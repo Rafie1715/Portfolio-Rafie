@@ -15,7 +15,7 @@ import toefl from '../assets/images/cert-toefl.png';
 import reactBeginner from '../assets/images/cert-dicoding-react-beginner.png';
 import reactFundamental from '../assets/images/cert-dicoding-react-fundamental.png';
 import flutterBeginner from '../assets/images/cert-dicoding-flutter-beginner.png';
-import IBMCode from '../assets/images/cert-ibm-code.png';
+import ibmCode from '../assets/images/cert-ibm-code.png';
 
 const certifications = [
   { id: 1, img: bangkitCert, alt: "Bangkit Academy Certificate" },
@@ -32,7 +32,7 @@ const certifications = [
   { id: 12, img: reactBeginner, alt: "Dicoding React Beginner" },
   { id: 13, img: reactFundamental, alt: "Dicoding React Fundamental" },
   { id: 14, img: flutterBeginner, alt: "Dicoding Flutter Beginner" },
-  { id: 15, img: IBMCode, alt: "IBM Code Certificate" },
+  { id: 15, img: ibmCode, alt: "IBM Code Certificate" },
 ];
 
 const Certifications = () => {
