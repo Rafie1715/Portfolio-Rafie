@@ -15,7 +15,7 @@ import toefl from '../assets/images/cert-toefl.png';
 import reactBeginner from '../assets/images/cert-dicoding-react-beginner.png';
 import reactFundamental from '../assets/images/cert-dicoding-react-fundamental.png';
 import flutterBeginner from '../assets/images/cert-dicoding-flutter-beginner.png';
-import IBMCode from '../assets/images/cert-IBM-code.png';
+import IBMCode from '../assets/images/cert-ibm-code.png';
 
 const certifications = [
   { id: 1, img: bangkitCert, alt: "Bangkit Academy Certificate" },
