@@ -14,6 +14,10 @@ import backendBeginner from '../assets/images/cert-dicoding-backend-beginner.png
 import dataAnalytics from '../assets/images/cert-data-analytics.png';
 import englishComp from '../assets/images/cert-english-competition.png';
 import toefl from '../assets/images/cert-toefl.png';
+import reactBeginner from '../assets/images/cert-dicoding-react-beginner.png';
+import reactFundamental from '../assets/images/cert-dicoding-react-fundamental.png';
+import flutterBeginner from '../assets/images/cert-dicoding-flutter-beginner.png';
+import IBMCode from '../assets/images/cert-IBM-code.png';
 
 const certifications = [
   { id: 1, img: bangkitCert, alt: "Bangkit Academy Certificate" },
@@ -27,6 +31,10 @@ const certifications = [
   { id: 9, img: dataAnalytics, alt: "Data Analytics Certificate" },
   { id: 10, img: englishComp, alt: "English Competition Certificate" },
   { id: 11, img: toefl, alt: "TOEFL Certificate" },
+  { id: 12, img: reactBeginner, alt: "Dicoding React Beginner" },
+  { id: 13, img: reactFundamental, alt: "Dicoding React Fundamental" },
+  { id: 14, img: flutterBeginner, alt: "Dicoding Flutter Beginner" },
+  { id: 15, img: IBMCode, alt: "IBM Code Certificate" },
 ];
 
 const Certifications = () => {

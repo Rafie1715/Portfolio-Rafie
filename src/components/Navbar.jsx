@@ -2,12 +2,12 @@
 import { useState, useEffect } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import useTheme from '../hooks/useTheme'; // <-- Import Hook tadi
+import useTheme from '../hooks/useTheme'; 
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme(); // <-- Pakai Hook
+  const { theme, toggleTheme } = useTheme(); 
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
@@ -27,9 +27,22 @@ const Navbar = () => {
     { name: "Contact", to: "contact" },
   ];
 
+  // Logic Warna Navbar:
+  // Scrolled: Putih (Light) / Dark (Dark)
+  // Top: Transparan (tapi teks menyesuaikan tema)
+  const navbarClasses = scrolled 
+    ? 'bg-white/90 dark:bg-dark/90 shadow-md backdrop-blur-sm py-3' 
+    : 'bg-transparent py-5';
+
+  const textClasses = scrolled
+    ? 'text-gray-800 dark:text-white' // Saat scroll: teks hitam (light) / putih (dark)
+    : 'text-gray-800 dark:text-white'; // Saat di atas: sama (karena bg hero juga berubah)
+
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-dark/95 backdrop-blur-sm shadow-lg py-3' : 'bg-dark py-5'}`}>
-      <div className="container mx-auto px-4 flex justify-between items-center text-white">
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${navbarClasses}`}>
+      <div className={`container mx-auto px-4 flex justify-between items-center ${textClasses}`}>
+        
+        {/* Logo */}
         <RouterLink to="/" className="text-xl font-bold tracking-wider hover:text-primary transition-colors">
           Rafie<span className="text-primary">.</span>
         </RouterLink>
@@ -63,29 +76,21 @@ const Navbar = () => {
           {/* Tombol Toggle Theme (Desktop) */}
           <button
             onClick={toggleTheme}
-            className="w-10 h-10 rounded-full bg-slate-700 hover:bg-primary flex items-center justify-center transition-all duration-300"
+            className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all duration-300 shadow-sm"
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? (
-              <i className="fas fa-sun text-yellow-400 text-lg"></i>
+              <i className="fas fa-sun text-lg"></i>
             ) : (
-              <i className="fas fa-moon text-white text-lg"></i>
+              <i className="fas fa-moon text-slate-600 text-lg"></i>
             )}
           </button>
         </div>
 
         {/* Mobile Controls */}
         <div className="md:hidden flex items-center gap-4">
-          {/* Tombol Toggle Theme (Mobile) */}
-          <button
-            onClick={toggleTheme}
-            className="text-xl text-white hover:text-primary transition-colors"
-          >
-             {theme === 'dark' ? (
-              <i className="fas fa-sun text-yellow-400"></i>
-            ) : (
-              <i className="fas fa-moon"></i>
-            )}
+          <button onClick={toggleTheme} className="text-xl transition-colors text-yellow-500 dark:text-yellow-400">
+             {theme === 'dark' ? <i className="fas fa-sun"></i> : <i className="fas fa-moon text-slate-600"></i>}
           </button>
 
           <button className="text-2xl focus:outline-none" onClick={() => setIsOpen(!isOpen)}>
@@ -94,8 +99,8 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <div className={`md:hidden bg-dark absolute w-full shadow-xl overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+      {/* Mobile Menu Dropdown */}
+      <div className={`md:hidden absolute w-full shadow-xl overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} bg-white dark:bg-dark`}>
         <div className="flex flex-col px-4 pb-4 space-y-2">
           {navLinks.map((link) => (
              isHomePage ? (
@@ -105,7 +110,7 @@ const Navbar = () => {
                 smooth={true}
                 offset={-70}
                 onClick={() => setIsOpen(false)}
-                className="block py-2 text-white hover:text-primary border-b border-gray-700 last:border-0"
+                className="block py-2 text-gray-800 dark:text-white hover:text-primary border-b border-gray-100 dark:border-slate-800 last:border-0"
               >
                 {link.name}
               </ScrollLink>
@@ -114,7 +119,7 @@ const Navbar = () => {
                 key={link.name}
                 to={`/#${link.to}`}
                 onClick={() => setIsOpen(false)}
-                className="block py-2 text-white hover:text-primary border-b border-gray-700 last:border-0"
+                className="block py-2 text-gray-800 dark:text-white hover:text-primary border-b border-gray-100 dark:border-slate-800 last:border-0"
               >
                 {link.name}
               </RouterLink>

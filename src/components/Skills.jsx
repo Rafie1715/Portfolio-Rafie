@@ -14,6 +14,7 @@ const Skills = () => {
     { name: "Java", icon: "devicon-java-plain colored" },
     { name: "Python", icon: "devicon-python-plain colored" },
     { name: "MySQL", icon: "devicon-mysql-plain colored" },
+    { name: "Dart", icon: "devicon-dart-plain colored" },
     { name: "Git", icon: "devicon-git-plain colored" },
     { name: "Figma", icon: "devicon-figma-plain colored" },
     { name: "Firebase", icon: "devicon-firebase-plain colored" },
@@ -21,6 +22,8 @@ const Skills = () => {
     { name: "Flutter", icon: "devicon-flutter-plain colored" },
     { name: "Tailwind CSS", icon: "devicon-tailwindcss-plain colored" },
     { name: "React", icon: "devicon-react-original colored" },
+    { name: "Express", icon: "devicon-express-original colored" },
+    { name: "GitHub", icon: "devicon-github-plain colored" },
   ];
 
   return (
