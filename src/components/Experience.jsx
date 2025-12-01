@@ -1,12 +1,9 @@
-// src/components/Experience.jsx
 import { useState } from 'react';
 
-// Import Logo
 import ksmLogo from '../assets/images/ksm-logo.jpg';
 import hmifLogo from '../assets/images/hmif-logo.jpg';
 import bangkitLogo from '../assets/images/bangkit_academy-logo.jpg';
 
-// Import Dokumentasi KSM
 import ksmDoc1 from '../assets/images/ksm-doc1.png';
 import ksmDoc2 from '../assets/images/ksm-doc2.png';
 import ksmDoc3 from '../assets/images/ksm-doc3.png';
@@ -14,7 +11,6 @@ import ksmDoc4 from '../assets/images/ksm-doc4.png';
 import ksmDoc5 from '../assets/images/ksm-doc5.jpg';
 import ksmDoc6 from '../assets/images/ksm-doc6.jpeg';
 
-// Import Dokumentasi HMIF
 import hmifDoc1 from '../assets/images/hmif-doc1.png';
 import hmifDoc2 from '../assets/images/hmif-doc2.jpg';
 import hmifDoc3 from '../assets/images/hmif-doc3.png';
@@ -22,7 +18,6 @@ import hmifDoc4 from '../assets/images/hmif-doc4.png';
 import hmifDoc5 from '../assets/images/hmif-doc5.jpg';
 import hmifDoc6 from '../assets/images/hmif-doc6.jpeg';
 
-// Import Dokumentasi Bangkit
 import bangkitDoc1 from '../assets/images/bangkit-doc1.png';
 import bangkitDoc2 from '../assets/images/bangkit-doc2.png';
 import bangkitDoc3 from '../assets/images/bangkit-doc3.png';
@@ -41,7 +36,7 @@ const experiences = [
       "Developed and managed all learning materials and assessments.",
       "Actively served on various committees for KSM Multimedia programs and events."
     ],
-    docs: [ksmDoc1, ksmDoc2, ksmDoc3, ksmDoc4, ksmDoc5, ksmDoc6] // Data dokumentasi
+    docs: [ksmDoc1, ksmDoc2, ksmDoc3, ksmDoc4, ksmDoc5, ksmDoc6]
   },
   {
     id: 2,
@@ -53,7 +48,7 @@ const experiences = [
       "Managed the 'CodeVox' educational program, creating and editing video tutorials for the HMIF YouTube channel.",
       "Actively served on various committees for HMIF programs and events."
     ],
-    docs: [hmifDoc1, hmifDoc2, hmifDoc3, hmifDoc4, hmifDoc5, hmifDoc6] // Data dokumentasi
+    docs: [hmifDoc1, hmifDoc2, hmifDoc3, hmifDoc4, hmifDoc5, hmifDoc6]
   },
   {
     id: 3,
@@ -66,12 +61,11 @@ const experiences = [
       "Developed 'Planetku' capstone project with Machine Learning integration.",
       "Gained soft skills and career readiness training from industry experts."
     ],
-    docs: [bangkitDoc1, bangkitDoc2, bangkitDoc3, bangkitDoc4] // Data dokumentasi
+    docs: [bangkitDoc1, bangkitDoc2, bangkitDoc3, bangkitDoc4]
   }
 ];
 
 const Experience = () => {
-  // State untuk fitur zoom gambar (Lightbox sederhana)
   const [selectedImage, setSelectedImage] = useState(null);
 
   return (
@@ -83,7 +77,6 @@ const Experience = () => {
         </div>
 
         <div className="max-w-4xl mx-auto relative">
-          {/* Vertical Line */}
           <div className="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-slate-700 -translate-x-1/2 hidden md:block"></div>
           <div className="absolute left-[28px] top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-slate-700 -translate-x-1/2 md:hidden"></div>
 
@@ -91,13 +84,10 @@ const Experience = () => {
             {experiences.map((exp, index) => (
               <div key={exp.id} data-aos={index % 2 === 0 ? "fade-left" : "fade-right"} className={`relative flex items-start md:items-center gap-6 md:gap-0 ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
                 
-                {/* Empty Spacer for Desktop */}
                 <div className="hidden md:block md:w-1/2"></div>
                 
-                {/* Timeline Dot */}
                 <div className="absolute left-[28px] md:left-1/2 -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-white dark:border-dark shadow-sm z-10"></div>
 
-                {/* Content Card */}
                 <div className="flex-1 ml-12 md:ml-0 md:w-1/2 md:px-10">
                   <div className="bg-white dark:bg-darkLight p-6 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-shadow duration-300">
                     <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100 dark:border-slate-600">
@@ -117,7 +107,6 @@ const Experience = () => {
                       ))}
                     </ul>
 
-                    {/* Section Dokumentasi Baru */}
                     {exp.docs && exp.docs.length > 0 && (
                       <div className="mt-4 pt-4 border-t border-gray-50 dark:border-slate-600">
                         <h6 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Documentation:</h6>
@@ -148,7 +137,6 @@ const Experience = () => {
         </div>
       </div>
 
-      {/* Modal Lightbox Sederhana untuk Zoom Gambar */}
       {selectedImage && (
         <div 
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"

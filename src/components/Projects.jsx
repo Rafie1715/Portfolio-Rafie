@@ -1,4 +1,3 @@
-// src/components/Projects.jsx
 import { useState } from 'react';
 import { projects } from '../data/projects';
 import { Link } from 'react-router-dom';
@@ -27,8 +26,7 @@ const Projects = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">Featured Projects</h2>
           <div className="w-20 h-1 bg-primary mx-auto rounded-full"></div>
         </div>
-        
-        {/* Filter Buttons */}
+
         <div className="flex flex-wrap justify-center gap-3 mb-12" data-aos="fade-up">
           {filters.map(f => (
             <button
@@ -45,7 +43,6 @@ const Projects = () => {
           ))}
         </div>
 
-        {/* Project Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project, index) => (
             <Tilt 
@@ -94,10 +91,8 @@ const Projects = () => {
                      ))}
                   </div>
 
-                  {/* LOGIKA TOMBOL */}
                   <div className="mt-auto flex flex-col gap-3">
                     
-                    {/* 1. Tombol Live Site (BARU) */}
                     {project.live && (
                       <a 
                         href={project.live} 
@@ -109,7 +104,6 @@ const Projects = () => {
                       </a>
                     )}
 
-                    {/* 2. Tombol GitHub (Jika ada) */}
                     {project.github && (
                       <a 
                         href={project.github} 
@@ -121,7 +115,6 @@ const Projects = () => {
                       </a>
                     )}
 
-                    {/* 3. Tombol Figma (Design) */}
                     {project.figma && (
                       <a 
                         href={project.figma} 
@@ -133,7 +126,6 @@ const Projects = () => {
                       </a>
                     )}
 
-                    {/* 4. Tombol Prototype (Jika ada) */}
                     {project.prototype && (
                       <a 
                         href={project.prototype} 
@@ -145,7 +137,6 @@ const Projects = () => {
                       </a>
                     )}
 
-                    {/* 5. Fallback jika kosong */}
                     {!project.live && !project.github && !project.figma && !project.prototype && (
                       <div className="block w-full text-center py-3 bg-gray-100 dark:bg-slate-800 text-gray-400 rounded-xl cursor-not-allowed border border-gray-200 dark:border-slate-700 text-sm">
                         Private Repository

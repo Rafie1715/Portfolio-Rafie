@@ -1,10 +1,8 @@
-// src/components/Contact.jsx
-import { motion } from 'framer-motion'; // Pastikan sudah install framer-motion
+import { motion } from 'framer-motion';
 
 const Contact = () => {
   return (
     <section id="contact" className="py-24 bg-white relative overflow-hidden dark:bg-dark">
-      {/* Background Decoration (Opsional: Blob samar di belakang) */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-secondary/5 rounded-full blur-3xl"></div>
@@ -23,7 +21,6 @@ const Contact = () => {
 
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-12">
           
-          {/* Bagian Kiri: Info Kontak & Sosmed */}
           <div className="md:w-1/3 space-y-8" data-aos="fade-right">
             <div className="bg-gray-50 dark:bg-darkLight p-8 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm">
               <h3 className="text-xl font-bold text-dark dark:text-white mb-6">Contact Info</h3>
@@ -52,14 +49,13 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* Social Icons dengan Animasi */}
               <div className="mt-10">
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Follow me on:</p>
                 <div className="flex space-x-4">
                   {[
                     { icon: "fab fa-linkedin-in", url: "https://linkedin.com/in/rafie-rojagat", color: "hover:bg-[#0077b5]" },
                     { icon: "fab fa-github", url: "https://github.com/Rafie1715", color: "hover:bg-[#333]" },
-                    { icon: "fab fa-instagram", url: "https://instagram.com/rafie_rb", color: "hover:bg-[#E1306C]" } // Contoh tambah IG
+                    { icon: "fab fa-instagram", url: "https://instagram.com/rafie_rb", color: "hover:bg-[#E1306C]" }
                   ].map((social, index) => (
                     <a
                       key={index}
@@ -76,11 +72,9 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Bagian Kanan: Form */}
           <div className="md:w-2/3" data-aos="fade-left">
             <form action="https://formspree.io/f/xanjlvvr" method="POST" className="bg-white dark:bg-darkLight p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 relative">
               
-              {/* Grid Layout untuk Form */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="group">
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-primary">Name</label>
@@ -118,7 +112,6 @@ const Contact = () => {
                 ></textarea>
               </div>
 
-              {/* Animated Send Button */}
               <div className="text-right">
                 <motion.button 
                   type="submit" 
@@ -130,7 +123,7 @@ const Contact = () => {
                   <motion.i 
                     className="fas fa-paper-plane ml-2"
                     initial={{ x: 0, y: 0 }}
-                    whileHover={{ x: 3, y: -3 }} // Animasi pesawat terbang saat hover
+                    whileHover={{ x: 3, y: -3 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   ></motion.i>
                 </motion.button>

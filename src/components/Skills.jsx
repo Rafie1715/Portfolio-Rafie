@@ -1,5 +1,4 @@
-// src/components/Skills.jsx
-import Marquee from "react-fast-marquee"; // <-- Import Marquee
+import Marquee from "react-fast-marquee";
 
 const Skills = () => {
   const skillsData = [
@@ -38,7 +37,6 @@ const Skills = () => {
         </p>
       </div>
 
-      {/* Marquee Slider */}
       <div className="py-10" data-aos="zoom-in">
         <Marquee gradientColor={[255, 255, 255, 0]} speed={50} pauseOnHover={true}>
           {skillsData.map((skill, index) => (

@@ -1,9 +1,3 @@
-// src/data/projects.js
-
-// Import images agar diproses oleh Vite (Opsional jika ditaruh di folder public, tapi disarankan via import di src)
-// Jika Anda menaruh gambar di folder 'public/images', Anda bisa pakai string path langsung '/images/nama.png'
-// Tapi untuk tutorial ini, kita asumsikan gambar ada di src/assets/images/ dan kita gunakan path string relatif.
-
 export const projects = [
   {
     id: "planetku",
@@ -83,7 +77,6 @@ export const projects = [
     techStack: [
       { name: "Figma", icon: "devicon-figma-plain" }
     ],
-    // HAPUS bagian 'github', GANTI dengan dua ini:
     figma: "https://www.figma.com/design/abLUBq3MKWlLsFA70Foznn/Lamimin?node-id=0-1&node-type=canvas&t=PlGVttlcvHZiLx4B-0",
     prototype: "https://www.figma.com/proto/abLUBq3MKWlLsFA70Foznn/Lamimin?node-id=48-537&node-type=canvas&t=sdLMx6dqWfX4HUzo-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=2%3A2",
     gallery: [

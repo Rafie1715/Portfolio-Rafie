@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import { useState, useEffect } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
@@ -27,27 +26,21 @@ const Navbar = () => {
     { name: "Contact", to: "contact" },
   ];
 
-  // Logic Warna Navbar:
-  // Scrolled: Putih (Light) / Dark (Dark)
-  // Top: Transparan (tapi teks menyesuaikan tema)
   const navbarClasses = scrolled 
     ? 'bg-white/90 dark:bg-dark/90 shadow-md backdrop-blur-sm py-3' 
     : 'bg-transparent py-5';
 
   const textClasses = scrolled
-    ? 'text-gray-800 dark:text-white' // Saat scroll: teks hitam (light) / putih (dark)
-    : 'text-gray-800 dark:text-white'; // Saat di atas: sama (karena bg hero juga berubah)
+    ? 'text-gray-800 dark:text-white'
+    : 'text-gray-800 dark:text-white';
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${navbarClasses}`}>
       <div className={`container mx-auto px-4 flex justify-between items-center ${textClasses}`}>
-        
-        {/* Logo */}
         <RouterLink to="/" className="text-xl font-bold tracking-wider hover:text-primary transition-colors">
           Rafie<span className="text-primary">.</span>
         </RouterLink>
         
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
             isHomePage ? (
@@ -73,7 +66,6 @@ const Navbar = () => {
             )
           ))}
 
-          {/* Tombol Toggle Theme (Desktop) */}
           <button
             onClick={toggleTheme}
             className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all duration-300 shadow-sm"
@@ -86,8 +78,7 @@ const Navbar = () => {
             )}
           </button>
         </div>
-
-        {/* Mobile Controls */}
+        
         <div className="md:hidden flex items-center gap-4">
           <button onClick={toggleTheme} className="text-xl transition-colors text-yellow-500 dark:text-yellow-400">
              {theme === 'dark' ? <i className="fas fa-sun"></i> : <i className="fas fa-moon text-slate-600"></i>}
@@ -99,7 +90,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
       <div className={`md:hidden absolute w-full shadow-xl overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} bg-white dark:bg-dark`}>
         <div className="flex flex-col px-4 pb-4 space-y-2">
           {navLinks.map((link) => (

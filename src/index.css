@@ -6,7 +6,6 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  /* Update baris ini: Tambahkan kondisi dark mode */
   @apply text-slate-800 bg-light transition-colors duration-300 overflow-x-hidden;
   @apply dark:bg-dark dark:text-slate-200; 
 }
@@ -19,7 +18,7 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-light dark:bg-dark; /* Track berubah warna */
+  @apply bg-light dark:bg-dark;
 }
 ::-webkit-scrollbar-thumb {
   @apply bg-slate-400 dark:bg-slate-700 rounded-full border-2 border-light dark:border-dark hover:bg-primary transition-colors;

@@ -1,11 +1,9 @@
-// src/components/About.jsx
 import upnLogo from '../assets/images/upnvj_logo.png';
 import cvFile from '../assets/CV Rafie Rojagat Bachri.pdf';
-import Nametag from './NameTag'; // Pastikan import Nametag, BUKAN Nametag3D
+import Nametag from './NameTag';
 
 const About = () => {
   return (
-    // Tambahkan overflow-visible di sini
     <section id="about" className="py-24 bg-white dark:bg-dark overflow-visible">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center text-dark dark:text-white mb-16" data-aos="fade-down">
@@ -15,13 +13,10 @@ const About = () => {
 
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           
-          {/* KOLOM KIRI (Nametag) */}
-          {/* Pastikan tidak ada overflow-hidden disini */}
           <div className="lg:w-5/12 w-full flex justify-center order-1 h-[550px]" data-aos="fade-right">
              <Nametag />
           </div>
 
-          {/* KOLOM KANAN (Deskripsi & Edukasi) */}
           <div className="lg:w-7/12 order-2" data-aos="fade-left">
             <div className="mb-10">
                 <h3 className="text-2xl font-bold text-dark dark:text-white mb-4">
@@ -39,7 +34,6 @@ const About = () => {
                 </a>
             </div>
 
-            {/* 2. Section Edukasi (Tetap Ada) */}
             <div className="bg-gray-50 dark:bg-darkLight p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm">
               <div className="flex items-start gap-4">
                   <div className="bg-white p-2 rounded-lg shadow-sm w-16 h-16 flex items-center justify-center flex-shrink-0">

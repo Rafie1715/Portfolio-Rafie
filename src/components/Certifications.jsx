@@ -1,8 +1,6 @@
-// src/components/Certifications.jsx
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // <-- Import penting
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Import semua gambar sertifikat (sama seperti sebelumnya)
 import bangkitCert from '../assets/images/cert-bangkit.png';
 import androidBeginner from '../assets/images/cert-dicoding-android-beginner.png';
 import androidFundamental from '../assets/images/cert-dicoding-android-fundamental.png';
@@ -39,35 +37,32 @@ const certifications = [
 
 const Certifications = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  // Kita butuh state arah untuk menentukan animasi slide ke kiri atau kanan
   const [direction, setDirection] = useState(0); 
 
   const prevSlide = () => {
-    setDirection(-1); // Set arah ke kiri
+    setDirection(-1); 
     const isFirstSlide = currentIndex === 0;
     const newIndex = isFirstSlide ? certifications.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   };
 
   const nextSlide = () => {
-    setDirection(1); // Set arah ke kanan
+    setDirection(1); 
     const isLastSlide = currentIndex === certifications.length - 1;
     const newIndex = isLastSlide ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
   };
 
   const goToSlide = (slideIndex) => {
-    // Tentukan arah berdasarkan index tujuan vs index sekarang
     setDirection(slideIndex > currentIndex ? 1 : -1);
     setCurrentIndex(slideIndex);
   }
 
-  // Konfigurasi Animasi Framer Motion
   const slideVariants = {
     enter: (direction) => ({
-      x: direction > 0 ? 50 : -50, // Masuk dari kanan (+50) atau kiri (-50)
+      x: direction > 0 ? 50 : -50, 
       opacity: 0,
-      scale: 0.95, // Sedikit lebih kecil saat masuk
+      scale: 0.95, 
     }),
     center: {
       zIndex: 1,
@@ -77,9 +72,9 @@ const Certifications = () => {
     },
     exit: (direction) => ({
       zIndex: 0,
-      x: direction < 0 ? 50 : -50, // Keluar ke kanan (+50) atau kiri (-50) berkebalikan dari masuk
+      x: direction < 0 ? 50 : -50, 
       opacity: 0,
-      scale: 0.95, // Mengecil sedikit saat keluar
+      scale: 0.95,
     }),
   };
 
@@ -94,13 +89,11 @@ const Certifications = () => {
         </div>
 
         <div className="max-w-4xl mx-auto relative group" data-aos="zoom-in">
-          {/* Container Gambar Utama dengan efek Glow halus */}
           <div className="w-full h-[300px] md:h-[500px] rounded-2xl bg-gray-50/50 dark:bg-darkLight/50 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 shadow-xl shadow-primary/5 overflow-hidden flex items-center justify-center relative p-6 md:p-10">
             
-            {/* AnimatePresence menangani komponen saat keluar dari DOM */}
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.img
-                key={currentIndex} // Key penting agar React tahu gambar berubah
+                key={currentIndex}
                 src={certifications[currentIndex].img}
                 alt={certifications[currentIndex].alt}
                 custom={direction}
@@ -116,12 +109,10 @@ const Certifications = () => {
                 className="max-w-full max-h-full object-contain drop-shadow-md relative z-10"
               />
             </AnimatePresence>
-            
-            {/* Efek background blur di belakang gambar */}
+
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-secondary/5 rounded-2xl -z-0"></div>
           </div>
             
-          {/* Indikator Slide (Dots) dengan animasi hover */}
           <div className="flex justify-center space-x-3 mt-6">
             {certifications.map((_, slideIndex) => (
               <button
@@ -129,7 +120,7 @@ const Certifications = () => {
                 onClick={() => goToSlide(slideIndex)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 hover:scale-150 ${
                   currentIndex === slideIndex 
-                    ? 'bg-primary w-8 scale-110 shadow-sm shadow-primary/50' // Dot aktif lebih lebar
+                    ? 'bg-primary w-8 scale-110 shadow-sm shadow-primary/50'
                     : 'bg-gray-300 hover:bg-primary/50'
                 }`}
                 aria-label={`Go to slide ${slideIndex + 1}`}
@@ -137,7 +128,6 @@ const Certifications = () => {
             ))}
           </div>
 
-          {/* Tombol Previous dengan animasi hover & click */}
           <button 
             onClick={prevSlide}
             className="absolute top-1/2 -translate-y-1/2 left-2 md:-left-14 text-2xl p-3 rounded-full bg-white/90 dark:bg-slate-700/90 text-dark dark:text-white hover:text-primary hover:bg-white dark:hover:bg-slate-600 transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95 z-20 group-hover:opacity-100 md:opacity-0 transition-opacity duration-300"
@@ -145,7 +135,6 @@ const Certifications = () => {
             <i className="fas fa-chevron-left"></i>
           </button>
 
-          {/* Tombol Next dengan animasi hover & click */}
           <button 
             onClick={nextSlide}
             className="absolute top-1/2 -translate-y-1/2 right-2 md:-right-14 text-2xl p-3 rounded-full bg-white/90 dark:bg-slate-700/90 text-dark dark:text-white hover:text-primary hover:bg-white dark:hover:bg-slate-600 transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95 z-20 group-hover:opacity-100 md:opacity-0 transition-opacity duration-300"

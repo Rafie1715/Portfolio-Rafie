@@ -1,7 +1,6 @@
-// src/App.jsx
-import { useEffect } from 'react'; // <-- Import useEffect
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import Navbar from './components/NavBar';
 import Hero from './components/Hero';
 import About from './components/About';
 import Experience from './components/Experience';
@@ -11,10 +10,8 @@ import Certifications from './components/Certifications';
 import Contact from './components/Contact';
 import ProjectDetail from './pages/ProjectDetail';
 import BackToTop from './components/BacktoTop';
-
-// Import AOS
 import AOS from 'aos';
-import 'aos/dist/aos.css'; // Import CSS AOS
+import 'aos/dist/aos.css';
 
 const Home = () => (
   <>
@@ -38,12 +35,11 @@ const Home = () => (
 );
 
 function App() {
-  // Inisialisasi AOS saat aplikasi dimuat
   useEffect(() => {
     AOS.init({
-      duration: 1000, // Durasi animasi (ms)
-      once: true,     // Animasi hanya berjalan sekali saat scroll ke bawah
-      offset: 100,    // Offset trigger animasi
+      duration: 1000, 
+      once: true,     
+      offset: 100,   
     });
   }, []);
 
