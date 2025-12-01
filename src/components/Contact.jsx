@@ -1,8 +1,39 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const Contact = () => {
+  const [status, setStatus] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    setStatus("loading");
+
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/xanjlvvr", {
+        method: "POST",
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        form.reset(); 
+        setTimeout(() => setStatus(""), 5000);
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      setStatus("error");
+    }
+  };
+
   return (
-    <section id="contact" className="py-24 bg-white relative overflow-hidden dark:bg-dark">
+    <section id="contact" className="py-24 bg-white dark:bg-dark relative overflow-hidden transition-colors duration-300">
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-secondary/5 rounded-full blur-3xl"></div>
@@ -20,7 +51,6 @@ const Contact = () => {
         </div>
 
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-12">
-          
           <div className="md:w-1/3 space-y-8" data-aos="fade-right">
             <div className="bg-gray-50 dark:bg-darkLight p-8 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm">
               <h3 className="text-xl font-bold text-dark dark:text-white mb-6">Contact Info</h3>
@@ -73,8 +103,7 @@ const Contact = () => {
           </div>
 
           <div className="md:w-2/3" data-aos="fade-left">
-            <form action="https://formspree.io/f/xanjlvvr" method="POST" className="bg-white dark:bg-darkLight p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 relative">
-              
+            <form onSubmit={handleSubmit} className="bg-white dark:bg-darkLight p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 relative">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="group">
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-primary">Name</label>
@@ -94,7 +123,7 @@ const Contact = () => {
                     name="email" 
                     id="email" 
                     required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-50 dark:bg-slate-800 outline-none transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary focus:shadow-lg"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-50 dark:bg-slate-800 outline-none transition-all duration-300 focus:bg-white dark:text-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary focus:shadow-lg"
                     placeholder="name@example.com"
                   />
                 </div>
@@ -115,18 +144,40 @@ const Contact = () => {
               <div className="text-right">
                 <motion.button 
                   type="submit" 
+                  disabled={status === 'loading'}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center justify-center px-8 py-3.5 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all"
+                  className={`inline-flex items-center justify-center px-8 py-3.5 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all ${status === 'loading' ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
-                  Send Message 
-                  <motion.i 
-                    className="fas fa-paper-plane ml-2"
-                    initial={{ x: 0, y: 0 }}
-                    whileHover={{ x: 3, y: -3 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  ></motion.i>
+                  {status === 'loading' ? 'Sending...' : 'Send Message'}
+                  {!status && (
+                    <motion.i 
+                      className="fas fa-paper-plane ml-2"
+                      initial={{ x: 0, y: 0 }}
+                      whileHover={{ x: 3, y: -3 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    ></motion.i>
+                  )}
                 </motion.button>
+
+                {status === 'success' && (
+                  <motion.p 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-green-500 text-sm mt-4 font-medium flex items-center justify-end"
+                  >
+                    <i className="fas fa-check-circle mr-2"></i> Message sent successfully!
+                  </motion.p>
+                )}
+                {status === 'error' && (
+                  <motion.p 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-500 text-sm mt-4 font-medium flex items-center justify-end"
+                  >
+                    <i className="fas fa-exclamation-circle mr-2"></i> Failed to send message.
+                  </motion.p>
+                )}
               </div>
 
             </form>
