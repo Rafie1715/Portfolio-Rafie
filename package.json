@@ -23,7 +23,8 @@
     "react-scroll": "^1.9.3",
     "react-tsparticles": "^2.12.2",
     "tsparticles": "^3.9.1",
-    "typewriter-effect": "^2.22.0"
+    "typewriter-effect": "^2.22.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
