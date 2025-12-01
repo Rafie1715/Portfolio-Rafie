@@ -21,10 +21,10 @@ const Projects = () => {
   ];
 
   return (
-    <section id="projects" className="py-24 bg-gray-50">
+    <section id="projects" className="py-24 bg-gray-50 dark:bg-dark">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16" data-aos="fade-down">
-          <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4">Featured Projects</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">Featured Projects</h2>
           <div className="w-20 h-1 bg-primary mx-auto rounded-full"></div>
         </div>
         
@@ -37,7 +37,7 @@ const Projects = () => {
               className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 filter === f.id 
                   ? 'bg-primary text-white shadow-lg shadow-blue-500/30 scale-105' 
-                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-primary/50'
+                  : 'bg-white dark:bg-darkLight text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-primary/50'
               }`}
             >
               {f.label}
@@ -59,7 +59,7 @@ const Projects = () => {
               <div 
                 data-aos="fade-up"
                 data-aos-delay={index * 100} 
-                className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col h-full"
+                className="group bg-white dark:bg-darkLight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-slate-700 flex flex-col h-full"
               >
                 <div className="h-52 overflow-hidden relative">
                   <img 
@@ -79,12 +79,12 @@ const Projects = () => {
                 
                 <div className="p-6 flex flex-col flex-grow">
                   <Link to={`/project/${project.id}`} className="block">
-                    <h3 className="text-xl font-bold mb-3 text-dark group-hover:text-primary transition-colors line-clamp-1" title={project.title}>
+                    <h3 className="text-xl font-bold mb-3 text-dark dark:text-white group-hover:text-primary transition-colors line-clamp-1" title={project.title}>
                       {project.title}
                     </h3>
                   </Link>
 
-                  <p className="text-gray-600 mb-4 text-sm leading-relaxed flex-grow line-clamp-3">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed flex-grow line-clamp-3">
                     {project.shortDesc}
                   </p>
                   
@@ -127,7 +127,7 @@ const Projects = () => {
                         href={project.figma} 
                         target="_blank" 
                         rel="noreferrer"
-                        className="block w-full text-center py-3 bg-dark text-white rounded-xl hover:bg-gray-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 font-medium"
+                        className="block w-full text-center py-3 bg-dark dark:bg-slate-700 text-white rounded-xl hover:bg-gray-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 font-medium"
                       >
                         <i className="fab fa-figma text-lg"></i> View Design
                       </a>
@@ -139,7 +139,7 @@ const Projects = () => {
                         href={project.prototype} 
                         target="_blank" 
                         rel="noreferrer"
-                        className="block w-full text-center py-3 border-2 border-dark text-dark rounded-xl hover:bg-dark hover:text-white transition-all flex items-center justify-center gap-2 font-medium"
+                        className="block w-full text-center py-3 border-2 border-dark dark:border-slate-500 text-dark dark:text-slate-200 rounded-xl hover:bg-dark dark:hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center gap-2 font-medium"
                       >
                         <i className="fas fa-play text-lg"></i> Try Prototype
                       </a>
@@ -147,7 +147,7 @@ const Projects = () => {
 
                     {/* 5. Fallback jika kosong */}
                     {!project.live && !project.github && !project.figma && !project.prototype && (
-                      <div className="block w-full text-center py-3 bg-gray-100 text-gray-400 rounded-xl cursor-not-allowed border border-gray-200 text-sm">
+                      <div className="block w-full text-center py-3 bg-gray-100 dark:bg-slate-800 text-gray-400 rounded-xl cursor-not-allowed border border-gray-200 dark:border-slate-700 text-sm">
                         Private Repository
                       </div>
                     )}

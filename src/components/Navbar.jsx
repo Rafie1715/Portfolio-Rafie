@@ -1,13 +1,13 @@
 // src/components/Navbar.jsx
 import { useState, useEffect } from 'react';
-// Kita pakai 'react-scroll' untuk scroll di halaman Home, 
-// tapi pakai 'react-router-dom' untuk navigasi jika kita sedang di halaman Detail.
 import { Link as ScrollLink } from 'react-scroll';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import useTheme from '../hooks/useTheme'; // <-- Import Hook tadi
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme(); // <-- Pakai Hook
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
@@ -35,7 +35,7 @@ const Navbar = () => {
         </RouterLink>
         
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-8">
+        <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
             isHomePage ? (
               <ScrollLink 
@@ -59,12 +59,39 @@ const Navbar = () => {
               </RouterLink>
             )
           ))}
+
+          {/* Tombol Toggle Theme (Desktop) */}
+          <button
+            onClick={toggleTheme}
+            className="w-10 h-10 rounded-full bg-slate-700 hover:bg-primary flex items-center justify-center transition-all duration-300"
+            aria-label="Toggle Theme"
+          >
+            {theme === 'dark' ? (
+              <i className="fas fa-sun text-yellow-400 text-lg"></i>
+            ) : (
+              <i className="fas fa-moon text-white text-lg"></i>
+            )}
+          </button>
         </div>
 
-        {/* Mobile Toggle */}
-        <button className="md:hidden text-2xl focus:outline-none" onClick={() => setIsOpen(!isOpen)}>
-          <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i>
-        </button>
+        {/* Mobile Controls */}
+        <div className="md:hidden flex items-center gap-4">
+          {/* Tombol Toggle Theme (Mobile) */}
+          <button
+            onClick={toggleTheme}
+            className="text-xl text-white hover:text-primary transition-colors"
+          >
+             {theme === 'dark' ? (
+              <i className="fas fa-sun text-yellow-400"></i>
+            ) : (
+              <i className="fas fa-moon"></i>
+            )}
+          </button>
+
+          <button className="text-2xl focus:outline-none" onClick={() => setIsOpen(!isOpen)}>
+            <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}

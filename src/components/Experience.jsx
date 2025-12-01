@@ -75,17 +75,17 @@ const Experience = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   return (
-    <section id="experience" className="py-24 bg-white">
+    <section id="experience" className="py-24 bg-white dark:bg-dark">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4">Experience</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4 dark:text-white">Experience</h2>
           <div className="w-20 h-1 bg-primary mx-auto rounded-full"></div>
         </div>
 
         <div className="max-w-4xl mx-auto relative">
           {/* Vertical Line */}
-          <div className="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 -translate-x-1/2 hidden md:block"></div>
-          <div className="absolute left-[28px] top-0 bottom-0 w-0.5 bg-gray-200 -translate-x-1/2 md:hidden"></div>
+          <div className="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-slate-700 -translate-x-1/2 hidden md:block"></div>
+          <div className="absolute left-[28px] top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-slate-700 -translate-x-1/2 md:hidden"></div>
 
           <div className="space-y-12">
             {experiences.map((exp, index) => (
@@ -95,22 +95,22 @@ const Experience = () => {
                 <div className="hidden md:block md:w-1/2"></div>
                 
                 {/* Timeline Dot */}
-                <div className="absolute left-[28px] md:left-1/2 -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-white shadow-sm z-10"></div>
+                <div className="absolute left-[28px] md:left-1/2 -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-white dark:border-dark shadow-sm z-10"></div>
 
                 {/* Content Card */}
                 <div className="flex-1 ml-12 md:ml-0 md:w-1/2 md:px-10">
-                  <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300">
-                    <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100">
+                  <div className="bg-white dark:bg-darkLight p-6 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-shadow duration-300">
+                    <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100 dark:border-slate-600">
                       <img src={exp.logo} alt={exp.org} className="w-12 h-12 rounded-full object-cover shadow-sm" />
                       <div>
-                        <h3 className="font-bold text-dark text-lg leading-tight">{exp.title}</h3>
+                        <h3 className="font-bold text-dark dark:text-white text-lg leading-tight">{exp.title}</h3>
                         <p className="text-primary text-sm font-medium">{exp.org}</p>
                       </div>
                     </div>
                     
                     <ul className="space-y-2 mb-6">
                       {exp.description.map((item, i) => (
-                        <li key={i} className="text-gray-600 text-sm flex items-start">
+                        <li key={i} className="text-gray-600 dark:text-gray-300 text-sm flex items-start">
                           <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-gray-400 rounded-full flex-shrink-0"></span>
                           {item}
                         </li>
@@ -119,7 +119,7 @@ const Experience = () => {
 
                     {/* Section Dokumentasi Baru */}
                     {exp.docs && exp.docs.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-gray-50">
+                      <div className="mt-4 pt-4 border-t border-gray-50 dark:border-slate-600">
                         <h6 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Documentation:</h6>
                         <div className="flex flex-wrap gap-2">
                           {exp.docs.map((doc, idx) => (
@@ -127,7 +127,7 @@ const Experience = () => {
                               key={idx} 
                               src={doc} 
                               alt={`Doc ${idx + 1}`} 
-                              className="w-20 h-14 object-cover rounded-md border border-gray-200 cursor-pointer hover:scale-110 transition-transform hover:shadow-md"
+                              className="w-20 h-14 object-cover rounded-md border border-gray-200 dark:border-slate-600 cursor-pointer hover:scale-110 transition-transform hover:shadow-md"
                               onClick={() => setSelectedImage(doc)}
                             />
                           ))}
@@ -136,7 +136,7 @@ const Experience = () => {
                     )}
 
                     <div className="mt-4 pt-2 text-right">
-                       <span className="inline-block px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-xs font-medium">
+                       <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300 rounded-full text-xs font-medium">
                          {exp.date}
                        </span>
                     </div>

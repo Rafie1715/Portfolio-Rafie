@@ -76,10 +76,10 @@ const Certifications = () => {
   };
 
   return (
-    <section id="certifications" className="py-24 bg-white overflow-hidden">
+    <section id="certifications" className="py-24 bg-white dark:bg-dark overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16" data-aos="fade-down">
-          <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">
             Certifications
           </h2>
           <div className="w-20 h-1 bg-primary mx-auto rounded-full mt-2"></div>
@@ -87,7 +87,7 @@ const Certifications = () => {
 
         <div className="max-w-4xl mx-auto relative group" data-aos="zoom-in">
           {/* Container Gambar Utama dengan efek Glow halus */}
-          <div className="w-full h-[300px] md:h-[500px] rounded-2xl bg-gray-50/50 backdrop-blur-sm border border-gray-200/50 shadow-xl shadow-primary/5 overflow-hidden flex items-center justify-center relative p-6 md:p-10">
+          <div className="w-full h-[300px] md:h-[500px] rounded-2xl bg-gray-50/50 dark:bg-darkLight/50 backdrop-blur-sm border border-gray-200/50 dark:border-slate-700/50 shadow-xl shadow-primary/5 overflow-hidden flex items-center justify-center relative p-6 md:p-10">
             
             {/* AnimatePresence menangani komponen saat keluar dari DOM */}
             <AnimatePresence initial={false} custom={direction} mode="wait">
@@ -132,7 +132,7 @@ const Certifications = () => {
           {/* Tombol Previous dengan animasi hover & click */}
           <button 
             onClick={prevSlide}
-            className="absolute top-1/2 -translate-y-1/2 left-2 md:-left-14 text-2xl p-3 rounded-full bg-white/90 text-dark hover:text-primary hover:bg-white transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95 z-20 group-hover:opacity-100 md:opacity-0 transition-opacity duration-300"
+            className="absolute top-1/2 -translate-y-1/2 left-2 md:-left-14 text-2xl p-3 rounded-full bg-white/90 dark:bg-slate-700/90 text-dark dark:text-white hover:text-primary hover:bg-white dark:hover:bg-slate-600 transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95 z-20 group-hover:opacity-100 md:opacity-0 transition-opacity duration-300"
           >
             <i className="fas fa-chevron-left"></i>
           </button>
@@ -140,7 +140,7 @@ const Certifications = () => {
           {/* Tombol Next dengan animasi hover & click */}
           <button 
             onClick={nextSlide}
-            className="absolute top-1/2 -translate-y-1/2 right-2 md:-right-14 text-2xl p-3 rounded-full bg-white/90 text-dark hover:text-primary hover:bg-white transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95 z-20 group-hover:opacity-100 md:opacity-0 transition-opacity duration-300"
+            className="absolute top-1/2 -translate-y-1/2 right-2 md:-right-14 text-2xl p-3 rounded-full bg-white/90 dark:bg-slate-700/90 text-dark dark:text-white hover:text-primary hover:bg-white dark:hover:bg-slate-600 transition-all shadow-md hover:shadow-lg hover:scale-110 active:scale-95 z-20 group-hover:opacity-100 md:opacity-0 transition-opacity duration-300"
           >
             <i className="fas fa-chevron-right"></i>
           </button>
