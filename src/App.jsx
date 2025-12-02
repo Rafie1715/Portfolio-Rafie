@@ -15,7 +15,7 @@ import 'aos/dist/aos.css';
 import NotFound from './pages/NotFound';
 import SEO from './components/SEO';
 import Terminal from './components/Terminal';
-import UsesPage from './pages/usesPage';
+import UsesPage from './pages/UsesPage';
 import Spotlight from './components/Spotlight';
 
 const Home = () => (
