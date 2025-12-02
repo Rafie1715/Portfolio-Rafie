@@ -13,9 +13,16 @@ import BackToTop from './components/BacktoTop';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import NotFound from './pages/NotFound';
+import SEO from './components/SEO';
+import Terminal from './components/Terminal';
 
 const Home = () => (
   <>
+    <SEO 
+      title="Rafie Rojagat | Software Engineer" 
+      description="Portfolio of Rafie Rojagat, an Informatics Student specializing in Mobile & Web Development."
+      url="https://rafierojagat.netlify.app/" 
+    />
     <Hero />
     <About />
     <Experience />
@@ -24,6 +31,7 @@ const Home = () => (
     <Certifications />
     <Contact />
     <BackToTop />
+    <Terminal />
     
     <footer className="bg-dark text-white py-6 text-center border-t border-gray-800">
       <div className="container mx-auto px-4">

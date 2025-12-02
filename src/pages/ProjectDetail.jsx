@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { projects } from '../data/projects';
 import { useEffect } from 'react';
+import SEO from '../components/SEO';
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -23,6 +24,13 @@ const ProjectDetail = () => {
 
   return (
     <div className="bg-white dark:bg-dark min-h-screen pb-20">
+
+      <SEO 
+        title={`${project.title} | Rafie Projects`} 
+        description={project.shortDesc}
+        url={`https://rafierojagat.netlify.app/project/${project.id}`} 
+      />
+      
       <div className="bg-dark text-white pt-32 pb-16 px-4">
         <div className="container mx-auto text-center max-w-4xl">
           <span className="inline-block px-4 py-1 bg-white/10 rounded-full text-sm font-medium mb-4 backdrop-blur-sm uppercase tracking-wide">
