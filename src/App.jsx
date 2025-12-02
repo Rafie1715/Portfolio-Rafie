@@ -12,6 +12,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import BackToTop from './components/BacktoTop';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import NotFound from './pages/NotFound';
 
 const Home = () => (
   <>
@@ -49,6 +50,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/project/:id" element={<ProjectDetail />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
