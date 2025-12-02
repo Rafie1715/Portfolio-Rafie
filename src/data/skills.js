@@ -17,4 +17,5 @@ export const skillsData = [
   { name: "Flutter", icon: "devicon-flutter-plain colored" },
   { name: "Tailwind CSS", icon: "devicon-tailwindcss-plain colored" },
   { name: "React", icon: "devicon-react-original colored" },
+  { name: "Vite", icon: "devicon-vitejs-plain colored" }
 ];

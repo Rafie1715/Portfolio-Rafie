@@ -197,7 +197,7 @@ export const projects = [
     challenges: "Building a consistent UI that works across Android, iOS, Web, and Windows from a single codebase while managing the quiz state (current question index and score) efficiently without external state management libraries.",
     solution: "Utilized Flutter's built-in `StatefulWidget` for logic management and `MaterialPageRoute` for seamless navigation. Implemented a modular project structure separating UI widgets (Home, Quiz, Result) from the data models (`question_model.dart`) for better maintainability.",
     techStack: [
-      { name: "Flutter", icon: "devicon-flutter-plain" }, //
+      { name: "Flutter", icon: "devicon-flutter-plain" },
       { name: "Dart", icon: "devicon-dart-plain" },
       { name: "Android Studio", icon: "devicon-androidstudio-plain" }
     ],
@@ -208,5 +208,27 @@ export const projects = [
       new URL('../assets/images/project-quickquiz4.png', import.meta.url).href,
       new URL('../assets/images/project-quickquiz5.png', import.meta.url).href
     ]
+  },
+  {
+    id: "personal-notes",
+    title: "Personal Notes App (React)",
+    category: "web",
+    image: new URL('../assets/images/project-notesapp.png', import.meta.url).href,
+    shortDesc: "A comprehensive note management app with authentication, archiving, and multi-language support.",
+    fullDesc: "This web-based application allows users to manage their personal notes efficiently. It features a robust system for creating, archiving, and deleting notes, secured by user authentication. The app enhances user experience with real-time search, theme customization (Dark/Light mode), and multi-language support (English/Indonesian).",
+    challenges: "Managing complex global states like theme and language preferences across the application while ensuring seamless navigation and protected routes for authenticated users.",
+    solution: "Implemented React Context API for efficient global state management (Theme & Locale). Used React Router DOM for handling navigation and protecting routes requiring authentication. Integrated a REST API for persistent data storage and user management.",
+    techStack: [
+      { name: "React", icon: "devicon-react-original" },
+      { name: "Vite", icon: "devicon-vitejs-plain" },
+      { name: "CSS3", icon: "devicon-css3-plain" }
+    ],
+    github: "https://github.com/Rafie1715/personal-notes-app-with-react", 
+    live: "https://reactpersonalnotes.netlify.app",
+    gallery: [
+      new URL('../assets/images/project-notesapp2.png', import.meta.url).href,
+      new URL('../assets/images/project-notesapp3.png', import.meta.url).href,
+      new URL('../assets/images/project-notesapp4.png', import.meta.url).href
+    ] 
   }
 ];
