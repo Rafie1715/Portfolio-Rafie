@@ -15,6 +15,8 @@ import 'aos/dist/aos.css';
 import NotFound from './pages/NotFound';
 import SEO from './components/SEO';
 import Terminal from './components/Terminal';
+import UsesPage from './pages/usesPage';
+import Spotlight from './components/Spotlight';
 
 const Home = () => (
   <>
@@ -23,6 +25,7 @@ const Home = () => (
       description="Portfolio of Rafie Rojagat, an Informatics Student specializing in Mobile & Web Development."
       url="https://rafie-dev.netlify.app/" 
     />
+    <Spotlight />
     <Hero />
     <About />
     <Experience />
@@ -58,6 +61,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/project/:id" element={<ProjectDetail />} />
+        <Route path="/uses" element={<UsesPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
