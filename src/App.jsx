@@ -21,7 +21,7 @@ const Home = () => (
     <SEO 
       title="Rafie Rojagat | Software Engineer" 
       description="Portfolio of Rafie Rojagat, an Informatics Student specializing in Mobile & Web Development."
-      url="https://rafierojagat.netlify.app/" 
+      url="https://rafie-dev.netlify.app/" 
     />
     <Hero />
     <About />

@@ -28,7 +28,7 @@ const ProjectDetail = () => {
       <SEO 
         title={`${project.title} | Rafie Projects`} 
         description={project.shortDesc}
-        url={`https://rafierojagat.netlify.app/project/${project.id}`} 
+        url={`https://rafie-dev.netlify.app/project/${project.id}`} 
       />
       
       <div className="bg-dark text-white pt-32 pb-16 px-4">
