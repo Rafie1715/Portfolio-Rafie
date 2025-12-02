@@ -79,7 +79,7 @@ const Nametag = () => {
                             </div>
                             <div className="text-right">
                                 <p className="text-[9px] uppercase font-bold text-gray-400">Year</p>
-                                <p className="text-xs font-bold font-mono">2025</p>
+                                <p className="text-xs font-bold font-mono">2022</p>
                             </div>
                         </div>
                     </div>

@@ -17,6 +17,7 @@ const Projects = () => {
     { id: 'python', label: 'Python' },
     { id: 'java', label: 'Java' },
     { id: 'ui', label: 'UI/UX' },
+    { id: 'flutter', label: 'Flutter' }
   ];
 
   return (

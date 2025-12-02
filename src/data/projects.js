@@ -165,5 +165,48 @@ export const projects = [
     github: "https://github.com/samsamsemy/Landing-page",
     live: "https://landing-page-zeta-two-87.vercel.app",
     gallery: []
+  },
+  {
+    id: "block-breaker",
+    title: "Block Breaker Game",
+    category: "web",
+    image: new URL('../assets/images/project-blockbreaker.png', import.meta.url).href,
+    shortDesc: "A modern 'Breakout' arcade game built from scratch using HTML5 Canvas and AI assistance.",
+    fullDesc: "This project is a modern, from-scratch implementation of the classic arcade game 'Breakout'. The game challenges the player to destroy all bricks on the screen by deflecting a ball with a paddle. The primary objective was to build a fully functional, interactive web application using fundamental web technologies, all while documenting how an AI assistant (IBM Granite) was used to accelerate development, optimize code, and debug issues.",
+    challenges: "Building a fully functional game engine logic (rendering, physics, collision detection) from scratch using only the Canvas API without relying on external game libraries like Phaser.",
+    solution: "Leveraged IBM Granite AI as a co-pilot to generate boilerplate code, develop complex algorithms for collision detection, and implement a state management system (Menu, Playing, Game Over) for smooth game flow.",
+    techStack: [
+      { name: "HTML5", icon: "devicon-html5-plain" },
+      { name: "CSS3", icon: "devicon-css3-plain" },
+      { name: "JavaScript", icon: "devicon-javascript-plain" },
+    ],
+    github: "https://github.com/Rafie1715/Capstone-Project-IBM-Granite",
+    live: "https://block-breaker.netlify.app/",
+    gallery: [
+      new URL('../assets/images/project-blockbreaker2.png', import.meta.url).href,
+      new URL('../assets/images/project-blockbreaker3.png', import.meta.url).href
+    ]
+  },
+  {
+    id: "quick-quiz",
+    title: "QuickQuiz - Multi-Platform App",
+    category: "flutter",
+    image: new URL('../assets/images/project-quickquiz.png', import.meta.url).href,
+    shortDesc: "A simple, multi-platform quiz application built with Flutter demonstrating state management and clean UI.",
+    fullDesc: "QuickQuiz is a general knowledge quiz app designed with a clean, user-friendly interface. The app guides users through a welcome screen, a quiz interface with a progress bar, and a results screen that calculates the score percentage. It demonstrates fundamental mobile development concepts like navigation, local data handling, and responsive UI design.",
+    challenges: "Building a consistent UI that works across Android, iOS, Web, and Windows from a single codebase while managing the quiz state (current question index and score) efficiently without external state management libraries.",
+    solution: "Utilized Flutter's built-in `StatefulWidget` for logic management and `MaterialPageRoute` for seamless navigation. Implemented a modular project structure separating UI widgets (Home, Quiz, Result) from the data models (`question_model.dart`) for better maintainability.",
+    techStack: [
+      { name: "Flutter", icon: "devicon-flutter-plain" }, //
+      { name: "Dart", icon: "devicon-dart-plain" },
+      { name: "Android Studio", icon: "devicon-androidstudio-plain" }
+    ],
+    github: "https://github.com/Rafie1715/quickquiz", 
+    gallery: [
+      new URL('../assets/images/project-quickquiz2.png', import.meta.url).href,
+      new URL('../assets/images/project-quickquiz3.png', import.meta.url).href,
+      new URL('../assets/images/project-quickquiz4.png', import.meta.url).href,
+      new URL('../assets/images/project-quickquiz5.png', import.meta.url).href
+    ]
   }
 ];
