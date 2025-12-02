@@ -36,7 +36,7 @@ const ProjectDetail = () => {
       <div className="container mx-auto px-4 -mt-10">
         <div className="max-w-5xl mx-auto bg-white dark:bg-darkLight rounded-2xl shadow-xl overflow-hidden">
           <div className="aspect-video w-full bg-gray-100">
-            <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+            <img src={project.image} alt={project.title} loading="lazy" className="w-full h-full object-cover" />
           </div>
           
           <div className="p-8 md:p-12">
@@ -110,6 +110,7 @@ const ProjectDetail = () => {
                        <img 
                         src={img} 
                         alt={`${project.title} Screenshot ${idx+1}`} 
+                        loading="lazy"
                         className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500" 
                        />
                     </div>

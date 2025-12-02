@@ -26,7 +26,7 @@ const Experience = () => {
                 <div className="flex-1 ml-12 md:ml-0 md:w-1/2 md:px-10">
                   <div className="bg-white dark:bg-darkLight p-6 rounded-xl shadow-md border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-shadow duration-300">
                     <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100 dark:border-slate-700">
-                      <img src={exp.logo} alt={exp.org} className="w-12 h-12 rounded-full object-cover shadow-sm" />
+                      <img src={exp.logo} alt={exp.org} loading="lazy" className="w-12 h-12 rounded-full object-cover shadow-sm" />
                       <div>
                         <h3 className="font-bold text-dark dark:text-white text-lg leading-tight">{exp.title}</h3>
                         <p className="text-primary text-sm font-medium">{exp.org}</p>
@@ -51,6 +51,7 @@ const Experience = () => {
                               key={idx} 
                               src={doc} 
                               alt={`Doc ${idx + 1}`} 
+                              loading="lazy"
                               className="w-20 h-14 object-cover rounded-md border border-gray-200 dark:border-slate-600 cursor-pointer hover:scale-110 transition-transform hover:shadow-md"
                               onClick={() => setSelectedImage(doc)}
                             />

@@ -63,6 +63,7 @@ const Certifications = () => {
                 key={currentIndex}
                 src={certifications[currentIndex].img}
                 alt={certifications[currentIndex].alt}
+                loading="lazy"
                 custom={direction}
                 variants={slideVariants}
                 initial="enter"
