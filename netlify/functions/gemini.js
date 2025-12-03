@@ -1,10 +1,7 @@
-// netlify/functions/gemini.js
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// === OTAK AI (SYSTEM PROMPT) ===
-// Di sini kita kasih tau AI siapa Rafie itu berdasarkan data portfolio Anda
 const SYSTEM_PROMPT = `
 You are an AI Assistant for Rafie Rojagat Bachri's Portfolio Website.
 Your goal is to answer visitor questions about Rafie in a professional, friendly, and concise manner.
@@ -31,7 +28,6 @@ Instructions:
 `;
 
 export const handler = async (event) => {
-  // Hanya terima method POST
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
@@ -50,7 +46,7 @@ export const handler = async (event) => {
           role: "model",
           parts: [{ text: "Understood. I am ready to assist visitors with information about Rafie." }],
         },
-        ...history, // Masukkan histori chat sebelumnya agar nyambung
+        ...history,
       ],
     });
 

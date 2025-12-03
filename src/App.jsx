@@ -5,14 +5,12 @@ import { HelmetProvider } from 'react-helmet-async';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-// Komponen Global (Dimuat langsung)
 import Navbar from './components/Navbar';
 import ScrollProgress from './components/ScrollProgress';
 import Chatbot from './components/Chatbot';
 import Spotlight from './components/Spotlight';
 import Loading from './components/Loading';
 
-// === LAZY LOAD HALAMAN (Dipecah jadi chunk terpisah) ===
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
@@ -35,7 +33,6 @@ function App() {
       
       <Navbar />
       
-      {/* Suspense menampilkan Loading saat halaman sedang didownload browser */}
       <Suspense fallback={<Loading />}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>

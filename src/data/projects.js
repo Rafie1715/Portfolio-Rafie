@@ -3,7 +3,7 @@ export const projects = [
     id: "planetku",
     title: "Planetku (Smart Waste Management App)",
     category: "mobile",
-    image: new URL('/images/project-planetku.png', import.meta.url).href,
+    image: "/images/project-planetku.png",
     shortDesc: "Capstone project for Bangkit 2024. Features AI-powered waste classification, carbon calculation, and waste bank locator.",
     fullDesc: "Waste management is a significant challenge in many urban areas. The goal of Planetku was to create a mobile application that empowers users to manage their waste more effectively and sustainably. The app aims to solve problems like incorrect waste sorting, lack of awareness about recycling value, and difficulty in finding nearby waste banks.",
     challenges: "One of the biggest challenges was implementing the camera-based waste classification feature efficiently without slowing down the user's device. The initial model was quite large and slow.",
@@ -16,18 +16,18 @@ export const projects = [
     ],
     github: "https://github.com/PlanetKu-Capstone",
     gallery: [
-      new URL('/images/Planetku1.png', import.meta.url).href,
-      new URL('/images/Planetku2.png', import.meta.url).href,
-      new URL('/images/Planetku3.png', import.meta.url).href,
-      new URL('/images/Planetku4.png', import.meta.url).href,
-      new URL('/images/Planetku5.png', import.meta.url).href
+      "/images/Planetku1.png",
+      "/images/Planetku2.png",
+      "/images/Planetku3.png",
+      "/images/Planetku4.png",
+      "/images/Planetku5.png"
     ]
   },
   {
     id: "cinemazone",
     title: "CinemaZone - Movie Ticket Booking App",
     category: "mobile",
-    image: new URL('/images/project-cinemazone.png', import.meta.url).href,
+    image: "/images/project-cinemazone.png",
     shortDesc: "Android app with Firebase Auth, Cloud Firestore for wishlists, and a QR Code e-ticket generator.",
     fullDesc: "The CinemaZone project was developed to create a seamless and feature-rich movie ticket booking experience on an Android platform. The goal was to build an application that handles the entire user journey, from Browse movies and viewing details to selecting seats and generating a digital e-ticket.",
     challenges: "A primary challenge was designing and implementing the interactive seat picker, which needed to visually represent the cinema layout and handle seat selection state (available, selected, occupied) in real-time.",
@@ -39,15 +39,15 @@ export const projects = [
     ],
     github: "https://github.com/Rafie1715/CinemaZone",
     gallery: [
-      new URL('/images/project-cinemazone2.png', import.meta.url).href,
-      new URL('/images/project-cinemazone3.png', import.meta.url).href
+      "/images/project-cinemazone2.png",
+      "/images/project-cinemazone3.png"
     ]
   },
   {
     id: "computer-crafter",
     title: "Computer Crafter Website",
     category: "web",
-    image: new URL('/images/project-computercrafter.png', import.meta.url).href,
+    image: "/images/project-computercrafter.png",
     shortDesc: "A web-based PC building simulator for enthusiasts and beginners.",
     fullDesc: "The process of building a personal computer can be intimidating for newcomers due to component compatibility issues. Computer Crafter was created to demystify this process, providing a user-friendly platform where users can select PC parts, see a real-time price total, and be confident that their chosen components will work together.",
     challenges: "The most complex part of this project was managing the database of components and implementing the compatibility logic. For example, ensuring a selected CPU was compatible with the chosen motherboard's socket type.",
@@ -62,14 +62,14 @@ export const projects = [
     ],
     github: "https://github.com/inotlusrabka/Project-Web",
     gallery: [
-       new URL('/images/project-computercrafter2.png', import.meta.url).href
+      "/images/project-computercrafter2.png"
     ]
   },
   {
     id: "lamimin",
     title: "LaMiMin (Lapar Miskin Minus) UI/UX",
     category: "ui",
-    image: new URL('/images/project-lamimin.png', import.meta.url).href,
+    image: "/images/project-lamimin.png",
     shortDesc: "App interface design focused on SDG 1 (No Poverty) and SDG 2 (Zero Hunger).",
     fullDesc: "This application interface was designed to address two critical Sustainable Development Goals (SDGs): SDG 1 (No Poverty) and SDG 2 (Zero Hunger). We chose these themes because poverty and hunger are fundamental, interconnected issues.",
     challenges: "Creating an intuitive and trustworthy user experience. Key considerations included making the donation process as simple as possible and ensuring transparency in fund distribution.",
@@ -80,14 +80,14 @@ export const projects = [
     figma: "https://www.figma.com/design/abLUBq3MKWlLsFA70Foznn/Lamimin?node-id=0-1&node-type=canvas&t=PlGVttlcvHZiLx4B-0",
     prototype: "https://www.figma.com/proto/abLUBq3MKWlLsFA70Foznn/Lamimin?node-id=48-537&node-type=canvas&t=sdLMx6dqWfX4HUzo-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=2%3A2",
     gallery: [
-      new URL('/images/project-lamimin2.png', import.meta.url).href
+      "/images/project-lamimin2.png"
     ]
   },
   {
     id: "library-system",
     title: "Library Book Lending System",
     category: "java",
-    image: new URL('/images/project-library-system.png', import.meta.url).href,
+    image: "/images/project-library-system.png",
     shortDesc: "A Java-based program to efficiently manage book loans, featuring user registration and loan tracking.",
     fullDesc: "This project was created to provide a simple yet robust solution for managing book loans in a small library. The application handles essential functions such as cataloging books, registering users, and tracking the status of each loan (borrowed or returned).",
     challenges: "The primary challenge was designing an intuitive Graphical User Interface (GUI) using Java's Swing library, which can be less straightforward than modern UI frameworks.",
@@ -103,7 +103,7 @@ export const projects = [
     id: "tools-launcher",
     title: "Tools Launcher Program",
     category: "python",
-    image: new URL('/images/project-tools-launcher.png', import.meta.url).href,
+    image: "/images/project-tools-launcher.png",
     shortDesc: "A desktop tools launcher built with Python and the Tkinter library.",
     fullDesc: "This project aims to develop a tools launcher program using Python and the Tkinter library for the GUI. The launcher provides easy access to four essential tools: a calculator, a to-do list, a notepad, and a whiteboard.",
     challenges: "Integrating multiple distinct functionalities (calculator logic, canvas drawing for whiteboard) into a single cohesive application.",
@@ -118,7 +118,7 @@ export const projects = [
     id: "mangosteen-detect",
     title: "Mangosteen Maturity Detection",
     category: "python",
-    image: new URL('/images/project-mangosteen-detector.png', import.meta.url).href,
+    image: "/images/project-mangosteen-detector.png",
     shortDesc: "A Python application using OpenCV to detect mangosteen maturity based on its skin color.",
     fullDesc: "Manually sorting fruit by maturity is a time-consuming process. This project aimed to automate the detection of mangosteen maturity by analyzing the fruit's skin color using Image Processing.",
     challenges: "Accurately distinguishing between ripe and unripe fruit under varying lighting conditions. Simple RGB analysis was unreliable.",
@@ -134,7 +134,7 @@ export const projects = [
     id: "temp-converter",
     title: "Temperature Converter Website",
     category: "web",
-    image: new URL('/images/project-temp-converter.png', import.meta.url).href,
+    image: "/images/project-temp-converter.png",
     shortDesc: "A user-friendly website for instant Celsius and Fahrenheit conversion.",
     fullDesc: "This project was created to demonstrate fundamental front-end web development skills. It is a user-friendly Temperature Converter website that enables instant and accurate conversion between Celsius and Fahrenheit.",
     challenges: "Implementing the conversion logic dynamically and handling user input validation.",
@@ -152,7 +152,7 @@ export const projects = [
     id: "sdgs-web",
     title: "Landing Page Website About SDGs",
     category: "web",
-    image: new URL('/images/project-sdgs-website.png', import.meta.url).href,
+    image: "/images/project-sdgs-website.png",
     shortDesc: "A project-based landing page website to introduce the Sustainable Development Goals (SDGs).",
     fullDesc: "This project was developed as a team-based landing page to provide a clear and concise introduction to the United Nations' Sustainable Development Goals (SDGs).",
     challenges: "Coordinating with a team to merge different sections of the website.",
@@ -170,7 +170,7 @@ export const projects = [
     id: "block-breaker",
     title: "Block Breaker Game",
     category: "web",
-    image: new URL('/images/project-blockbreaker.png', import.meta.url).href,
+    image: "/images/project-blockbreaker.png",
     shortDesc: "A modern 'Breakout' arcade game built from scratch using HTML5 Canvas and AI assistance.",
     fullDesc: "This project is a modern, from-scratch implementation of the classic arcade game 'Breakout'. The game challenges the player to destroy all bricks on the screen by deflecting a ball with a paddle. The primary objective was to build a fully functional, interactive web application using fundamental web technologies, all while documenting how an AI assistant (IBM Granite) was used to accelerate development, optimize code, and debug issues.",
     challenges: "Building a fully functional game engine logic (rendering, physics, collision detection) from scratch using only the Canvas API without relying on external game libraries like Phaser.",
@@ -183,15 +183,15 @@ export const projects = [
     github: "https://github.com/Rafie1715/Capstone-Project-IBM-Granite",
     live: "https://block-breaker.netlify.app/",
     gallery: [
-      new URL('/images/project-blockbreaker2.png', import.meta.url).href,
-      new URL('/images/project-blockbreaker3.png', import.meta.url).href
+      "/images/project-blockbreaker2.png",
+      "/images/project-blockbreaker3.png"
     ]
   },
   {
     id: "quick-quiz",
     title: "QuickQuiz - Multi-Platform App",
     category: "flutter",
-    image: new URL('/images/project-quickquiz.png', import.meta.url).href,
+    image: "/images/project-quickquiz.png",
     shortDesc: "A simple, multi-platform quiz application built with Flutter demonstrating state management and clean UI.",
     fullDesc: "QuickQuiz is a general knowledge quiz app designed with a clean, user-friendly interface. The app guides users through a welcome screen, a quiz interface with a progress bar, and a results screen that calculates the score percentage. It demonstrates fundamental mobile development concepts like navigation, local data handling, and responsive UI design.",
     challenges: "Building a consistent UI that works across Android, iOS, Web, and Windows from a single codebase while managing the quiz state (current question index and score) efficiently without external state management libraries.",
@@ -203,17 +203,17 @@ export const projects = [
     ],
     github: "https://github.com/Rafie1715/quickquiz", 
     gallery: [
-      new URL('/images/project-quickquiz2.png', import.meta.url).href,
-      new URL('/images/project-quickquiz3.png', import.meta.url).href,
-      new URL('/images/project-quickquiz4.png', import.meta.url).href,
-      new URL('/images/project-quickquiz5.png', import.meta.url).href
+      "/images/project-quickquiz2.png",
+      "/images/project-quickquiz3.png",
+      "/images/project-quickquiz4.png",
+      "/images/project-quickquiz5.png"
     ]
   },
   {
     id: "personal-notes",
     title: "Personal Notes App (React)",
     category: "web",
-    image: new URL('/images/project-notesapp.png', import.meta.url).href,
+    image: "/images/project-notesapp.png",
     shortDesc: "A comprehensive note management app with authentication, archiving, and multi-language support.",
     fullDesc: "This web-based application allows users to manage their personal notes efficiently. It features a robust system for creating, archiving, and deleting notes, secured by user authentication. The app enhances user experience with real-time search, theme customization (Dark/Light mode), and multi-language support (English/Indonesian).",
     challenges: "Managing complex global states like theme and language preferences across the application while ensuring seamless navigation and protected routes for authenticated users.",
@@ -226,9 +226,9 @@ export const projects = [
     github: "https://github.com/Rafie1715/personal-notes-app-with-react", 
     live: "https://reactpersonalnotes.netlify.app",
     gallery: [
-      new URL('/images/project-notesapp2.png', import.meta.url).href,
-      new URL('/images/project-notesapp3.png', import.meta.url).href,
-      new URL('/images/project-notesapp4.png', import.meta.url).href
+      "/images/project-notesapp2.png",
+      "/images/project-notesapp3.png",
+      "/images/project-notesapp4.png"
     ] 
   }
 ];

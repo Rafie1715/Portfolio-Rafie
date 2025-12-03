@@ -10,4 +10,8 @@ export const certifications = [
   { id: 9, img: "/images/cert-data-analytics.png", alt: "Data Analytics Certificate" },
   { id: 10, img: "/images/cert-english-competition.png", alt: "English Competition Certificate" },
   { id: 11, img: "/images/cert-toefl.png", alt: "TOEFL Certificate" },
+  { id: 12, img: "/images/cert-dicoding-react-beginner.png", alt: "Dicoding React Beginner" },
+  { id: 13, img: "/images/cert-dicoding-react-fundamental.png", alt: "Dicoding React Fundamental" },
+  { id: 14, img: "/images/cert-dicoding-flutter-beginner.png", alt: "Dicoding Flutter Beginner" },
+  { id: 15, img: "/images/cert-ibm-code.png", alt: "IBM Code Certificate" },
 ];
