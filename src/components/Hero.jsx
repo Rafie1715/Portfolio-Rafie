@@ -122,10 +122,10 @@ const Hero = () => {
         </div>
  
         <div className="flex flex-col sm:flex-row justify-center gap-5" data-aos="fade-up" data-aos-delay="900">
-          <a href="#projects" className="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full font-bold shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300">
+          <a href="/projects" className="px-10 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full font-bold shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300">
             View My Work
           </a>
-          <a href="#contact" className="px-10 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-bold hover:border-purple-500 hover:text-purple-500 dark:hover:text-purple-400 dark:hover:border-purple-400 transition-all duration-300 backdrop-blur-sm">
+          <a href="/contact" className="px-10 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-bold hover:border-purple-500 hover:text-purple-500 dark:hover:text-purple-400 dark:hover:border-purple-400 transition-all duration-300 backdrop-blur-sm">
             Contact Me
           </a>
         </div>
