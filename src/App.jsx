@@ -8,8 +8,7 @@ import 'aos/dist/aos.css';
 // Komponen Global (Dimuat langsung)
 import Navbar from './components/Navbar';
 import ScrollProgress from './components/ScrollProgress';
-import BackToTop from './components/BacktoTop';
-import Terminal from './components/Terminal';
+import Chatbot from './components/Chatbot';
 import Spotlight from './components/Spotlight';
 import Loading from './components/Loading';
 
@@ -51,8 +50,7 @@ function App() {
         </AnimatePresence>
       </Suspense>
 
-      <BackToTop />
-      <Terminal />
+      <Chatbot />
     </HelmetProvider>
   );
 }
