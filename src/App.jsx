@@ -1,70 +1,59 @@
-import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Experience from './components/Experience';
-import Projects from './components/Projects';
-import Skills from './components/Skills';
-import Certifications from './components/Certifications';
-import Contact from './components/Contact';
-import ProjectDetail from './pages/ProjectDetail';
-import BackToTop from './components/BacktoTop';
+import { useEffect, lazy, Suspense } from 'react'; // Tambah lazy & Suspense
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import { HelmetProvider } from 'react-helmet-async';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import NotFound from './pages/NotFound';
-import SEO from './components/SEO';
-import Terminal from './components/Terminal';
-import UsesPage from './pages/UsesPage';
-import Spotlight from './components/Spotlight';
 
-const Home = () => (
-  <>
-    <SEO 
-      title="Rafie Rojagat | Software Engineer" 
-      description="Portfolio of Rafie Rojagat, an Informatics Student specializing in Mobile & Web Development."
-      url="https://rafie-dev.netlify.app/" 
-    />
-    <Spotlight />
-    <Hero />
-    <About />
-    <Experience />
-    <Projects />
-    <Skills />
-    <Certifications />
-    <Contact />
-    <BackToTop />
-    <Terminal />
-    
-    <footer className="bg-dark text-white py-6 text-center border-t border-gray-800">
-      <div className="container mx-auto px-4">
-        <p className="text-gray-400 text-sm">
-          &copy; 2025 Rafie Rojagat Bachri. All Rights Reserved.
-        </p>
-      </div>
-    </footer>
-  </>
-);
+// Komponen Global (Dimuat langsung)
+import Navbar from './components/Navbar';
+import ScrollProgress from './components/ScrollProgress';
+import BackToTop from './components/BacktoTop';
+import Terminal from './components/Terminal';
+import Spotlight from './components/Spotlight';
+import Loading from './components/Loading';
+
+// === LAZY LOAD HALAMAN (Dipecah jadi chunk terpisah) ===
+const HomePage = lazy(() => import('./pages/HomePage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const UsesPage = lazy(() => import('./pages/UsesPage'));
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
+  const location = useLocation();
+
   useEffect(() => {
-    AOS.init({
-      duration: 1000, 
-      once: true,     
-      offset: 100,   
-    });
+    AOS.init({ duration: 1000, once: true, offset: 100 });
   }, []);
 
   return (
-    <Router>
+    <HelmetProvider>
+      <ScrollProgress />
+      <Spotlight />
+      
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/project/:id" element={<ProjectDetail />} />
-        <Route path="/uses" element={<UsesPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+      
+      {/* Suspense menampilkan Loading saat halaman sedang didownload browser */}
+      <Suspense fallback={<Loading />}>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/uses" element={<UsesPage />} />
+            <Route path="/project/:id" element={<ProjectDetail />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AnimatePresence>
+      </Suspense>
+
+      <BackToTop />
+      <Terminal />
+    </HelmetProvider>
   );
 }
 

@@ -1,6 +1,6 @@
+// src/components/Navbar.jsx
 import { useState, useEffect } from 'react';
-import { Link as ScrollLink } from 'react-scroll';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import useTheme from '../hooks/useTheme';
 
 const Navbar = () => {
@@ -8,79 +8,73 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
 
+  // Efek untuk mendeteksi scroll (agar navbar berubah warna/transparan)
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Tutup menu mobile setiap kali pindah halaman
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
+  // Daftar Menu Utama (Sesuai halaman yang kita buat)
   const navLinks = [
-    { name: "Home", to: "home", type: "scroll" },
-    { name: "About", to: "about", type: "scroll" },
-    { name: "Experience", to: "experience", type: "scroll" },
-    { name: "Projects", to: "projects", type: "scroll" },
-    { name: "Skills", to: "skills", type: "scroll" },
-    { name: "Certifications", to: "certifications", type: "scroll" },
-    { name: "Uses", to: "/uses", type: "page" }, // <-- Link Halaman Baru
-    { name: "Contact", to: "contact", type: "scroll" },
+    { name: "Home", to: "/" },
+    { name: "About", to: "/about" },
+    { name: "Projects", to: "/projects" },
+    { name: "Uses", to: "/uses" },
+    { name: "Contact", to: "/contact" },
   ];
 
+  // Kelas CSS Dinamis untuk Navbar
   const navbarClasses = scrolled 
-    ? 'bg-white/90 dark:bg-dark/90 shadow-md backdrop-blur-sm py-3' 
+    ? 'bg-white/80 dark:bg-dark/80 shadow-sm backdrop-blur-md py-3' 
     : 'bg-transparent py-5';
-
-  const textClasses = 'text-gray-800 dark:text-white';
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${navbarClasses}`}>
-      <div className={`container mx-auto px-4 flex justify-between items-center ${textClasses}`}>
+      <div className="container mx-auto px-4 flex justify-between items-center">
         
-        <RouterLink to="/" className="text-xl font-bold tracking-wider hover:text-primary transition-colors">
+        {/* Logo */}
+        <Link 
+          to="/" 
+          className="text-xl font-bold tracking-wider text-gray-800 dark:text-white hover:text-primary transition-colors"
+        >
           Rafie<span className="text-primary">.</span>
-        </RouterLink>
+        </Link>
         
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => {
-            if (link.type === "page") {
-              return (
-                <RouterLink
-                  key={link.name}
-                  to={link.to}
-                  className="cursor-pointer text-sm font-medium hover:text-primary transition-colors"
-                >
-                  {link.name}
-                </RouterLink>
-              );
-            }
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.to}
+              className={({ isActive }) => 
+                `text-sm font-medium transition-colors hover:text-primary relative group ${
+                  isActive 
+                    ? 'text-primary font-bold' 
+                    : 'text-gray-600 dark:text-gray-300'
+                }`
+              }
+            >
+              {/* Teks Menu */}
+              {link.name}
+              
+              {/* Garis Bawah Animasi saat Hover/Active */}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+            </NavLink>
+          ))}
 
-            return isHomePage ? (
-              <ScrollLink 
-                key={link.name}
-                to={link.to} 
-                smooth={true} 
-                duration={500}
-                offset={-70}
-                className="cursor-pointer text-sm font-medium hover:text-primary transition-colors relative group"
-              >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
-              </ScrollLink>
-            ) : (
-              <RouterLink 
-                key={link.name}
-                to={`/#${link.to}`}
-                className="cursor-pointer text-sm font-medium hover:text-primary transition-colors"
-              >
-                {link.name}
-              </RouterLink>
-            );
-          })}
-
+          {/* Tombol Toggle Theme (Matahari/Bulan) */}
           <button
             onClick={toggleTheme}
-            className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all duration-300 shadow-sm"
+            className="w-9 h-9 rounded-full bg-gray-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all duration-300 shadow-sm hover:scale-110"
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? (
@@ -91,55 +85,46 @@ const Navbar = () => {
           </button>
         </div>
 
+        {/* Mobile Menu Button (Hamburger) */}
         <div className="md:hidden flex items-center gap-4">
-          <button onClick={toggleTheme} className="text-xl transition-colors text-yellow-500 dark:text-yellow-400">
+          <button 
+            onClick={toggleTheme} 
+            className="text-xl transition-colors text-yellow-500 dark:text-yellow-400"
+          >
              {theme === 'dark' ? <i className="fas fa-sun"></i> : <i className="fas fa-moon text-slate-600"></i>}
           </button>
 
-          <button className="text-2xl focus:outline-none" onClick={() => setIsOpen(!isOpen)}>
+          <button 
+            className="text-2xl focus:outline-none text-gray-800 dark:text-white" 
+            onClick={() => setIsOpen(!isOpen)}
+          >
             <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i>
           </button>
         </div>
       </div>
 
-      <div className={`md:hidden absolute w-full shadow-xl overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} bg-white dark:bg-dark`}>
-        <div className="flex flex-col px-4 pb-4 space-y-2">
-          {navLinks.map((link) => {
-             if (link.type === "page") {
-                return (
-                  <RouterLink
-                    key={link.name}
-                    to={link.to}
-                    onClick={() => setIsOpen(false)}
-                    className="block py-2 text-gray-800 dark:text-white hover:text-primary border-b border-gray-100 dark:border-slate-800 last:border-0"
-                  >
-                    {link.name}
-                  </RouterLink>
-                );
-             }
-
-             return isHomePage ? (
-              <ScrollLink 
-                key={link.name}
-                to={link.to} 
-                smooth={true}
-                offset={-70}
-                onClick={() => setIsOpen(false)}
-                className="block py-2 text-gray-800 dark:text-white hover:text-primary border-b border-gray-100 dark:border-slate-800 last:border-0"
-              >
-                {link.name}
-              </ScrollLink>
-             ) : (
-              <RouterLink
-                key={link.name}
-                to={`/#${link.to}`}
-                onClick={() => setIsOpen(false)}
-                className="block py-2 text-gray-800 dark:text-white hover:text-primary border-b border-gray-100 dark:border-slate-800 last:border-0"
-              >
-                {link.name}
-              </RouterLink>
-             );
-          })}
+      {/* Mobile Dropdown Menu */}
+      <div 
+        className={`md:hidden absolute w-full bg-white dark:bg-dark shadow-xl border-b border-gray-100 dark:border-slate-800 overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="flex flex-col px-4 pb-6 pt-2 space-y-1">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.to}
+              className={({ isActive }) => 
+                `block py-3 px-4 rounded-lg text-base font-medium transition-colors ${
+                  isActive 
+                    ? 'bg-primary/10 text-primary' 
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                }`
+              }
+            >
+              {link.name}
+            </NavLink>
+          ))}
         </div>
       </div>
     </nav>

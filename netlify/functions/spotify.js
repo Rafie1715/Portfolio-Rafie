@@ -1,4 +1,3 @@
-// netlify/functions/spotify.js
 import querystring from 'querystring';
 
 const client_id = process.env.SPOTIFY_CLIENT_ID;
@@ -49,6 +48,7 @@ export const handler = async () => {
   const album = song.item.album.name;
   const albumArt = song.item.album.images[0].url;
   const url = song.item.external_urls.spotify;
+  const previewUrl = song.item.preview_url;
 
   return {
     statusCode: 200,
@@ -63,6 +63,7 @@ export const handler = async () => {
       album,
       albumArt,
       url,
+      previewUrl,
     }),
   };
 };

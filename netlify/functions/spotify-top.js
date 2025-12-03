@@ -36,10 +36,12 @@ export const handler = async () => {
   const data = await response.json();
 
   const tracks = data.items.map((track) => ({
+    id: track.id,
     artist: track.artists.map((_artist) => _artist.name).join(', '),
     songUrl: track.external_urls.spotify,
     title: track.name,
     albumArt: track.album.images[0].url,
+    previewUrl: track.preview_url,
   }));
 
   return {
