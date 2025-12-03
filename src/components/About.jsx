@@ -1,4 +1,4 @@
-import upnLogo from '../assets/images/upnvj_logo.png';
+import upnLogo from '/images/upnvj_logo.png';
 import cvFile from '../assets/CV Rafie Rojagat Bachri.pdf';
 import Nametag from './Nametag';
 
