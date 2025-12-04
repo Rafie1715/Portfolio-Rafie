@@ -130,12 +130,6 @@ const Hero = () => {
           </a>
         </div>
       </div>
-  
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-10 text-gray-400 dark:text-gray-600 cursor-pointer">
-        <a href="#about" aria-label="Scroll down">
-          <i className="fas fa-chevron-down text-3xl hover:text-primary transition-colors"></i>
-        </a>
-      </div>
     </section>
   );
 };
