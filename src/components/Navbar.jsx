@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import useTheme from '../hooks/useTheme';
@@ -9,7 +8,6 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
-  // Efek untuk mendeteksi scroll (agar navbar berubah warna/transparan)
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -18,12 +16,10 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Tutup menu mobile setiap kali pindah halaman
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
 
-  // Daftar Menu Utama (Sesuai halaman yang kita buat)
   const navLinks = [
     { name: "Home", to: "/" },
     { name: "About", to: "/about" },
@@ -32,7 +28,6 @@ const Navbar = () => {
     { name: "Contact", to: "/contact" },
   ];
 
-  // Kelas CSS Dinamis untuk Navbar
   const navbarClasses = scrolled 
     ? 'bg-white/80 dark:bg-dark/80 shadow-sm backdrop-blur-md py-3' 
     : 'bg-transparent py-5';
@@ -41,7 +36,6 @@ const Navbar = () => {
     <nav className={`fixed w-full z-50 transition-all duration-300 ${navbarClasses}`}>
       <div className="container mx-auto px-4 flex justify-between items-center">
         
-        {/* Logo */}
         <Link 
           to="/" 
           className="text-xl font-bold tracking-wider text-gray-800 dark:text-white hover:text-primary transition-colors"
@@ -49,7 +43,6 @@ const Navbar = () => {
           Rafie<span className="text-primary">.</span>
         </Link>
         
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
             <NavLink
@@ -63,15 +56,12 @@ const Navbar = () => {
                 }`
               }
             >
-              {/* Teks Menu */}
               {link.name}
               
-              {/* Garis Bawah Animasi saat Hover/Active */}
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
             </NavLink>
           ))}
 
-          {/* Tombol Toggle Theme (Matahari/Bulan) */}
           <button
             onClick={toggleTheme}
             className="w-9 h-9 rounded-full bg-gray-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all duration-300 shadow-sm hover:scale-110"
@@ -85,7 +75,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Menu Button (Hamburger) */}
         <div className="md:hidden flex items-center gap-4">
           <button 
             onClick={toggleTheme} 
@@ -103,7 +92,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
       <div 
         className={`md:hidden absolute w-full bg-white dark:bg-dark shadow-xl border-b border-gray-100 dark:border-slate-800 overflow-hidden transition-all duration-300 ease-in-out ${
           isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'

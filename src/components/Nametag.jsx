@@ -53,7 +53,7 @@ const Nametag = () => {
                         <div className="absolute -inset-1 bg-gradient-to-br from-pink-500 to-violet-600 rounded-[1.5rem] opacity-80 blur-[2px]"></div>
                         <div className="relative w-32 h-40 bg-white p-1 rounded-[1.4rem] shadow-inner overflow-hidden">
                             <img 
-                                src="/images/profile.jpg" 
+                                src="/images/profile.webp" 
                                 alt="Profile" 
                                 className="w-full h-full object-cover rounded-[1.2rem]" 
                                 draggable="false" 

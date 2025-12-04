@@ -12,12 +12,12 @@ export const experiences = [
       "Actively served on various committees for KSM Multimedia programs and events."
     ],
     docs: [
-      "/images/ksm-doc1.png",
-      "/images/ksm-doc2.png",
-      "/images/ksm-doc3.png",
-      "/images/ksm-doc4.png",
-      "/images/ksm-doc5.jpg",  
-      "/images/ksm-doc6.jpeg"  
+      "/images/ksm-doc1.webp",
+      "/images/ksm-doc2.webp",
+      "/images/ksm-doc3.webp",
+      "/images/ksm-doc4.webp",
+      "/images/ksm-doc5.webp",  
+      "/images/ksm-doc6.webp"  
     ]
   },
   {
@@ -31,12 +31,12 @@ export const experiences = [
       "Actively served on various committees for HMIF programs and events."
     ],
     docs: [
-      "/images/hmif-doc1.png",
-      "/images/hmif-doc2.jpg",
-      "/images/hmif-doc3.png",
-      "/images/hmif-doc4.png",
-      "/images/hmif-doc5.jpg",
-      "/images/hmif-doc6.jpeg"
+      "/images/hmif-doc1.webp",
+      "/images/hmif-doc2.webp",
+      "/images/hmif-doc3.webp",
+      "/images/hmif-doc4.webp",
+      "/images/hmif-doc5.webp",
+      "/images/hmif-doc6.webp"
     ]
   },
   {
@@ -51,10 +51,10 @@ export const experiences = [
       "Gained soft skills and career readiness training from industry experts."
     ],
     docs: [
-      "/images/bangkit-doc1.png",
-      "/images/bangkit-doc2.png",
-      "/images/bangkit-doc3.png",
-      "/images/bangkit-doc4.png"
+      "/images/bangkit-doc1.webp",
+      "/images/bangkit-doc2.webp",
+      "/images/bangkit-doc3.webp",
+      "/images/bangkit-doc4.webp"
     ]
   }
 ];
