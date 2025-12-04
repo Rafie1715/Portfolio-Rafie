@@ -1,7 +1,7 @@
 export const experiences = [
   {
     id: 1,
-    logo: "/images/ksm-logo.jpg",
+    logo: "/images/ksm-logo.webp",
     title: "Head of Web Development Class",
     org: "Kelompok Studi Mahasiswa (KSM) Multimedia UPNVJ",
     date: "Feb 2025 - Present",
@@ -22,7 +22,7 @@ export const experiences = [
   },
   {
     id: 2,
-    logo: "/images/hmif-logo.jpg",
+    logo: "/images/hmif-logo.webp",
     title: "Staff of Information and Technology",
     org: "Himpunan Mahasiswa Informatika (HMIF) UPNVJ",
     date: "Jan 2025 - Present",
@@ -41,7 +41,7 @@ export const experiences = [
   },
   {
     id: 3,
-    logo: "/images/bangkit_academy-logo.jpg",
+    logo: "/images/bangkit_academy-logo.webp",
     title: "Mobile Development Cohort",
     org: "Bangkit Academy by Google, GoTo, Traveloka",
     date: "Sep 2024 - Jan 2025",
