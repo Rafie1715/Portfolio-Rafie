@@ -1,4 +1,3 @@
-// src/components/Chatbot.jsx
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -11,7 +10,6 @@ const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll ke bawah
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -30,8 +28,6 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      // Format history untuk dikirim ke Gemini (ubah 'model' jadi 'model', 'user' jadi 'user')
-      // Kita ambil 10 pesan terakhir saja biar hemat token
       const historyForApi = messages.slice(-10).map(msg => ({
         role: msg.role === 'model' ? 'model' : 'user',
         parts: [{ text: msg.text }]
@@ -62,7 +58,6 @@ const Chatbot = () => {
 
   return (
     <>
-      {/* Tombol Floating (Pojok Kanan Bawah) */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-primary to-secondary text-white rounded-full shadow-lg hover:shadow-primary/50 transition-all"
@@ -72,7 +67,6 @@ const Chatbot = () => {
         {isOpen ? <i className="fas fa-times text-xl"></i> : <i className="fas fa-robot text-xl"></i>}
       </motion.button>
 
-      {/* Jendela Chat */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -81,7 +75,6 @@ const Chatbot = () => {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className="fixed bottom-24 right-6 z-50 w-full max-w-[350px] bg-white dark:bg-darkLight rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-[500px]"
           >
-            {/* Header */}
             <div className="bg-primary p-4 flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white">
                 <i className="fas fa-robot"></i>
@@ -94,7 +87,6 @@ const Chatbot = () => {
               </div>
             </div>
 
-            {/* Chat Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-dark">
               {messages.map((msg, idx) => (
                 <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -105,12 +97,11 @@ const Chatbot = () => {
                         : "bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 rounded-tl-none border border-gray-100 dark:border-slate-700"
                     }`}
                   >
-                    {msg.text}
+                    {msg.text.replace(/\*\*/g, '').replace(/\*/g, '')}
                   </div>
                 </div>
               ))}
               
-              {/* Loading Indicator */}
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none border border-gray-100 dark:border-slate-700 flex gap-1">
@@ -123,7 +114,6 @@ const Chatbot = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area */}
             <form onSubmit={handleSend} className="p-3 bg-white dark:bg-darkLight border-t border-gray-100 dark:border-slate-700 flex gap-2">
               <input
                 type="text"
