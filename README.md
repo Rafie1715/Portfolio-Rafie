@@ -17,10 +17,3 @@ Check it out live here: [**https://rafie-dev.netlify.app**](https://rafie-dev.ne
 - **Deployment:** Netlify
 
 ## 📸 Screenshots
-
-
-## 🏃‍♂️ Run Locally
-1. Clone the repo
-2. `npm install`
-3. Create `.env` file (See `.env.example`)
-4. `npm run dev`
