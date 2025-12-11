@@ -10,6 +10,13 @@ const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
+  const suggestions = [
+    { label: "💻 Skills", text: "What are your main technical skills?" },
+    { label: "📂 Best Project", text: "Tell me about your best project." },
+    { label: "🎓 Education", text: "What is your educational background?" },
+    { label: "📧 Contact", text: "How can I contact Rafie?" },
+  ];
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -18,11 +25,10 @@ const Chatbot = () => {
     scrollToBottom();
   }, [messages, isOpen]);
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+  const processMessage = async (messageText) => {
+    if (!messageText.trim()) return;
 
-    const userMessage = { role: "user", text: input };
+    const userMessage = { role: "user", text: messageText };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
@@ -36,7 +42,7 @@ const Chatbot = () => {
       const response = await fetch("/.netlify/functions/gemini", {
         method: "POST",
         body: JSON.stringify({ 
-            message: input, 
+            message: messageText, 
             history: historyForApi 
         }),
       });
@@ -44,16 +50,27 @@ const Chatbot = () => {
       const data = await response.json();
       
       if (data.reply) {
-        setMessages((prev) => [...prev, { role: "model", text: data.reply }]);
+        const cleanText = data.reply.replace(/\*\*/g, '').replace(/\*/g, '');
+        setMessages((prev) => [...prev, { role: "model", text: cleanText }]);
       } else {
         throw new Error("No reply");
       }
 
     } catch (error) {
+      console.error(error);
       setMessages((prev) => [...prev, { role: "model", text: "Sorry, I'm having trouble connecting right now. 😓" }]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSend = (e) => {
+    e.preventDefault();
+    processMessage(input);
+  };
+
+  const handleChipClick = (text) => {
+    processMessage(text);
   };
 
   return (
@@ -73,9 +90,9 @@ const Chatbot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 z-50 w-full max-w-[350px] bg-white dark:bg-darkLight rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-[500px]"
+            className="fixed bottom-24 right-6 z-50 w-full max-w-[350px] bg-white dark:bg-darkLight rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-[550px]"
           >
-            <div className="bg-primary p-4 flex items-center gap-3">
+            <div className="bg-primary p-4 flex items-center gap-3 shadow-md relative z-10">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white">
                 <i className="fas fa-robot"></i>
               </div>
@@ -91,13 +108,13 @@ const Chatbot = () => {
               {messages.map((msg, idx) => (
                 <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
-                    className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${
+                    className={`max-w-[85%] p-3 rounded-2xl text-sm shadow-sm leading-relaxed ${
                       msg.role === "user"
                         ? "bg-primary text-white rounded-tr-none"
                         : "bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 rounded-tl-none border border-gray-100 dark:border-slate-700"
                     }`}
                   >
-                    {msg.text.replace(/\*\*/g, '').replace(/\*/g, '')}
+                    {msg.text}
                   </div>
                 </div>
               ))}
@@ -114,20 +131,36 @@ const Chatbot = () => {
               <div ref={messagesEndRef} />
             </div>
 
+            <div className="bg-white dark:bg-darkLight px-4 py-2 border-t border-gray-100 dark:border-slate-700">
+                <p className="text-[10px] text-gray-400 mb-2 uppercase font-bold tracking-wider">Suggested Questions:</p>
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    {suggestions.map((suggestion, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => handleChipClick(suggestion.text)}
+                            disabled={isLoading}
+                            className="whitespace-nowrap px-3 py-1.5 bg-gray-100 dark:bg-slate-800 text-primary text-xs font-medium rounded-full border border-transparent hover:border-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
+                        >
+                            {suggestion.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             <form onSubmit={handleSend} className="p-3 bg-white dark:bg-darkLight border-t border-gray-100 dark:border-slate-700 flex gap-2">
               <input
                 type="text"
-                placeholder="Ask about Rafie..."
+                placeholder="Type a message..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-1 bg-gray-100 dark:bg-slate-800 text-dark dark:text-white rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50"
+                className="flex-1 bg-gray-100 dark:bg-slate-800 text-dark dark:text-white rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/50 transition-all"
               />
               <button 
                 type="submit"
                 disabled={isLoading || !input.trim()}
-                className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-secondary transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <i className="fas fa-paper-plane"></i>
+                <i className="fas fa-paper-plane text-sm"></i>
               </button>
             </form>
           </motion.div>

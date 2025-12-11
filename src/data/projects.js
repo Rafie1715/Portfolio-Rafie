@@ -8,6 +8,16 @@ export const projects = [
     fullDesc: "Waste management is a significant challenge in many urban areas. The goal of Planetku was to create a mobile application that empowers users to manage their waste more effectively and sustainably. The app aims to solve problems like incorrect waste sorting, lack of awareness about recycling value, and difficulty in finding nearby waste banks.",
     challenges: "One of the biggest challenges was implementing the camera-based waste classification feature efficiently without slowing down the user's device. The initial model was quite large and slow.",
     solution: "We worked closely with the Machine Learning team to optimize the TensorFlow Lite model for mobile deployment. On the app side, I implemented asynchronous processing (`Coroutines` in Kotlin) to ensure the UI remained responsive while the image was being analyzed in the background.",
+    
+    lessonLearned: "I learned how to integrate TFLite with Android efficiently and mastered Kotlin Coroutines for background tasks. It also taught me the importance of cross-functional collaboration between ML and Mobile teams.",
+    
+    features: [
+      "AI Waste Classification (Camera & Gallery)",
+      "Real-time Carbon Footprint Calculation",
+      "Interactive Waste Bank Map Locator",
+      "User Reward & Point System"
+    ],
+
     techStack: [
       { name: "Kotlin", icon: "devicon-kotlin-plain" },
       { name: "Android Studio", icon: "devicon-androidstudio-plain" },
@@ -32,6 +42,16 @@ export const projects = [
     fullDesc: "The CinemaZone project was developed to create a seamless and feature-rich movie ticket booking experience on an Android platform. The goal was to build an application that handles the entire user journey, from Browse movies and viewing details to selecting seats and generating a digital e-ticket.",
     challenges: "A primary challenge was designing and implementing the interactive seat picker, which needed to visually represent the cinema layout and handle seat selection state (available, selected, occupied) in real-time.",
     solution: "I implemented this using a dynamic GridView in Android. Each seat was an object with a specific state. I used Firebase's Realtime Database to listen for changes, ensuring that if another user booked a seat, the UI would update instantly.",
+    
+    lessonLearned: "This project deepened my understanding of NoSQL databases (Firestore vs Realtime DB). I learned how to handle complex state management for the seat selection logic to prevent double-booking.",
+    
+    features: [
+      "User Authentication (Login/Register)",
+      "Real-time Seat Selection Status",
+      "E-Ticket QR Code Generation",
+      "Movie Wishlist System"
+    ],
+
     techStack: [
       { name: "Kotlin", icon: "devicon-kotlin-plain" },
       { name: "Firebase", icon: "devicon-firebase-plain" },
@@ -52,6 +72,16 @@ export const projects = [
     fullDesc: "The process of building a personal computer can be intimidating for newcomers due to component compatibility issues. Computer Crafter was created to demystify this process, providing a user-friendly platform where users can select PC parts, see a real-time price total, and be confident that their chosen components will work together.",
     challenges: "The most complex part of this project was managing the database of components and implementing the compatibility logic. For example, ensuring a selected CPU was compatible with the chosen motherboard's socket type.",
     solution: "I designed a relational database schema in MySQL to store components with their relevant specifications. Using PHP on the back-end, I created API endpoints that would dynamically filter the options available in the dropdown menus via AJAX.",
+    
+    lessonLearned: "I gained solid experience in Relational Database Design and normalization. I also learned how to use AJAX for dynamic content loading without refreshing the page.",
+    
+    features: [
+      "PC Part Picker Simulator",
+      "Automatic Compatibility Check",
+      "Real-time Price Estimation",
+      "Component Database Management"
+    ],
+
     techStack: [
       { name: "HTML5", icon: "devicon-html5-plain" },
       { name: "CSS3", icon: "devicon-css3-plain" },
@@ -74,6 +104,16 @@ export const projects = [
     fullDesc: "This application interface was designed to address two critical Sustainable Development Goals (SDGs): SDG 1 (No Poverty) and SDG 2 (Zero Hunger). We chose these themes because poverty and hunger are fundamental, interconnected issues.",
     challenges: "Creating an intuitive and trustworthy user experience. Key considerations included making the donation process as simple as possible and ensuring transparency in fund distribution.",
     solution: "We used Figma to create wireframes, high-fidelity mockups, and an interactive prototype to simulate the user flow from discovery to donation.",
+    
+    lessonLearned: "I learned the importance of Empathy Maps and User Personas in design. It taught me that a good UI is not just about aesthetics, but about solving user problems efficiently.",
+    
+    features: [
+      "Donation Tracking Dashboard",
+      "Transparent Fund Reporting",
+      "User Profile & History",
+      "Social Sharing Integration"
+    ],
+
     techStack: [
       { name: "Figma", icon: "devicon-figma-plain" }
     ],
@@ -92,6 +132,16 @@ export const projects = [
     fullDesc: "This project was created to provide a simple yet robust solution for managing book loans in a small library. The application handles essential functions such as cataloging books, registering users, and tracking the status of each loan (borrowed or returned).",
     challenges: "The primary challenge was designing an intuitive Graphical User Interface (GUI) using Java's Swing library, which can be less straightforward than modern UI frameworks.",
     solution: "I dedicated significant time to learning the intricacies of Swing's layout managers (like `BorderLayout`, `GridLayout`). By carefully nesting `JPanel` components, I built a structured and responsive layout manually.",
+    
+    lessonLearned: "This project solidified my understanding of Object-Oriented Programming (OOP) concepts like Inheritance and Encapsulation. I also got comfortable with Desktop GUI development.",
+    
+    features: [
+      "Book CRUD Operations",
+      "Member Registration System",
+      "Loan & Return Tracking",
+      "Overdue Fine Calculation"
+    ],
+
     techStack: [
       { name: "Java", icon: "devicon-java-plain" },
       { name: "IntelliJ IDEA", icon: "devicon-intellij-plain" }
@@ -108,6 +158,16 @@ export const projects = [
     fullDesc: "This project aims to develop a tools launcher program using Python and the Tkinter library for the GUI. The launcher provides easy access to four essential tools: a calculator, a to-do list, a notepad, and a whiteboard.",
     challenges: "Integrating multiple distinct functionalities (calculator logic, canvas drawing for whiteboard) into a single cohesive application.",
     solution: "Used Python's modularity to separate the logic for each tool and integrated them into a main dashboard using Tkinter.",
+    
+    lessonLearned: "I learned how to manage multiple windows and contexts in a GUI application. It also improved my skills in writing modular and reusable Python code.",
+    
+    features: [
+      "Scientific Calculator",
+      "Persistent To-Do List",
+      "Quick Note Editor",
+      "Interactive Whiteboard Canvas"
+    ],
+
     techStack: [
       { name: "Python", icon: "devicon-python-plain" }
     ],
@@ -123,6 +183,16 @@ export const projects = [
     fullDesc: "Manually sorting fruit by maturity is a time-consuming process. This project aimed to automate the detection of mangosteen maturity by analyzing the fruit's skin color using Image Processing.",
     challenges: "Accurately distinguishing between ripe and unripe fruit under varying lighting conditions. Simple RGB analysis was unreliable.",
     solution: "Implemented image processing using the HSV (Hue, Saturation, Value) color space, which is less sensitive to lighting. Applied thresholding on the Hue channel and morphological operations to isolate the fruit.",
+    
+    lessonLearned: "I gained practical knowledge of Computer Vision concepts. I learned why HSV is often better than RGB for color detection and how to use OpenCV for image manipulation.",
+    
+    features: [
+      "Image Upload & Capture",
+      "HSV Color Space Analysis",
+      "Automated Maturity Classification",
+      "Visual Feedback Overlay"
+    ],
+
     techStack: [
       { name: "Python", icon: "devicon-python-plain" },
       { name: "OpenCV", icon: "devicon-opencv-plain" }
@@ -130,7 +200,7 @@ export const projects = [
     github: "https://github.com/Rafie1715/Projek_UAS_PCD",
     gallery: []
   },
-   {
+  {
     id: "temp-converter",
     title: "Temperature Converter Website",
     category: "web",
@@ -139,6 +209,16 @@ export const projects = [
     fullDesc: "This project was created to demonstrate fundamental front-end web development skills. It is a user-friendly Temperature Converter website that enables instant and accurate conversion between Celsius and Fahrenheit.",
     challenges: "Implementing the conversion logic dynamically and handling user input validation.",
     solution: "Used vanilla JavaScript DOM manipulation to capture input events and calculate conversions in real-time.",
+    
+    lessonLearned: "This was my first step into interactive web development. I mastered DOM manipulation and event listeners without relying on frameworks.",
+    
+    features: [
+      "Real-time Conversion",
+      "Bidirectional Input Support",
+      "Input Validation",
+      "Responsive Design"
+    ],
+
     techStack: [
       { name: "HTML5", icon: "devicon-html5-plain" },
       { name: "CSS3", icon: "devicon-css3-plain" },
@@ -157,10 +237,20 @@ export const projects = [
     fullDesc: "This project was developed as a team-based landing page to provide a clear and concise introduction to the United Nations' Sustainable Development Goals (SDGs).",
     challenges: "Coordinating with a team to merge different sections of the website.",
     solution: "Used Git for version control and clearly defined sections for each team member.",
+    
+    lessonLearned: "I learned the basics of Git collaboration and conflict resolution. It also taught me how to structure a project for team development.",
+    
+    features: [
+      "Informational Sections for SDGs",
+      "Team Member Section",
+      "Contact Form Integration",
+      "Bootstrap Responsive Grid"
+    ],
+
     techStack: [
-       { name: "HTML5", icon: "devicon-html5-plain" },
-       { name: "CSS3", icon: "devicon-css3-plain" },
-       { name: "Bootstrap", icon: "devicon-bootstrap-plain" }
+      { name: "HTML5", icon: "devicon-html5-plain" },
+      { name: "CSS3", icon: "devicon-css3-plain" },
+      { name: "Bootstrap", icon: "devicon-bootstrap-plain" }
     ],
     github: "https://github.com/samsamsemy/Landing-page",
     live: "https://landing-page-zeta-two-87.vercel.app",
@@ -175,6 +265,16 @@ export const projects = [
     fullDesc: "This project is a modern, from-scratch implementation of the classic arcade game 'Breakout'. The game challenges the player to destroy all bricks on the screen by deflecting a ball with a paddle. The primary objective was to build a fully functional, interactive web application using fundamental web technologies, all while documenting how an AI assistant (IBM Granite) was used to accelerate development, optimize code, and debug issues.",
     challenges: "Building a fully functional game engine logic (rendering, physics, collision detection) from scratch using only the Canvas API without relying on external game libraries like Phaser.",
     solution: "Leveraged IBM Granite AI as a co-pilot to generate boilerplate code, develop complex algorithms for collision detection, and implement a state management system (Menu, Playing, Game Over) for smooth game flow.",
+    
+    lessonLearned: "I mastered the HTML5 Canvas API and game loop logic (`requestAnimationFrame`). It also taught me how to effectively prompt AI for complex algorithmic problems.",
+    
+    features: [
+      "Physics-based Collision Detection",
+      "Score & High Score System",
+      "Multiple Game States (Menu, Play, Over)",
+      "Sound Effects & Animations"
+    ],
+
     techStack: [
       { name: "HTML5", icon: "devicon-html5-plain" },
       { name: "CSS3", icon: "devicon-css3-plain" },
@@ -196,6 +296,16 @@ export const projects = [
     fullDesc: "QuickQuiz is a general knowledge quiz app designed with a clean, user-friendly interface. The app guides users through a welcome screen, a quiz interface with a progress bar, and a results screen that calculates the score percentage. It demonstrates fundamental mobile development concepts like navigation, local data handling, and responsive UI design.",
     challenges: "Building a consistent UI that works across Android, iOS, Web, and Windows from a single codebase while managing the quiz state (current question index and score) efficiently without external state management libraries.",
     solution: "Utilized Flutter's built-in `StatefulWidget` for logic management and `MaterialPageRoute` for seamless navigation. Implemented a modular project structure separating UI widgets (Home, Quiz, Result) from the data models (`question_model.dart`) for better maintainability.",
+    
+    lessonLearned: "I learned the power of Flutter's 'Write Once, Run Anywhere'. I also understood the Widget Lifecycle and basic state management in Dart.",
+    
+    features: [
+      "Multi-platform Support (Mobile/Web)",
+      "Dynamic Question Progress Bar",
+      "Score Calculation System",
+      "Clean Material Design UI"
+    ],
+
     techStack: [
       { name: "Flutter", icon: "devicon-flutter-plain" },
       { name: "Dart", icon: "devicon-dart-plain" },
@@ -218,6 +328,16 @@ export const projects = [
     fullDesc: "This web-based application allows users to manage their personal notes efficiently. It features a robust system for creating, archiving, and deleting notes, secured by user authentication. The app enhances user experience with real-time search, theme customization (Dark/Light mode), and multi-language support (English/Indonesian).",
     challenges: "Managing complex global states like theme and language preferences across the application while ensuring seamless navigation and protected routes for authenticated users.",
     solution: "Implemented React Context API for efficient global state management (Theme & Locale). Used React Router DOM for handling navigation and protecting routes requiring authentication. Integrated a REST API for persistent data storage and user management.",
+    
+    lessonLearned: "This project advanced my React skills significantly, especially in using Hooks (`useContext`, `useEffect`) and creating Custom Hooks. I also learned patterns for securing client-side routes.",
+    
+    features: [
+      "User Registration & Login (JWT)",
+      "Create, Archive, & Delete Notes",
+      "Real-time Search & Filtering",
+      "Dark/Light Mode & Multi-language"
+    ],
+
     techStack: [
       { name: "React", icon: "devicon-react-original" },
       { name: "Vite", icon: "devicon-vitejs-plain" },

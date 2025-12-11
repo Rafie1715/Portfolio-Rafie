@@ -8,17 +8,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#6366f1',   // Indigo 500 (Lebih terang)
-        secondary: '#a855f7', // Purple 500
-        accent: '#ec4899',    // Pink 500 (Untuk aksen warna-warni)
-        dark: '#0f172a',      // Slate 900
-        darkLight: '#1e293b', // Slate 800
-        light: '#f8fafc',     // Slate 50
+        primary: '#6366f1',   
+        secondary: '#a855f7', 
+        accent: '#ec4899',    
+        dark: '#0f172a',      
+        darkLight: '#1e293b',
+        light: '#f8fafc',     
       },
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'],
+        display: ['Outfit', 'sans-serif'],
+        body: ['Poppins', 'sans-serif'],
+        sans: ['Poppins', 'sans-serif'],
       },
-      // Menambahkan Animasi Kustom
       animation: {
         'gradient-x': 'gradient-x 3s ease infinite',
         'blob': 'blob 7s infinite',

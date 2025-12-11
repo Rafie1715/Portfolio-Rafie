@@ -93,8 +93,8 @@ const Navbar = () => {
       </div>
 
       <div 
-        className={`md:hidden absolute w-full bg-white dark:bg-dark shadow-xl border-b border-gray-100 dark:border-slate-800 overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        className={`md:hidden absolute top-full left-0 w-full bg-white dark:bg-dark shadow-xl border-b border-gray-100 dark:border-slate-800 overflow-hidden transition-all duration-300 ease-in-out origin-top ${
+          isOpen ? 'max-h-96 opacity-100 scale-y-100' : 'max-h-0 opacity-0 scale-y-95'
         }`}
       >
         <div className="flex flex-col px-4 pb-6 pt-2 space-y-1">
@@ -102,6 +102,7 @@ const Navbar = () => {
             <NavLink
               key={link.name}
               to={link.to}
+              onClick={() => setIsOpen(false)}
               className={({ isActive }) => 
                 `block py-3 px-4 rounded-lg text-base font-medium transition-colors ${
                   isActive 
