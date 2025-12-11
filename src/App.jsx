@@ -5,7 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-import Navbar from './components/NavBar';
+import Navbar from './components/Navbar';
 import ScrollProgress from './components/ScrollProgress';
 import Chatbot from './components/Chatbot';
 import Spotlight from './components/Spotlight';
@@ -31,7 +31,7 @@ function App() {
       <ScrollProgress />
 
       <div className="bg-noise"></div>
-      
+
       <Spotlight />
       
       <Navbar />
