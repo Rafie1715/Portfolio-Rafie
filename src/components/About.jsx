@@ -1,5 +1,5 @@
 import upnLogo from '/images/upnvj_logo.webp';
-import cvFile from '../assets/CV Rafie Rojagat Bachri.pdf';
+import cvFile from '/assets/CV Rafie Rojagat Bachri.pdf';
 import Nametag from './Nametag';
 
 const About = () => {
