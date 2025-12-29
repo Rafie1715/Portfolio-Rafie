@@ -1,4 +1,3 @@
-// src/App.jsx
 import { Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -7,12 +6,8 @@ import ScrollProgress from './components/ScrollProgress';
 import Spotlight from './components/Spotlight';
 import { HelmetProvider } from 'react-helmet-async';
 import Chatbot from './components/Chatbot';
-
-// --- IMPORT FOOTER DI SINI ---
 import Footer from './components/Footer'; 
-// -----------------------------
 
-// Lazy Load Pages
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
