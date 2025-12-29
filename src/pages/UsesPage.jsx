@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { usesData } from '../data/uses';
 import SEO from '../components/SEO';
 import SpotifyTopTracks from '../components/SpotifyTopTracks';
+import SpotifyNowPlaying from '../components/SpotifyNowPlaying';
 import { Link } from 'react-scroll';
 import ThreeDCard from '../components/ThreeDCard';
 
@@ -232,6 +233,9 @@ const UsesPage = () => {
                   <div className="text-xs font-bold text-[#1DB954] bg-[#1DB954]/10 px-3 py-1 rounded-full">
                     Live from Spotify
                   </div>
+                </div>
+                <div className="mb-8">
+                  <SpotifyNowPlaying />
                 </div>
                 <SpotifyTopTracks />
               </div>

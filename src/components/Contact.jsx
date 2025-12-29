@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import SpotifyNowPlaying from './SpotifyNowPlaying';
 
 const Contact = () => {
   const [status, setStatus] = useState("");
@@ -100,10 +99,6 @@ const Contact = () => {
                   ))}
                 </div>
               </div>
-            </div>
-
-            <div data-aos="fade-up" data-aos-delay="200">
-               <SpotifyNowPlaying />
             </div>
           </div>
 

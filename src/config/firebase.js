@@ -2,14 +2,14 @@ import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDic7njORA4nE3-bSN5yQFbHba4IXIGpC8",
-  authDomain: "portfolio-rafie.firebaseapp.com",
-  databaseURL: "https://portfolio-rafie-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "portfolio-rafie",
-  storageBucket: "portfolio-rafie.firebasestorage.app",
-  messagingSenderId: "301202975884",
-  appId: "1:301202975884:web:bc00f6d2838605f51cdfa9",
-  measurementId: "G-9FBKNJVVEM"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
