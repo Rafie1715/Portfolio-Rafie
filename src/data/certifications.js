@@ -134,4 +134,49 @@ export const certifications = [
     date: "2025",
     link: "https://www.credly.com/badges/258db53c-754b-4f6a-a2ab-32f2a0e9c0f3/linked_in_profile"
   },
+  { 
+    id: 16, 
+    img: "/images/cert-dicoding-frontend-fundamental.webp", 
+    alt: "Frontend Fundamental Certificate",
+    title: "Belajar Fundamental Front-End Web Development",
+    issuer: "Dicoding Indonesia",
+    date: "2025",
+    link: "https://www.dicoding.com/certificates/4EXG3EE1DZRL"
+  },
+  { 
+    id: 17, 
+    img: "/images/cert-dicoding-kotlin.webp", 
+    alt: "Kotlin Beginner Certificate",
+    title: "Memulai Pemrograman dengan Kotlin",
+    issuer: "Dicoding Indonesia",
+    date: "2024",
+    link: "https://www.dicoding.com/certificates/81P2N9RY8XOY"
+  },
+  { 
+    id: 18, 
+    img: "/images/cert-dicoding-github.webp", 
+    alt: "GitHub Beginner Certificate",
+    title: "Belajar Dasar Git dengan GitHub",
+    issuer: "Dicoding Indonesia",
+    date: "2024",
+    link: "https://www.dicoding.com/certificates/98XWLN7J0ZM3"
+  },
+  { 
+    id: 19, 
+    img: "/images/cert-dicoding-dart.webp", 
+    alt: "Dart Beginner Certificate",
+    title: "Memulai Pemrograman dengan Dart",
+    issuer: "Dicoding Indonesia",
+    date: "2025",
+    link: "https://www.dicoding.com/certificates/53XEKY24VXRN"
+  },
+  { 
+    id: 20, 
+    img: "/images/cert-dicoding-javascript.webp", 
+    alt: "JavaScript Beginner Certificate",
+    title: "Belajar Dasar Pemrograman JavaScript",
+    issuer: "Dicoding Indonesia",
+    date: "2025",
+    link: "https://www.dicoding.com/certificates/6RPNVQOE8Z2M"
+  }
 ];
