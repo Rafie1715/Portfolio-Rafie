@@ -89,6 +89,8 @@ const Projects = () => {
                   className="h-full"
                 >
                   <div className="group bg-white dark:bg-darkLight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 dark:border-slate-700/50 flex flex-col h-full relative">                    
+                    
+                    {/* Image Wrapper */}
                     <div className="h-52 overflow-hidden relative">
                       <img 
                         src={project.image} 
@@ -111,6 +113,7 @@ const Projects = () => {
                       </div>
                     </div>
                     
+                    {/* Content */}
                     <div className="p-6 flex flex-col flex-grow">
                       <Link to={`/project/${project.id}`} className="block">
                         <h3 className="text-xl font-bold mb-3 text-dark dark:text-white group-hover:text-primary transition-colors line-clamp-1" title={project.title}>
@@ -135,6 +138,7 @@ const Projects = () => {
 
                       <div className="mt-auto flex flex-col gap-3">
                         
+                        {/* Live Site Button */}
                         {project.live && (
                           <a 
                             href={project.live} 
@@ -146,6 +150,7 @@ const Projects = () => {
                           </a>
                         )}
 
+                        {/* GitHub Button */}
                         {project.github && (
                           <a 
                             href={project.github} 
@@ -157,6 +162,31 @@ const Projects = () => {
                           </a>
                         )}
 
+                        {/* --- KODE TAMBAHAN: Figma Design Button --- */}
+                        {project.figma && (
+                          <a 
+                            href={project.figma} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="block w-full text-center py-2.5 bg-dark dark:bg-slate-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-slate-700 transition-all shadow-md flex items-center justify-center gap-2 font-medium text-sm"
+                          >
+                            <i className="fab fa-figma text-lg"></i> View Design
+                          </a>
+                        )}
+
+                        {/* --- KODE TAMBAHAN: Prototype Button --- */}
+                        {project.prototype && (
+                          <a 
+                            href={project.prototype} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="block w-full text-center py-2.5 border-2 border-dark dark:border-slate-500 text-dark dark:text-slate-200 rounded-xl hover:bg-dark dark:hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center gap-2 font-medium text-sm"
+                          >
+                            <i className="fas fa-play text-sm"></i> Try Prototype
+                          </a>
+                        )}
+
+                        {/* Private Repo Indicator */}
                         {!project.live && !project.github && !project.figma && !project.prototype && (
                           <div className="block w-full text-center py-2.5 bg-gray-50 dark:bg-slate-800/50 text-gray-400 border border-dashed border-gray-300 dark:border-slate-700 rounded-xl text-sm cursor-not-allowed">
                              <i className="fas fa-lock mr-2"></i> Private Repository

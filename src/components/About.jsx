@@ -52,7 +52,7 @@ const About = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
           <motion.div
-            className="lg:w-5/12 w-full flex justify-center order-1 h-[400px] md:h-[550px] relative z-10"
+            className="lg:w-5/12 w-full flex justify-center order-1 h-[500px] md:h-[550px] relative z-10"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}

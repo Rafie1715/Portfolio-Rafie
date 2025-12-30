@@ -86,7 +86,7 @@ const Certifications = () => {
 
         <div className="max-w-5xl mx-auto relative group">
             
-            <div className="relative w-full aspect-[16/9] md:aspect-[21/9] h-[400px] md:h-[550px] flex items-center justify-center">
+            <div className="relative w-full aspect-[16/9] md:aspect-[21/9] h-[600px] md:h-[550px] flex items-center justify-center">
                 
                 <button 
                     onClick={prevSlide}
