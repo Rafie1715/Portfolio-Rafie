@@ -7,14 +7,14 @@ exports.handler = async (event, context) => {
   }
 
   const MOVIE_CONFIG = [
-    { id: 83533, favorite: true }, 
-    { id: 1287571, favorite: false }, 
-    { id: 1061474, favorite: false },
-    { id: 617126, favorite: false },
-    { id: 1234821, favorite: false },
-    { id: 986056, favorite: false },
-    { id: 911430, favorite: false },
-    { id: 822119, favorite: false },
+    { id: 83533, favorite: true, myRating: 9.5 }, 
+    { id: 1287571, favorite: false, myRating: 9.0 }, 
+    { id: 1061474, favorite: false, myRating: 8.5 },
+    { id: 617126, favorite: false, myRating: 8.5 },
+    { id: 1234821, favorite: false, myRating: 8.0 },
+    { id: 986056, favorite: false, myRating: 8.0 },
+    { id: 911430, favorite: false, myRating: 8.7 },
+    { id: 822119, favorite: false, myRating: 7.8 },
     
     // Tahun 2024
     { id: 533535, favorite: true },
@@ -82,7 +82,8 @@ exports.handler = async (event, context) => {
         .then(res => res.json())
         .then(data => ({
             ...data,
-            isFavorite: movie.favorite
+            isFavorite: movie.favorite,
+            myRating: movie.myRating
         }))
     );
 

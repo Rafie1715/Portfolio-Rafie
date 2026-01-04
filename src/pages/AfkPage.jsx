@@ -6,7 +6,8 @@ import SpotifyTopTracks from '../components/SpotifyTopTracks';
 
 const AfkPage = () => {
     const [games, setGames] = useState([]);
-    const [movies, setMovies] = useState([]); 
+    const [steamUser, setSteamUser] = useState(null);
+    const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -14,7 +15,9 @@ const AfkPage = () => {
             try {
                 const steamRes = await fetch('/.netlify/functions/steam');
                 const steamData = await steamRes.json();
-                if (Array.isArray(steamData)) setGames(steamData.slice(0, 10));
+
+                if (steamData.games) setGames(steamData.games);
+                if (steamData.user) setSteamUser(steamData.user);
 
                 const moviesRes = await fetch('/.netlify/functions/movies');
                 const moviesData = await moviesRes.json();
@@ -26,7 +29,6 @@ const AfkPage = () => {
                 setLoading(false);
             }
         };
-
         fetchData();
     }, []);
 
@@ -64,6 +66,15 @@ const AfkPage = () => {
     };
 
     const moviesByYear = groupMoviesByYear(movies);
+
+    const getSteamStatus = () => {
+        if (!steamUser) return { text: 'Loading...', color: 'bg-gray-400' };
+        if (steamUser.gameextrainfo) return { text: `Playing ${steamUser.gameextrainfo}`, color: 'bg-green-500 animate-pulse' };
+        if (steamUser.status === 1) return { text: 'Online', color: 'bg-blue-500' };
+        return { text: 'Offline', color: 'bg-gray-500' };
+    };
+
+    const statusInfo = getSteamStatus();
 
     return (
         <div className="bg-white dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300">
@@ -122,9 +133,35 @@ const AfkPage = () => {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <motion.section variants={itemVariants} className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-100 dark:border-slate-700 rounded-3xl p-6 md:p-8 h-full">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                                <div className="flex items-center gap-4">
+                                    {steamUser && (
+                                        <a href={steamUser.profileurl} target="_blank" rel="noreferrer" className="relative">
+                                            <img src={steamUser.avatar} alt="Steam Avatar" className="w-12 h-12 rounded-full border-2 border-gray-200 dark:border-slate-600" />
+                                            <div className={`absolute bottom-0 right-0 w-3.5 h-3.5 border-2 border-white dark:border-slate-800 rounded-full ${statusInfo.color}`}></div>
+                                        </a>
+                                    )}
+
+                                    <div>
+                                        <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-2">
+                                            <i className="fab fa-steam text-[#1b2838] dark:text-white"></i>
+                                            Steam Library
+                                        </h2>
+                                        <p className={`text-xs font-bold ${steamUser?.gameextrainfo ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}`}>
+                                            {statusInfo.text}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {steamUser && (
+                                    <a href={steamUser.profileurl} target="_blank" rel="noreferrer" className="px-4 py-2 text-xs font-bold bg-[#1b2838] text-white rounded-lg hover:bg-[#2a475e] transition-colors">
+                                        View Profile
+                                    </a>
+                                )}
+                            </div>
                             <div className="fl ex items-center justify-between mb-6">
                                 <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3">
-                                    <i className="fab fa-steam text-[#1b2838] dark:text-white text-3xl"></i>
+                                    <i className="fab text-[#1b2838] dark:text-white text-3xl"></i>
                                     Most Played
                                 </h2>
                                 <span className={`w-2 h-2 rounded-full animate-pulse ${loading ? 'bg-gray-400' : 'bg-green-500'}`} title="Steam Status"></span>
@@ -214,7 +251,7 @@ const AfkPage = () => {
                                                                             <span className="text-[10px] font-bold bg-yellow-500 text-black px-2 py-0.5 rounded-full flex items-center gap-1">
                                                                                 <i className="fas fa-trophy"></i> Best of {year}
                                                                             </span>
-                                                                            <span className="text-yellow-400 text-xs">⭐ {favoriteMovie.vote_average.toFixed(1)}</span>
+                                                                            <span className="text-yellow-400 text-xs">⭐ {favoriteMovie.myRating || favoriteMovie.vote_average.toFixed(1)}</span>
                                                                         </div>
                                                                         <h4 className="text-white font-bold text-lg md:text-xl leading-tight line-clamp-1 group-hover:text-yellow-300 transition-colors">{favoriteMovie.title}</h4>
                                                                         <p className="text-gray-400 text-xs mt-1 line-clamp-2">{favoriteMovie.overview}</p>
@@ -242,7 +279,7 @@ const AfkPage = () => {
                                                                 />
                                                                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2 text-center">
                                                                     <span className="text-white text-xs font-bold mb-1">{movie.title}</span>
-                                                                    <span className="text-yellow-400 text-[10px]">⭐ {movie.vote_average.toFixed(1)}</span>
+                                                                    <span className="text-yellow-400 text-[10px]">⭐ {movie.myRating ? movie.myRating : movie.vote_average.toFixed(1)}</span>
                                                                 </div>
                                                             </a>
                                                         ))}
