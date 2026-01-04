@@ -13,8 +13,9 @@ const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
-const UsesPage = lazy(() => import('./pages/UsesPage'));
+const UsesPage = lazy(() => import('./pages/WorkspacePage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const AfkPage = lazy(() => import('./pages/AfkPage'));
 
 function App() {
   const location = useLocation();
@@ -34,7 +35,8 @@ function App() {
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route path="/uses" element={<UsesPage />} />
+          <Route path="/workspace" element={<UsesPage />} />
+          <Route path="/afk" element={<AfkPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

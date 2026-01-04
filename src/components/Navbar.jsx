@@ -24,7 +24,8 @@ const Navbar = () => {
     { name: "Home", to: "/" },
     { name: "About", to: "/about" },
     { name: "Projects", to: "/projects" },
-    { name: "Uses", to: "/uses" },
+    { name: "Workspace", to: "/workspace" },
+    { name: "AFK", to: "/afk" },
     { name: "Contact", to: "/contact" },
   ];
 
