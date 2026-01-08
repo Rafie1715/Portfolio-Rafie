@@ -5,18 +5,15 @@ import SpotifyNowPlaying from '../components/SpotifyNowPlaying';
 import SpotifyTopTracks from '../components/SpotifyTopTracks';
 
 const AfkPage = () => {
-    // --- STATE ---
     const [games, setGames] = useState([]);
     const [recentGames, setRecentGames] = useState([]); // State Baru: Recently Played
     const [steamUser, setSteamUser] = useState(null);
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // --- FETCH DATA ---
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch Steam
                 const steamRes = await fetch('/.netlify/functions/steam');
                 const steamData = await steamRes.json();
 
@@ -24,7 +21,6 @@ const AfkPage = () => {
                 if (steamData.recent) setRecentGames(steamData.recent); // Set Data Recent
                 if (steamData.user) setSteamUser(steamData.user);
 
-                // Fetch Movies
                 const moviesRes = await fetch('/.netlify/functions/movies');
                 const moviesData = await moviesRes.json();
                 if (Array.isArray(moviesData)) setMovies(moviesData);
@@ -38,7 +34,6 @@ const AfkPage = () => {
         fetchData();
     }, []);
 
-    // --- HELPER FUNCTIONS ---
     const groupMoviesByYear = (movieList) => {
         const grouped = {};
         movieList.forEach(movie => {
@@ -61,7 +56,6 @@ const AfkPage = () => {
 
     const statusInfo = getSteamStatus();
 
-    // --- ANIMATION VARIANTS ---
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -80,7 +74,6 @@ const AfkPage = () => {
         }
     };
 
-    // Komponen Visualizer Musik
     const MusicBars = () => (
         <div className="flex gap-1 items-end h-4">
             {[1, 2, 3, 4].map((bar) => (
@@ -108,7 +101,6 @@ const AfkPage = () => {
                 url="https://rafie-dev.netlify.app/afk" 
             />
 
-            {/* --- BACKGROUND AMBIANCE --- */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <motion.div 
                     animate={{ x: [-100, 100, -100], y: [-50, 50, -50], opacity: [0.3, 0.5, 0.3] }}
@@ -122,9 +114,7 @@ const AfkPage = () => {
                 />
             </div>
 
-            <div className="container mx-auto px-4 max-w-5xl relative z-10">
-                
-                {/* --- HEADER --- */}
+            <div className="container mx-auto px-4 max-w-5xl relative z-10">                
                 <div className="text-center mb-16">
                     <motion.div 
                         initial={{ scale: 0, rotate: -180 }}
@@ -165,9 +155,7 @@ const AfkPage = () => {
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                >
-                    
-                    {/* --- SECTION 1: MUSIC --- */}
+                >                    
                     <motion.div 
                         variants={itemVariants} 
                         whileHover={{ y: -5 }}
@@ -199,14 +187,11 @@ const AfkPage = () => {
                     </motion.div>
 
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        
-                        {/* --- SECTION 2: GAMING (Updated with Recently Played) --- */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">                        
                         <motion.section 
                             variants={itemVariants} 
                             className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-white/20 dark:border-slate-700/50 rounded-[2rem] p-6 md:p-8 h-full shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500"
                         >
-                            {/* Profile Header */}
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
                                 <div className="flex items-center gap-4">
                                     {steamUser && (
@@ -229,13 +214,11 @@ const AfkPage = () => {
                                 </div>
                             </div>
 
-                            {/* A. RECENTLY PLAYED (FITUR BARU) */}
                             {recentGames.length > 0 && (
                                 <div className="mb-8">
                                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                                         <i className="fas fa-history"></i> Recently Played (2 Weeks)
                                     </h3>
-                                    {/* Horizontal Scroll */}
                                     <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
                                         {recentGames.map((game) => (
                                             <a 
@@ -256,7 +239,6 @@ const AfkPage = () => {
                                 </div>
                             )}
                             
-                            {/* B. MOST PLAYED */}
                             <div className="flex items-center justify-between mb-6">
                                 <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
                                    <i className="fas fa-trophy"></i> Most Played
@@ -292,7 +274,6 @@ const AfkPage = () => {
                             </div>
                         </motion.section>
 
-                        {/* --- SECTION 3: MOVIES --- */}
                         <motion.section 
                             variants={itemVariants} 
                             className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-white/20 dark:border-slate-700/50 rounded-[2rem] p-6 md:p-8 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-500"
@@ -316,14 +297,12 @@ const AfkPage = () => {
 
                                         return (
                                             <div key={year} className="relative">
-                                                {/* Year Watermark */}
-                                                <h3 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-primary/10 to-transparent absolute -top-12 -left-4 z-0 select-none pointer-events-none font-outline-2">
+                                                <h3 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-primary/60 to-transparent absolute -top-12 -left-4 z-0 select-none pointer-events-none font-outline-2">
                                                     {year}
                                                 </h3>
                                                 
                                                 <div className="relative z-10 pt-2">
                                                     
-                                                    {/* Best of Year Card */}
                                                     {favoriteMovie && (
                                                         <motion.a 
                                                             whileHover={{ scale: 1.02 }}
@@ -333,7 +312,6 @@ const AfkPage = () => {
                                                             className="block mb-6 group relative rounded-2xl overflow-hidden shadow-lg border border-yellow-500/30 hover:border-yellow-400 transition-all cursor-pointer bg-dark"
                                                         >
                                                             <div className="flex h-32 md:h-40 relative">
-                                                                {/* Backdrop Image Blur */}
                                                                 <div className="absolute inset-0 bg-cover bg-center opacity-40 blur-sm group-hover:opacity-50 transition-opacity duration-500" style={{backgroundImage: `url(https://image.tmdb.org/t/p/w500${favoriteMovie.backdrop_path})`}}></div>
                                                                 <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
 
@@ -356,7 +334,6 @@ const AfkPage = () => {
                                                         </motion.a>
                                                     )}
 
-                                                    {/* Other Movies Grid */}
                                                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                                                         {otherMovies.map((movie) => (
                                                             <motion.a 
@@ -391,7 +368,6 @@ const AfkPage = () => {
                                  <div className="col-span-3 text-center py-10 text-gray-400 text-sm">No movies added.</div>
                             )}
                         </motion.section>
-
                     </div>
                 </motion.div>
             </div>
