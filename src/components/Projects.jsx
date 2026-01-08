@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Tilt from 'react-parallax-tilt';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects as manualProjects } from '../data/projects';
@@ -17,12 +18,12 @@ const Projects = () => {
       try {
         const q = query(collection(dbFirestore, "projects"), orderBy("createdAt", "desc"));
         const querySnapshot = await getDocs(q);
-
+        
         const list = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-
+        
         setCmsProjects(list);
       } catch (error) {
         console.error("Error fetching Firebase projects:", error);
@@ -124,93 +125,90 @@ const Projects = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-32">
           {loadingCms && manualProjects.length === 0 ? (
-            [1, 2, 3].map(i => (
-              <div key={i} className="h-[450px] bg-gray-200 dark:bg-slate-800 rounded-2xl animate-pulse"></div>
-            ))
+             [1, 2, 3].map(i => (
+                <div key={i} className="h-[450px] bg-gray-200 dark:bg-slate-800 rounded-2xl animate-pulse"></div>
+             ))
           ) : filteredProjects.length > 0 ? (
-            <AnimatePresence mode='popLayout'>
-              {filteredProjects.map((project) => (
-                <motion.div
-                  layout
-                  key={project.id} 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2000} className="h-full">
-                    <div className="group bg-white dark:bg-darkLight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 dark:border-slate-700/50 flex flex-col h-full relative">
-                      <div className="h-52 overflow-hidden relative">
-                        <img
-                          src={project.image}
-                          alt={project.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6">
-                          {project.live && (
-                            <a href={project.live} target="_blank" rel="noreferrer" className="px-6 py-2 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full font-medium hover:bg-primary hover:border-primary shadow-lg transition-all">
-                              Visit Site
-                            </a>
-                          )}
-                        </div>
-                        <div className="absolute top-4 left-4 bg-white/90 dark:bg-dark/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-dark dark:text-white shadow-sm border border-gray-100 dark:border-slate-700 uppercase">
-                          {project.category}
-                        </div>
-                      </div>
-
-                      <div className="p-6 flex flex-col flex-grow">
-                        <h3 className="text-xl font-bold mb-3 text-dark dark:text-white group-hover:text-primary transition-colors line-clamp-1">{project.title}</h3>
-                        <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed flex-grow line-clamp-3">{project.shortDesc}</p>
-                        <div className="flex gap-3 mb-6 text-xl text-gray-400 dark:text-gray-500">
-                          {Array.isArray(project.techStack) && project.techStack.slice(0, 4).map((tech, idx) => (
-                            <motion.i
-                              key={idx}
-                              whileHover={{ y: -3, color: "#6366f1" }}
-                              className={`${tech.icon ? tech.icon : ''} transition-colors cursor-help`}
-                              title={tech.name}
-                            ></motion.i>
-                          ))}
-                        </div>
-
-                        <div className="mt-auto flex flex-col gap-3">
-                          {project.live && <a href={project.live} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl shadow-md flex items-center justify-center gap-2 font-medium text-sm group/btn"><i className="fas fa-external-link-alt group-hover/btn:rotate-45 transition-transform duration-300"></i> View Live Site</a>}
-
-                          {project.figma && (
-                            <a
-                              href={project.figma}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="block w-full text-center py-2.5 bg-dark dark:bg-slate-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-slate-700 transition-all shadow-md flex items-center justify-center gap-2 font-medium text-sm"
+             <AnimatePresence mode='popLayout'>
+                {filteredProjects.map((project) => (
+                  <motion.div
+                    layout
+                    key={project.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2000} className="h-full">
+                      <div className="group bg-white dark:bg-darkLight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 dark:border-slate-700/50 flex flex-col h-full relative">                        
+                        <div className="h-52 overflow-hidden relative">
+                          <img 
+                            src={project.image} 
+                            alt={project.title} 
+                            loading="lazy" 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1" 
+                          />
+                          
+                          <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6">                            
+                            <Link 
+                                to={`/project/${project.id}`} 
+                                className="px-6 py-2 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-primary hover:border-primary shadow-lg"
                             >
-                              <i className="fab fa-figma text-lg"></i> View Design
-                            </a>
-                          )}
+                                View Details
+                            </Link>
 
-                          {project.prototype && (
-                            <a
-                              href={project.prototype}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="block w-full text-center py-2.5 border-2 border-dark dark:border-slate-500 text-dark dark:text-slate-200 rounded-xl hover:bg-dark dark:hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center gap-2 font-medium text-sm"
-                            >
-                              <i className="fas fa-play text-sm"></i> Try Prototype
-                            </a>
-                          )}
-
-                          {project.github && <a href={project.github} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 bg-gray-100 dark:bg-slate-700 text-dark dark:text-white rounded-xl hover:bg-gray-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center gap-2 font-medium text-sm"><i className="fab fa-github text-lg"></i> Source Code</a>}
+                          </div>
+                          <div className="absolute top-4 left-4 bg-white/90 dark:bg-dark/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-dark dark:text-white shadow-sm border border-gray-100 dark:border-slate-700 uppercase">
+                              {project.category}
+                          </div>
                         </div>
-                      </div>
 
-                    </div>
-                  </Tilt>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+                        <div className="p-6 flex flex-col flex-grow">
+                          <Link to={`/project/${project.id}`} className="block">
+                             <h3 className="text-xl font-bold mb-3 text-dark dark:text-white group-hover:text-primary transition-colors line-clamp-1">{project.title}</h3>
+                          </Link>
+                          
+                          <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed flex-grow line-clamp-3">{project.shortDesc}</p>
+                          
+                          <div className="flex gap-3 mb-6 text-xl text-gray-400 dark:text-gray-500">
+                            {Array.isArray(project.techStack) && project.techStack.slice(0, 4).map((tech, idx) => (
+                                <motion.i 
+                                    key={idx} 
+                                    whileHover={{ y: -3, color: "#6366f1" }} 
+                                    className={`${tech.icon ? tech.icon : ''} transition-colors cursor-help`} 
+                                    title={tech.name}
+                                ></motion.i>
+                            ))}
+                          </div>
+
+                          <div className="mt-auto flex flex-col gap-3">
+                            {project.live && <a href={project.live} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl shadow-md flex items-center justify-center gap-2 font-medium text-sm group/btn"><i className="fas fa-external-link-alt group-hover/btn:rotate-45 transition-transform duration-300"></i> View Live Site</a>}
+                            
+                            {project.figma && (
+                                <a href={project.figma} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 bg-dark dark:bg-slate-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-slate-700 transition-all shadow-md flex items-center justify-center gap-2 font-medium text-sm">
+                                    <i className="fab fa-figma text-lg"></i> View Design
+                                </a>
+                            )}
+
+                            {project.prototype && (
+                                <a href={project.prototype} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 border-2 border-dark dark:border-slate-500 text-dark dark:text-slate-200 rounded-xl hover:bg-dark dark:hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center gap-2 font-medium text-sm">
+                                    <i className="fas fa-play text-sm"></i> Try Prototype
+                                </a>
+                            )}
+
+                            {project.github && <a href={project.github} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 bg-gray-100 dark:bg-slate-700 text-dark dark:text-white rounded-xl hover:bg-gray-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center gap-2 font-medium text-sm"><i className="fab fa-github text-lg"></i> Source Code</a>}
+                          </div>
+                        </div>
+
+                      </div>
+                    </Tilt>
+                  </motion.div>
+                ))}
+             </AnimatePresence>
           ) : (
-            <div className="col-span-full text-center py-20 text-gray-500">
-              No projects found.
-            </div>
+             <div className="col-span-full text-center py-20 text-gray-500">
+                No projects found.
+             </div>
           )}
         </div>
 
