@@ -1,25 +1,30 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // Tambah AnimatePresence
+import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import SpotifyNowPlaying from '../components/SpotifyNowPlaying';
 import SpotifyTopTracks from '../components/SpotifyTopTracks';
 
 const AfkPage = () => {
+    // --- STATE ---
     const [games, setGames] = useState([]);
+    const [recentGames, setRecentGames] = useState([]); // State Baru: Recently Played
     const [steamUser, setSteamUser] = useState(null);
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // --- FETCH DATA (Logic Tetap Sama) ---
+    // --- FETCH DATA ---
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // Fetch Steam
                 const steamRes = await fetch('/.netlify/functions/steam');
                 const steamData = await steamRes.json();
 
                 if (steamData.games) setGames(steamData.games);
+                if (steamData.recent) setRecentGames(steamData.recent); // Set Data Recent
                 if (steamData.user) setSteamUser(steamData.user);
 
+                // Fetch Movies
                 const moviesRes = await fetch('/.netlify/functions/movies');
                 const moviesData = await moviesRes.json();
                 if (Array.isArray(moviesData)) setMovies(moviesData);
@@ -56,7 +61,7 @@ const AfkPage = () => {
 
     const statusInfo = getSteamStatus();
 
-    // --- ANIMATION VARIANTS (UPDATED) ---
+    // --- ANIMATION VARIANTS ---
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -75,7 +80,7 @@ const AfkPage = () => {
         }
     };
 
-    // Komponen Visualizer Musik Sederhana
+    // Komponen Visualizer Musik
     const MusicBars = () => (
         <div className="flex gap-1 items-end h-4">
             {[1, 2, 3, 4].map((bar) => (
@@ -103,8 +108,7 @@ const AfkPage = () => {
                 url="https://rafie-dev.netlify.app/afk" 
             />
 
-            {/* --- 1. BACKGROUND AMBIANCE (NEW) --- */}
-            {/* Bola cahaya biru/ungu yang bergerak lambat di background */}
+            {/* --- BACKGROUND AMBIANCE --- */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <motion.div 
                     animate={{ x: [-100, 100, -100], y: [-50, 50, -50], opacity: [0.3, 0.5, 0.3] }}
@@ -135,7 +139,6 @@ const AfkPage = () => {
                         >
                             <span className="text-4xl">🎮</span>
                         </motion.div>
-                        {/* Efek Shadow di belakang icon */}
                         <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full transform scale-150 z-0"></div>
                     </motion.div>
 
@@ -167,14 +170,14 @@ const AfkPage = () => {
                     {/* --- SECTION 1: MUSIC --- */}
                     <motion.div 
                         variants={itemVariants} 
-                        whileHover={{ y: -5 }} // Efek Hover Naik Sedikit
+                        whileHover={{ y: -5 }}
                         className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 rounded-[2rem] p-8 md:p-10 shadow-lg hover:shadow-2xl hover:shadow-green-500/10 transition-all duration-500"
                     >
                         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                             <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3">
                                 <i className="fab fa-spotify text-[#1DB954] text-3xl"></i>
                                 On Repeat
-                                <MusicBars /> {/* Animasi Bar Musik */}
+                                <MusicBars />
                             </h2>
                             <div className="text-xs font-bold text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/20 px-4 py-1.5 rounded-full w-fit flex items-center gap-2">
                                 <span className="relative flex h-2 w-2">
@@ -198,11 +201,12 @@ const AfkPage = () => {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         
-                        {/* --- SECTION 2: GAMING --- */}
+                        {/* --- SECTION 2: GAMING (Updated with Recently Played) --- */}
                         <motion.section 
                             variants={itemVariants} 
                             className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-white/20 dark:border-slate-700/50 rounded-[2rem] p-6 md:p-8 h-full shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500"
                         >
+                            {/* Profile Header */}
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
                                 <div className="flex items-center gap-4">
                                     {steamUser && (
@@ -224,9 +228,39 @@ const AfkPage = () => {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* A. RECENTLY PLAYED (FITUR BARU) */}
+                            {recentGames.length > 0 && (
+                                <div className="mb-8">
+                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                        <i className="fas fa-history"></i> Recently Played (2 Weeks)
+                                    </h3>
+                                    {/* Horizontal Scroll */}
+                                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                                        {recentGames.map((game) => (
+                                            <a 
+                                                key={game.appid} 
+                                                href={`https://store.steampowered.com/app/${game.appid}`}
+                                                target="_blank" 
+                                                rel="noreferrer"
+                                                className="flex-shrink-0 w-32 group relative rounded-xl overflow-hidden shadow-md cursor-pointer border border-gray-200 dark:border-slate-700/50"
+                                            >
+                                                <img src={`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`} alt={game.name} className="w-full h-40 object-cover object-center transition-transform duration-500 group-hover:scale-110" />
+                                                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
+                                                    <span className="text-[10px] text-white font-bold line-clamp-2 leading-tight mb-1">{game.name}</span>
+                                                    <span className="text-[9px] text-green-400 font-mono">{(game.playtime_2weeks / 60).toFixed(1)} hrs</span>
+                                                </div>
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                             
+                            {/* B. MOST PLAYED */}
                             <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-lg font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest text-xs">Most Played</h3>
+                                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                                   <i className="fas fa-trophy"></i> Most Played
+                                </h3>
                                 <span className={`w-2 h-2 rounded-full animate-pulse ${loading ? 'bg-gray-400' : 'bg-green-500'}`} title="API Status"></span>
                             </div>
 
