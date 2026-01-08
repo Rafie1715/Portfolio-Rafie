@@ -4,7 +4,7 @@ export const certifications = [
     img: "/images/cert-bangkit.webp", 
     alt: "Bangkit Academy Certificate",
     title: "Mobile Development Cohort",
-    issuer: "Bangkit Academy led by Google, Tokopedia, Gojek, & Traveloka",
+    issuer: "Bangkit Academy led by Google, GoTo, & Traveloka",
     date: "2024",
     link: ""
   },
