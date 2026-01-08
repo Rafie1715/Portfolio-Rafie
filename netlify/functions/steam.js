@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
     if (gamesData.response && gamesData.response.games) {
         topGames = gamesData.response.games
             .sort((a, b) => b.playtime_forever - a.playtime_forever)
-            .slice(0, 20);
+            .slice(0, 30);
     }
 
     const playerInfo = profileData.response.players[0];

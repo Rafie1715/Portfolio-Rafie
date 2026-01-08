@@ -5,6 +5,8 @@ import SEO from '../components/SEO';
 
 const UsesPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+
+  // --- ANIMATION VARIANTS ---
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -14,12 +16,12 @@ const UsesPage = () => {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9, y: 20 },
+    hidden: { opacity: 0, y: 30, scale: 0.9 },
     visible: { 
       opacity: 1, 
+      y: 0, 
       scale: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 50, damping: 15 } 
+      transition: { type: "spring", stiffness: 80, damping: 15 } 
     }
   };
 
@@ -33,7 +35,7 @@ const UsesPage = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300">
+    <div className="bg-gray-50 dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300 relative overflow-hidden">
       
       <SEO 
         title="Workspace | Rafie Rojagat" 
@@ -41,26 +43,45 @@ const UsesPage = () => {
         url="https://rafie-dev.netlify.app/workspace" 
       />
 
-      <div className="container mx-auto px-4 max-w-6xl">        
-        <div className="text-center mb-16" data-aos="fade-down">
+      {/* --- 1. TECH BACKGROUND (Cyber Grid) --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+          {/* Grid Pattern */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+          {/* Radial Gradient untuk memudarkan grid di pinggir */}
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-transparent to-gray-50 dark:from-dark dark:via-transparent dark:to-dark"></div>
+          
+          {/* Glowing Orbs */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 blur-[120px] rounded-full"></div>
+      </div>
+
+      <div className="container mx-auto px-4 max-w-6xl relative z-10">        
+        
+        {/* --- HEADER --- */}
+        <div className="text-center mb-20" data-aos="fade-down">
           <motion.div 
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-block p-4 rounded-3xl bg-gray-100 dark:bg-slate-800 mb-6 border border-gray-200 dark:border-slate-700 shadow-sm"
+            animate={{ y: [0, -15, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="inline-block relative"
           >
-            <i className="fas fa-laptop-code text-4xl text-dark dark:text-white"></i>
+             <div className="p-5 rounded-3xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-xl relative z-10">
+                <i className="fas fa-laptop-code text-5xl text-dark dark:text-white bg-clip-text bg-gradient-to-r from-primary to-secondary"></i>
+             </div>
+             {/* Glow Effect behind icon */}
+             <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full transform scale-150 z-0 animate-pulse"></div>
           </motion.div>
 
-          <h1 className="text-4xl md:text-6xl font-bold text-dark dark:text-white mb-6 tracking-tight">
-            My <span className="text-primary">Workspace</span>
+          <h1 className="mt-8 text-4xl md:text-6xl font-black text-dark dark:text-white mb-6 tracking-tight">
+            My <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">Workspace</span>
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            A curated look at the hardware, gadgets, and software that power my daily workflow.
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            The hardware, gadgets, and software that power my productivity.<br/>
+            <span className="text-sm font-mono text-primary bg-primary/10 px-2 py-1 rounded mt-2 inline-block">Updated: 2025</span>
           </p>
         </div>
 
+        {/* --- GRID ITEMS --- */}
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-4 auto-rows-[280px] gap-5"
+          className="grid grid-cols-1 md:grid-cols-4 auto-rows-[280px] gap-6"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -70,90 +91,133 @@ const UsesPage = () => {
             <motion.div
               key={item.id}
               variants={itemVariants}
-              className={`group relative rounded-3xl overflow-hidden cursor-pointer bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-2xl transition-all duration-500 ${getSizeClasses(item.size)}`}
+              whileHover={{ y: -8, scale: 1.02, zIndex: 10 }}
               onClick={() => setSelectedImage(item)}
-              whileHover={{ y: -5 }}
+              className={`group relative rounded-3xl overflow-hidden cursor-pointer 
+                bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm 
+                border border-white/50 dark:border-slate-700/50 
+                shadow-lg hover:shadow-2xl hover:shadow-primary/20 
+                transition-all duration-500 ${getSizeClasses(item.size)}`}
             >
+              {/* Gambar */}
               <img 
                 src={item.image} 
                 alt={item.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 loading="lazy"
               />
 
-              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300"></div>
-              <div className="absolute bottom-0 left-0 w-full p-5 md:translate-y-[40%] md:group-hover:translate-y-0 transition-transform duration-500 bg-black/60 backdrop-blur-md border-t border-white/10">
+              {/* Overlay Gradient (Selalu ada tapi tipis) */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300"></div>
+
+              {/* Konten Text */}
+              <div className="absolute bottom-0 left-0 w-full p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                 
-                <div className="flex justify-between items-start mb-1">
-                    <div>
-                        <span className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1 block">
-                        {item.category}
-                        </span>
-                        <h3 className="text-white text-lg font-bold leading-tight drop-shadow-sm">
-                        {item.title}
-                        </h3>
-                    </div>
-                    <i className="fas fa-arrow-up-right-from-square text-white/50 text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                {/* Kategori Badge */}
+                <div className="mb-2 opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 delay-100">
+                   <span className="text-[10px] font-bold text-black bg-primary px-2 py-0.5 rounded shadow-lg shadow-primary/50 uppercase tracking-wider">
+                     {item.category}
+                   </span>
                 </div>
 
-                <p className="text-gray-300 text-xs line-clamp-2 mt-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 delay-75">
-                  {item.desc}
-                </p>
-              </div>
+                {/* Judul */}
+                <h3 className="text-white text-xl font-bold leading-tight drop-shadow-md mb-1">
+                  {item.title}
+                </h3>
 
-              <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-md w-8 h-8 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100 border border-white/20">
-                <i className="fas fa-expand-alt text-xs"></i>
+                {/* Deskripsi (Hanya muncul saat hover) */}
+                <div className="h-0 group-hover:h-auto overflow-hidden transition-all duration-500">
+                    <p className="text-gray-300 text-xs line-clamp-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-150 leading-relaxed">
+                    {item.desc}
+                    </p>
+                </div>
+                
+                {/* Indikator Panah */}
+                <div className="absolute right-6 bottom-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200">
+                     <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
+                        <i className="fas fa-arrow-up rotate-45"></i>
+                     </div>
+                </div>
               </div>
             </motion.div>
           ))}
         </motion.div>
       </div>
 
+      {/* --- MODAL (POPUP IMAGE) --- */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4 backdrop-blur-md"
+            className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4 backdrop-blur-xl"
             onClick={() => setSelectedImage(null)}
           >
             <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative max-w-5xl w-full max-h-screen flex flex-col items-center"
+              initial={{ scale: 0.9, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="relative max-w-5xl w-full flex flex-col items-center"
               onClick={(e) => e.stopPropagation()}
             >
-               <img 
-                 src={selectedImage.image} 
-                 alt={selectedImage.title}
-                 className="w-auto h-auto max-w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl border border-white/10 bg-black"
-               />
+               {/* Container Gambar dengan Border Glow */}
+               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-primary/20 border border-white/10 bg-dark">
+                  <img 
+                    src={selectedImage.image} 
+                    alt={selectedImage.title}
+                    className="w-auto h-auto max-w-full max-h-[70vh] object-contain"
+                  />
+                  
+                  {/* Watermark/Tag */}
+                  <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+                      <p className="text-xs font-bold text-white uppercase tracking-wider">{selectedImage.category}</p>
+                  </div>
+               </div>
                
-               <div className="mt-6 text-center text-white max-w-2xl px-4">
-                 <div className="flex items-center justify-center gap-3 mb-2">
-                    <h2 className="text-2xl font-bold">{selectedImage.title}</h2>
-                    {selectedImage.link && (
-                        <a 
-                          href={selectedImage.link} 
-                          target="_blank" 
-                          rel="noreferrer"
-                          className="text-primary hover:text-white transition-colors"
-                          title="View Product"
-                        >
-                            <i className="fas fa-external-link-alt text-lg"></i>
-                        </a>
-                    )}
-                 </div>
-                 <p className="text-gray-300 leading-relaxed">{selectedImage.desc}</p>
+               {/* Detail Info */}
+               <div className="mt-8 text-center text-white max-w-2xl px-4">
+                 <motion.h2 
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
+                 >
+                    {selectedImage.title}
+                 </motion.h2>
+                 
+                 <motion.p 
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-gray-400 leading-relaxed text-lg"
+                 >
+                    {selectedImage.desc}
+                 </motion.p>
+
+                 {/* External Link (Jika ada di data) */}
+                 {selectedImage.link && (
+                    <motion.a 
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        href={selectedImage.link}
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 mt-6 px-6 py-2 bg-primary text-white rounded-full font-bold hover:bg-secondary transition-colors shadow-lg shadow-primary/30"
+                    >
+                        <i className="fas fa-shopping-bag"></i> View Product
+                    </motion.a>
+                 )}
                </div>
 
+               {/* Close Button */}
                <button
-                  className="absolute -top-12 right-0 md:-right-10 text-white/50 hover:text-white transition-colors bg-white/10 hover:bg-white/20 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10"
-                  onClick={() => setSelectedImage(null)}
+                 className="absolute -top-16 right-0 md:-right-10 text-white/50 hover:text-white transition-colors bg-white/10 hover:bg-white/20 w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10 group"
+                 onClick={() => setSelectedImage(null)}
                >
-                  <i className="fas fa-times text-xl"></i>
+                 <i className="fas fa-times text-xl group-hover:rotate-90 transition-transform duration-300"></i>
                </button>
             </motion.div>
           </motion.div>
