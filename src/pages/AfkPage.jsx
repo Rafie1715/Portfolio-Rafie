@@ -1,24 +1,26 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
 import SpotifyNowPlaying from '../components/SpotifyNowPlaying';
 import SpotifyTopTracks from '../components/SpotifyTopTracks';
 
 const AfkPage = () => {
+    const DISCORD_ID = "717196208996876379"; 
+
     const [games, setGames] = useState([]);
-    const [recentGames, setRecentGames] = useState([]); // State Baru: Recently Played
+    const [recentGames, setRecentGames] = useState([]); 
     const [steamUser, setSteamUser] = useState(null);
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [discordData, setDiscordData] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const steamRes = await fetch('/.netlify/functions/steam');
                 const steamData = await steamRes.json();
-
                 if (steamData.games) setGames(steamData.games);
-                if (steamData.recent) setRecentGames(steamData.recent); // Set Data Recent
+                if (steamData.recent) setRecentGames(steamData.recent); 
                 if (steamData.user) setSteamUser(steamData.user);
 
                 const moviesRes = await fetch('/.netlify/functions/movies');
@@ -34,6 +36,37 @@ const AfkPage = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (!DISCORD_ID) return;
+        let socket;
+        let heartbeatInterval;
+
+        const connectLanyard = () => {
+            socket = new WebSocket('wss://api.lanyard.rest/socket');
+            socket.onopen = () => {
+                socket.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
+            };
+            socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                const { t, d, op } = message;
+                if (op === 1) {
+                    heartbeatInterval = setInterval(() => {
+                        if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ op: 3 })); 
+                    }, d.heartbeat_interval);
+                }
+                if (t === 'INIT_STATE' || t === 'PRESENCE_UPDATE') {
+                    setDiscordData((prev) => t === 'INIT_STATE' ? d : { ...prev, ...d });
+                }
+            };
+            socket.onclose = () => clearInterval(heartbeatInterval);
+        };
+        connectLanyard();
+        return () => {
+            clearInterval(heartbeatInterval);
+            if (socket) socket.close();
+        };
+    }, []); 
+
     const groupMoviesByYear = (movieList) => {
         const grouped = {};
         movieList.forEach(movie => {
@@ -44,118 +77,52 @@ const AfkPage = () => {
         });
         return Object.entries(grouped).sort((a, b) => b[0] - a[0]);
     };
-
     const moviesByYear = groupMoviesByYear(movies);
 
-    const getSteamStatus = () => {
-        if (!steamUser) return { text: 'Loading...', color: 'bg-gray-400' };
-        if (steamUser.gameextrainfo) return { text: `Playing ${steamUser.gameextrainfo}`, color: 'bg-green-500 animate-pulse' };
-        if (steamUser.status === 1) return { text: 'Online', color: 'bg-blue-500' };
-        return { text: 'Offline', color: 'bg-gray-500' };
-    };
+    const getDiscordStatus = () => {
+        if (!discordData) return { text: 'Offline', color: 'bg-gray-500', isOnline: false, avatar: steamUser?.avatar };
+        
+        const statusColors = { online: 'bg-green-500', idle: 'bg-yellow-500', dnd: 'bg-red-500', offline: 'bg-gray-500' };
+        const gameActivity = discordData.activities?.find(act => act.type === 0);
 
-    const statusInfo = getSteamStatus();
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+        if (gameActivity) {
+            return { 
+                text: `Playing ${gameActivity.name}`, color: 'bg-purple-500', isOnline: true, 
+                gameDetails: gameActivity, 
+                avatar: `https://cdn.discordapp.com/avatars/${discordData.discord_user.id}/${discordData.discord_user.avatar}.png`
+            };
         }
+        return { 
+            text: discordData.discord_status.charAt(0).toUpperCase() + discordData.discord_status.slice(1), 
+            color: statusColors[discordData.discord_status] || 'bg-gray-500', 
+            isOnline: discordData.discord_status !== 'offline',
+            avatar: `https://cdn.discordapp.com/avatars/${discordData.discord_user.id}/${discordData.discord_user.avatar}.png`
+        };
     };
+    const statusInfo = getDiscordStatus();
 
-    const itemVariants = {
-        hidden: { opacity: 0, y: 30, scale: 0.95 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: { type: "spring", stiffness: 100, damping: 20 }
-        }
-    };
-
-    const MusicBars = () => (
-        <div className="flex gap-1 items-end h-4">
-            {[1, 2, 3, 4].map((bar) => (
-                <motion.div
-                    key={bar}
-                    className="w-1 bg-[#1DB954]"
-                    animate={{ height: [4, 16, 8, 12, 4] }}
-                    transition={{
-                        duration: 0.8,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                        delay: bar * 0.1
-                    }}
-                />
-            ))}
-        </div>
-    );
+    const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
+    const itemVariants = { hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100 } } };
+    const MusicBars = () => ( <div className="flex gap-1 items-end h-4"> {[1, 2, 3, 4].map((bar) => ( <motion.div key={bar} className="w-1 bg-[#1DB954]" animate={{ height: [4, 16, 8, 12, 4] }} transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse", delay: bar * 0.1 }} /> ))} </div> );
 
     return (
         <div className="bg-gray-50 dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300 relative overflow-hidden">
-            
-            <SEO 
-                title="AFK (Away From Keyboard) | Rafie Rojagat" 
-                description="My life outside of coding: Music, Games, and Movies."
-                url="https://rafie-dev.netlify.app/afk" 
-            />
+            <SEO title="AFK | Rafie Rojagat" description="Games, Music, and Movies." url="https://rafierb.me/afk" />
 
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <motion.div 
-                    animate={{ x: [-100, 100, -100], y: [-50, 50, -50], opacity: [0.3, 0.5, 0.3] }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px]"
-                />
-                <motion.div 
-                    animate={{ x: [100, -100, 100], y: [50, -50, 50], opacity: [0.2, 0.4, 0.2] }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-purple-500/20 rounded-full blur-[120px]"
-                />
+                <motion.div animate={{ x: [-100, 100, -100], y: [-50, 50, -50], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px]" />
             </div>
 
-            <div className="container mx-auto px-4 max-w-5xl relative z-10">                
+            <div className="container mx-auto px-4 max-w-5xl relative z-10">
+                
                 <div className="text-center mb-16">
-                    <motion.div 
-                        initial={{ scale: 0, rotate: -180 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={{ type: "spring", duration: 1.5 }}
-                        className="inline-block relative"
-                    >
-                        <motion.div 
-                            animate={{ rotate: [0, 10, -10, 0] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            className="p-4 rounded-3xl bg-white dark:bg-slate-800 mb-6 border border-gray-100 dark:border-slate-700 shadow-xl relative z-10"
-                        >
-                            <span className="text-4xl">🎮</span>
-                        </motion.div>
-                        <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full transform scale-150 z-0"></div>
-                    </motion.div>
-
-                    <motion.h1 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="text-4xl md:text-6xl font-black text-dark dark:text-white mb-6 tracking-tight"
-                    >
-                        /afk <span className="text-primary text-2xl md:text-4xl font-medium ml-2 font-mono">(Away From Keyboard)</span>
-                    </motion.h1>
-                    <motion.p 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.4 }}
-                        className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
-                    >
-                        When I'm not pushing pixels or fixing bugs, this is what I'm up to.
-                    </motion.p>
+                    <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 4, repeat: Infinity }} className="inline-block text-6xl mb-4 filter drop-shadow-lg">🎮</motion.div>
+                    <h1 className="text-4xl md:text-6xl font-black text-dark dark:text-white mb-2 tracking-tight">/afk</h1>
+                    <p className="text-gray-500 font-medium text-lg">Away From Keyboard.</p>
                 </div>
 
-                <motion.div 
-                    className="space-y-12"
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                >                    
+                <motion.div className="space-y-12" variants={containerVariants} initial="hidden" animate="visible">
+                    
                     <motion.div 
                         variants={itemVariants} 
                         whileHover={{ y: -5 }}
@@ -186,189 +153,149 @@ const AfkPage = () => {
                         </div>
                     </motion.div>
 
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">                        
-                        <motion.section 
-                            variants={itemVariants} 
-                            className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-white/20 dark:border-slate-700/50 rounded-[2rem] p-6 md:p-8 h-full shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500"
-                        >
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-                                <div className="flex items-center gap-4">
-                                    {steamUser && (
-                                        <a href={steamUser.profileurl} target="_blank" rel="noreferrer" className="relative group">
-                                            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
-                                            <img src={steamUser.avatar} alt="Steam Avatar" className="relative w-14 h-14 rounded-full border-2 border-white dark:border-slate-800 object-cover" />
-                                            <div className={`absolute bottom-0 right-0 w-4 h-4 border-2 border-white dark:border-slate-800 rounded-full ${statusInfo.color} z-10`}></div>
-                                        </a>
-                                    )}
-                                    
-                                    <div>
-                                        <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-2">
-                                            <i className="fab fa-steam text-[#1b2838] dark:text-white"></i>
-                                            Steam Library
-                                        </h2>
-                                        <p className={`text-xs font-bold mt-1 ${steamUser?.gameextrainfo ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}`}>
-                                            {statusInfo.text}
-                                        </p>
-                                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        
+                        <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 h-full shadow-xl hover:shadow-purple-500/10 transition-all duration-500 flex flex-col">                            
+                            <div className="flex items-center gap-5 mb-8">
+                                <div className="relative">
+                                    <motion.div className={`absolute -inset-1 rounded-full blur opacity-40 ${statusInfo.isOnline ? 'bg-green-500' : 'bg-gray-500'}`} animate={{ opacity: [0.4, 0.7, 0.4] }} transition={{ duration: 2, repeat: Infinity }}></motion.div>
+                                    <img src={statusInfo.avatar || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'} alt="Avatar" className="relative w-16 h-16 rounded-full border-2 border-white dark:border-slate-800 object-cover bg-gray-200" />
+                                    <div className={`absolute bottom-0 right-0 w-5 h-5 border-4 border-white dark:border-slate-800 rounded-full ${statusInfo.color} z-10`}></div>
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-dark dark:text-white">Status Check</h2>
+                                    <p className={`text-sm font-bold mt-0.5 ${statusInfo.isOnline ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}`}>{statusInfo.text}</p>
                                 </div>
                             </div>
 
-                            {recentGames.length > 0 && (
-                                <div className="mb-8">
-                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                                        <i className="fas fa-history"></i> Recently Played (2 Weeks)
-                                    </h3>
-                                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                            <div className="mb-10">
+                                <AnimatePresence mode="wait">
+                                    {statusInfo.gameDetails ? (
+                                        <motion.div key="playing" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/5 shadow-2xl group w-full">
+                                            <div className="absolute inset-0 bg-cover bg-center opacity-30 dark:opacity-40 blur-md scale-110 group-hover:scale-100 transition-transform duration-700" style={{ backgroundImage: statusInfo.gameDetails.assets?.large_image ? `url(https://cdn.discordapp.com/app-assets/${statusInfo.gameDetails.application_id}/${statusInfo.gameDetails.assets.large_image}.png)` : 'none' }}></div>
+                                            <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent dark:from-slate-900/90 dark:via-slate-900/50 dark:to-transparent"></div>
+                                            <div className="relative z-10 p-6 flex items-center gap-5">
+                                                {statusInfo.gameDetails.assets?.large_image ? (
+                                                    <img src={`https://cdn.discordapp.com/app-assets/${statusInfo.gameDetails.application_id}/${statusInfo.gameDetails.assets.large_image}.png`} alt="Game Asset" className="w-24 h-24 rounded-xl shadow-lg object-cover bg-gray-800" />
+                                                ) : (
+                                                    <div className="w-24 h-24 rounded-xl bg-indigo-500 flex items-center justify-center text-4xl shadow-lg">🎮</div>
+                                                )}
+                                                <div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
+                                                        <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Now Playing</span>
+                                                    </div>
+                                                    <h3 className="text-2xl font-black text-dark dark:text-white leading-tight">{statusInfo.gameDetails.name}</h3>
+                                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-300 line-clamp-1">{statusInfo.gameDetails.details}</p>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{statusInfo.gameDetails.state}</p>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    ) : (
+                                        <div className="text-center text-gray-400 py-8 w-full bg-gray-50/50 dark:bg-slate-700/30 rounded-2xl border border-dashed border-gray-300 dark:border-slate-600">
+                                            <div className="text-3xl mb-2 grayscale opacity-50">💤</div>
+                                            <p className="text-xs font-medium">Currently chilling...</p>
+                                        </div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+
+                            <div className="mt-auto">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2"><i className="fas fa-history"></i> Recently Played</h3>
+                                    <div className="h-[1px] flex-grow ml-4 bg-gray-200 dark:bg-slate-700/50"></div>
+                                </div>
+                                {recentGames.length > 0 ? (
+                                    <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-hide">
                                         {recentGames.map((game) => (
-                                            <a 
-                                                key={game.appid} 
-                                                href={`https://store.steampowered.com/app/${game.appid}`}
-                                                target="_blank" 
-                                                rel="noreferrer"
-                                                className="flex-shrink-0 w-32 group relative rounded-xl overflow-hidden shadow-md cursor-pointer border border-gray-200 dark:border-slate-700/50"
-                                            >
-                                                <img src={`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`} alt={game.name} className="w-full h-40 object-cover object-center transition-transform duration-500 group-hover:scale-110" />
-                                                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
-                                                    <span className="text-[10px] text-white font-bold line-clamp-2 leading-tight mb-1">{game.name}</span>
-                                                    <span className="text-[9px] text-green-400 font-mono">{(game.playtime_2weeks / 60).toFixed(1)} hrs</span>
+                                            <a key={game.appid} href={`https://store.steampowered.com/app/${game.appid}`} target="_blank" rel="noreferrer" className="flex-shrink-0 w-24 group relative rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                                <img src={`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`} className="w-full h-32 object-cover bg-gray-800" alt={game.name} />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
+                                                    <p className="text-[9px] text-white font-bold leading-tight line-clamp-2">{game.name}</p>
                                                 </div>
                                             </a>
                                         ))}
                                     </div>
-                                </div>
-                            )}
-                            
-                            <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                                   <i className="fas fa-trophy"></i> Most Played
-                                </h3>
-                                <span className={`w-2 h-2 rounded-full animate-pulse ${loading ? 'bg-gray-400' : 'bg-green-500'}`} title="API Status"></span>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {loading ? (
-                                    [1, 2, 3, 4].map((i) => <div key={i} className="aspect-[16/9] bg-gray-200 dark:bg-slate-700 rounded-2xl animate-pulse"></div>)
-                                ) : games.length > 0 ? (
-                                    games.map((game) => (
-                                        <motion.div 
-                                            key={game.appid} 
-                                            whileHover={{ scale: 1.03, y: -2 }}
-                                            className="group relative aspect-[16/9] bg-gray-900 rounded-2xl overflow-hidden shadow-md border border-gray-200 dark:border-slate-700 cursor-pointer"
-                                        >
-                                            <img src={`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`} alt={game.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
-                                            
-                                            <div className="absolute bottom-0 left-0 p-4 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                                                <h3 className="text-white font-bold text-sm leading-tight mb-1 line-clamp-1 text-shadow">{game.name}</h3>
-                                                <p className="text-[10px] text-gray-300 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75">
-                                                    <i className="fas fa-clock text-[9px]"></i> {Math.floor(game.playtime_forever / 60)} hrs total
-                                                </p>
-                                            </div>
-                                            <a href={`https://store.steampowered.com/app/${game.appid}`} target="_blank" rel="noreferrer" className="absolute inset-0 z-10"></a>
-                                        </motion.div>
-                                    ))
-                                ) : (
-                                    <div className="col-span-full text-center py-10 text-gray-400 text-sm">No games found.</div>
-                                )}
+                                ) : ( <p className="text-sm text-gray-400 italic">No recent activity.</p> )}
                             </div>
                         </motion.section>
 
-                        <motion.section 
-                            variants={itemVariants} 
-                            className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-white/20 dark:border-slate-700/50 rounded-[2rem] p-6 md:p-8 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-500"
-                        >
-                            <div className="flex items-center justify-between mb-8">
-                                <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3">
-                                    <span className="text-3xl filter drop-shadow-md">🍿</span> Cinema Log
-                                </h2>
-                            </div>
-
-                            {loading ? (
-                                <div className="grid grid-cols-3 gap-3">
-                                     {[1, 2, 3].map(i => <div key={i} className="aspect-[2/3] bg-gray-200 dark:bg-slate-700 rounded-xl animate-pulse"></div>)}
-                                </div>
-                            ) : movies.length > 0 ? (
-                                
-                                <div className="space-y-12">
+                        <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-yellow-500/10 transition-all duration-500 flex flex-col h-[600px]">
+                            <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3 mb-6 flex-shrink-0">
+                                <span className="text-3xl filter drop-shadow-md">🍿</span> Cinema Log
+                            </h2>
+                            {loading ? ( <div className="animate-pulse h-full bg-gray-200 dark:bg-slate-700 rounded-xl"></div> ) : (
+                                <div className="space-y-10 flex-1 overflow-y-auto scrollbar-hide pr-2 min-h-0">
                                     {moviesByYear.map(([year, yearMovies]) => {
-                                        const favoriteMovie = yearMovies.find(m => m.isFavorite);
-                                        const otherMovies = yearMovies.filter(m => !m.isFavorite);
-
+                                        const fav = yearMovies.find(m => m.isFavorite);
+                                        const others = yearMovies.filter(m => !m.isFavorite);
                                         return (
                                             <div key={year} className="relative">
-                                                <h3 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-primary/60 to-transparent absolute -top-12 -left-4 z-0 select-none pointer-events-none font-outline-2">
-                                                    {year}
-                                                </h3>
-                                                
-                                                <div className="relative z-10 pt-2">
-                                                    
-                                                    {favoriteMovie && (
-                                                        <motion.a 
-                                                            whileHover={{ scale: 1.02 }}
-                                                            href={`https://www.themoviedb.org/movie/${favoriteMovie.id}`} 
-                                                            target="_blank" 
-                                                            rel="noreferrer"
-                                                            className="block mb-6 group relative rounded-2xl overflow-hidden shadow-lg border border-yellow-500/30 hover:border-yellow-400 transition-all cursor-pointer bg-dark"
-                                                        >
-                                                            <div className="flex h-32 md:h-40 relative">
-                                                                <div className="absolute inset-0 bg-cover bg-center opacity-40 blur-sm group-hover:opacity-50 transition-opacity duration-500" style={{backgroundImage: `url(https://image.tmdb.org/t/p/w500${favoriteMovie.backdrop_path})`}}></div>
-                                                                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
-
-                                                                <div className="relative z-10 flex w-full">
-                                                                     <div className="w-24 md:w-28 flex-shrink-0 relative shadow-2xl">
-                                                                        <img src={`https://image.tmdb.org/t/p/w500${favoriteMovie.poster_path}`} alt={favoriteMovie.title} className="w-full h-full object-cover" />
-                                                                     </div>
-                                                                     <div className="flex-1 p-4 flex flex-col justify-center">
-                                                                         <div className="flex items-center gap-2 mb-2">
-                                                                             <span className="text-[10px] font-black bg-yellow-400 text-black px-2 py-0.5 rounded-md flex items-center gap-1 shadow-lg shadow-yellow-400/20">
-                                                                                 <i className="fas fa-trophy"></i> BEST OF {year}
-                                                                             </span>
-                                                                             <span className="text-yellow-400 text-xs font-bold drop-shadow-md">⭐ {favoriteMovie.myRating || favoriteMovie.vote_average.toFixed(1)}</span>
-                                                                         </div>
-                                                                         <h4 className="text-white font-bold text-lg md:text-xl leading-tight line-clamp-1 group-hover:text-yellow-300 transition-colors drop-shadow-md">{favoriteMovie.title}</h4>
-                                                                         <p className="text-gray-300 text-xs mt-1 line-clamp-2 opacity-80 group-hover:opacity-100">{favoriteMovie.overview}</p>
-                                                                     </div>
-                                                                </div>
+                                                <div className="sticky top-0 z-10 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm py-2 mb-4 border-b border-gray-100 dark:border-slate-700/50">
+                                                    <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">{year}</h3>
+                                                </div>
+                                                {fav && (
+                                                    <a href={`https://www.themoviedb.org/movie/${fav.id}`} target="_blank" rel="noreferrer" className="block mb-6 relative rounded-2xl overflow-hidden aspect-video group cursor-pointer shadow-lg border border-yellow-500/20">
+                                                        <img src={`https://image.tmdb.org/t/p/w500${fav.backdrop_path}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={fav.title} />
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 group-hover:opacity-70 transition-opacity"></div>
+                                                        <div className="absolute bottom-0 left-0 p-5 w-full">
+                                                            <div className="flex items-center gap-2 mb-2">
+                                                                <span className="bg-yellow-500 text-black text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-yellow-500/20 uppercase tracking-wide">Best of Year</span>
+                                                                <span className="text-yellow-400 text-xs font-bold">⭐ {fav.myRating || fav.vote_average.toFixed(1)}</span>
                                                             </div>
-                                                        </motion.a>
-                                                    )}
-
-                                                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                                                        {otherMovies.map((movie) => (
-                                                            <motion.a 
-                                                                key={movie.id} 
-                                                                whileHover={{ y: -5, scale: 1.05, zIndex: 10 }}
-                                                                href={`https://www.themoviedb.org/movie/${movie.id}`} 
-                                                                target="_blank" 
-                                                                rel="noreferrer"
-                                                                className="group relative aspect-[2/3] bg-gray-900 rounded-xl overflow-hidden shadow-md cursor-pointer block" 
-                                                                title={movie.title}
-                                                            >
-                                                                <img 
-                                                                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
-                                                                    alt={movie.title}
-                                                                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                                                                    loading="lazy"
-                                                                />
-                                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-2 text-center">
-                                                                    <span className="text-white text-[10px] font-bold leading-tight mb-1 line-clamp-2">{movie.title}</span>
-                                                                    <span className="text-yellow-400 text-[9px] font-bold">⭐ {movie.myRating ? movie.myRating : movie.vote_average.toFixed(1)}</span>
-                                                                </div>
-                                                            </motion.a>
-                                                        ))}
-                                                    </div>
+                                                            <h4 className="text-white font-black text-xl leading-tight line-clamp-1 group-hover:text-yellow-300 transition-colors">{fav.title}</h4>
+                                                        </div>
+                                                    </a>
+                                                )}
+                                                <div className="grid grid-cols-3 gap-4">
+                                                    {others.map(m => (
+                                                        <a key={m.id} href={`https://www.themoviedb.org/movie/${m.id}`} target="_blank" rel="noreferrer" className="relative aspect-[2/3] rounded-xl overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                                                            <img src={`https://image.tmdb.org/t/p/w300${m.poster_path}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" alt={m.title} />
+                                                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-center">
+                                                                <span className="text-white text-[11px] font-bold line-clamp-2 leading-tight">{m.title}</span>
+                                                                <span className="text-yellow-400 text-[10px] font-bold mt-1">⭐ {m.myRating || m.vote_average.toFixed(1)}</span>
+                                                            </div>
+                                                        </a>
+                                                    ))}
                                                 </div>
                                             </div>
-                                        );
+                                        )
                                     })}
+                                    <div className="h-4"></div>
                                 </div>
-
-                            ) : (
-                                 <div className="col-span-3 text-center py-10 text-gray-400 text-sm">No movies added.</div>
                             )}
                         </motion.section>
                     </div>
+
+                    <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-8 md:p-10 shadow-xl hover:shadow-blue-500/10 transition-all duration-500">
+                        <div className="flex items-center justify-between mb-8">
+                            <h3 className="text-xl font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest flex items-center gap-3">
+                                <i className="fab fa-steam text-2xl"></i> Steam Library
+                            </h3>
+                            <div className="h-[2px] flex-grow ml-6 bg-gray-200 dark:bg-slate-700/50 rounded-full"></div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"> 
+                            {games.slice(0, 16).map((game) => (
+                                <div key={game.appid} className="flex items-center gap-4 p-4 rounded-2xl bg-white/50 dark:bg-slate-700/40 hover:bg-white dark:hover:bg-slate-700/80 border border-transparent hover:border-gray-200 dark:hover:border-slate-600 transition-all cursor-default shadow-sm hover:shadow-md">
+                                    <img src={`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`} className="w-12 h-12 rounded-lg object-cover shadow-sm" alt={game.name} />
+                                    <div className="overflow-hidden">
+                                        <p className="text-sm font-bold text-dark dark:text-white truncate">{game.name}</p>
+                                        <p className="text-xs text-gray-500 font-mono">{Math.floor(game.playtime_forever / 60)} hrs total</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {steamUser && (
+                            <div className="mt-10 text-center">
+                                <a href={`${steamUser.profileurl}/games/?tab=all`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 dark:bg-slate-700 text-dark dark:text-white rounded-full text-sm font-bold hover:bg-primary hover:text-white transition-all shadow-sm">
+                                    <i className="fab fa-steam"></i> View Full Library <i className="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>
+                        )}
+                    </motion.section>
+
                 </motion.div>
             </div>
         </div>
