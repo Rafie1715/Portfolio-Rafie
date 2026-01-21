@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@react-three/drei": "^9.102.0",
+    "@react-three/fiber": "^8.18.0",
+    "@react-three/rapier": "^1.4.0",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",
     "aos": "^2.3.4",
@@ -26,6 +29,8 @@
     "react-parallax-tilt": "^1.7.315",
     "react-router-dom": "^6.23.1",
     "react-scroll": "^1.9.0",
+    "three": "^0.160.0",
+    "three-stdlib": "^2.36.1",
     "tsparticles": "^3.9.1",
     "typewriter-effect": "^2.21.0"
   },

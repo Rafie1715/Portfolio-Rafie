@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import upnLogo from '/images/upnvj_logo.webp';
 import galasLogo from '/images/sman13-logo.webp';
 const cvFile = "/assets/CV Rafie Rojagat Bachri.pdf";
-import Nametag from './Nametag';
+import Nametag3D from './Nametag3D'; 
 
 const About = () => {
   const containerVariants = {
@@ -50,25 +50,16 @@ const About = () => {
         </motion.div>
 
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-
           <motion.div
-            className="lg:w-5/12 w-full flex justify-center order-1 h-[500px] md:h-[550px] relative z-10"
+            className="lg:w-5/12 w-full flex justify-center order-1 h-[500px] relative z-10"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-          >
-            <motion.div
-              animate={{ y: [0, -15, 0] }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
-            >
-              <Nametag />
-            </motion.div>
+          > 
+            <div className="w-full h-full flex items-center justify-center">
+               <Nametag3D />
+            </div>
           </motion.div>
 
           <motion.div
