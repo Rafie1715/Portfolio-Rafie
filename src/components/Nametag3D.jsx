@@ -163,11 +163,12 @@ const Rig = () => {
 const Nametag3D = () => {
   return (
     <div className="w-full h-[600px]" style={{ touchAction: 'none' }}>
-      <Canvas camera={{ position: [0, 0, 9], fov: 45 }}>
+      <Canvas camera={{ position: [0, 0, 10], fov: 40 }}>
         <Environment preset="studio" />
         <ambientLight intensity={0.8} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={0.5} castShadow />
-        <Physics gravity={[0, -25, 0]}> 
+        
+        <Physics> 
           <Rig />
         </Physics>
       </Canvas>

@@ -4,7 +4,7 @@ export const experiences = [
     logo: "/images/ksm-logo.webp",
     title: "Head of Web Development Class",
     org: "Kelompok Studi Mahasiswa (KSM) Multimedia UPNVJ",
-    date: "Feb 2025 - Present",
+    date: "Feb 2025 - Jan 2026",
     description: [
       "Led and coordinated a team of 2 mentors.",
       "Instructed 28 students in front-end web development curriculum (HTML, CSS, JavaScript).",
@@ -25,7 +25,7 @@ export const experiences = [
     logo: "/images/hmif-logo.webp",
     title: "Staff of Information and Technology",
     org: "Himpunan Mahasiswa Informatika (HMIF) UPNVJ",
-    date: "Jan 2025 - Present",
+    date: "Jan 2025 - Jan 2026",
     description: [
       "Managed the 'CodeVox' educational program, creating and editing video tutorials for the HMIF YouTube channel.",
       "Actively served on various committees for HMIF programs and events."
