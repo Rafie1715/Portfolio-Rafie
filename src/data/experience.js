@@ -6,9 +6,9 @@ export const experiences = [
     org: "Kelompok Studi Mahasiswa (KSM) Multimedia UPNVJ",
     date: "Feb 2025 - Jan 2026",
     description: [
-      "Led and coordinated a team of 2 mentors.",
-      "Instructed 28 students in front-end web development curriculum (HTML, CSS, JavaScript).",
-      "Developed and managed all learning materials and assessments.",
+      "Led a mentoring team of 2 to instruct 26 students in a comprehensive web development curriculum (Front-End & Back-End).",
+      "Delivered comprehensive Front-End training ranging from fundamentals (HTML, CSS, JavaScript) to modern frameworks like React, culminating in the development of final Capstone Projects.",
+      "Developed and managed all learning materials, assignments, and assessments for the class",
       "Actively served on various committees for KSM Multimedia programs and events."
     ],
     docs: [
