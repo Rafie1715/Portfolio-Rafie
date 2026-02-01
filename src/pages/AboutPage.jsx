@@ -1,23 +1,33 @@
 import About from '../components/About';
-import Experience from '../components/Experience';
 import Skills from '../components/Skills';
 import Certifications from '../components/Certifications';
 import SEO from '../components/SEO';
-import GithubStats from '../components/GithubStats';
+import PageTransition from '../components/PageTransition'; 
+import Timeline from '../components/Timeline';
 
 const AboutPage = () => {
   return (
-    <div className="pt-20 bg-white dark:bg-dark min-h-screen">
-      <SEO title="About Me | Rafie Rojagat" description="Learn more about my background, experience, and skills." url="https://rafierojagat.netlify.app/about" />
+    <PageTransition>
+      <div className="pt-20 bg-white dark:bg-dark min-h-screen">
+        <SEO title="About | Rafie Rojagat" description="Learn more about me." url="https://rafierojagat.netlify.app/about" />
+        
+        <About />
+        
+        <section className="py-20 bg-gray-50 dark:bg-darkLight relative">
+            <div className="container mx-auto px-4 mb-10 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">
+                  Experience & Organization
+                </h2>
+                <div className="w-20 h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
+            </div>
+            
+            <Timeline /> 
+        </section>
 
-      <About />
-      <Experience />
-      <Skills />
-      <Certifications />
-      <div className="mt-20">
-        <GithubStats />
+        <Skills />
+        <Certifications />
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

@@ -1,5 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion'; // <--- 1. TAMBAHKAN IMPORT INI
+
 import Navbar from './components/Navbar';
 import Loading from './components/Loading';
 import ScrollProgress from './components/ScrollProgress';
@@ -25,56 +27,61 @@ const AfkPage = lazy(() => import('./pages/AfkPage'));
 function App() {
   const location = useLocation();
 
+  // Opsional: Cek apakah sedang di halaman admin/login agar Navbar/Footer bisa disembunyikan (kalau mau)
+  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname === '/login';
+
   return (
     <HelmetProvider>
       <ScrollProgress />
       <div className="bg-noise"></div>
       <Spotlight />
 
-      <Navbar />
+      {!isAdminRoute && <Navbar />}
 
       <Suspense fallback={<Loading />}>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/project/:id" element={<ProjectDetail />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/workspace" element={<UsesPage />} />
-          <Route path="/afk" element={<AfkPage />} />
-          <Route path="*" element={<NotFound />} />
-          <Route path="/login" element={<Login />} />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/project/:id" element={<ProjectDetail />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/workspace" element={<UsesPage />} />
+            <Route path="/afk" element={<AfkPage />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/login" element={<Login />} />
 
-          <Route
-            path="/admin/dashboard"
-            element={
-              <RequireAuth>
-                <Dashboard />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <RequireAuth>
+                  <Dashboard />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/admin/projects"
-            element={
-              <RequireAuth>
-                <ManageProjects />
-              </RequireAuth>
-            }
-          />
+            <Route
+              path="/admin/projects"
+              element={
+                <RequireAuth>
+                  <ManageProjects />
+                </RequireAuth>
+              }
+            />
 
-          <Route
-            path="/admin/add-project"
-            element={
-              <RequireAuth>
-                <AddProject />
-              </RequireAuth>
-            }
-          />
-        </Routes>
+            <Route
+              path="/admin/add-project"
+              element={
+                <RequireAuth>
+                  <AddProject />
+                </RequireAuth>
+              }
+            />
+          </Routes>
+        </AnimatePresence>
       </Suspense>
 
-      <Footer />
+      {!isAdminRoute && <Footer />}
 
       <Chatbot />
     </HelmetProvider>

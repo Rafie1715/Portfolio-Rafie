@@ -127,7 +127,6 @@ const Hero = () => {
         </motion.p>
 
         <motion.div variants={itemVariants} className="mb-10 h-10 flex flex-col md:flex-row items-center justify-center gap-2 text-lg md:text-2xl font-light text-gray-600 dark:text-gray-300">
-          {t('hero.passionate')}
           <span>{t('hero.passionate')}</span>
           <span className="text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-lg">
             <Typewriter
