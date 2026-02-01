@@ -5,12 +5,15 @@ import SpotlightCard from '../components/SpotlightCard';
 import SEO from '../components/SEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import LikeButton from '../components/LikeButton';
+import { useTranslation } from 'react-i18next';
 
 const ProjectDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const project = projects.find((p) => p.id === id);
   const [selectedImage, setSelectedImage] = useState(null);
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language;
 
   useEffect(() => {
     if (!project) {
@@ -20,6 +23,21 @@ const ProjectDetail = () => {
   }, [project, navigate]);
 
   if (!project) return null;
+
+  const getData = (data) => {
+    if (data && typeof data === 'object' && !Array.isArray(data) && data[currentLang]) {
+      return data[currentLang];
+    }
+    return data;
+  };
+
+  const title = getData(project.title);
+  const shortDesc = getData(project.shortDesc);
+  const fullDesc = getData(project.fullDesc);
+  const challenges = getData(project.challenges);
+  const solution = getData(project.solution);
+  const lessonLearned = getData(project.lessonLearned);
+  const features = getData(project.features);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -59,9 +77,9 @@ const ProjectDetail = () => {
     >
       
       <SEO 
-        title={`${project.title} | Rafie Rojagat`}
-        description={project.shortDesc}
-        url={`https://rafie-dev.netlify.app/project/${project.id}`}
+        title={`${title} | Rafie Rojagat`}
+        description={shortDesc}
+        url={`https://rafierojagat.netlify.app/project/${project.id}`}
         image={project.image}
       />
 
@@ -74,15 +92,15 @@ const ProjectDetail = () => {
           className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-8 overflow-x-auto whitespace-nowrap"
         >
             <Link to="/" className="hover:text-primary transition-colors flex items-center gap-1">
-              <i className="fas fa-home text-xs"></i> Home
+              <i className="fas fa-home text-xs"></i> {t('navbar.home')}
             </Link>
             <span className="mx-2 text-gray-300 dark:text-gray-600">/</span>
             <Link to="/projects" className="hover:text-primary transition-colors">
-              Projects
+              {t('navbar.projects')}
             </Link>
             <span className="mx-2 text-gray-300 dark:text-gray-600">/</span>
             <span className="text-primary font-medium truncate max-w-[200px]">
-                {project.title}
+                {title}
             </span>
         </motion.nav>
 
@@ -95,13 +113,13 @@ const ProjectDetail = () => {
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
             <div className="flex-1">
               <motion.span variants={itemVariants} className="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">
-                {project.category} Project
+                {project.category} {t('projectDetail.category_label')}
               </motion.span>
               <motion.h1 variants={itemVariants} className="text-3xl md:text-5xl font-bold text-dark dark:text-white mb-4 leading-tight">
-                {project.title}
+                {title}
               </motion.h1>
               <motion.p variants={itemVariants} className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl">
-                {project.shortDesc}
+                {shortDesc}
               </motion.p>
             </div>
 
@@ -121,7 +139,7 @@ const ProjectDetail = () => {
                       rel="noreferrer" 
                       className="px-5 py-2.5 rounded-full bg-gray-100 dark:bg-slate-800 text-dark dark:text-white font-medium hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-sm"
                     >
-                      <i className="fab fa-github text-lg"></i> Source
+                      <i className="fab fa-github text-lg"></i> {t('projects.source_code')}
                     </motion.a>
                   )}
                   {project.live && (
@@ -133,14 +151,14 @@ const ProjectDetail = () => {
                       rel="noreferrer" 
                       className="px-5 py-2.5 rounded-full bg-primary text-white font-medium hover:bg-secondary transition-colors shadow-lg shadow-primary/30 flex items-center gap-2 text-sm"
                     >
-                      <i className="fas fa-external-link-alt"></i> Live Demo
+                      <i className="fas fa-external-link-alt"></i> {t('projects.live_site')}
                     </motion.a>
                   )}
               </div>
                <div className="flex flex-wrap gap-3">
                   {project.figma && (
                      <motion.a whileHover={{ scale: 1.05 }} href={project.figma} target="_blank" rel="noreferrer" className="px-5 py-2 rounded-full bg-gray-100 dark:bg-slate-800 text-xs font-bold hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-                        <i className="fab fa-figma text-purple-500"></i> Design
+                        <i className="fab fa-figma text-purple-500"></i> {t('projects.design')}
                      </motion.a>
                   )}
                </div>
@@ -156,7 +174,7 @@ const ProjectDetail = () => {
         >
           <img 
             src={project.image} 
-            alt={project.title} 
+            alt={title} 
             className="w-full h-auto object-cover"
           />
         </motion.div>
@@ -168,7 +186,7 @@ const ProjectDetail = () => {
           variants={fadeInBottom}
           className="mb-12"
         >
-            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Technologies Used</h3>
+            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{t('projectDetail.tech_used')}</h3>
             <div className="flex flex-wrap gap-3">
                 {project.techStack.map((tech, idx) => (
                     <motion.div 
@@ -192,22 +210,23 @@ const ProjectDetail = () => {
                     viewport={{ once: true }}
                     variants={fadeInBottom}
                 >
-                    <h2 className="text-2xl font-bold text-dark dark:text-white mb-4">Project Overview</h2>
+                    <h2 className="text-2xl font-bold text-dark dark:text-white mb-4">{t('projectDetail.overview')}</h2>
                     <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line text-lg">
-                        {project.fullDesc}
+                        {fullDesc}
                     </p>
                 </motion.section>
 
-                {project.features && (
+                {/* 5. Render Features yang sudah diekstrak */}
+                {features && features.length > 0 && (
                     <motion.section 
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={fadeInBottom}
                     >
-                        <h2 className="text-2xl font-bold text-dark dark:text-white mb-6">Key Features</h2>
+                        <h2 className="text-2xl font-bold text-dark dark:text-white mb-6">{t('projectDetail.features')}</h2>
                         <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {project.features.map((feature, idx) => (
+                            {features.map((feature, idx) => (
                                 <motion.li 
                                     key={idx} 
                                     className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
@@ -236,10 +255,10 @@ const ProjectDetail = () => {
                             <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
                                 <i className="fas fa-fire text-xl"></i>
                             </div>
-                            <h3 className="font-bold text-dark dark:text-white text-lg">The Challenge</h3>
+                            <h3 className="font-bold text-dark dark:text-white text-lg">{t('projectDetail.challenge')}</h3>
                         </div>
                         <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                            {project.challenges}
+                            {challenges}
                         </p>
                     </SpotlightCard>
                 </motion.div>
@@ -255,17 +274,17 @@ const ProjectDetail = () => {
                             <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-500">
                                 <i className="fas fa-lightbulb text-xl"></i>
                             </div>
-                            <h3 className="font-bold text-dark dark:text-white text-lg">The Solution</h3>
+                            <h3 className="font-bold text-dark dark:text-white text-lg">{t('projectDetail.solution')}</h3>
                         </div>
                         <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                            {project.solution}
+                            {solution}
                         </p>
                     </SpotlightCard>
                 </motion.div>
             </div>
         </div>
 
-        {project.lessonLearned && (
+        {lessonLearned && (
             <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -277,10 +296,10 @@ const ProjectDetail = () => {
                     
                     <div className="relative z-10">
                         <h2 className="text-2xl font-bold text-dark dark:text-white mb-4 flex items-center gap-3">
-                            <span className="text-3xl">🎓</span> What I Learned
+                            <span className="text-3xl">🎓</span> {t('projectDetail.learned')}
                         </h2>
                         <p className="text-lg text-gray-700 dark:text-gray-200 leading-relaxed italic border-l-4 border-primary pl-6 py-2">
-                            "{project.lessonLearned}"
+                            "{lessonLearned}"
                         </p>
                     </div>
                 </div>
@@ -295,7 +314,7 @@ const ProjectDetail = () => {
             variants={containerVariants}
             className="mb-20"
           >
-            <h2 className="text-2xl font-bold text-dark dark:text-white mb-8">Project Gallery</h2>
+            <h2 className="text-2xl font-bold text-dark dark:text-white mb-8">{t('projectDetail.gallery')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {project.gallery.map((img, idx) => (
                 <motion.div 
@@ -353,7 +372,7 @@ const ProjectDetail = () => {
                     &times;
                 </button>
                 
-                <p className="text-gray-400 mt-4 text-sm">Click outside or press Esc to close</p>
+                <p className="text-gray-400 mt-4 text-sm">{t('projectDetail.click_close')}</p>
             </motion.div>
           </motion.div>
         )}

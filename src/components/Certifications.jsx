@@ -1,11 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { certifications } from '../data/certifications';
+// 1. Import Hook
+import { useTranslation } from 'react-i18next';
 
 const Certifications = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);   
+  const [direction, setDirection] = useState(0);    
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isPaused, setIsPaused] = useState(false); // State untuk pause auto-slide
+  const autoSlideRef = useRef();
+
+  // 2. Inisialisasi Hook
+  const { t } = useTranslation();
+
+  // 3. Logika Auto Slide
+  useEffect(() => {
+    if (isPaused) return; // Jangan jalankan timer kalau sedang dipause
+
+    autoSlideRef.current = setInterval(() => {
+        nextSlide();
+    }, 5000); // Ganti slide setiap 5 detik
+
+    return () => clearInterval(autoSlideRef.current);
+  }, [currentIndex, isPaused]);
 
   const prevSlide = () => {
     setDirection(-1); 
@@ -76,12 +94,16 @@ const Certifications = () => {
           className="text-center mb-10 md:mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">
-            Certifications
+            {t('certifications.title')}
           </h2>
           <div className="w-20 h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
         </motion.div>
 
-        <div className="relative w-full flex flex-col items-center">            
+        <div 
+            className="relative w-full flex flex-col items-center"
+            onMouseEnter={() => setIsPaused(true)} 
+            onMouseLeave={() => setIsPaused(false)} 
+        >            
             <div className="relative w-full min-h-[500px] md:h-[500px] flex items-center justify-center overflow-hidden mb-8">                
                 <button 
                     onClick={prevSlide}
@@ -107,7 +129,7 @@ const Certifications = () => {
                         exit="exit"
                         className="w-full md:absolute md:inset-0 px-2 md:px-16 flex items-center justify-center"
                     >
-                        <div className="w-full max-w-4xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row h-auto md:h-[400px]">                                                        
+                        <div className="w-full max-w-4xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row h-auto md:h-[400px]">                                                                                            
                             <div className="w-full md:w-3/5 h-[250px] md:h-full bg-gray-100 dark:bg-slate-900 flex items-center justify-center p-4 md:p-6 relative group/img overflow-hidden">
                                 <motion.img 
                                     src={certifications[currentIndex].img} 
@@ -141,7 +163,7 @@ const Certifications = () => {
                                     <div className="h-px w-full bg-gray-200 dark:bg-slate-600 mb-4"></div>
                                     
                                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                                        Issued: <span className="text-dark dark:text-gray-200 font-medium">{certifications[currentIndex].date || "2024"}</span>
+                                        {t('certifications.issued')}: <span className="text-dark dark:text-gray-200 font-medium">{certifications[currentIndex].date || "2024"}</span>
                                     </p>
                                     
                                     {certifications[currentIndex].link && (
@@ -151,7 +173,7 @@ const Certifications = () => {
                                             rel="noreferrer"
                                             className="inline-flex items-center justify-center w-full py-2.5 bg-gray-100 dark:bg-slate-700 text-dark dark:text-white rounded-lg text-sm font-bold hover:bg-primary hover:text-white transition-all gap-2 group/link"
                                         >
-                                            Verify Credential <i className="fas fa-external-link-alt group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-transform"></i>
+                                            {t('certifications.verify')} <i className="fas fa-external-link-alt group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-transform"></i>
                                         </a>
                                     )}
                                 </motion.div>
@@ -180,7 +202,7 @@ const Certifications = () => {
                 </button>
             </div>
 
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-2 flex-wrap px-4">
                 {certifications.map((_, slideIndex) => (
                     <button
                         key={slideIndex}
@@ -229,7 +251,6 @@ const Certifications = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
     </section>
   );
 };

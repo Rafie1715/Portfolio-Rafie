@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, useTexture, RoundedBox, Environment, Center } from '@react-three/drei';
 import { Physics, RigidBody, useSphericalJoint } from '@react-three/rapier';
@@ -7,51 +7,58 @@ import * as THREE from 'three';
 const Card = ({ texture }) => {
   return (
     <group>
-      <group position={[0, 2.3, 0]}>
-        <mesh position={[0, 2.5, 0]}>
-          <boxGeometry args={[0.45, 5, 0.02]} />
-          <meshBasicMaterial color="#ff6600" />
+      <group position={[0, 2.7, 0]}>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.12, 0.12, 0.8, 16]} />
+            <meshStandardMaterial color="#888" metalness={0.8} roughness={0.2} />
         </mesh>
-        
-        <Text 
-          position={[0, 1.5, 0.02]} 
-          rotation={[0, 0, -Math.PI / 2]} 
-          fontSize={0.25} 
-          color="white" 
-          font="/fonts/Poppins-Bold.ttf" 
-          letterSpacing={0.1}
-        >
-          UPNVJ
-        </Text>
-
-        <RoundedBox position={[0, -0.6, 0.02]} args={[1.2, 0.4, 0.1]} radius={0.1}>
-          <meshStandardMaterial color="#111" roughness={0.3} />
-        </RoundedBox>
       </group>
 
       <RoundedBox args={[3.2, 5.2, 0.1]} radius={0.2} smoothness={4}>
         <meshStandardMaterial 
-          color="#ffffff" 
-          roughness={0.3} 
+          color="#f0f0f0" 
+          roughness={0.5} 
           metalness={0.1} 
         />
       </RoundedBox>
 
-      <group position={[0, 0, 0.06]}>
-        
+      <group position={[0, 0, 0.07]}>        
+        <group position={[0, 2.3, 0]}>
+          <mesh position={[0, 2.5, 0]}>
+            <boxGeometry args={[0.45, 5, 0.02]} />
+            <meshStandardMaterial color="#ff6600" roughness={0.4} />
+          </mesh>
+          
+          <Text 
+            position={[0, 1.5, 0.02]} 
+            rotation={[0, 0, -Math.PI / 2]} 
+            fontSize={0.25} 
+            color="white" 
+            font="/fonts/Poppins-Bold.ttf" 
+            letterSpacing={0.1}
+          >
+            UPNVJ
+          </Text>
+
+          <RoundedBox position={[0, -0.6, 0.02]} args={[1.2, 0.4, 0.1]} radius={0.1}>
+            <meshStandardMaterial color="#111" roughness={0.3} />
+          </RoundedBox>
+        </group>
+
         <group position={[0, 1.3, 0]}>
            <RoundedBox args={[1.8, 0.5, 0.02]} radius={0.25}>
              <meshBasicMaterial color="#ffcc00" toneMapped={false} />
            </RoundedBox>
            <Text position={[0, 0, 0.02]} fontSize={0.22} color="#1a1a1a" font="/fonts/Poppins-Bold.ttf" letterSpacing={0.05}>
-              STUDENT
+             STUDENT
            </Text>
         </group>
 
         <group position={[0, -0.2, 0]}>
             <RoundedBox args={[2.3, 2.3, 0.01]} radius={0.1} position={[0, 0, -0.01]}>
-                <meshStandardMaterial color="#ff0080" emissive="#ff0080" emissiveIntensity={0.8} />
+                <meshStandardMaterial color="white" />
             </RoundedBox>
+            
             <mesh position={[0, 0, 0.01]}>
               <planeGeometry args={[2.1, 2.1]} />
               <meshBasicMaterial map={texture} side={THREE.DoubleSide} toneMapped={false} />
@@ -93,6 +100,22 @@ const Card = ({ texture }) => {
         </group>
 
       </group>
+
+      <RoundedBox args={[3.25, 5.25, 0.12]} radius={0.2} smoothness={4} position={[0, 0, 0]}>
+        <meshPhysicalMaterial 
+            color="white"
+            transmission={0.95}  
+            opacity={1} 
+            metalness={0} 
+            roughness={0}      
+            ior={1.5}          
+            thickness={0.2}    
+            specularIntensity={1}
+            clearcoat={1}      
+            transparent={true}
+        />
+      </RoundedBox>
+
     </group>
   );
 };
@@ -168,9 +191,11 @@ const Nametag3D = () => {
         <ambientLight intensity={0.8} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={0.5} castShadow />
         
-        <Physics> 
-          <Rig />
-        </Physics>
+        <Suspense fallback={null}>
+            <Physics> 
+              <Rig />
+            </Physics>
+        </Suspense>
       </Canvas>
     </div>
   );

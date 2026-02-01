@@ -1,8 +1,10 @@
 import Marquee from "react-fast-marquee"; 
 import { skillsData } from "../data/skills";
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 
 const Skills = () => {
+  const { t } = useTranslation();
   const midPoint = Math.ceil(skillsData.length / 2);
   const firstRow = skillsData.slice(0, midPoint);
   const secondRow = skillsData.slice(midPoint);
@@ -19,16 +21,17 @@ const Skills = () => {
           className="text-center"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">
-            Technical Skills
+            {t('skills.title')}
           </h2>
           <div className="w-20 h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full mb-6"></div>
           <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-            My digital toolbox. I'm constantly learning and expanding this list.
+            {t('skills.description')}
+            {t('skills.description')}
           </p>
         </motion.div>
       </div>
 
-      <div className="relative flex flex-col gap-8 [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]">
+      <div className="relative flex flex-col gap-8 [mask-image:linear-gradient(to_right,transparent,white_5%,white_95%,transparent)]">
         
         <Marquee gradient={false} speed={40} pauseOnHover={true}>
           {firstRow.map((skill, index) => (

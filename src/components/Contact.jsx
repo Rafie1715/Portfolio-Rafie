@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
+  const { t } = useTranslation();
   const [status, setStatus] = useState("");
 
   const handleSubmit = async (e) => {
@@ -63,14 +65,14 @@ const Contact = () => {
   return (
     <section id="contact" className="py-24 bg-white dark:bg-dark relative overflow-hidden transition-colors duration-300">      
       <motion.div 
-         animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
-         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-         className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"
       ></motion.div>
       <motion.div 
-         animate={{ scale: [1, 1.5, 1], rotate: [0, -45, 0] }}
-         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-         className="absolute bottom-0 left-0 w-80 h-80 bg-secondary/5 rounded-full blur-[100px] pointer-events-none"
+          animate={{ scale: [1, 1.5, 1], rotate: [0, -45, 0] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-0 left-0 w-80 h-80 bg-secondary/5 rounded-full blur-[100px] pointer-events-none"
       ></motion.div>
 
       <div className="container mx-auto px-4 relative z-10">        
@@ -81,7 +83,7 @@ const Contact = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">
-            Get In Touch
+            {t('contact.title')}
           </h2>
           <motion.div 
             initial={{ width: 0 }}
@@ -90,7 +92,7 @@ const Contact = () => {
             className="h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full mb-6"
           ></motion.div>
           <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-            Have a project in mind? I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+            {t('contact.subtitle')}
           </p>
         </motion.div>
 
@@ -105,7 +107,7 @@ const Contact = () => {
             <div className="bg-gray-50/50 dark:bg-darkLight/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-100 dark:border-slate-700/50 shadow-sm hover:shadow-xl transition-shadow duration-300">
               <h3 className="text-xl font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
                 <span className="w-2 h-6 bg-primary rounded-full"></span>
-                Contact Info
+                {t('contact.info_title')}
               </h3>
               
               <div className="space-y-6">                
@@ -132,14 +134,14 @@ const Contact = () => {
                     <i className="fas fa-map-marker-alt text-lg"></i>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5 uppercase tracking-wide font-bold">Location</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5 uppercase tracking-wide font-bold">{t('contact.location')}</p>
                     <p className="text-dark dark:text-slate-200 font-medium">Jakarta, Indonesia</p>
                   </div>
                 </motion.div>
               </div>
 
               <div className="mt-10 pt-6 border-t border-gray-200 dark:border-slate-700/50">
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 font-medium">Follow me on:</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 font-medium">{t('contact.follow_me')}</p>
                 <div className="flex space-x-3">
                   {[
                     { icon: "fab fa-linkedin-in", url: "https://linkedin.com/in/rafie-rojagat", color: "hover:bg-[#0077b5]", text: "LinkedIn" },
@@ -174,38 +176,38 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="bg-white dark:bg-darkLight p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700/50 relative overflow-hidden">              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <motion.div variants={itemVariants} className="group">
-                  <label htmlFor="name" className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-primary">Name</label>
+                  <label htmlFor="name" className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-primary">{t('contact.form.name_label')}</label>
                   <input 
                     type="text" 
                     name="name" 
                     id="name" 
                     required
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-800/50 outline-none transition-all duration-300 focus:bg-white dark:text-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary placeholder-gray-400"
-                    placeholder="Enter your full name"
+                    placeholder={t('contact.form.name_placeholder')}
                   />
                 </motion.div>
                 <motion.div variants={itemVariants} className="group">
-                  <label htmlFor="email" className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-primary">Email</label>
+                  <label htmlFor="email" className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-primary">{t('contact.form.email_label')}</label>
                   <input 
                     type="email" 
                     name="email" 
                     id="email" 
                     required
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-800/50 outline-none transition-all duration-300 focus:bg-white dark:text-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary placeholder-gray-400"
-                    placeholder="Enter your email address"
+                    placeholder={t('contact.form.email_placeholder')}
                   />
                 </motion.div>
               </div>
 
               <motion.div variants={itemVariants} className="mb-8 group">
-                <label htmlFor="message" className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-primary">Message</label>
+                <label htmlFor="message" className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors group-focus-within:text-primary">{t('contact.form.message_label')}</label>
                 <textarea 
                   name="message" 
                   id="message" 
                   rows="5" 
                   required
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-800/50 outline-none transition-all duration-300 focus:bg-white dark:text-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-primary/10 focus:border-primary placeholder-gray-400 resize-none"
-                  placeholder="Please write your message or inquiry here..."
+                  placeholder={t('contact.form.message_placeholder')}
                 ></textarea>
               </motion.div>
 
@@ -225,7 +227,7 @@ const Contact = () => {
                     />
                   )}
                   
-                  {status === 'loading' ? 'Sending...' : 'Send Message'}
+                  {status === 'loading' ? t('contact.form.sending') : t('contact.form.send_btn')}
                   
                   {!status && (
                     <motion.i 
@@ -244,7 +246,7 @@ const Contact = () => {
                         exit={{ opacity: 0, y: -10 }}
                         className="absolute bottom-full right-0 mb-4 px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg text-sm font-bold flex items-center shadow-sm"
                     >
-                        <i className="fas fa-check-circle mr-2"></i> Message sent successfully!
+                        <i className="fas fa-check-circle mr-2"></i> {t('contact.form.success')}
                     </motion.div>
                     )}
                     {status === 'error' && (
@@ -254,7 +256,7 @@ const Contact = () => {
                         exit={{ opacity: 0, y: -10 }}
                         className="absolute bottom-full right-0 mb-4 px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm font-bold flex items-center shadow-sm"
                     >
-                        <i className="fas fa-exclamation-circle mr-2"></i> Failed to send. Try again.
+                        <i className="fas fa-exclamation-circle mr-2"></i> {t('contact.form.error')}
                     </motion.div>
                     )}
                 </AnimatePresence>

@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import useTheme from '../hooks/useTheme';
+import { useTranslation } from 'react-i18next'; // 1. Import Hook
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const location = useLocation();
+  const location = useLocation();  
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'id' : 'en';
+    i18n.changeLanguage(newLang);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,12 +28,12 @@ const Navbar = () => {
   }, [location]);
 
   const navLinks = [
-    { name: "Home", to: "/" },
-    { name: "About", to: "/about" },
-    { name: "Projects", to: "/projects" },
-    { name: "Workspace", to: "/workspace" },
-    { name: "AFK", to: "/afk" },
-    { name: "Contact", to: "/contact" },
+    { name: t('navbar.home'), to: "/" },
+    { name: t('navbar.about'), to: "/about" },
+    { name: t('navbar.projects'), to: "/projects" },
+    { name: t('navbar.workspace'), to: "/workspace" },
+    { name: t('navbar.afk'), to: "/afk" },
+    { name: t('navbar.contact'), to: "/contact" },
   ];
 
   const navbarClasses = scrolled 
@@ -47,7 +54,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
             <NavLink
-              key={link.name}
+              key={link.to}
               to={link.to}
               className={({ isActive }) => 
                 `text-sm font-medium transition-colors hover:text-primary relative group ${
@@ -58,10 +65,16 @@ const Navbar = () => {
               }
             >
               {link.name}
-              
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
             </NavLink>
           ))}
+
+          <button
+            onClick={toggleLanguage}
+            className="px-2 py-1 rounded text-xs font-bold border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+          >
+            {i18n.language === 'en' ? 'ID' : 'EN'}
+          </button>
 
           <button
             onClick={toggleTheme}
@@ -77,6 +90,13 @@ const Navbar = () => {
         </div>
 
         <div className="md:hidden flex items-center gap-4">
+          <button
+            onClick={toggleLanguage}
+            className="text-sm font-bold text-gray-600 dark:text-gray-300"
+          >
+            {i18n.language === 'en' ? 'ID' : 'EN'}
+          </button>
+
           <button 
             onClick={toggleTheme} 
             className="text-xl transition-colors text-yellow-500 dark:text-yellow-400"
@@ -101,7 +121,7 @@ const Navbar = () => {
         <div className="flex flex-col px-4 pb-6 pt-2 space-y-1">
           {navLinks.map((link) => (
             <NavLink
-              key={link.name}
+              key={link.to}
               to={link.to}
               onClick={() => setIsOpen(false)}
               className={({ isActive }) => 

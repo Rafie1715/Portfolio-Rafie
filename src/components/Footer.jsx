@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import VisitorCounter from './VisitorCounter';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
@@ -13,12 +15,12 @@ const Footer = () => {
   ];
 
   const footerLinks = [
-    { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Projects", path: "/projects" },
-    { name: "Workspace", path: "/workspace" },
-    { name: "AFK", path: "/afk" },
-    { name: "Contact", path: "/contact" },
+    { name: t('navbar.home'), path: "/" },
+    { name: t('navbar.about'), path: "/about" },
+    { name: t('navbar.projects'), path: "/projects" },
+    { name: t('navbar.workspace'), path: "/workspace" },
+    { name: t('navbar.afk'), path: "/afk" },
+    { name: t('navbar.contact'), path: "/contact" },
   ];
 
   const footerVariants = {
@@ -62,7 +64,7 @@ const Footer = () => {
                     rafie<span className="text-primary">.dev</span>
                 </Link>
                 <p className="text-gray-500 dark:text-gray-400 text-sm text-center md:text-left leading-relaxed max-w-xs">
-                    Building digital experiences with code and creativity. Let's create something amazing together.
+                    {t('footer.description')}
                 </p>
                 <div className="pt-2">
                     <VisitorCounter />
@@ -70,11 +72,11 @@ const Footer = () => {
             </motion.div>
 
             <motion.div variants={itemVariants} className="flex flex-col items-center md:items-start space-y-4">
-                <h3 className="font-bold text-dark dark:text-white">Quick Links</h3>
+                <h3 className="font-bold text-dark dark:text-white">{t('footer.quick_links')}</h3>
                 <div className="flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2">
                     {footerLinks.map((link) => (
                         <Link 
-                            key={link.name}
+                            key={link.path} // Ganti key jadi path karena name bisa berubah bahasa
                             to={link.path} 
                             className="text-sm text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors relative group"
                         >
@@ -86,7 +88,7 @@ const Footer = () => {
             </motion.div>
 
             <motion.div variants={itemVariants} className="flex flex-col items-center md:items-end space-y-4">
-                <h3 className="font-bold text-dark dark:text-white">Connect</h3>
+                <h3 className="font-bold text-dark dark:text-white">{t('footer.connect')}</h3>
                 <div className="flex gap-4">
                     {socialLinks.map((social, idx) => (
                         <motion.a 
@@ -108,7 +110,7 @@ const Footer = () => {
                     download="CV_Rafie_Rojagat_Bachri.pdf"
                     className="text-xs font-bold px-4 py-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-primary hover:text-white transition-all flex items-center gap-2 shadow-sm hover:shadow-md"
                 >
-                    <i className="fas fa-download"></i> Download CV
+                    <i className="fas fa-download"></i> {t('footer.download_cv')}
                 </motion.a>
             </motion.div>
         </motion.div>
@@ -119,9 +121,9 @@ const Footer = () => {
             transition={{ delay: 0.5 }}
             className="pt-8 border-t border-gray-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400"
         >
-            <p>© {currentYear} Rafie Rojagat. All rights reserved.</p>
+            <p>© {currentYear} Rafie Rojagat. {t('footer.rights')}</p>
             <p className="flex items-center gap-1">
-                Made with <span className="text-red-500 animate-pulse">❤</span> and <span className="text-amber-600">☕</span> in Jakarta
+                {t('footer.made_with')} <span className="text-red-500 animate-pulse">❤</span> {t('footer.and')} <span className="text-amber-600">☕</span> {t('footer.in')} Jakarta
             </p>
         </motion.div>
       </div>
