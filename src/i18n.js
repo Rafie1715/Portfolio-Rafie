@@ -32,10 +32,6 @@ const resources = {
                 hs_name: "SMA Negeri 13 Jakarta",
                 hs_major: "Science (2019 - 2022)"
             },
-            projects: {
-                title: "My Projects",
-                subtitle: "Here are some projects I've worked on."
-            },
             contact: {
                 title: "Get in Touch",
                 send: "Send Message"
@@ -95,7 +91,9 @@ const resources = {
                     java: "Java",
                     ui: "UI/UX",
                     flutter: "Flutter"
-                }
+                },
+                seo_title: "Projects | Rafie Rojagat",
+                seo_desc: "A showcase of my software engineering projects."
             },
             projectDetail: {
                 category_label: "Project",
@@ -185,10 +183,6 @@ const resources = {
                 hs_name: "SMA Negeri 13 Jakarta",
                 hs_major: "IPA (2019 - 2022)"
             },
-            projects: {
-                title: "Proyek Saya",
-                subtitle: "Berikut adalah beberapa proyek yang telah saya kerjakan."
-            },
             contact: {
                 title: "Hubungi Saya",
                 send: "Kirim Pesan"
@@ -248,7 +242,9 @@ const resources = {
                     java: "Java",
                     ui: "UI/UX",
                     flutter: "Flutter"
-                }
+                },
+                seo_title: "Proyek | Rafie Rojagat",
+                seo_desc: "Pameran proyek rekayasa perangkat lunak saya."
             },
             projectDetail: {
                 category_label: "Proyek",
@@ -312,13 +308,13 @@ const resources = {
 };
 
 i18n
-    .use(LanguageDetector) 
+    .use(LanguageDetector)
     .use(initReactI18next)
     .init({
         resources,
-        fallbackLng: 'en', 
+        fallbackLng: 'en',
         interpolation: {
-            escapeValue: false 
+            escapeValue: false
         }
     });
 

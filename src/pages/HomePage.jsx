@@ -3,11 +3,11 @@ import Hero from '../components/Hero';
 import { projects } from '../data/projects';
 import SpotlightCard from '../components/SpotlightCard';
 import SEO from '../components/SEO';
-import { useTranslation } from 'react-i18next'; 
+import { useTranslation } from 'react-i18next';
 
 const HomePage = () => {
   const { t, i18n } = useTranslation();
-  const currentLang = i18n.language; 
+  const currentLang = i18n.language;
 
   const featuredProjects = projects.slice(0, 3);
 
@@ -44,15 +44,13 @@ const HomePage = () => {
                 <div className="h-48 overflow-hidden relative">
                   <img 
                     src={project.image} 
-                    alt={title}
+                    alt={title} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                   />
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
                   <h3 className="text-xl font-bold text-dark dark:text-white mb-2">{title}</h3>                  
-                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4 flex-grow">
-                    {shortDesc}
-                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4 flex-grow">{shortDesc}</p>
                   
                   <Link to={`/project/${project.id}`} className="text-primary font-medium hover:underline mt-auto">
                     {t('home.view_details')}

@@ -216,7 +216,6 @@ const ProjectDetail = () => {
                     </p>
                 </motion.section>
 
-                {/* 5. Render Features yang sudah diekstrak */}
                 {features && features.length > 0 && (
                     <motion.section 
                         initial="hidden"
@@ -364,7 +363,6 @@ const ProjectDetail = () => {
                     className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
                 />
                 
-                {/* Tombol Close */}
                 <button
                     className="absolute -top-12 right-0 md:-right-6 text-white text-3xl hover:text-primary transition-colors bg-white/10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
                     onClick={() => setSelectedImage(null)}
