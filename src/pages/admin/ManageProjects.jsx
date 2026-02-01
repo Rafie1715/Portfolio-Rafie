@@ -72,7 +72,11 @@ const ManageProjects = () => {
                     <td className="py-3 px-6">
                       <img src={project.image} alt="thumb" className="w-16 h-10 object-cover rounded" />
                     </td>
-                    <td className="py-3 px-6 font-medium">{project.title}</td>
+                    
+                    <td className="py-3 px-6 font-medium">
+                        {typeof project.title === 'object' ? project.title.en : project.title}
+                    </td>
+
                     <td className="py-3 px-6">
                         <span className="bg-blue-100 text-blue-600 py-1 px-3 rounded-full text-xs font-bold">
                             {project.category}
