@@ -25,10 +25,13 @@ const ProjectDetail = () => {
   if (!project) return null;
 
   const getData = (data) => {
-    if (data && typeof data === 'object' && !Array.isArray(data) && data[currentLang]) {
-      return data[currentLang];
+    if (!data) return "";
+    
+    if (typeof data === 'object' && data.en) {
+      return data[currentLang] || data.en || "";
     }
-    return data;
+    
+    return String(data);
   };
 
   const title = getData(project.title);

@@ -1,22 +1,26 @@
 import { Helmet } from 'react-helmet-async';
 
-const SEO = ({ title, description, url }) => {
+const SEO = ({ title, description, url, image }) => {
+  const safeText = (text) => {
+    if (!text) return "";
+    if (typeof text === 'object') return text.en || text.id || "";
+    return String(text);
+  };
+
+  const safeTitle = safeText(title);
+  const safeDesc = safeText(description);
+
   return (
     <Helmet>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-
-      <meta property="og:type" content="website" />
+      <title>{safeTitle}</title>
+      <meta name="description" content={safeDesc} />
+      <meta property="og:title" content={safeTitle} />
+      <meta property="og:description" content={safeDesc} />
       <meta property="og:url" content={url} />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:image" content="https://rafie-dev.netlify.app/og-image.png" />
-
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content={url} />
-      <meta property="twitter:title" content={title} />
-      <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content="https://rafie-dev.netlify.app/og-image.png" />
+      {image && <meta property="og:image" content={image} />}
+      <meta name="twitter:title" content={safeTitle} />
+      <meta name="twitter:description" content={safeDesc} />
+      {image && <meta name="twitter:image" content={image} />}
     </Helmet>
   );
 };

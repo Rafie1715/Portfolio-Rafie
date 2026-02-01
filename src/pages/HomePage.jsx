@@ -7,15 +7,18 @@ import { useTranslation } from 'react-i18next';
 
 const HomePage = () => {
   const { t, i18n } = useTranslation();
-  const currentLang = i18n.language;
+  const currentLang = i18n.language || 'en'; 
 
   const featuredProjects = projects.slice(0, 3);
 
   const getData = (data) => {
-    if (data && typeof data === 'object' && !Array.isArray(data) && data[currentLang]) {
-      return data[currentLang];
+    if (!data) return "";
+
+    if (typeof data === 'object' && !Array.isArray(data)) {
+      return data[currentLang] || data.en || data.id || "";
     }
-    return data;
+
+    return String(data);
   };
 
   return (
@@ -49,8 +52,11 @@ const HomePage = () => {
                   />
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-xl font-bold text-dark dark:text-white mb-2">{title}</h3>                  
-                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4 flex-grow">{shortDesc}</p>
+                  <h3 className="text-xl font-bold text-dark dark:text-white mb-2">{title}</h3>
+                  
+                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4 flex-grow">
+                    {shortDesc}
+                  </p>
                   
                   <Link to={`/project/${project.id}`} className="text-primary font-medium hover:underline mt-auto">
                     {t('home.view_details')}
