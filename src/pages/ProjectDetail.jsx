@@ -43,29 +43,18 @@ const ProjectDetail = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
+      transition: { staggerChildren: 0.1, delayChildren: 0.1 },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { type: "spring", stiffness: 50 }
-    },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 50 } },
   };
 
   const fadeInBottom = {
     hidden: { opacity: 0, y: 40 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.6, ease: "easeOut" } 
-    }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
   return (
@@ -77,8 +66,8 @@ const ProjectDetail = () => {
     >
       
       <SEO 
-        title={`${title} | Rafie Rojagat`}
-        description={shortDesc}
+        title={`${title} | Rafie Rojagat`} 
+        description={shortDesc} 
         url={`https://rafierojagat.netlify.app/project/${project.id}`}
         image={project.image}
       />
@@ -124,11 +113,9 @@ const ProjectDetail = () => {
             </div>
 
             <motion.div variants={itemVariants} className="flex flex-col gap-4 flex-shrink-0 min-w-[140px]">
-              
               <div className="self-start md:self-end">
                  <LikeButton projectId={project.id} />
               </div>
-              
               <div className="flex flex-wrap gap-3">
                   {project.github && (
                     <motion.a 
@@ -174,7 +161,7 @@ const ProjectDetail = () => {
         >
           <img 
             src={project.image} 
-            alt={title} 
+            alt={title}
             className="w-full h-auto object-cover"
           />
         </motion.div>

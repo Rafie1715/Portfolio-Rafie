@@ -13,9 +13,8 @@ const Projects = () => {
   const [loadingCms, setLoadingCms] = useState(true);
   const [repos, setRepos] = useState([]);
   const [loadingGithub, setLoadingGithub] = useState(true);
-
   const { t, i18n } = useTranslation();
-  const currentLang = i18n.language; 
+  const currentLang = i18n.language;
 
   useEffect(() => {
     const fetchCmsProjects = async () => {
@@ -31,6 +30,13 @@ const Projects = () => {
         setCmsProjects(list);
       } catch (error) {
         console.error("Error fetching Firebase projects:", error);
+        try {
+            const querySnapshot = await getDocs(collection(dbFirestore, "projects"));
+            const list = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setCmsProjects(list);
+        } catch (e) {
+            console.error("Firebase fallback failed", e);
+        }
       } finally {
         setLoadingCms(false);
       }
@@ -156,7 +162,7 @@ const Projects = () => {
                           <div className="h-52 overflow-hidden relative">
                             <img 
                               src={project.image} 
-                              alt={title} 
+                              alt={title}
                               loading="lazy" 
                               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1" 
                             />
