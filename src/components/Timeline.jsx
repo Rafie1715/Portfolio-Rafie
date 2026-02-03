@@ -125,7 +125,7 @@ const Timeline = () => {
                   </div>
 
                   <ul className={`space-y-2 mb-4 list-none`}>
-                    {descList.slice(0, 3).map((point, i) => ( 
+                    {descList.map((point, i) => ( 
                         <li key={i} className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex gap-2">
                             {!isEven && <span className="mt-1.5 w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0"></span>}
                             <span>{point}</span>

@@ -105,7 +105,11 @@ export const experiences = [
       "/images/bangkit-doc1.webp",
       "/images/bangkit-doc2.webp",
       "/images/bangkit-doc3.webp",
-      "/images/bangkit-doc4.webp"
+      "/images/bangkit-doc4.webp",
+      "/images/bangkit-doc5.webp",
+      "/images/bangkit-doc6.webp",
+      "/images/bangkit-doc7.webp",
+      "/images/bangkit-doc8.webp"
     ]
   }
 ];
