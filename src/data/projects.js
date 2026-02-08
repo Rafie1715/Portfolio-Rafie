@@ -626,5 +626,59 @@ export const projects = [
       "/images/project-notesapp3.webp",
       "/images/project-notesapp4.webp"
     ] 
+  },
+  {
+    id: "sentimen-deepseek",
+    title: {
+      en: "Deepseek App Sentiment Analysis",
+      id: "Analisis Sentimen Aplikasi Deepseek"
+    },
+    category: "python",
+    image: "/images/project-deepseek.webp",
+    shortDesc: {
+      en: "Sentiment analysis of Deepseek app reviews on Google Play Store using Naive Bayes algorithm.",
+      id: "Analisis sentimen ulasan aplikasi Deepseek di Google Play Store menggunakan algoritma Naive Bayes."
+    },
+    fullDesc: {
+      en: "With the rise of mobile app usage, user reviews on platforms like Google Play Store have become crucial data for product evaluation. This research aims to perform sentiment analysis on the Deepseek app reviews to classify user opinions into positive, negative, and neutral categories. The study utilizes text mining stages starting from data collection, preprocessing, feature extraction using TF-IDF, to classification using the Multinomial Naive Bayes algorithm.",
+      id: "Seiring meningkatnya penggunaan aplikasi mobile, ulasan pengguna di platform seperti Google Play Store telah menjadi sumber data krusial untuk evaluasi produk. Penelitian ini bertujuan untuk melakukan analisis sentimen terhadap ulasan aplikasi Deepseek guna mengklasifikasikan opini pengguna ke dalam kategori positif, negatif, dan netral. Penelitian menerapkan tahapan text mining mulai dari pengumpulan data, preprocessing, ekstraksi fitur menggunakan TF-IDF, hingga klasifikasi dengan algoritma Multinomial Naive Bayes."
+    },
+    challenges: {
+      en: "Validating manual sentiment labeling, especially for neutral categories which are prone to misinterpretation, and handling unstructured text data from user reviews.",
+      id: "Melakukan validasi pelabelan sentimen secara manual, terutama untuk kategori netral yang rentan salah interpretasi, serta menangani data teks yang tidak terstruktur dari ulasan pengguna."
+    },
+    solution: {
+      en: "Implemented a complete preprocessing pipeline (Case Folding, Tokenization, Stopword Removal, Lemmatization) and used TF-IDF for feature extraction. The Multinomial Naive Bayes model achieved an accuracy of 87.67%.",
+      id: "Menerapkan pipeline preprocessing lengkap (Case Folding, Tokenisasi, Stopword Removal, Lemmatization) dan menggunakan TF-IDF untuk ekstraksi fitur. Model Multinomial Naive Bayes berhasil mencapai akurasi 87.67%."
+    },
+    lessonLearned: {
+      en: "I learned how to apply Text Mining techniques effectively and analyze model performance using Confusion Matrix. It also highlighted the importance of preprocessing in NLP tasks.",
+      id: "Saya belajar cara menerapkan teknik Text Mining secara efektif dan menganalisis kinerja model menggunakan Confusion Matrix. Ini juga menyoroti pentingnya preprocessing dalam tugas NLP."
+    },
+    features: {
+      en: [
+        "Text Preprocessing (Stopword, Lemmatization)",
+        "TF-IDF Feature Extraction",
+        "Multinomial Naive Bayes Classification",
+        "87.67% Model Accuracy"
+      ],
+      id: [
+        "Preprocessing Teks (Stopword, Lemmatization)",
+        "Ekstraksi Fitur TF-IDF",
+        "Klasifikasi Multinomial Naive Bayes",
+        "Akurasi Model 87.67%"
+      ]
+    },
+    techStack: [
+      { name: "Python", icon: "devicon-python-plain" },
+      { name: "Scikit-Learn", icon: "devicon-scikitlearn-plain" },
+      { name: "Pandas", icon: "devicon-pandas-plain" }
+    ],
+    github: "https://github.com/Rafie1715/UAS-Machine-Learning",
+    gallery: [
+      "/images/project-deepseek2.webp",
+      "/images/project-deepseek3.webp",
+      "/images/project-deepseek4.webp"
+    ] 
   }
 ];

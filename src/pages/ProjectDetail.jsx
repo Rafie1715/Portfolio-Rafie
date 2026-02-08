@@ -1,38 +1,75 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { projects } from '../data/projects';
+import { projects as localProjects } from '../data/projects'; 
+import { dbFirestore } from '../config/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import SpotlightCard from '../components/SpotlightCard';
 import SEO from '../components/SEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import LikeButton from '../components/LikeButton';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
+import Loading from '../components/Loading';
 
 const ProjectDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const project = projects.find((p) => p.id === id);
-  const [selectedImage, setSelectedImage] = useState(null);
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
 
-  useEffect(() => {
-    if (!project) {
-      navigate('/not-found');
-    }
-    window.scrollTo(0, 0);
-  }, [project, navigate]);
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
 
+  useEffect(() => {
+    const fetchProject = async () => {
+      setLoading(true);
+
+      const foundLocal = localProjects.find((p) => p.id === id);
+      
+      if (foundLocal) {
+        setProject(foundLocal);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const docRef = doc(dbFirestore, "projects", id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setProject({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          navigate('/not-found');
+        }
+      } catch (error) {
+        console.error("Error fetching project:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProject();
+    window.scrollTo(0, 0);
+  }, [id, navigate]);
+
+  if (loading) return <Loading />;
   if (!project) return null;
 
   const getData = (data) => {
     if (!data) return "";
-
-    if (typeof data === 'object' && data.en) {
+    if (typeof data === 'string') return data;
+    if (typeof data === 'object' && (data.en || data.id)) {
       return data[currentLang] || data.en || "";
     }
-
     return String(data);
+  };
+
+  const getFeatures = (data) => {
+      const raw = getData(data);
+      if (Array.isArray(raw)) return raw;
+      if (typeof raw === 'string') return [raw]; 
+      return [];
   };
 
   const title = getData(project.title);
@@ -41,7 +78,7 @@ const ProjectDetail = () => {
   const challenges = getData(project.challenges);
   const solution = getData(project.solution);
   const lessonLearned = getData(project.lessonLearned);
-  const features = getData(project.features);
+  const featuresList = getFeatures(project.features);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -208,7 +245,7 @@ const ProjectDetail = () => {
                 </p>
               </motion.section>
 
-              {features && features.length > 0 && (
+              {featuresList && featuresList.length > 0 && (
                 <motion.section
                   initial="hidden"
                   whileInView="visible"
@@ -217,7 +254,7 @@ const ProjectDetail = () => {
                 >
                   <h2 className="text-2xl font-bold text-dark dark:text-white mb-6">{t('projectDetail.features')}</h2>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {features.map((feature, idx) => (
+                    {featuresList.map((feature, idx) => (
                       <motion.li
                         key={idx}
                         className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
