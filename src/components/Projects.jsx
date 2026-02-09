@@ -74,7 +74,8 @@ const Projects = () => {
     { id: 'python', label: t('projects.filter.python') },
     { id: 'java', label: t('projects.filter.java') },
     { id: 'ui', label: t('projects.filter.ui') },
-    { id: 'flutter', label: t('projects.filter.flutter') }
+    { id: 'flutter', label: t('projects.filter.flutter') },
+    { id: 'game', label: 'Game' }
   ];
 
   const langColors = {

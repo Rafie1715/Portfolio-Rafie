@@ -680,5 +680,58 @@ export const projects = [
       "/images/project-deepseek3.webp",
       "/images/project-deepseek4.webp"
     ] 
+  },
+  {
+    id: "green-sort-unity",
+    title: {
+      en: "Green Sort: Waste Sorting Simulation",
+      id: "Green Sort: Simulasi Pemilahan Sampah"
+    },
+    category: "game",
+    image: "/images/project-greensort.webp",
+    shortDesc: {
+      en: "A first-person 3D simulation game built with Unity to educate users on waste sorting (Organic, Inorganic, B3).",
+      id: "Game simulasi 3D sudut pandang orang pertama yang dibangun dengan Unity untuk edukasi pemilahan sampah (Organik, Anorganik, B3)."
+    },
+    fullDesc: {
+      en: "Green Sort is a desktop-based Virtual Reality (VR) simulation aimed at educating users on proper waste disposal. Acting as a recycling plant officer, players face a conveyor belt bringing various types of trash. The objective is to grab and sort the waste into the correct bins: Organic, Inorganic, or Hazardous (B3). This project emphasizes interactive learning through gamification.",
+      id: "Green Sort adalah simulasi Virtual Reality (VR) berbasis Desktop yang bertujuan mengedukasi pengguna tentang cara memilah sampah yang benar. Berperan sebagai petugas pabrik daur ulang, pemain menghadapi conveyor belt yang membawa berbagai jenis sampah. Tujuannya adalah mengambil dan memilah sampah ke tong yang sesuai: Organik, Anorganik, atau B3. Proyek ini menekankan pembelajaran interaktif melalui gamifikasi."
+    },
+    challenges: {
+      en: "Building the 3D environment from scratch using ProBuilder without relying on pre-made scenes, and implementing realistic physics for the grab-and-throw mechanics on moving objects.",
+      id: "Membangun environment 3D dari nol menggunakan ProBuilder tanpa mengandalkan scene jadi, serta mengimplementasikan fisika yang realistis untuk mekanika ambil-dan-lempar (grab-and-throw) pada objek yang bergerak."
+    },
+    solution: {
+      en: "Utilized Unity's Physics engine and C# scripting to create a custom 'Object Grabbable' system. The environment was modeled manually using ProBuilder to fit the industrial recycling theme.",
+      id: "Memanfaatkan engine Fisika Unity dan scripting C# untuk membuat sistem 'Object Grabbable' kustom. Lingkungan dimodelkan secara manual menggunakan ProBuilder agar sesuai dengan tema industri daur ulang."
+    },
+    features: {
+      en: [
+        "First-Person Perspective (FPP) Gameplay",
+        "Conveyor Belt System",
+        "Interactive Grab & Throw Mechanics",
+        "Real-time Scoring System & Audio Feedback",
+        "3 Waste Categories (Organic, Inorganic, B3)"
+      ],
+      id: [
+        "Gameplay Sudut Pandang Orang Pertama (FPP)",
+        "Sistem Conveyor Belt Berjalan",
+        "Mekanik Interaktif Ambil & Lempar",
+        "Sistem Skor Real-time & Umpan Balik Audio",
+        "3 Kategori Sampah (Organik, Anorganik, B3)"
+      ]
+    },
+    techStack: [
+      { name: "Unity", icon: "devicon-unity-plain" },
+      { name: "C#", icon: "devicon-csharp-plain" },
+      { name: "ProBuilder", icon: "fas fa-cubes" },
+    ],
+    github: "https://github.com/Rafie1715/UAS-ARVR", 
+    gallery: [
+      "/images/project-greensort2.webp",
+      "/images/project-greensort3.webp",
+      "/images/project-greensort4.webp",
+      "/images/project-greensort5.webp"
+    ]
   }
 ];
