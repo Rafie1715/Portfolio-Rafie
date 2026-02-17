@@ -42,7 +42,7 @@ const IDCard = () => {
                                 alt="Profile"
                                 className="w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-purple-500/10 mix-blend-overlay"></div>
+                            <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-cyan-500/10 mix-blend-overlay"></div>
                         </div>
                         <div className="w-8 h-6 sm:w-10 sm:h-8 rounded-sm sm:rounded bg-gradient-to-br from-yellow-200 to-yellow-500 border border-yellow-600 shadow-sm mx-auto opacity-80 flex items-center justify-center">
                             <div className="w-5 h-4 sm:w-6 sm:h-5 border border-yellow-700/30 rounded-[1px] sm:rounded-[2px] grid grid-cols-2 gap-[1px]">

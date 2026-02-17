@@ -177,7 +177,7 @@ const AddProject = () => {
         .dark .label-style { color: #d1d5db; }
         .input-style { width: 100%; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; outline: none; transition: ring 2px; }
         .dark .input-style { background-color: #334155; border-color: #475569; color: white; }
-        .input-style:focus { ring: 2px; ring-color: #6366f1; }
+        .input-style:focus { ring: 2px; ring-color: #2563eb; }
       `}</style>
     </div>
   );

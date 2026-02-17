@@ -32,7 +32,6 @@ const Navbar = () => {
     { name: t('navbar.about'), to: "/about" },
     { name: t('navbar.projects'), to: "/projects" },
     { name: t('navbar.workspace'), to: "/workspace" },
-    { name: t('navbar.afk'), to: "/afk" },
     { name: t('navbar.contact'), to: "/contact" },
   ];
 

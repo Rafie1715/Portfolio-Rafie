@@ -80,7 +80,7 @@ const Projects = () => {
 
   const langColors = {
     JavaScript: "bg-yellow-400", TypeScript: "bg-blue-500", HTML: "bg-orange-500",
-    CSS: "bg-blue-400", Python: "bg-green-500", Dart: "bg-cyan-500", Kotlin: "bg-purple-500",
+    CSS: "bg-blue-400", Python: "bg-green-500", Dart: "bg-cyan-500", Kotlin: "bg-blue-600",
     default: "bg-gray-400"
   };
 
@@ -191,6 +191,13 @@ const Projects = () => {
                                </h3>
                             </Link>
                             
+                            {project.impact && (
+                              <div className="flex items-center gap-1.5 mb-3 text-xs text-primary dark:text-blue-400 font-medium">
+                                <i className="fas fa-chart-line text-xs"></i>
+                                <span className="line-clamp-1">{i18n.language === 'id' ? project.impact.id : project.impact.en}</span>
+                              </div>
+                            )}
+                            
                             <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed flex-grow line-clamp-3">
                               {shortDesc}
                             </p>
@@ -199,7 +206,7 @@ const Projects = () => {
                               {Array.isArray(project.techStack) && project.techStack.slice(0, 4).map((tech, idx) => (
                                   <motion.i 
                                       key={idx} 
-                                      whileHover={{ y: -3, color: "#6366f1" }} 
+                                      whileHover={{ y: -3, color: "#2563eb" }} 
                                       className={`${tech.icon ? tech.icon : ''} transition-colors cursor-help`} 
                                       title={tech.name}
                                   ></motion.i>

@@ -38,15 +38,14 @@ const resources = {
             },
             hero: {
                 greeting: "Hi there, I'm",
-                description: "Final Year Informatics Student at",
-                passionate: "Passionate about",
+                tagline: "Final-year Informatics student at UPN Veteran Jakarta. I build responsive apps for mobile and web.",
                 view_work: "View My Work",
                 contact_me: "Contact Me",
-                skills: {
-                    mobile: "Mobile Development",
-                    web: "Web Development",
-                    uiux: "UI/UX Design",
-                    ml: "Machine Learning"
+                quick_facts: {
+                    location: "Jakarta, Indonesia",
+                    availability: "Open to internship",
+                    focus: "Mobile and Web",
+                    stack: "React, Kotlin, Firebase"
                 }
             },
             footer: {
@@ -189,15 +188,14 @@ const resources = {
             },
             hero: {
                 greeting: "Halo, saya",
-                description: "Mahasiswa Tingkat Akhir Informatika di",
-                passionate: "Tertarik pada",
+                tagline: "Mahasiswa tingkat akhir Informatika di UPN Veteran Jakarta. Membangun aplikasi responsif untuk mobile dan web.",
                 view_work: "Lihat Karya Saya",
                 contact_me: "Hubungi Saya",
-                skills: {
-                    mobile: "Pengembangan Seluler",
-                    web: "Pengembangan Web",
-                    uiux: "Desain UI/UX",
-                    ml: "Machine Learning"
+                quick_facts: {
+                    location: "Jakarta, Indonesia",
+                    availability: "Terbuka untuk magang",
+                    focus: "Mobile dan Web",
+                    stack: "React, Kotlin, Firebase"
                 }
             },
             footer: {

@@ -73,7 +73,7 @@ const SpotifyNowPlaying = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className={`relative overflow-hidden p-4 rounded-2xl border transition-all flex items-center gap-4 group cursor-default ${
                     isActive 
-                    ? 'bg-primary/10 border-primary/50 dark:bg-primary/20 shadow-[0_0_25px_rgba(99,102,241,0.25)]' 
+                    ? 'bg-primary/10 border-primary/50 dark:bg-primary/20 shadow-[0_0_25px_rgba(37,99,235,0.25)]' 
                     : 'bg-white/60 dark:bg-slate-800/50 backdrop-blur-md border-white/20 dark:border-white/10 shadow-sm hover:shadow-md'
                 }`}
             >

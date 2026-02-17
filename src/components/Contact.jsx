@@ -215,7 +215,7 @@ const Contact = () => {
                 <motion.button 
                   type="submit" 
                   disabled={status === 'loading'}
-                  whileHover={{ scale: 1.02, boxShadow: "0 10px 30px -10px rgba(99, 102, 241, 0.5)" }}
+                  whileHover={{ scale: 1.02, boxShadow: "0 10px 30px -10px rgba(37, 99, 235, 0.5)" }}
                   whileTap={{ scale: 0.95 }}
                   className={`relative overflow-hidden inline-flex items-center justify-center px-8 py-3.5 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg transition-all ${status === 'loading' ? 'opacity-80 cursor-not-allowed' : ''}`}
                 >

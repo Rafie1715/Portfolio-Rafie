@@ -85,7 +85,7 @@ const About = () => {
                 </Trans>
                 <br /><br />
                 <Trans i18nKey="about.desc2">
-                  Skilled in building responsive apps using <span className="text-yellow-600 dark:text-yellow-400 font-medium">JavaScript</span>, <span className="text-blue-500 font-medium">React</span>, and <span className="text-purple-500 font-medium">Kotlin</span>. Highly motivated to enhance technical skills through internship opportunities to create impactful digital solutions.
+                  Skilled in building responsive apps using <span className="text-yellow-600 dark:text-yellow-400 font-medium">JavaScript</span>, <span className="text-blue-500 font-medium">React</span>, and <span className="text-blue-600 font-medium">Kotlin</span>. Highly motivated to enhance technical skills through internship opportunities to create impactful digital solutions.
                 </Trans>
               </motion.p>
 

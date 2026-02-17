@@ -74,7 +74,7 @@ const WorkspacePage = () => {
             </motion.div>
 
             <h1 className="mt-8 text-4xl md:text-6xl font-black text-dark dark:text-white mb-6 tracking-tight">
-              {t('workspace.title_prefix')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">{t('workspace.title_highlight')}</span>
+              {t('workspace.title_prefix')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">{t('workspace.title_highlight')}</span>
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
               {t('workspace.subtitle')}<br />

@@ -26,7 +26,6 @@ const Skills = () => {
           <div className="w-20 h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full mb-6"></div>
           <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg">
             {t('skills.description')}
-            {t('skills.description')}
           </p>
         </motion.div>
       </div>

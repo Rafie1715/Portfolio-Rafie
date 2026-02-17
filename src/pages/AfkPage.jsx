@@ -91,7 +91,7 @@ const AfkPage = () => {
         if (gameActivity) {
             return {
                 text: `${t('afk.playing')} ${gameActivity.name}`,
-                color: 'bg-purple-500', isOnline: true,
+                color: 'bg-blue-500', isOnline: true,
                 gameDetails: gameActivity,
                 avatar: `https://cdn.discordapp.com/avatars/${discordData.discord_user.id}/${discordData.discord_user.avatar}.png`
             };
@@ -160,7 +160,7 @@ const AfkPage = () => {
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                            <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 h-full shadow-xl hover:shadow-purple-500/10 transition-all duration-500 flex flex-col">
+                            <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 h-full shadow-xl hover:shadow-blue-500/10 transition-all duration-500 flex flex-col">
                                 <div className="flex items-center gap-5 mb-8">
                                     <div className="relative">
                                         <motion.div className={`absolute -inset-1 rounded-full blur opacity-40 ${statusInfo.isOnline ? 'bg-green-500' : 'bg-gray-500'}`} animate={{ opacity: [0.4, 0.7, 0.4] }} transition={{ duration: 2, repeat: Infinity }}></motion.div>
@@ -183,7 +183,7 @@ const AfkPage = () => {
                                                     {statusInfo.gameDetails.assets?.large_image ? (
                                                         <img src={`https://cdn.discordapp.com/app-assets/${statusInfo.gameDetails.application_id}/${statusInfo.gameDetails.assets.large_image}.png`} alt="Game Asset" className="w-24 h-24 rounded-xl shadow-lg object-cover bg-gray-800" />
                                                     ) : (
-                                                        <div className="w-24 h-24 rounded-xl bg-indigo-500 flex items-center justify-center text-4xl shadow-lg">🎮</div>
+                                                        <div className="w-24 h-24 rounded-xl bg-blue-500 flex items-center justify-center text-4xl shadow-lg">🎮</div>
                                                     )}
                                                     <div>
                                                         <div className="flex items-center gap-2 mb-1">
@@ -237,7 +237,7 @@ const AfkPage = () => {
                                             return (
                                                 <div key={year} className="relative">
                                                     <div className="sticky top-0 z-10 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm py-2 mb-4 border-b border-gray-100 dark:border-slate-700/50">
-                                                        <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">{year}</h3>
+                                                        <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">{year}</h3>
                                                     </div>
                                                     {fav && (
                                                         <a href={`https://www.themoviedb.org/movie/${fav.id}`} target="_blank" rel="noreferrer" className="block mb-6 relative rounded-2xl overflow-hidden aspect-video group cursor-pointer shadow-lg border border-yellow-500/20">

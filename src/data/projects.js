@@ -7,6 +7,10 @@ export const projects = [
     },
     category: "mobile",
     image: "/images/project-planetku.webp",
+    impact: {
+      en: "Mobile Dev Lead • Built AI waste classifier • 6-member team",
+      id: "Mobile Dev Lead • Bangun AI classifier • Tim 6 orang"
+    },
     shortDesc: {
       en: "Capstone project for Bangkit 2024. Features AI-powered waste classification, carbon calculation, and waste bank locator.",
       id: "Proyek Capstone Bangkit 2024. Fitur klasifikasi sampah berbasis AI, kalkulasi karbon, dan pencari bank sampah."
@@ -64,6 +68,10 @@ export const projects = [
     },
     category: "mobile",
     image: "/images/project-cinemazone.webp",
+    impact: {
+      en: "Solo Developer • Real-time seat booking • Firebase integration",
+      id: "Solo Developer • Booking kursi real-time • Integrasi Firebase"
+    },
     shortDesc: {
       en: "Android app with Firebase Auth, Cloud Firestore for wishlists, and a QR Code e-ticket generator.",
       id: "Aplikasi Android dengan Firebase Auth, Cloud Firestore untuk wishlist, dan generator e-tiket QR Code."
@@ -117,6 +125,10 @@ export const projects = [
     },
     category: "web",
     image: "/images/project-computercrafter.webp",
+    impact: {
+      en: "Full-stack Dev • Built compatibility logic • MySQL + PHP",
+      id: "Full-stack Dev • Logic kompatibilitas • MySQL + PHP"
+    },
     shortDesc: {
       en: "A web-based PC building simulator for enthusiasts and beginners.",
       id: "Simulator perakitan PC berbasis web untuk penggemar dan pemula."

@@ -187,7 +187,7 @@ const ProjectDetail = () => {
                 <div className="flex flex-wrap gap-3">
                   {project.figma && (
                     <motion.a whileHover={{ scale: 1.05 }} href={project.figma} target="_blank" rel="noreferrer" className="px-5 py-2 rounded-full bg-gray-100 dark:bg-slate-800 text-xs font-bold hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-                      <i className="fab fa-figma text-purple-500"></i> {t('projects.design')}
+                      <i className="fab fa-figma text-blue-500"></i> {t('projects.design')}
                     </motion.a>
                   )}
                 </div>
@@ -220,7 +220,7 @@ const ProjectDetail = () => {
               {project.techStack.map((tech, idx) => (
                 <motion.div
                   key={idx}
-                  whileHover={{ y: -5, backgroundColor: "rgba(99, 102, 241, 0.1)" }}
+                  whileHover={{ y: -5, backgroundColor: "rgba(37, 99, 235, 0.1)" }}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-darkLight border border-gray-200 dark:border-slate-700 shadow-sm transition-colors cursor-default"
                 >
                   <i className={`${tech.icon} text-xl colored`}></i>
@@ -319,7 +319,7 @@ const ProjectDetail = () => {
               viewport={{ once: true }}
               className="mb-20"
             >
-              <div className="relative p-8 rounded-3xl bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5 border border-primary/10 overflow-hidden shadow-sm">
+              <div className="relative p-8 rounded-3xl bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 border border-primary/10 overflow-hidden shadow-sm">
                 <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
 
                 <div className="relative z-10">
