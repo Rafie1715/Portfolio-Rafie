@@ -4,17 +4,17 @@ import { motion, AnimatePresence } from "framer-motion";
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: "model", text: "Hi! I'm Rafie's AI Assistant. Ask me anything about his projects or skills! 👋" }
+    { role: "model", text: "Hey there! 👋 I'm Rafie's AI assistant. I can help you learn about his projects, skills, experience, and more. What would you like to know?" }
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   const suggestions = [
-    { label: "💻 Skills", text: "What are your main technical skills?" },
-    { label: "📂 Best Project", text: "Tell me about your best project." },
-    { label: "🎓 Education", text: "What is your educational background?" },
-    { label: "📧 Contact", text: "How can I contact Rafie?" },
+    { label: "💼 Experience", text: "What's Rafie's professional background?" },
+    { label: "🚀 Impact", text: "Tell me about the impact of his projects." },
+    { label: "🛠️ Tech Stack", text: "What technologies does Rafie specialize in?" },
+    { label: "📌 Hire", text: "Is Rafie available for collaboration or hiring?" },
   ];
 
   const scrollToBottom = () => {
@@ -77,7 +77,7 @@ const Chatbot = () => {
     <>
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-primary to-secondary text-white rounded-full shadow-lg hover:shadow-primary/50 transition-all"
+        className="fixed bottom-6 right-6 z-50 p-4 bg-primary text-white rounded-full shadow-lg hover:shadow-xl hover:shadow-primary/50 transition-all"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
@@ -92,14 +92,14 @@ const Chatbot = () => {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className="fixed bottom-24 right-6 z-50 w-full max-w-[350px] bg-white dark:bg-darkLight rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-700 overflow-hidden flex flex-col h-[550px]"
           >
-            <div className="bg-primary p-4 flex items-center gap-3 shadow-md relative z-10">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white">
+            <div className="bg-gradient-to-r from-primary to-secondary p-4 flex items-center gap-3 shadow-md relative z-10">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white text-lg">
                 <i className="fas fa-robot"></i>
               </div>
               <div>
-                <h3 className="font-bold text-white">Rafie AI</h3>
-                <p className="text-xs text-white/80 flex items-center gap-1">
-                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Online
+                <h3 className="font-bold text-white">Rafie Assistant</h3>
+                <p className="text-xs text-white/85 flex items-center gap-1">
+                  <span className="w-2 h-2 bg-emerald-300 rounded-full animate-pulse"></span> Always here
                 </p>
               </div>
             </div>
@@ -131,15 +131,15 @@ const Chatbot = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="bg-white dark:bg-darkLight px-4 py-2 border-t border-gray-100 dark:border-slate-700">
-                <p className="text-[10px] text-gray-400 mb-2 uppercase font-bold tracking-wider">Suggested Questions:</p>
+            <div className="bg-white dark:bg-darkLight px-4 py-3 border-t border-gray-100 dark:border-slate-700">
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-2.5 uppercase font-bold tracking-wider">Quick Ask</p>
                 <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                     {suggestions.map((suggestion, idx) => (
                         <button
                             key={idx}
                             onClick={() => handleChipClick(suggestion.text)}
                             disabled={isLoading}
-                            className="whitespace-nowrap px-3 py-1.5 bg-gray-100 dark:bg-slate-800 text-primary text-xs font-medium rounded-full border border-transparent hover:border-primary hover:bg-primary/5 transition-colors disabled:opacity-50"
+                            className="whitespace-nowrap px-3 py-2 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-slate-800 dark:to-slate-750 text-primary dark:text-blue-400 text-xs font-medium rounded-lg border border-primary/20 hover:border-primary/50 hover:bg-primary/5 dark:hover:bg-slate-700/50 transition-all disabled:opacity-50"
                         >
                             {suggestion.label}
                         </button>

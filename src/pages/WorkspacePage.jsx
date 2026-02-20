@@ -4,9 +4,11 @@ import { setupItems } from '../data/setup';
 import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
+import GitHubActivity from '../components/GitHubActivity';
 
 const WorkspacePage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
 
@@ -43,6 +45,27 @@ const WorkspacePage = () => {
       default: return 'md:col-span-1 md:row-span-1';
     }
   };
+
+  const categories = [
+    { id: 'all', label: currentLang === 'id' ? 'Semua' : 'All' },
+    { id: 'Daily Driver', label: currentLang === 'id' ? 'Laptop Utama' : 'Daily Driver' },
+    { id: 'Tablet', label: 'Tablet' },
+    { id: 'Mobile', label: currentLang === 'id' ? 'Ponsel' : 'Mobile' },
+    { id: 'Audio', label: currentLang === 'id' ? 'Audio' : 'Audio' },
+    { id: 'Editor', label: 'Editor' },
+    { id: 'IDE', label: 'IDE' },
+    { id: 'DevOps', label: 'DevOps' },
+    { id: 'Productivity', label: currentLang === 'id' ? 'Produktivitas' : 'Productivity' },
+    { id: 'Testing', label: 'Testing' },
+    { id: 'Backend', label: 'Backend' },
+    { id: 'Design', label: currentLang === 'id' ? 'Desain' : 'Design' },
+    { id: 'Music', label: currentLang === 'id' ? 'Musik' : 'Music' },
+    { id: 'Social', label: currentLang === 'id' ? 'Sosial' : 'Social' },
+  ];
+
+  const filteredItems = selectedCategory === 'all' 
+    ? setupItems 
+    : setupItems.filter(item => item.category[currentLang] === categories.find(c => c.id === selectedCategory)?.label || item.category.en === selectedCategory);
 
   return (
     <PageTransition>
@@ -84,14 +107,34 @@ const WorkspacePage = () => {
             </p>
           </div>
 
+          {/* Category Filter */}
+          <div className="mb-12 flex flex-wrap justify-center gap-3">
+            {categories.map((cat) => (
+              <motion.button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
+                  selectedCategory === cat.id
+                    ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/30'
+                    : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50'
+                }`}
+              >
+                {cat.label}
+              </motion.button>
+            ))}
+          </div>
+
           <motion.div
             className="grid grid-cols-1 md:grid-cols-4 auto-rows-[280px] gap-6"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
+            key={selectedCategory}
           >
-            {setupItems.map((item) => {
+            {filteredItems.map((item) => {
               const desc = getData(item.desc);
               const category = getData(item.category);
 
@@ -152,6 +195,43 @@ const WorkspacePage = () => {
               );
             })}
           </motion.div>
+        </div>
+
+        {/* GitHub Activity Section - Advanced */}
+        <div className="mt-28 relative">
+          {/* Decorative Background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-3xl -z-10 blur-2xl"></div>
+          
+          {/* Decorative Divider */}
+          <div className="relative mb-20">
+            <div className="flex items-center gap-4 mb-12">
+              <div className="flex-1 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+              <div className="text-primary/40">
+                <i className="fas fa-code text-2xl"></i>
+              </div>
+              <div className="flex-1 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+            </div>
+
+            {/* Section Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl md:text-5xl font-black text-dark dark:text-white mb-4 tracking-tight">
+                Development <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">Activity</span>
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                {currentLang === 'id' 
+                  ? 'Pantau perjalanan coding saya - kontribusi konsisten, proyek aktif, dan komitmen terhadap pertumbuhan berkelanjutan.'
+                  : 'Track my coding journey - consistent contributions, active projects, and commitment to continuous growth.'}
+              </p>
+            </motion.div>
+          </div>
+
+          {/* GitHub Activity Component */}
+          <GitHubActivity />
         </div>
 
         <AnimatePresence>
