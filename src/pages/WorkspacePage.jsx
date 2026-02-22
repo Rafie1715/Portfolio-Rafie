@@ -13,10 +13,21 @@ const WorkspacePage = () => {
   const currentLang = i18n.language;
 
   const getData = (data) => {
-    if (data && typeof data === 'object' && !Array.isArray(data) && data[currentLang]) {
-      return data[currentLang];
+    if (!data) return "";
+    
+    // If it's an object with language keys, get the appropriate translation
+    if (typeof data === 'object' && !Array.isArray(data)) {
+      const value = data[currentLang] || data.en || data.id;
+      return typeof value === 'string' ? value : String(value || "");
     }
-    return data;
+    
+    // If it's already a string, return as is
+    if (typeof data === 'string') {
+      return data;
+    }
+    
+    // Fallback: convert to string
+    return String(data || "");
   };
 
   const containerVariants = {
@@ -66,13 +77,22 @@ const WorkspacePage = () => {
   const filteredItems = selectedCategory === 'all' 
     ? setupItems 
     : setupItems.filter((item) => {
-        const categoryData = item?.category;
-        const categoryLabel = categories.find((c) => c.id === selectedCategory)?.label;
-        const categoryText = typeof categoryData === 'object' && categoryData
-          ? categoryData[currentLang] || categoryData.en
-          : categoryData;
-
-        return categoryText === categoryLabel || categoryData?.en === selectedCategory || categoryData === selectedCategory;
+        try {
+          const categoryData = item?.category;
+          if (!categoryData) return false;
+          
+          const categoryLabel = categories.find((c) => c.id === selectedCategory)?.label;
+          if (!categoryLabel) return false;
+          
+          const categoryText = typeof categoryData === 'object' && categoryData
+            ? (categoryData[currentLang] || categoryData.en || categoryData.id)
+            : categoryData;
+          
+          return String(categoryText || "") === String(categoryLabel || "");
+        } catch (err) {
+          console.warn('Filter error for item:', item, err);
+          return false;
+        }
       });
 
   return (
@@ -152,8 +172,8 @@ const WorkspacePage = () => {
               const handleItemClick = () => {
                 setSelectedImage({
                   ...item,
-                  desc: desc,
-                  category: category
+                  desc: String(desc || ""),
+                  category: String(category || "")
                 });
               };
 
