@@ -134,6 +134,7 @@ const Certifications = () => {
                                 <motion.img 
                                     src={certifications[currentIndex].img} 
                                     alt={certifications[currentIndex].alt || "Certificate"}
+                                    loading="lazy"
                                     className="max-w-full max-h-full object-contain shadow-md rounded transition-transform duration-500 group-hover/img:scale-105"
                                     layoutId={`cert-img-${currentIndex}`}
                                 />

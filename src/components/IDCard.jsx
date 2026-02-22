@@ -22,7 +22,7 @@ const IDCard = () => {
                 <div className="absolute top-0 left-0 right-0 py-1.5 sm:h-14 bg-gradient-to-r from-[#004d40] to-[#00695c] flex flex-col sm:flex-row items-center px-3 sm:px-5 justify-between z-10">
                     <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-0">
                         <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center p-0.5">
-                            <img src={upnLogo} alt="UPN" className="w-full h-full object-contain" onError={(e) => e.target.style.display = 'none'} />
+                            <img src={upnLogo} alt="UPN" loading="lazy" className="w-full h-full object-contain" onError={(e) => e.target.style.display = 'none'} />
                         </div>
                         <div className="leading-none sm:leading-tight text-white text-center sm:text-left">
                             <h1 className="font-bold text-[10px] sm:text-sm tracking-wide">UPN VETERAN JAKARTA</h1>

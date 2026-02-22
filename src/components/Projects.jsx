@@ -6,6 +6,7 @@ import { projects as manualProjects } from '../data/projects';
 import { dbFirestore } from '../config/firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
+import LazyImage from './LazyImage';
 
 const Projects = () => {
   const [filter, setFilter] = useState('all');
@@ -164,11 +165,12 @@ const Projects = () => {
                       <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2000} className="h-full">
                         <div className="group bg-white dark:bg-darkLight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 dark:border-slate-700/50 flex flex-col h-full relative">                        
                           <div className="h-52 overflow-hidden relative">
-                            <img 
+                            <LazyImage 
                               src={project.image} 
                               alt={title}
-                              loading="lazy" 
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1" 
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+                              wrapperClassName="w-full h-full"
+                              placeholderClassName="rounded-t-2xl"
                             />
                             
                             <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6">                            

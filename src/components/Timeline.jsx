@@ -104,7 +104,7 @@ const Timeline = () => {
               <div className="hidden md:block w-1/2" />
 
               <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:translate-y-0 top-0 md:top-auto w-12 h-12 rounded-full border-4 border-white dark:border-dark bg-white shadow-lg z-10 overflow-hidden flex items-center justify-center">
-                <img src={exp.logo} alt="Logo" className="w-full h-full object-contain p-1" />
+                <img src={exp.logo} alt="Logo" loading="lazy" className="w-full h-full object-contain p-1" />
               </div>
 
               <div className="w-full pl-12 md:pl-0 md:w-1/2 md:px-10 mt-6 md:mt-0">
