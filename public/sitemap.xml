@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://rafie-dev.netlify.app/</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafie-dev.netlify.app/"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafie-dev.netlify.app/?lang=id"/>
+  </url>
+
+  <!-- About Page -->
+  <url>
+    <loc>https://rafie-dev.netlify.app/about</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafie-dev.netlify.app/about"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafie-dev.netlify.app/about?lang=id"/>
+  </url>
+
+  <!-- Projects Page -->
+  <url>
+    <loc>https://rafie-dev.netlify.app/projects</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafie-dev.netlify.app/projects"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafie-dev.netlify.app/projects?lang=id"/>
+  </url>
+
+  <!-- Workspace Page -->
+  <url>
+    <loc>https://rafie-dev.netlify.app/workspace</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafie-dev.netlify.app/workspace"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafie-dev.netlify.app/workspace?lang=id"/>
+  </url>
+
+  <!-- Contact Page -->
+  <url>
+    <loc>https://rafie-dev.netlify.app/contact</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafie-dev.netlify.app/contact"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafie-dev.netlify.app/contact?lang=id"/>
+  </url>
+
+  <!-- AFK Page -->
+  <url>
+    <loc>https://rafie-dev.netlify.app/afk</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Individual Projects - Add your main projects here -->
+  <!-- Example project entries (update with actual project IDs) -->
+  <url>
+    <loc>https://rafie-dev.netlify.app/project/unshelf</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://rafie-dev.netlify.app/project/smarteye</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://rafie-dev.netlify.app/project/filmophile</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>

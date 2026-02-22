@@ -9,7 +9,13 @@ const AboutPage = () => {
   return (
     <PageTransition>
       <div className="pt-20 bg-white dark:bg-dark min-h-screen">
-        <SEO title="About | Rafie Rojagat" description="Learn more about me." url="https://rafierojagat.netlify.app/about" />
+        <SEO 
+          title="About Rafie Rojagat | Software Engineer & Developer"
+          description="Learn about Rafie Rojagat, an Informatics Student at UPN Veteran Jakarta passionate about Mobile & Web Development. Discover my journey, skills, certifications, and experience in React, Flutter, Python, and more."
+          url="https://rafie-dev.netlify.app/about"
+          keywords="About Rafie Rojagat, Developer Biography, Software Engineer Skills, Mobile Development Experience, Web Development Certifications, React Developer, Flutter Developer"
+          type="profile"
+        />
         
         <About />
         

@@ -108,10 +108,14 @@ const ProjectDetail = () => {
       >
 
         <SEO
-          title={`${title} | Rafie Rojagat`}
+          title={`${title} | Rafie Rojagat Portfolio`}
           description={shortDesc}
-          url={`https://rafierojagat.netlify.app/project/${project.id}`}
+          url={`https://rafie-dev.netlify.app/project/${project.id}`}
           image={project.image}
+          type="article"
+          keywords={`${title}, ${project.category}, Software Project, ${project.tech?.join(', ')}, Portfolio Project`}
+          published={project.createdAt}
+          modified={project.updatedAt}
         />
 
         <div className="container mx-auto px-4 max-w-4xl">

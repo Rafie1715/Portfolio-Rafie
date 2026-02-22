@@ -26,9 +26,11 @@ const HomePage = () => {
     <PageTransition>
       <div className="bg-white dark:bg-dark min-h-screen">
         <SEO
-          title="Rafie Rojagat | Software Engineer"
-          description="Welcome to my digital playground. Exploring Mobile & Web Development."
-          url="https://rafierojagat.netlify.app/"
+          title="Rafie Rojagat | Software Engineer Portfolio"
+          description="Welcome to my digital playground. Informatics Student at UPN Veteran Jakarta specializing in Mobile & Web Development with React, Flutter, and modern frameworks. Explore my projects, skills, and experience."
+          url="https://rafie-dev.netlify.app/"
+          keywords="Rafie Rojagat, Software Engineer Portfolio, Mobile Developer, Web Developer, React, Flutter, Full Stack Developer, UPN Veteran Jakarta"
+          type="website"
         />
 
         <Hero />

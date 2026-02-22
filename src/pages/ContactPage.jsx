@@ -12,7 +12,9 @@ const ContactPage = () => {
       <SEO 
         title={t('contact.seo_title')} 
         description={t('contact.seo_desc')} 
-        url="https://rafierojagat.netlify.app/contact" 
+        url="https://rafie-dev.netlify.app/contact"
+        keywords="Contact Rafie Rojagat, Hire Software Engineer, Developer Contact Form, Get in Touch, Collaboration Opportunities"
+        type="website"
       />
       <Contact />
     </div>

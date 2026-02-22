@@ -12,7 +12,9 @@ const ProjectsPage = () => {
         <SEO
           title={t('projects.seo_title')}
           description={t('projects.seo_desc')}
-          url="https://rafierojagat.netlify.app/projects"
+          url="https://rafie-dev.netlify.app/projects"
+          keywords="Portfolio Projects, Mobile Apps, Web Applications, React Projects, Flutter Apps, Python Projects, Software Development Portfolio, Coding Projects"
+          type="website"
         />
 
         <Projects />

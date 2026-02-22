@@ -72,9 +72,11 @@ const WorkspacePage = () => {
       <div className="bg-gray-50 dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300 relative overflow-hidden">
 
         <SEO
-          title="Workspace | Rafie Rojagat"
-          description="A visual tour of my desk setup, hardware, and developer tools."
+          title="Workspace & Development Setup | Rafie Rojagat"
+          description="Explore my development workspace and tools. A visual tour of my desk setup, hardware, software, and developer tools I use daily for Mobile & Web Development."
           url="https://rafie-dev.netlify.app/workspace"
+          keywords="Developer Workspace, Desk Setup, Development Tools, Software Engineer Setup, Hardware Setup, Coding Environment, Developer Gear"
+          type="website"
         />
 
         <div className="absolute inset-0 z-0 pointer-events-none">
