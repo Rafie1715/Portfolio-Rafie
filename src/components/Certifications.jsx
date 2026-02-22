@@ -154,6 +154,14 @@ const Certifications = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.2 }}
                                 >
+                                    {/* Category Badge */}
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <span className="text-2xl">{certifications[currentIndex].badge}</span>
+                                        <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full bg-gradient-to-r ${certifications[currentIndex].color} text-white shadow-md`}>
+                                            {certifications[currentIndex].category}
+                                        </span>
+                                    </div>
+
                                     <h3 className="text-xl font-bold text-dark dark:text-white mb-2 leading-tight">
                                         {certifications[currentIndex].title || "Certificate Title"}
                                     </h3>

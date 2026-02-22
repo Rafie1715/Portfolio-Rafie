@@ -6,7 +6,10 @@ export const certifications = [
     title: "Mobile Development Cohort",
     issuer: "Bangkit Academy led by Google, GoTo, & Traveloka",
     date: "2024",
-    link: ""
+    link: "",
+    category: "Mobile",
+    badge: "🏆",
+    color: "from-blue-500 to-blue-600"
   },
   { 
     id: 2, 
@@ -15,7 +18,10 @@ export const certifications = [
     title: "Belajar Membuat Aplikasi Android untuk Pemula",
     issuer: "Dicoding Indonesia",
     date: "2024",
-    link: "https://www.dicoding.com/certificates/4EXG75JN9PRL" // Contoh link
+    link: "https://www.dicoding.com/certificates/4EXG75JN9PRL",
+    category: "Android",
+    badge: "📱",
+    color: "from-green-500 to-green-600"
   },
   { 
     id: 3, 
@@ -24,7 +30,10 @@ export const certifications = [
     title: "Belajar Fundamental Aplikasi Android",
     issuer: "Dicoding Indonesia",
     date: "2024",
-    link: "https://www.dicoding.com/certificates/1OP844E2LZQK" 
+    link: "https://www.dicoding.com/certificates/1OP844E2LZQK",
+    category: "Android",
+    badge: "📱",
+    color: "from-green-500 to-green-600"
   },
   { 
     id: 4, 
@@ -33,7 +42,10 @@ export const certifications = [
     title: "Belajar Penerapan Machine Learning untuk Android",
     issuer: "Dicoding Indonesia",
     date: "2024",
-    link: "https://www.dicoding.com/certificates/NVP74NQKGPR0"
+    link: "https://www.dicoding.com/certificates/NVP74NQKGPR0",
+    category: "ML & Android",
+    badge: "🤖",
+    color: "from-purple-500 to-purple-600"
   },
   { 
     id: 5, 
@@ -42,7 +54,10 @@ export const certifications = [
     title: "Belajar Pengembangan Aplikasi Android Intermediate",
     issuer: "Dicoding Indonesia",
     date: "2024",
-    link: "https://www.dicoding.com/certificates/4EXG7D58GPRL"
+    link: "https://www.dicoding.com/certificates/4EXG7D58GPRL",
+    category: "Android",
+    badge: "📱",
+    color: "from-green-500 to-green-600"
   },
   { 
     id: 6, 
@@ -51,7 +66,10 @@ export const certifications = [
     title: "Belajar Dasar Pemrograman Web",
     issuer: "Dicoding Indonesia",
     date: "2024",
-    link: "https://www.dicoding.com/certificates/MEPJY4MQJP3V"
+    link: "https://www.dicoding.com/certificates/MEPJY4MQJP3V",
+    category: "Web",
+    badge: "🌐",
+    color: "from-yellow-500 to-yellow-600"
   },
   { 
     id: 7, 
@@ -60,7 +78,10 @@ export const certifications = [
     title: "Belajar Membuat Front-End Web untuk Pemula",
     issuer: "Dicoding Indonesia",
     date: "2024",
-    link: "https://www.dicoding.com/certificates/L4PQ13M4OXO1"
+    link: "https://www.dicoding.com/certificates/L4PQ13M4OXO1",
+    category: "Frontend",
+    badge: "⚛️",
+    color: "from-cyan-500 to-cyan-600"
   },
   { 
     id: 8, 
@@ -69,7 +90,10 @@ export const certifications = [
     title: "Belajar Back-End Pemula dengan JavaScript",
     issuer: "Dicoding Indonesia",
     date: "2025",
-    link: "https://www.dicoding.com/certificates/RVZKWD1QQZD5"
+    link: "https://www.dicoding.com/certificates/RVZKWD1QQZD5",
+    category: "Backend",
+    badge: "⚙️",
+    color: "from-orange-500 to-orange-600"
   },
   { 
     id: 9, 
@@ -78,7 +102,10 @@ export const certifications = [
     title: "IT Specialist - Data Analytics",
     issuer: "Certiport",
     date: "2024",
-    link: "https://www.credly.com/badges/57b4d1aa-8d54-4f52-a9b4-d602023016c3/linked_in_profile"
+    link: "https://www.credly.com/badges/57b4d1aa-8d54-4f52-a9b4-d602023016c3/linked_in_profile",
+    category: "Data",
+    badge: "📊",
+    color: "from-red-500 to-red-600"
   },
   { 
     id: 10, 
@@ -87,7 +114,10 @@ export const certifications = [
     title: "Ajang Prestasi Akademik Nasioal (APAN) 2024 - English Competition",
     issuer: "Divya Competition",
     date: "2024",
-    link: ""
+    link: "",
+    category: "Language",
+    badge: "🎯",
+    color: "from-pink-500 to-pink-600"
   },
   { 
     id: 11, 
@@ -96,7 +126,10 @@ export const certifications = [
     title: "TOEFL ITP Prediction Test",
     issuer: "Language Center",
     date: "2024",
-    link: ""
+    link: "",
+    category: "Language",
+    badge: "📝",
+    color: "from-pink-500 to-pink-600"
   },
   { 
     id: 12, 
@@ -105,7 +138,10 @@ export const certifications = [
     title: "Belajar Membuat Aplikasi Web dengan React",
     issuer: "Dicoding Indonesia",
     date: "2025",
-    link: "https://www.dicoding.com/certificates/EYX4KQN76PDL"
+    link: "https://www.dicoding.com/certificates/EYX4KQN76PDL",
+    category: "React",
+    badge: "⚛️",
+    color: "from-cyan-500 to-cyan-600"
   },
   { 
     id: 13, 
@@ -114,7 +150,10 @@ export const certifications = [
     title: "Belajar Fundamental Aplikasi Web dengan React",
     issuer: "Dicoding Indonesia",
     date: "2025",
-    link: "https://www.dicoding.com/certificates/JMZVV083RZN9"
+    link: "https://www.dicoding.com/certificates/JMZVV083RZN9",
+    category: "React",
+    badge: "⚛️",
+    color: "from-cyan-500 to-cyan-600"
   },
   { 
     id: 14, 
@@ -123,7 +162,10 @@ export const certifications = [
     title: "Belajar Membuat Aplikasi Flutter untuk Pemula",
     issuer: "Dicoding Indonesia",
     date: "2025",
-    link: "https://www.dicoding.com/certificates/MEPJ2Q4VLP3V"
+    link: "https://www.dicoding.com/certificates/MEPJ2Q4VLP3V",
+    category: "Flutter",
+    badge: "🦋",
+    color: "from-blue-500 to-blue-600"
   },
   { 
     id: 15, 
@@ -132,7 +174,10 @@ export const certifications = [
     title: "Code Generation and Optimization using IBM Granite",
     issuer: "IBM",
     date: "2025",
-    link: "https://www.credly.com/badges/258db53c-754b-4f6a-a2ab-32f2a0e9c0f3/linked_in_profile"
+    link: "https://www.credly.com/badges/258db53c-754b-4f6a-a2ab-32f2a0e9c0f3/linked_in_profile",
+    category: "AI/ML",
+    badge: "🤖",
+    color: "from-purple-500 to-purple-600"
   },
   { 
     id: 16, 
@@ -141,7 +186,10 @@ export const certifications = [
     title: "Belajar Fundamental Front-End Web Development",
     issuer: "Dicoding Indonesia",
     date: "2025",
-    link: "https://www.dicoding.com/certificates/4EXG3EE1DZRL"
+    link: "https://www.dicoding.com/certificates/4EXG3EE1DZRL",
+    category: "Frontend",
+    badge: "🎨",
+    color: "from-cyan-500 to-cyan-600"
   },
   { 
     id: 17, 
@@ -150,7 +198,10 @@ export const certifications = [
     title: "Memulai Pemrograman dengan Kotlin",
     issuer: "Dicoding Indonesia",
     date: "2024",
-    link: "https://www.dicoding.com/certificates/81P2N9RY8XOY"
+    link: "https://www.dicoding.com/certificates/81P2N9RY8XOY",
+    category: "Language",
+    badge: "🎯",
+    color: "from-pink-500 to-pink-600"
   },
   { 
     id: 18, 
@@ -159,7 +210,10 @@ export const certifications = [
     title: "Belajar Dasar Git dengan GitHub",
     issuer: "Dicoding Indonesia",
     date: "2024",
-    link: "https://www.dicoding.com/certificates/98XWLN7J0ZM3"
+    link: "https://www.dicoding.com/certificates/98XWLN7J0ZM3",
+    category: "DevTools",
+    badge: "🛠️",
+    color: "from-slate-500 to-slate-600"
   },
   { 
     id: 19, 
@@ -168,15 +222,21 @@ export const certifications = [
     title: "Memulai Pemrograman dengan Dart",
     issuer: "Dicoding Indonesia",
     date: "2025",
-    link: "https://www.dicoding.com/certificates/53XEKY24VXRN"
+    link: "https://www.dicoding.com/certificates/53XEKY24VXRN",
+    category: "Language",
+    badge: "🎯",
+    color: "from-pink-500 to-pink-600"
   },
   { 
     id: 20, 
     img: "/images/cert-dicoding-javascript.webp", 
-    alt: "JavaScript Beginner Certificate",
+    alt: "Dicoding JavaScript Beginner",
     title: "Belajar Dasar Pemrograman JavaScript",
     issuer: "Dicoding Indonesia",
     date: "2025",
-    link: "https://www.dicoding.com/certificates/6RPNVQOE8Z2M"
+    link: "https://www.dicoding.com/certificates/6RPNVQOE8Z2M",
+    category: "Language",
+    badge: "📘",
+    color: "from-yellow-500 to-yellow-600"
   }
 ];

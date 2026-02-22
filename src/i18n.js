@@ -112,6 +112,23 @@ const resources = {
                 updated: "Updated",
                 view_product: "View Product"
             },
+            pages: {
+                projects: {
+                    title_prefix: "My",
+                    title_highlight: "Projects",
+                    subtitle: "A collection of web and mobile applications I've built, showcasing my skills in React, Kotlin, Python, and more."
+                },
+                about: {
+                    title_prefix: "About",
+                    title_highlight: "Me",
+                    subtitle: "Discover my journey as a developer, my skills, experience, and the passion I bring to every project."
+                },
+                contact: {
+                    title_prefix: "Get in",
+                    title_highlight: "Touch",
+                    subtitle: "Have a project in mind? Let's connect and create something amazing together."
+                }
+            },
             afk: {
                 subtitle: "Away From Keyboard.",
                 seo_desc: "Games, Music, and Movies.",
@@ -261,6 +278,23 @@ const resources = {
                 subtitle: "Perangkat keras, gadget, dan perangkat lunak yang mendukung produktivitas saya.",
                 updated: "Diperbarui",
                 view_product: "Lihat Produk"
+            },
+            pages: {
+                projects: {
+                    title_prefix: "Proyek",
+                    title_highlight: "Saya",
+                    subtitle: "Kumpulan aplikasi web dan mobile yang telah saya bangun, menampilkan keahlian saya dalam React, Kotlin, Python, dan banyak lagi."
+                },
+                about: {
+                    title_prefix: "Tentang",
+                    title_highlight: "Saya",
+                    subtitle: "Temukan perjalanan saya sebagai developer, keahlian, pengalaman, dan passion yang saya bawa ke setiap proyek."
+                },
+                contact: {
+                    title_prefix: "Hubungi",
+                    title_highlight: "Saya",
+                    subtitle: "Punya ide proyek? Mari terhubung dan ciptakan sesuatu yang luar biasa bersama."
+                }
             },
             afk: {
                 subtitle: "Jauh Dari Keyboard.",

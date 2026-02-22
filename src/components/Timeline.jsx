@@ -16,7 +16,7 @@ const DocCarousel = ({ docs, setSelectedImage }) => {
 
   return (
     <div 
-      className="relative w-full h-48 sm:h-56 rounded-xl overflow-hidden group cursor-pointer shadow-inner border border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 mt-4"
+      className="relative w-full aspect-video rounded-xl overflow-hidden group cursor-pointer shadow-inner border border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 mt-4"
       onClick={(e) => {
         e.stopPropagation();
         setSelectedImage(docs[index]);
@@ -64,6 +64,7 @@ const Timeline = () => {
   const { i18n } = useTranslation();
   const currentLang = i18n.language || 'en';
   const [selectedImage, setSelectedImage] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const getData = (data) => {
     if (!data) return "";
@@ -80,66 +81,234 @@ const Timeline = () => {
   };
 
   return (
-    <div className="relative container mx-auto px-4 py-12 max-w-5xl">
-      <div className="absolute left-4 md:left-1/2 top-0 h-full w-0.5 bg-gray-200 dark:bg-gray-700 transform md:-translate-x-1/2"></div>
+    <div className="relative container mx-auto px-4 py-12 max-w-4xl">
+      {/* Timeline Vertical Line */}
+      <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 top-0 h-full w-1.5 bg-gradient-to-b from-transparent via-primary to-transparent z-0"
+        style={{ 
+          boxShadow: '0 0 20px rgba(37, 99, 235, 0.6)'
+        }}
+      ></div>
 
       <div className="space-y-16">
         {experiences.map((exp, index) => {
-          const isEven = index % 2 === 0;
           const title = getData(exp.title);
           const date = getData(exp.date);
           const descList = getDescList(exp.description);
+          const isHovered = hoveredIndex === index;
 
           return (
             <motion.div
               key={exp.id}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`relative flex flex-col md:flex-row items-center ${
-                isEven ? "md:flex-row-reverse" : ""
-              }`}
+              transition={{ duration: 0.5, delay: index * 0.08 }}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              className="relative"
             >
-              <div className="hidden md:block w-1/2" />
+              {/* Mobile Layout */}
+              <div className="md:hidden flex gap-6">
+                {/* Logo */}
+                <div className="relative flex-shrink-0">
+                  <motion.div 
+                    className="w-16 h-16 rounded-full border-4 border-white dark:border-dark bg-white dark:bg-slate-800 shadow-lg z-20 overflow-hidden flex items-center justify-center"
+                    animate={isHovered ? { scale: 1.2, boxShadow: '0 0 25px rgba(37, 99, 235, 0.8)' } : { scale: 1, boxShadow: 'none' }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <img src={exp.logo} alt="Logo" loading="lazy" className="w-full h-full object-contain p-2" />
+                  </motion.div>
 
-              <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:translate-y-0 top-0 md:top-auto w-12 h-12 rounded-full border-4 border-white dark:border-dark bg-white shadow-lg z-10 overflow-hidden flex items-center justify-center">
-                <img src={exp.logo} alt="Logo" loading="lazy" className="w-full h-full object-contain p-1" />
+                  {/* Pulse */}
+                  <motion.div
+                    className="absolute inset-0 w-16 h-16 rounded-full border-2 border-primary/40 pointer-events-none"
+                    animate={isHovered ? { scale: 1.5, opacity: 0 } : { scale: 1, opacity: 0.6 }}
+                    transition={{ duration: 0.6, repeat: Infinity }}
+                  />
+                </div>
+
+                {/* Content */}
+                <div className="flex-1">
+                  <motion.div
+                    animate={isHovered ? { y: -4 } : { y: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="p-5 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-shadow"
+                  >
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: 0.1 }}
+                      className="text-xs font-bold text-primary mb-1"
+                    >
+                      {date}
+                    </motion.p>
+                    <motion.h3 
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: 0.15 }}
+                      className="text-lg font-bold text-dark dark:text-white mb-0.5"
+                    >
+                      {title}
+                    </motion.h3>
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: 0.2 }}
+                      className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3"
+                    >
+                      {exp.org}
+                    </motion.p>
+
+                    <ul className="space-y-2">
+                      {descList.map((point, i) => ( 
+                        <motion.li 
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.25 + i * 0.05 }}
+                          className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex gap-2"
+                        >
+                          <span className="mt-1.5 w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0"></span>
+                          <span>{point}</span>
+                        </motion.li>
+                      ))}
+                    </ul>
+
+                    {exp.docs && exp.docs.length > 0 && (
+                      <DocCarousel docs={exp.docs} setSelectedImage={setSelectedImage} />
+                    )}
+                  </motion.div>
+                </div>
               </div>
 
-              <div className="w-full pl-12 md:pl-0 md:w-1/2 md:px-10 mt-6 md:mt-0">
-                <div className={`p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-700 hover:shadow-xl hover:border-primary/30 transition-all relative group ${isEven ? 'md:text-right' : 'md:text-left'}`}>
-                  
-                  <div className={`hidden md:block absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white dark:bg-slate-800 rotate-45 border-b border-l border-gray-100 dark:border-slate-700 ${isEven ? '-right-2 border-r-0 border-t-0' : '-left-2 border-b-0 border-l-0'}`}></div>
-
-                  <div className={`flex flex-col ${isEven ? 'md:items-end' : 'md:items-start'}`}>
-                      <span className="inline-block px-3 py-1 text-xs font-bold rounded-full mb-2 bg-primary/10 text-primary">
+              {/* Desktop Layout */}
+              <div className="hidden md:flex gap-8 items-start">
+                {/* Left Side Content */}
+                <div className={`flex-1 text-right pr-8 ${index % 2 !== 0 ? 'visible' : 'hidden'}`}>
+                  {index % 2 !== 0 && (
+                    <motion.div
+                      animate={isHovered ? { y: -4 } : { y: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-shadow"
+                    >
+                      <motion.p 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                        className="text-xs font-bold text-primary mb-1"
+                      >
                         {date}
-                      </span>
-                      <h3 className="text-lg font-bold text-dark dark:text-white mb-1 group-hover:text-primary transition-colors">
+                      </motion.p>
+                      <motion.h3 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.15 }}
+                        className="text-lg font-bold text-dark dark:text-white mb-0.5"
+                      >
                         {title}
-                      </h3>
-                      <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">
+                      </motion.h3>
+                      <motion.p 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3"
+                      >
                         {exp.org}
-                      </p>
-                  </div>
+                      </motion.p>
 
-                  <ul className={`space-y-2 mb-4 list-none`}>
-                    {descList.map((point, i) => ( 
-                        <li key={i} className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex gap-2">
-                            {!isEven && <span className="mt-1.5 w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0"></span>}
+                      <ul className="space-y-2 text-left">
+                        {descList.map((point, i) => ( 
+                          <motion.li 
+                            key={i}
+                            initial={{ opacity: 0, x: 10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.25 + i * 0.05 }}
+                            className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex gap-2 justify-end"
+                          >
                             <span>{point}</span>
-                            {isEven && <span className="mt-1.5 w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0"></span>}
-                        </li>
-                    ))}
-                  </ul>
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0"></span>
+                          </motion.li>
+                        ))}
+                      </ul>
 
-                  {exp.docs && exp.docs.length > 0 && (
-                      <div className="w-full">
-                          <DocCarousel docs={exp.docs} setSelectedImage={setSelectedImage} />
-                      </div>
+                      {exp.docs && exp.docs.length > 0 && (
+                        <DocCarousel docs={exp.docs} setSelectedImage={setSelectedImage} />
+                      )}
+                    </motion.div>
                   )}
+                </div>
 
+                {/* Center Logo */}
+                <div className="relative flex-shrink-0 flex items-center justify-center">
+                  <motion.div 
+                    className="w-16 h-16 rounded-full border-4 border-white dark:border-dark bg-white dark:bg-slate-800 shadow-lg z-20 overflow-hidden flex items-center justify-center"
+                    animate={isHovered ? { scale: 1.2, boxShadow: '0 0 25px rgba(37, 99, 235, 0.8)' } : { scale: 1, boxShadow: 'none' }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <img src={exp.logo} alt="Logo" loading="lazy" className="w-full h-full object-contain p-2" />
+                  </motion.div>
+
+                  {/* Pulse */}
+                  <motion.div
+                    className="absolute inset-0 w-16 h-16 rounded-full border-2 border-primary/40 pointer-events-none"
+                    animate={isHovered ? { scale: 1.5, opacity: 0 } : { scale: 1, opacity: 0.6 }}
+                    transition={{ duration: 0.6, repeat: Infinity }}
+                  />
+                </div>
+
+                {/* Right Side Content */}
+                <div className={`flex-1 pl-8 ${index % 2 === 0 ? 'visible' : 'hidden'}`}>
+                  {index % 2 === 0 && (
+                    <motion.div
+                      animate={isHovered ? { y: -4 } : { y: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-shadow"
+                    >
+                      <motion.p 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                        className="text-xs font-bold text-primary mb-1"
+                      >
+                        {date}
+                      </motion.p>
+                      <motion.h3 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.15 }}
+                        className="text-lg font-bold text-dark dark:text-white mb-0.5"
+                      >
+                        {title}
+                      </motion.h3>
+                      <motion.p 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3"
+                      >
+                        {exp.org}
+                      </motion.p>
+
+                      <ul className="space-y-2">
+                        {descList.map((point, i) => ( 
+                          <motion.li 
+                            key={i}
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.25 + i * 0.05 }}
+                            className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex gap-2"
+                          >
+                            <span className="mt-1.5 w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0"></span>
+                            <span>{point}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+
+                      {exp.docs && exp.docs.length > 0 && (
+                        <DocCarousel docs={exp.docs} setSelectedImage={setSelectedImage} />
+                      )}
+                    </motion.div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -147,6 +316,7 @@ const Timeline = () => {
         })}
       </div>
 
+      {/* Image Zoom Modal */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
