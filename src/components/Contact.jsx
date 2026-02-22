@@ -151,10 +151,10 @@ const Contact = () => {
                       rel="noreferrer"
                       whileHover={{ y: -8, scale: 1.15 }}
                       whileTap={{ scale: 0.9 }}
-                      className={`w-12 h-12 rounded-xl bg-gradient-to-br ${social.color} flex items-center justify-center text-white transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 border border-white/20`}
+                      className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${social.color} flex items-center justify-center text-white transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 border border-white/20 min-h-[44px] min-w-[44px]`}
                       title={social.text}
                     >
-                      <i className={`${social.icon} text-lg`}></i>
+                      <i className={`${social.icon} text-lg sm:text-xl`}></i>
                     </motion.a>
                   ))}
                 </div>
@@ -266,7 +266,7 @@ const Contact = () => {
                   disabled={status === 'loading'}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`relative overflow-hidden inline-flex items-center justify-center px-8 py-3.5 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-primary/40 transition-all ${status === 'loading' ? 'opacity-80 cursor-not-allowed' : ''}`}
+                  className={`relative overflow-hidden inline-flex items-center justify-center px-8 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-primary/40 transition-all min-h-[44px] ${status === 'loading' ? 'opacity-80 cursor-not-allowed' : ''}`}
                 >
                   {status === 'loading' && (
                     <motion.div 

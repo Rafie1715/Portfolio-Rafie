@@ -70,14 +70,15 @@ const Navbar = () => {
 
           <button
             onClick={toggleLanguage}
-            className="px-2 py-1 rounded text-xs font-bold border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+            className="px-3 py-2 min-h-[44px] min-w-[44px] rounded text-xs font-bold border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+            title="Toggle language"
           >
             {i18n.language === 'en' ? 'ID' : 'EN'}
           </button>
 
           <button
             onClick={toggleTheme}
-            className="w-9 h-9 rounded-full bg-gray-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all duration-300 shadow-sm hover:scale-110"
+            className="w-10 h-10 sm:w-11 sm:h-11 min-h-[44px] min-w-[44px] rounded-full bg-gray-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all duration-300 shadow-sm hover:scale-110"
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? (
@@ -88,24 +89,27 @@ const Navbar = () => {
           </button>
         </div>
 
-        <div className="md:hidden flex items-center gap-4">
+        <div className="md:hidden flex items-center gap-3">
           <button
             onClick={toggleLanguage}
-            className="text-sm font-bold text-gray-600 dark:text-gray-300"
+            className="px-3 py-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-sm font-bold text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all"
+            title="Toggle language"
           >
             {i18n.language === 'en' ? 'ID' : 'EN'}
           </button>
 
           <button 
             onClick={toggleTheme} 
-            className="text-xl transition-colors text-yellow-500 dark:text-yellow-400"
+            className="p-2 min-h-[44px] min-w-[44px] text-xl transition-colors text-yellow-500 dark:text-yellow-400 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
+            aria-label="Toggle theme"
           >
              {theme === 'dark' ? <i className="fas fa-sun"></i> : <i className="fas fa-moon text-slate-600"></i>}
           </button>
 
           <button 
-            className="text-2xl focus:outline-none text-gray-800 dark:text-white" 
+            className="p-2 min-h-[44px] min-w-[44px] text-2xl focus:outline-none text-gray-800 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all" 
             onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
           >
             <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i>
           </button>

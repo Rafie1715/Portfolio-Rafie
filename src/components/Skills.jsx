@@ -30,15 +30,15 @@ const Skills = () => {
         </motion.div>
       </div>
 
-      <div className="relative flex flex-col gap-8 [mask-image:linear-gradient(to_right,transparent,white_5%,white_95%,transparent)]">
+      <div className="relative flex flex-col gap-6 sm:gap-8 md:gap-10 [mask-image:linear-gradient(to_right,transparent,white_5%,white_95%,transparent)]">
         
-        <Marquee gradient={false} speed={40} pauseOnHover={true}>
+        <Marquee gradient={false} speed={30} pauseOnHover={true} className="py-2">
           {firstRow.map((skill, index) => (
             <SkillCard key={index} skill={skill} />
           ))}
         </Marquee>
 
-        <Marquee gradient={false} speed={40} pauseOnHover={true} direction="right">
+        <Marquee gradient={false} speed={30} pauseOnHover={true} direction="right" className="py-2">
           {secondRow.map((skill, index) => (
             <SkillCard key={index} skill={skill} />
           ))}
@@ -51,10 +51,10 @@ const Skills = () => {
 
 const SkillCard = ({ skill }) => {
   return (
-    <div className="mx-4 group">
+    <div className="mx-2 sm:mx-3 md:mx-4 group">
       <div className="
-        relative flex flex-col items-center justify-center gap-3
-        w-32 h-32 sm:w-40 sm:h-40
+        relative flex flex-col items-center justify-center gap-2 sm:gap-3
+        w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40
         rounded-2xl 
         bg-white/50 dark:bg-slate-800/50 
         backdrop-blur-sm
@@ -62,18 +62,19 @@ const SkillCard = ({ skill }) => {
         hover:border-primary/50 dark:hover:border-primary/50
         hover:bg-white dark:hover:bg-slate-800
         hover:shadow-xl hover:shadow-primary/10
-        transition-all duration-300
+        transition-all duration-300 ease-out
         cursor-pointer
+        active:scale-95
       ">
-        <div className="text-5xl sm:text-6xl text-gray-400 dark:text-gray-500 group-hover:text-primary group-hover:scale-110 transition-all duration-300 filter grayscale group-hover:grayscale-0">
+        <div className="text-4xl sm:text-5xl md:text-6xl text-gray-400 dark:text-gray-500 group-hover:text-primary group-hover:scale-110 transition-all duration-300 filter grayscale group-hover:grayscale-0">
           <i className={skill.icon}></i>
         </div>
         
-        <span className="text-xs sm:text-sm font-bold text-gray-500 dark:text-gray-400 group-hover:text-dark dark:group-hover:text-white transition-colors">
+        <span className="text-[11px] sm:text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400 group-hover:text-dark dark:group-hover:text-white transition-colors text-center px-1 line-clamp-2">
           {skill.name}
         </span>
 
-        <div className="absolute top-3 right-3 w-1.5 h-1.5 rounded-full bg-gray-200 dark:bg-slate-700 group-hover:bg-primary transition-colors"></div>
+        <div className="absolute top-2 sm:top-3 right-2 sm:right-3 w-1.5 h-1.5 rounded-full bg-gray-200 dark:bg-slate-700 group-hover:bg-primary transition-colors"></div>
       </div>
     </div>
   );

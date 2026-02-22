@@ -127,52 +127,52 @@ const Hero = () => {
           {t('hero.tagline')}
         </motion.p>
 
-        <motion.div variants={itemVariants} className="mb-6 md:mb-8 w-full max-w-3xl">
-          <Marquee gradient={false} speed={18} pauseOnHover={true} className="text-[10px] sm:text-xs md:text-sm text-gray-500 dark:text-gray-400">
-            <span className="mx-2 sm:mx-3 flex items-center gap-2 sm:gap-3">
-              <span className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200 dark:border-slate-700 px-2 py-1 sm:px-3 sm:py-1.5 bg-white/60 dark:bg-slate-800/60 whitespace-nowrap">
-                <i className="fas fa-map-marker-alt text-primary text-[10px] sm:text-xs"></i>
+        <motion.div variants={itemVariants} className="mb-6 md:mb-8 w-full max-w-3xl px-4 sm:px-0">
+          <Marquee gradient={false} speed={12} pauseOnHover={true} className="text-[11px] sm:text-xs md:text-sm text-gray-600 dark:text-gray-400">
+            <span className="mx-3 sm:mx-4 flex items-center gap-2.5 sm:gap-3">
+              <span className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200 dark:border-slate-700 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/70 dark:bg-slate-800/70 whitespace-nowrap font-medium">
+                <i className="fas fa-map-marker-alt text-primary text-[11px] sm:text-xs"></i>
                 <span>{t('hero.quick_facts.location')}</span>
               </span>
               <span className="text-gray-300 dark:text-gray-600">•</span>
             </span>
-            <span className="mx-2 sm:mx-3 flex items-center gap-2 sm:gap-3">
-              <span className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200 dark:border-slate-700 px-2 py-1 sm:px-3 sm:py-1.5 bg-white/60 dark:bg-slate-800/60 whitespace-nowrap">
-                <i className="fas fa-briefcase text-primary text-[10px] sm:text-xs"></i>
+            <span className="mx-3 sm:mx-4 flex items-center gap-2.5 sm:gap-3">
+              <span className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200 dark:border-slate-700 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/70 dark:bg-slate-800/70 whitespace-nowrap font-medium">
+                <i className="fas fa-briefcase text-primary text-[11px] sm:text-xs"></i>
                 <span>{t('hero.quick_facts.availability')}</span>
               </span>
               <span className="text-gray-300 dark:text-gray-600">•</span>
             </span>
-            <span className="mx-2 sm:mx-3 flex items-center gap-2 sm:gap-3">
-              <span className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200 dark:border-slate-700 px-2 py-1 sm:px-3 sm:py-1.5 bg-white/60 dark:bg-slate-800/60 whitespace-nowrap">
-                <i className="fas fa-layer-group text-primary text-[10px] sm:text-xs"></i>
+            <span className="mx-3 sm:mx-4 flex items-center gap-2.5 sm:gap-3">
+              <span className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200 dark:border-slate-700 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/70 dark:bg-slate-800/70 whitespace-nowrap font-medium">
+                <i className="fas fa-layer-group text-primary text-[11px] sm:text-xs"></i>
                 <span>{t('hero.quick_facts.focus')}</span>
               </span>
               <span className="text-gray-300 dark:text-gray-600">•</span>
             </span>
-            <span className="mx-2 sm:mx-3 flex items-center gap-2 sm:gap-3">
-              <span className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200 dark:border-slate-700 px-2 py-1 sm:px-3 sm:py-1.5 bg-white/60 dark:bg-slate-800/60 whitespace-nowrap">
-                <i className="fas fa-code text-primary text-[10px] sm:text-xs"></i>
+            <span className="mx-3 sm:mx-4 flex items-center gap-2.5 sm:gap-3">
+              <span className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200 dark:border-slate-700 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/70 dark:bg-slate-800/70 whitespace-nowrap font-medium">
+                <i className="fas fa-code text-primary text-[11px] sm:text-xs"></i>
                 <span>{t('hero.quick_facts.stack')}</span>
               </span>
             </span>
           </Marquee>
         </motion.div>
  
-        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 md:gap-5 w-full sm:w-auto px-4 sm:px-0">
-          <a href="/projects" className="group relative px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all hover:scale-105 hover:shadow-blue-500/50 text-center">
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-5 md:gap-6 w-full px-4 sm:px-0">
+          <a href="/projects" className="group relative px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-105 hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center">
             <span className="relative z-10">{t('hero.view_work')}</span>
             <div className="absolute inset-0 h-full w-full scale-0 rounded-full transition-all duration-300 group-hover:scale-100 group-hover:bg-white/20"></div>
           </a>
           
-          <a href="/contact" className="px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-bold text-sm sm:text-base hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 dark:hover:border-blue-400 transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-black/20 text-center">
+          <a href="/contact" className="px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-bold text-sm sm:text-base hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 dark:hover:border-blue-400 transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-black/20 text-center min-h-[44px] flex items-center justify-center">
             {t('hero.contact_me')}
           </a>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="mt-8 md:mt-12 flex gap-5 md:gap-6 text-xl md:text-2xl text-gray-400">
-            <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all"><FaGithub /></a>
-            <a href="https://linkedin.com/in/rafie-rojagat" target="_blank" rel="noreferrer" className="hover:text-blue-600 hover:-translate-y-1 transition-all"><FaLinkedin /></a>
+        <motion.div variants={itemVariants} className="mt-8 md:mt-12 flex gap-5 md:gap-6 text-2xl md:text-3xl text-gray-400">
+            <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="p-2 hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50"><FaGithub /></a>
+            <a href="https://linkedin.com/in/rafie-rojagat" target="_blank" rel="noreferrer" className="p-2 hover:text-blue-600 hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50"><FaLinkedin /></a>
             <a href="https://instagram.com/rafie_rb" target="_blank" rel="noreferrer" className="hover:text-blue-400 hover:-translate-y-1 transition-all"><FaInstagram /></a>
         </motion.div>
       </motion.div>

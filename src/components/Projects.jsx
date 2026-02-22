@@ -217,19 +217,19 @@ const Projects = () => {
 
                             <div className="mt-auto flex flex-col gap-3">
                               {project.live && (
-                                <a href={project.live} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl shadow-md flex items-center justify-center gap-2 font-medium text-sm group/btn">
+                                <a href={project.live} target="_blank" rel="noreferrer" className="block w-full text-center py-3 sm:py-3.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl shadow-md flex items-center justify-center gap-2 font-medium text-sm sm:text-base group/btn hover:shadow-lg active:scale-95 transition-all min-h-[44px]">
                                   <i className="fas fa-external-link-alt group-hover/btn:rotate-45 transition-transform duration-300"></i> {t('projects.live_site')}
                                 </a>
                               )}
                               
                               {project.figma && (
-                                  <a href={project.figma} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 bg-dark dark:bg-slate-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-slate-700 transition-all shadow-md flex items-center justify-center gap-2 font-medium text-sm">
+                                  <a href={project.figma} target="_blank" rel="noreferrer" className="block w-full text-center py-3 sm:py-3.5 bg-dark dark:bg-slate-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-slate-700 transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 font-medium text-sm sm:text-base hover:shadow-lg min-h-[44px]">
                                       <i className="fab fa-figma text-lg"></i> {t('projects.design')}
                                   </a>
                               )}
 
                               {project.prototype && (
-                                  <a href={project.prototype} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 border-2 border-dark dark:border-slate-500 text-dark dark:text-slate-200 rounded-xl hover:bg-dark dark:hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center gap-2 font-medium text-sm">
+                                  <a href={project.prototype} target="_blank" rel="noreferrer" className="block w-full text-center py-3 sm:py-3.5 border-2 border-dark dark:border-slate-500 text-dark dark:text-slate-200 rounded-xl hover:bg-dark dark:hover:bg-slate-700 hover:text-white transition-all active:scale-95 flex items-center justify-center gap-2 font-medium text-sm sm:text-base hover:shadow-lg min-h-[44px]">
                                       <i className="fas fa-play text-sm"></i> {t('projects.prototype')}
                                   </a>
                               )}
