@@ -173,7 +173,7 @@ const Hero = () => {
         <motion.div variants={itemVariants} className="mt-8 md:mt-12 flex gap-5 md:gap-6 text-2xl md:text-3xl text-gray-400">
             <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="p-2 hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50"><FaGithub /></a>
             <a href="https://linkedin.com/in/rafie-rojagat" target="_blank" rel="noreferrer" className="p-2 hover:text-blue-600 hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50"><FaLinkedin /></a>
-            <a href="https://instagram.com/rafie_rb" target="_blank" rel="noreferrer" className="hover:text-blue-400 hover:-translate-y-1 transition-all"><FaInstagram /></a>
+            <a href="https://instagram.com/rafie_rb" target="_blank" rel="noreferrer" className="p-2 hover:text-pink-500 hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50"><FaInstagram /></a>
         </motion.div>
       </motion.div>
     </section>
