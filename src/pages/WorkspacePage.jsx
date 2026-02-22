@@ -39,10 +39,10 @@ const WorkspacePage = () => {
 
   const getSizeClasses = (size) => {
     switch (size) {
-      case 'large': return 'md:col-span-2 md:row-span-2';
-      case 'wide': return 'md:col-span-2 md:row-span-1';
-      case 'tall': return 'md:col-span-1 md:row-span-2';
-      default: return 'md:col-span-1 md:row-span-1';
+      case 'large': return 'sm:col-span-2 lg:col-span-2 lg:row-span-2';
+      case 'wide': return 'sm:col-span-2 lg:col-span-2 lg:row-span-1';
+      case 'tall': return 'sm:col-span-1 lg:col-span-1 lg:row-span-2';
+      default: return 'col-span-1 row-span-1';
     }
   };
 
@@ -65,11 +65,19 @@ const WorkspacePage = () => {
 
   const filteredItems = selectedCategory === 'all' 
     ? setupItems 
-    : setupItems.filter(item => item.category[currentLang] === categories.find(c => c.id === selectedCategory)?.label || item.category.en === selectedCategory);
+    : setupItems.filter((item) => {
+        const categoryData = item?.category;
+        const categoryLabel = categories.find((c) => c.id === selectedCategory)?.label;
+        const categoryText = typeof categoryData === 'object' && categoryData
+          ? categoryData[currentLang] || categoryData.en
+          : categoryData;
+
+        return categoryText === categoryLabel || categoryData?.en === selectedCategory || categoryData === selectedCategory;
+      });
 
   return (
     <PageTransition>
-      <div className="bg-gray-50 dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300 relative overflow-hidden">
+      <div className="bg-gray-50 dark:bg-dark min-h-screen pt-20 md:pt-24 pb-12 md:pb-20 transition-colors duration-300 relative overflow-hidden">
 
         <SEO
           title="Workspace & Development Setup | Rafie Rojagat"
@@ -86,54 +94,55 @@ const WorkspacePage = () => {
         </div>
 
         <div className="container mx-auto px-4 max-w-6xl relative z-10">
-          <div className="text-center mb-20" data-aos="fade-down">
+          <div className="text-center mb-12 md:mb-20">
             <motion.div
               animate={{ y: [0, -15, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               className="inline-block relative"
             >
-              <div className="p-5 rounded-3xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-xl relative z-10">
-                <i className="fas fa-laptop-code text-5xl text-dark dark:text-white bg-clip-text bg-gradient-to-r from-primary to-secondary"></i>
+              <div className="p-4 md:p-5 rounded-2xl md:rounded-3xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-xl relative z-10">
+                <i className="fas fa-laptop-code text-3xl md:text-5xl text-dark dark:text-white bg-clip-text bg-gradient-to-r from-primary to-secondary"></i>
               </div>
               <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full transform scale-150 z-0 animate-pulse"></div>
             </motion.div>
 
-            <h1 className="mt-8 text-4xl md:text-6xl font-black text-dark dark:text-white mb-6 tracking-tight">
+            <h1 className="mt-6 md:mt-8 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-dark dark:text-white mb-4 md:mb-6 tracking-tight px-4">
               {t('workspace.title_prefix')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">{t('workspace.title_highlight')}</span>
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed px-4">
               {t('workspace.subtitle')}<br />
-              <span className="text-sm font-mono text-primary bg-primary/10 px-2 py-1 rounded mt-2 inline-block">
+              <span className="text-xs sm:text-sm font-mono text-primary bg-primary/10 px-2 py-1 rounded mt-2 inline-block">
                 {t('workspace.updated')}: 2025
               </span>
             </p>
           </div>
 
-          {/* Category Filter */}
-          <div className="mb-12 flex flex-wrap justify-center gap-3">
-            {categories.map((cat) => (
-              <motion.button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all ${
-                  selectedCategory === cat.id
-                    ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/30'
-                    : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50'
-                }`}
-              >
-                {cat.label}
-              </motion.button>
-            ))}
+          <div className="mb-12 overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="flex md:flex-wrap md:justify-center gap-2 sm:gap-3 min-w-max md:min-w-0">
+              {categories.map((cat) => (
+                <motion.button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition-all whitespace-nowrap ${
+                    selectedCategory === cat.id
+                      ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/30'
+                      : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50'
+                  }`}
+                >
+                  {cat.label}
+                </motion.button>
+              ))}
+            </div>
           </div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-4 auto-rows-[280px] gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-[200px] sm:auto-rows-[240px] md:auto-rows-[280px] gap-4 md:gap-6"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             key={selectedCategory}
           >
             {filteredItems.map((item) => {
@@ -152,13 +161,13 @@ const WorkspacePage = () => {
                 <motion.div
                   key={item.id}
                   variants={itemVariants}
-                  whileHover={{ y: -8, scale: 1.02, zIndex: 10 }}
+                  whileHover={{ y: -4, scale: 1.01 }}
                   onClick={handleItemClick}
-                  className={`group relative rounded-3xl overflow-hidden cursor-pointer 
+                  className={`group relative rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer 
                     bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm 
                     border border-white/50 dark:border-slate-700/50 
-                    shadow-lg hover:shadow-2xl hover:shadow-primary/20 
-                    transition-all duration-500 ${getSizeClasses(item.size)}`}
+                    shadow-lg hover:shadow-xl md:hover:shadow-2xl hover:shadow-primary/20 
+                    transition-all duration-300 ${getSizeClasses(item.size)}`}
                 >
                   <img
                     src={item.image}
@@ -169,15 +178,15 @@ const WorkspacePage = () => {
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300"></div>
 
-                  <div className="absolute bottom-0 left-0 w-full p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 transform translate-y-1 md:translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
 
-                    <div className="mb-2 opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 delay-100">
-                      <span className="text-[10px] font-bold text-black bg-primary px-2 py-0.5 rounded shadow-lg shadow-primary/50 uppercase tracking-wider">
+                    <div className="mb-1 md:mb-2 opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 delay-100">
+                      <span className="text-[9px] sm:text-[10px] font-bold text-black bg-primary px-2 py-0.5 rounded shadow-lg shadow-primary/50 uppercase tracking-wider">
                         {category}
                       </span>
                     </div>
 
-                    <h3 className="text-white text-xl font-bold leading-tight drop-shadow-md mb-1">
+                    <h3 className="text-white text-base sm:text-lg md:text-xl font-bold leading-tight drop-shadow-md mb-1">
                       {item.title}
                     </h3>
 
@@ -199,32 +208,28 @@ const WorkspacePage = () => {
           </motion.div>
         </div>
 
-        {/* GitHub Activity Section - Advanced */}
-        <div className="mt-28 relative">
-          {/* Decorative Background */}
+        <div className="mt-16 md:mt-28 relative">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-3xl -z-10 blur-2xl"></div>
           
-          {/* Decorative Divider */}
-          <div className="relative mb-20">
-            <div className="flex items-center gap-4 mb-12">
+          <div className="relative mb-12 md:mb-20">
+            <div className="flex items-center gap-3 md:gap-4 mb-8 md:mb-12">
               <div className="flex-1 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
               <div className="text-primary/40">
-                <i className="fas fa-code text-2xl"></i>
+                <i className="fas fa-code text-xl md:text-2xl"></i>
               </div>
               <div className="flex-1 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
             </div>
 
-            {/* Section Header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-12 md:mb-16 px-4"
             >
-              <h2 className="text-4xl md:text-5xl font-black text-dark dark:text-white mb-4 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-dark dark:text-white mb-3 md:mb-4 tracking-tight">
                 Development <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">Activity</span>
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 {currentLang === 'id' 
                   ? 'Pantau perjalanan coding saya - kontribusi konsisten, proyek aktif, dan komitmen terhadap pertumbuhan berkelanjutan.'
                   : 'Track my coding journey - consistent contributions, active projects, and commitment to continuous growth.'}
@@ -232,7 +237,6 @@ const WorkspacePage = () => {
             </motion.div>
           </div>
 
-          {/* GitHub Activity Component */}
           <GitHubActivity />
         </div>
 
@@ -253,24 +257,24 @@ const WorkspacePage = () => {
                 className="relative max-w-5xl w-full flex flex-col items-center"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-primary/20 border border-white/10 bg-dark">
+                <div className="relative rounded-xl md:rounded-2xl overflow-hidden shadow-2xl shadow-primary/20 border border-white/10 bg-dark max-h-[70vh] md:max-h-auto">
                   <img
                     src={selectedImage.image}
                     alt={selectedImage.title}
-                    className="w-auto h-auto max-w-full max-h-[70vh] object-contain"
+                    className="w-full h-auto max-h-[60vh] md:max-h-[70vh] object-contain"
                   />
 
-                  <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-                    <p className="text-xs font-bold text-white uppercase tracking-wider">{selectedImage.category}</p>
+                  <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-black/50 backdrop-blur-md px-2 py-0.5 md:px-3 md:py-1 rounded-full border border-white/10">
+                    <p className="text-[10px] md:text-xs font-bold text-white uppercase tracking-wider">{selectedImage.category}</p>
                   </div>
                 </div>
 
-                <div className="mt-8 text-center text-white max-w-2xl px-4">
+                <div className="mt-6 md:mt-8 text-center text-white max-w-2xl px-4">
                   <motion.h2
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.1 }}
-                    className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
+                    className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
                   >
                     {selectedImage.title}
                   </motion.h2>
@@ -279,7 +283,7 @@ const WorkspacePage = () => {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="text-gray-400 leading-relaxed text-lg"
+                    className="text-sm sm:text-base md:text-lg text-gray-400 leading-relaxed"
                   >
                     {selectedImage.desc}
                   </motion.p>
@@ -292,7 +296,7 @@ const WorkspacePage = () => {
                       href={selectedImage.link}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 mt-6 px-6 py-2 bg-primary text-white rounded-full font-bold hover:bg-secondary transition-colors shadow-lg shadow-primary/30"
+                      className="inline-flex items-center gap-2 mt-4 md:mt-6 px-5 py-2 md:px-6 text-sm md:text-base bg-primary text-white rounded-full font-bold hover:bg-secondary transition-colors shadow-lg shadow-primary/30"
                     >
                       <i className="fas fa-shopping-bag"></i> {t('workspace.view_product')}
                     </motion.a>
@@ -300,10 +304,10 @@ const WorkspacePage = () => {
                 </div>
 
                 <button
-                  className="absolute -top-16 right-0 md:-right-10 text-white/50 hover:text-white transition-colors bg-white/10 hover:bg-white/20 w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10 group"
+                  className="absolute top-4 right-4 md:-top-16 md:right-0 md:-right-10 text-white/80 md:text-white/50 hover:text-white transition-colors bg-white/10 hover:bg-white/20 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10 group"
                   onClick={() => setSelectedImage(null)}
                 >
-                  <i className="fas fa-times text-xl group-hover:rotate-90 transition-transform duration-300"></i>
+                  <i className="fas fa-times text-lg md:text-xl group-hover:rotate-90 transition-transform duration-300"></i>
                 </button>
               </motion.div>
             </motion.div>
