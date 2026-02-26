@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Tilt from 'react-parallax-tilt';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects as manualProjects } from '../data/projects';
-import { dbFirestore } from '../config/firebase';
+import { useFirebaseInit } from '../hooks/useFirebaseInit';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import LazyImage from './LazyImage';
@@ -16,8 +16,11 @@ const Projects = () => {
   const [loadingGithub, setLoadingGithub] = useState(true);
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
+  const { dbFirestore } = useFirebaseInit('dbFirestore');
 
   useEffect(() => {
+    if (!dbFirestore) return; // Wait for Firebase to load
+    
     const fetchCmsProjects = async () => {
       try {
         const q = query(collection(dbFirestore, "projects"), orderBy("createdAt", "desc"));
@@ -44,7 +47,7 @@ const Projects = () => {
     };
 
     fetchCmsProjects();
-  }, []);
+  }, [dbFirestore]);
 
   useEffect(() => {
     const fetchRepos = async () => {

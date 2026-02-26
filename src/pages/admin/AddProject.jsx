@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { dbFirestore } from "../../config/firebase"; 
+import { useState, useEffect } from "react";
+import { useFirebaseInit } from "../../hooks/useFirebaseInit"; 
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -7,6 +7,7 @@ const AddProject = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const { dbFirestore } = useFirebaseInit('dbFirestore');
   
   const [title, setTitle] = useState("");
   const [shortDesc, setShortDesc] = useState("");
@@ -27,6 +28,7 @@ const AddProject = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !imageFile) return alert("Title and Image are required!");
+    if (!dbFirestore) return alert("Firebase not ready yet. Please try again.");
 
     setLoading(true);
 

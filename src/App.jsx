@@ -9,12 +9,9 @@ import Spotlight from './components/Spotlight';
 import { HelmetProvider } from 'react-helmet-async';
 import Chatbot from './components/Chatbot';
 import Footer from './components/Footer';
-import Login from './pages/admin/Login';
-import Dashboard from './pages/admin/Dashboard';
 import RequireAuth from './components/RequireAuth';
-import ManageProjects from './pages/admin/ManageProjects';
-import AddProject from './pages/admin/AddProject';
 
+// Lazy load all routes for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
@@ -23,6 +20,12 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const UsesPage = lazy(() => import('./pages/WorkspacePage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const AfkPage = lazy(() => import('./pages/AfkPage'));
+
+// Lazy load admin pages - defers Firebase loading until admin routes accessed
+const Login = lazy(() => import('./pages/admin/Login'));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
+const ManageProjects = lazy(() => import('./pages/admin/ManageProjects'));
+const AddProject = lazy(() => import('./pages/admin/AddProject'));
 
 function App() {
   const location = useLocation();

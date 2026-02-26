@@ -1,23 +1,110 @@
-import Tilt from 'react-parallax-tilt';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 import profileImg from '/images/profile.webp';
 import upnLogo from '/images/upnvj_logo.webp';
 
 const IDCard = () => {
+    const [rotation, setRotation] = useState({ x: 0, y: 0 });
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseMove = (e) => {
+        if (!isHovered) return;
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * 10;
+        const rotateY = ((x - centerX) / centerX) * 10;
+        setRotation({ x: -rotateX, y: rotateY });
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        setRotation({ x: 0, y: 0 });
+    };
+
     return (
-        <Tilt
-            tiltMaxAngleX={5}
-            tiltMaxAngleY={5}
-            perspective={1000}
-            scale={1.01}
-            transitionSpeed={2000}
-            className="w-full max-w-[360px] sm:max-w-[420px] mx-auto"
-        >
-            <div className="relative aspect-[1.586/1] rounded-xl sm:rounded-2xl bg-white dark:bg-slate-200 overflow-hidden shadow-xl sm:shadow-2xl border border-gray-300 dark:border-gray-500 group select-none">
+        <div className="w-full max-w-[360px] sm:max-w-[420px] mx-auto"
+            style={{ perspective: '1200px', perspectiveOrigin: 'center top' }}>
+            
+            {/* Lanyard Rope & Clip */}
+            <motion.div 
+                className="relative mx-auto w-12 h-32 mb-4"
+                animate={{ 
+                    rotateZ: isHovered ? [0, 3, -3, 0] : 0,
+                }}
+                transition={{ 
+                    duration: 2,
+                    repeat: isHovered ? Infinity : 0,
+                    ease: "easeInOut"
+                }}
+            >
+                {/* Lanyard String */}
+                <div className="absolute left-1/2 -translate-x-1/2 w-1 h-28 bg-gradient-to-b from-gray-400 via-gray-500 to-gray-600 rounded-full shadow-md">
+                    {/* String Texture */}
+                    <div className="absolute inset-0 opacity-30" style={{
+                        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.3) 3px, rgba(0,0,0,0.3) 4px)',
+                    }}></div>
+                </div>
+
+                {/* Lanyard Clip */}
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-8 h-6 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 rounded-t-lg shadow-lg border border-gray-600">
+                    <div className="absolute inset-1 bg-gradient-to-br from-gray-200 to-gray-300 rounded-t-md"></div>
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-2 bg-gray-600 rounded-b-sm"></div>
+                    {/* Metal sheen */}
+                    <div className="absolute top-1 left-2 w-1 h-2 bg-white/60 rounded-full blur-[1px]"></div>
+                </div>
+
+                {/* Lanyard Ring/Hook */}
+                <div className="absolute left-1/2 -translate-x-1/2 top-0 w-6 h-6 border-2 border-gray-400 rounded-full bg-gradient-to-br from-gray-300 to-gray-500 shadow-md">
+                    <div className="absolute inset-0.5 border border-white/40 rounded-full"></div>
+                </div>
+            </motion.div>
+
+            {/* ID Card with 3D Transform */}
+            <motion.div
+                onMouseMove={handleMouseMove}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={handleMouseLeave}
+                animate={{
+                    rotateX: rotation.x,
+                    rotateY: rotation.y,
+                    rotateZ: isHovered ? [0, -1, 1, 0] : 0,
+                }}
+                transition={{
+                    rotateX: { type: "spring", stiffness: 300, damping: 30 },
+                    rotateY: { type: "spring", stiffness: 300, damping: 30 },
+                    rotateZ: { duration: 3, repeat: isHovered ? Infinity : 0, ease: "easeInOut" }
+                }}
+                style={{
+                    transformStyle: 'preserve-3d',
+                    transformOrigin: 'center top',
+                }}
+                className="relative"
+            >
+            <div className="relative aspect-[1.586/1] rounded-xl sm:rounded-2xl bg-white dark:bg-slate-200 overflow-hidden shadow-2xl border border-gray-300 dark:border-gray-500 group select-none"
+                style={{
+                    boxShadow: isHovered 
+                        ? '0 30px 60px -12px rgba(0, 0, 0, 0.35), 0 18px 36px -18px rgba(0, 0, 0, 0.25)'
+                        : '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                    transition: 'box-shadow 0.3s ease-out'
+                }}
+            >
 
                 <div className="absolute inset-0 opacity-10 pointer-events-none"
                     style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #000 0.5px, transparent 0.5px)', backgroundSize: '8px 8px' }}>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-blue-100/50 pointer-events-none"></div>
+
+                {/* Lanyard Hole - Connection Point */}
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-300 shadow-inner border-2 border-gray-300 dark:border-gray-400 z-50">
+                    <div className="absolute inset-0.5 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 shadow-md"></div>
+                    <div className="absolute inset-1 rounded-full border border-gray-500/30"></div>
+                    {/* Reinforcement ring */}
+                    <div className="absolute -inset-1 rounded-full border-2 border-gray-400 dark:border-gray-500 opacity-40"></div>
+                </div>
 
                 <div className="absolute top-0 left-0 right-0 py-1.5 sm:h-14 bg-gradient-to-r from-[#004d40] to-[#00695c] flex flex-col sm:flex-row items-center px-3 sm:px-5 justify-between z-10">
                     <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-0">
@@ -91,7 +178,8 @@ const IDCard = () => {
                 </div>
 
             </div>
-        </Tilt>
+            </motion.div>
+        </div>
     );
 };
 

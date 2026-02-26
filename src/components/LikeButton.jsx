@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { db } from "../config/firebase";
+import { useFirebaseInit } from "../hooks/useFirebaseInit";
 import { ref, onValue, runTransaction } from "firebase/database";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -7,8 +7,11 @@ const LikeButton = ({ projectId }) => {
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
+  const { db } = useFirebaseInit('db');
 
   useEffect(() => {
+    if (!db) return; // Wait for Firebase to load
+    
     const likesRef = ref(db, `project_likes/${projectId}`);
     const unsubscribe = onValue(likesRef, (snapshot) => {
       setLikes(snapshot.val() || 0);
@@ -22,9 +25,11 @@ const LikeButton = ({ projectId }) => {
     checkLocalLike();
 
     return () => unsubscribe();
-  }, [projectId]);
+  }, [projectId, db]);
 
   const handleLike = () => {
+    if (!db) return; // Safety check
+    
     const likesRef = ref(db, `project_likes/${projectId}`);
     const likedProjects = JSON.parse(localStorage.getItem("liked_projects") || "[]");
 

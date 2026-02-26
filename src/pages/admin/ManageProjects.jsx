@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { dbFirestore } from "../../config/firebase";
+import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const ManageProjects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { dbFirestore } = useFirebaseInit('dbFirestore');
 
   const fetchProjects = async () => {
+    if (!dbFirestore) return; // Wait for Firebase to load
+    
     try {
       const querySnapshot = await getDocs(collection(dbFirestore, "projects"));
       const list = querySnapshot.docs.map(doc => ({
@@ -24,9 +27,11 @@ const ManageProjects = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [dbFirestore]);
 
   const handleDelete = async (id) => {
+    if (!dbFirestore) return;
+    
     if (window.confirm("Are you sure you want to delete this project?")) {
       try {
         await deleteDoc(doc(dbFirestore, "projects", id));

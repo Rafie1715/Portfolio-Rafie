@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { projects as localProjects } from '../data/projects'; 
-import { dbFirestore } from '../config/firebase';
+import { projects as localProjects } from '../data/projects';
+import { useFirebaseInit } from '../hooks/useFirebaseInit';
 import { doc, getDoc } from 'firebase/firestore';
 import SpotlightCard from '../components/SpotlightCard';
 import SEO from '../components/SEO';
@@ -16,6 +16,7 @@ const ProjectDetail = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
+  const { dbFirestore, loading: firebaseLoading } = useFirebaseInit('dbFirestore');
 
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,8 @@ const ProjectDetail = () => {
         setLoading(false);
         return;
       }
+
+      if (!dbFirestore) return; // Wait for Firebase to load
 
       try {
         const docRef = doc(dbFirestore, "projects", id);
@@ -51,7 +54,7 @@ const ProjectDetail = () => {
 
     fetchProject();
     window.scrollTo(0, 0);
-  }, [id, navigate]);
+  }, [id, navigate, dbFirestore]);
 
   if (loading) return <Loading />;
   if (!project) return null;

@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { db } from "../config/firebase";
+import { useFirebaseInit } from "../hooks/useFirebaseInit";
 import { ref, onValue, runTransaction } from "firebase/database";
 
 const VisitorCounter = () => {
   const [visits, setVisits] = useState(0);
   const [loading, setLoading] = useState(true);
+  const { db } = useFirebaseInit('db');
 
   useEffect(() => {
+    if (!db) return; // Wait for Firebase to load
+    
     const visitsRef = ref(db, "visitors");
 
     const unsubscribe = onValue(visitsRef, (snapshot) => {
@@ -29,7 +32,7 @@ const VisitorCounter = () => {
     }
 
     return () => unsubscribe();
-  }, []);
+  }, [db]);
 
   if (loading) return null;
   return (

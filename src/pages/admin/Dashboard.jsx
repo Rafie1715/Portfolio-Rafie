@@ -1,11 +1,14 @@
 import { signOut } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { useNavigate, Link } from "react-router-dom";
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const { auth } = useFirebaseInit('auth');
 
     const handleLogout = () => {
+        if (!auth) return;
+        
         signOut(auth).then(() => {
             navigate("/login");
         });

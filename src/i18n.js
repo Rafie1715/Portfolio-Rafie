@@ -43,7 +43,7 @@ const resources = {
                 contact_me: "Contact Me",
                 quick_facts: {
                     location: "Jakarta, Indonesia",
-                    availability: "Open to internship",
+                    availability: "Open to Internship",
                     focus: "Mobile and Web",
                     stack: "React, Kotlin, Firebase"
                 }

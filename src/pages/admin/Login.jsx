@@ -1,16 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [firebaseReady, setFirebaseReady] = useState(false);
   const navigate = useNavigate();
+  const { auth } = useFirebaseInit('auth');
+
+  useEffect(() => {
+    if (auth) setFirebaseReady(true);
+  }, [auth]);
 
   const handleLogin = (e) => {
     e.preventDefault();
+    if (!auth) return;
+    
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
