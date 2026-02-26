@@ -4,6 +4,10 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import './i18n';
 import App from './App.jsx'
+import { initializeAnalytics } from './utils/analytics'
+
+// Initialize Google Analytics
+initializeAnalytics();
 
 // Global error handler untuk debugging
 window.addEventListener('error', (event) => {

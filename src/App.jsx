@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion'; // <--- 1. TAMBAHKAN IMPORT INI
+import { AnimatePresence } from 'framer-motion';
 
 import Navbar from './components/Navbar';
 import Loading from './components/Loading';
@@ -10,6 +10,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import Chatbot from './components/Chatbot';
 import Footer from './components/Footer';
 import RequireAuth from './components/RequireAuth';
+import { usePageTracking } from './hooks/usePageTracking';
 
 // Lazy load all routes for code splitting
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -29,6 +30,9 @@ const AddProject = lazy(() => import('./pages/admin/AddProject'));
 
 function App() {
   const location = useLocation();
+  
+  // Track page views
+  usePageTracking();
 
   // Opsional: Cek apakah sedang di halaman admin/login agar Navbar/Footer bisa disembunyikan (kalau mau)
   const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname === '/login';

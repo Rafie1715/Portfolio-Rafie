@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { trackFormSubmission, trackExternalLink } from '../utils/analytics';
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -24,13 +25,16 @@ const Contact = () => {
       });
 
       if (response.ok) {
+        trackFormSubmission('contact_form', true);
         setStatus("success");
         form.reset(); 
         setTimeout(() => setStatus(""), 5000);
       } else {
+        trackFormSubmission('contact_form', false);
         setStatus("error");
       }
     } catch (error) {
+      trackFormSubmission('contact_form', false);
       setStatus("error");
     }
   };
@@ -149,6 +153,7 @@ const Contact = () => {
                       href={social.url}
                       target="_blank"
                       rel="noreferrer"
+                      onClick={() => trackExternalLink(social.text.toLowerCase(), social.url)}
                       whileHover={{ y: -8, scale: 1.15 }}
                       whileTap={{ scale: 0.9 }}
                       className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${social.color} flex items-center justify-center text-white transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 border border-white/20 min-h-[44px] min-w-[44px]`}

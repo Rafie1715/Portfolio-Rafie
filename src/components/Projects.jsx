@@ -6,6 +6,7 @@ import { projects as manualProjects } from '../data/projects';
 import { useFirebaseInit } from '../hooks/useFirebaseInit';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
+import { trackExternalLink, trackProjectView } from '../utils/analytics';
 import LazyImage from './LazyImage';
 
 const Projects = () => {
@@ -98,6 +99,25 @@ const Projects = () => {
     return String(data);
   };
 
+  const getImpactText = (project) => {
+    if (project?.impact) return getData(project.impact);
+
+    const features = getData(project?.features);
+    const featureText = Array.isArray(features)
+      ? features[0]
+      : (typeof features === 'string' ? features : "");
+
+    const techNames = Array.isArray(project?.techStack)
+      ? project.techStack.map((tech) => tech?.name).filter(Boolean)
+      : [];
+    const techText = techNames.slice(0, 2).join(' + ');
+
+    const categoryText = project?.category ? project.category.toUpperCase() : "PROJECT";
+    const parts = [categoryText, featureText, techText].filter(Boolean);
+
+    return parts.join(' • ');
+  };
+
   return (
     <section id="projects" className="py-24 bg-gray-50 dark:bg-dark relative overflow-hidden transition-colors duration-300">
 
@@ -155,6 +175,7 @@ const Projects = () => {
                 {filteredProjects.map((project) => {
                   const title = getData(project.title);
                   const shortDesc = getData(project.shortDesc);
+                  const impactText = getImpactText(project);
 
                   return (
                     <motion.div
@@ -178,7 +199,8 @@ const Projects = () => {
                             
                             <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6">                            
                               <Link 
-                                  to={`/project/${project.id}`} 
+                                  to={`/project/${project.id}`}
+                                  onClick={() => trackProjectView(project.id, getData(project.title))}
                                   className="px-6 py-2 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full font-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-primary hover:border-primary shadow-lg"
                               >
                                   {t('projects.view_details')}
@@ -190,16 +212,20 @@ const Projects = () => {
                           </div>
 
                           <div className="p-6 flex flex-col flex-grow">
-                            <Link to={`/project/${project.id}`} className="block">
+                            <Link 
+                              to={`/project/${project.id}`}
+                              onClick={() => trackProjectView(project.id, getData(project.title))}
+                              className="block"
+                            >
                                <h3 className="text-xl font-bold mb-3 text-dark dark:text-white group-hover:text-primary transition-colors line-clamp-1">
                                  {title}
                                </h3>
                             </Link>
                             
-                            {project.impact && (
+                            {impactText && (
                               <div className="flex items-center gap-1.5 mb-3 text-xs text-primary dark:text-blue-400 font-medium">
                                 <i className="fas fa-chart-line text-xs"></i>
-                                <span className="line-clamp-1">{i18n.language === 'id' ? project.impact.id : project.impact.en}</span>
+                                <span className="line-clamp-1">{impactText}</span>
                               </div>
                             )}
                             
@@ -220,25 +246,25 @@ const Projects = () => {
 
                             <div className="mt-auto flex flex-col gap-3">
                               {project.live && (
-                                <a href={project.live} target="_blank" rel="noreferrer" className="block w-full text-center py-3 sm:py-3.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl shadow-md flex items-center justify-center gap-2 font-medium text-sm sm:text-base group/btn hover:shadow-lg active:scale-95 transition-all min-h-[44px]">
+                                <a href={project.live} target="_blank" rel="noreferrer" onClick={() => trackExternalLink('live_demo', project.live)} className="block w-full text-center py-3 sm:py-3.5 bg-gradient-to-r from-primary to-secondary text-white rounded-xl shadow-md flex items-center justify-center gap-2 font-medium text-sm sm:text-base group/btn hover:shadow-lg active:scale-95 transition-all min-h-[44px]">
                                   <i className="fas fa-external-link-alt group-hover/btn:rotate-45 transition-transform duration-300"></i> {t('projects.live_site')}
                                 </a>
                               )}
                               
                               {project.figma && (
-                                  <a href={project.figma} target="_blank" rel="noreferrer" className="block w-full text-center py-3 sm:py-3.5 bg-dark dark:bg-slate-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-slate-700 transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 font-medium text-sm sm:text-base hover:shadow-lg min-h-[44px]">
+                                  <a href={project.figma} target="_blank" rel="noreferrer" onClick={() => trackExternalLink('figma_design', project.id)} className="block w-full text-center py-3 sm:py-3.5 bg-dark dark:bg-slate-800 text-white rounded-xl hover:bg-gray-800 dark:hover:bg-slate-700 transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 font-medium text-sm sm:text-base hover:shadow-lg min-h-[44px]">
                                       <i className="fab fa-figma text-lg"></i> {t('projects.design')}
                                   </a>
                               )}
 
                               {project.prototype && (
-                                  <a href={project.prototype} target="_blank" rel="noreferrer" className="block w-full text-center py-3 sm:py-3.5 border-2 border-dark dark:border-slate-500 text-dark dark:text-slate-200 rounded-xl hover:bg-dark dark:hover:bg-slate-700 hover:text-white transition-all active:scale-95 flex items-center justify-center gap-2 font-medium text-sm sm:text-base hover:shadow-lg min-h-[44px]">
+                                  <a href={project.prototype} target="_blank" rel="noreferrer" onClick={() => trackExternalLink('figma_prototype', project.id)} className="block w-full text-center py-3 sm:py-3.5 border-2 border-dark dark:border-slate-500 text-dark dark:text-slate-200 rounded-xl hover:bg-dark dark:hover:bg-slate-700 hover:text-white transition-all active:scale-95 flex items-center justify-center gap-2 font-medium text-sm sm:text-base hover:shadow-lg min-h-[44px]">
                                       <i className="fas fa-play text-sm"></i> {t('projects.prototype')}
                                   </a>
                               )}
 
                               {project.github && (
-                                <a href={project.github} target="_blank" rel="noreferrer" className="block w-full text-center py-2.5 bg-gray-100 dark:bg-slate-700 text-dark dark:text-white rounded-xl hover:bg-gray-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center gap-2 font-medium text-sm">
+                                <a href={project.github} target="_blank" rel="noreferrer" onClick={() => trackExternalLink('github_repo', project.id)} className="block w-full text-center py-2.5 bg-gray-100 dark:bg-slate-700 text-dark dark:text-white rounded-xl hover:bg-gray-200 dark:hover:bg-slate-600 transition-all flex items-center justify-center gap-2 font-medium text-sm">
                                   <i className="fab fa-github text-lg"></i> {t('projects.source_code')}
                                 </a>
                               )}
