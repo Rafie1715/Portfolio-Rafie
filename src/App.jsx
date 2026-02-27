@@ -21,6 +21,8 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const UsesPage = lazy(() => import('./pages/WorkspacePage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const AfkPage = lazy(() => import('./pages/AfkPage'));
+const BlogPage = lazy(() => import('./pages/BlogPage'));
+const BlogDetail = lazy(() => import('./pages/BlogDetail'));
 
 // Lazy load admin pages - defers Firebase loading until admin routes accessed
 const Login = lazy(() => import('./pages/admin/Login'));
@@ -54,6 +56,8 @@ function App() {
             <Route path="/project/:id" element={<ProjectDetail />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/workspace" element={<UsesPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/afk" element={<AfkPage />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/login" element={<Login />} />

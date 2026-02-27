@@ -9,6 +9,7 @@ const resources = {
                 home: "Home",
                 about: "About",
                 projects: "Projects",
+                blog: "Blog",
                 workspace: "Workspace",
                 afk: "AFK",
                 contact: "Contact"
@@ -176,6 +177,7 @@ const resources = {
                 home: "Beranda",
                 about: "Tentang",
                 projects: "Proyek",
+                blog: "Blog",
                 workspace: "Workspace",
                 afk: "AFK",
                 contact: "Kontak"
