@@ -18,7 +18,10 @@ const resources = {
                 featured_work: "Featured Work",
                 glimpse: "A glimpse of what I've built.",
                 view_details: "View Details →",
-                view_all: "View All Projects"
+                view_all: "View All Projects",
+                latest_blog: "Latest from Blog",
+                blog_glimpse: "Thoughts on web development, mobile apps, and learning",
+                view_all_blogs: "View All Blogs"
             },
             about: {
                 title: "About Me",
@@ -186,7 +189,10 @@ const resources = {
                 featured_work: "Karya Pilihan",
                 glimpse: "Sekilas tentang apa yang telah saya bangun.",
                 view_details: "Lihat Detail →",
-                view_all: "Lihat Semua Proyek"
+                view_all: "Lihat Semua Proyek",
+                latest_blog: "Terbaru dari Blog",
+                blog_glimpse: "Pemikiran tentang web development, aplikasi mobile, dan pembelajaran",
+                view_all_blogs: "Lihat Semua Blog"
             },
             about: {
                 title: "Tentang Saya",

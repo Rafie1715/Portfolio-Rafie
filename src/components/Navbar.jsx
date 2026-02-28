@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import useTheme from '../hooks/useTheme';
 import { useTranslation } from 'react-i18next'; // 1. Import Hook
 
@@ -53,20 +54,26 @@ const Navbar = () => {
         
         <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) => 
-                `text-sm font-medium transition-colors hover:text-primary relative group ${
-                  isActive 
-                    ? 'text-primary font-bold' 
-                    : 'text-gray-600 dark:text-gray-300'
-                }`
-              }
-            >
-              {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-            </NavLink>
+            <div key={link.to} className="relative">
+              <NavLink
+                to={link.to}
+                className={({ isActive }) => 
+                  `text-sm font-medium transition-colors hover:text-primary relative group ${
+                    isActive 
+                      ? 'text-primary font-bold' 
+                      : 'text-gray-600 dark:text-gray-300'
+                  }`
+                }
+              >
+                {link.name}
+              </NavLink>
+              <motion.span 
+                className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-primary to-blue-400"
+                initial={{ width: 0 }}
+                whileHover={{ width: "100%" }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              />
+            </div>
           ))}
 
           <button

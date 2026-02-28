@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import upnLogo from '/images/upnvj_logo.webp';
-import galasLogo from '/images/sman13-logo.webp';
-const cvFile = "/assets/CV Rafie Rojagat Bachri.pdf";
+import cvFile from '/assets/CV Rafie Rojagat Bachri.pdf';
 import IDCard from './IDCard';
 import { useTranslation, Trans } from 'react-i18next';
+import { Building2 } from 'lucide-react';
 
 const About = () => {
   const { t } = useTranslation();
@@ -121,7 +120,17 @@ const About = () => {
                   <div className="bg-white/80 dark:bg-darkLight/50 backdrop-blur-sm p-5 rounded-2xl border border-primary/20 dark:border-primary/20 shadow-lg hover:shadow-primary/10 transition-all duration-300 group hover:-translate-y-1">
                     <div className="flex items-start gap-4">
                       <div className="bg-white p-2 rounded-xl shadow-sm w-14 h-14 flex items-center justify-center flex-shrink-0 border border-gray-100">
-                        <img src={upnLogo} alt="UPN Logo" className="w-full h-full object-contain" />
+                        <img 
+                          src="/images/upnvj_logo.webp" 
+                          alt="UPN Logo" 
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            const fallback = e.target.parentElement?.querySelector('[data-upn-icon]');
+                            if (fallback) fallback.style.display = 'flex';
+                          }}
+                        />
+                        <Building2 data-upn-icon className="w-7 h-7 text-blue-600 hidden" strokeWidth={1.5} />
                       </div>
                       <div className="flex-1">
                         <h4 className="text-lg font-bold text-dark dark:text-white group-hover:text-primary transition-colors">
@@ -147,7 +156,17 @@ const About = () => {
                   <div className="bg-white/60 dark:bg-darkLight/30 backdrop-blur-sm p-5 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
                     <div className="flex items-center gap-4">
                       <div className="bg-white p-2 rounded-xl shadow-sm w-12 h-12 flex items-center justify-center flex-shrink-0 border border-gray-100 grayscale group-hover:grayscale-0 transition-all duration-300">
-                        <img src={galasLogo} alt="SMA Logo" className="w-full h-full object-contain" />
+                        <img 
+                          src="/images/sman13-logo.webp" 
+                          alt="SMA Logo" 
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            const fallback = e.target.parentElement?.querySelector('[data-sma-icon]');
+                            if (fallback) fallback.style.display = 'flex';
+                          }}
+                        />
+                        <Building2 data-sma-icon className="w-6 h-6 text-gray-500 hidden" strokeWidth={1.5} />
                       </div>
                       <div>
                         <h4 className="text-base font-bold text-dark dark:text-white group-hover:text-primary transition-colors">

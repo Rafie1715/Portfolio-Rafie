@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import { projects } from '../data/projects';
+import { blogs } from '../data/blogs';
+import BlogCard from '../components/BlogCard';
 import SpotlightCard from '../components/SpotlightCard';
 import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +13,7 @@ const HomePage = () => {
   const currentLang = i18n.language || 'en';
 
   const featuredProjects = projects.slice(0, 3);
+  const featuredBlogs = blogs.slice(0, 2);
 
   const getData = (data) => {
     if (!data) return "";
@@ -74,6 +77,25 @@ const HomePage = () => {
           <div className="text-center">
             <Link to="/projects" className="inline-block px-8 py-3 rounded-full border border-gray-300 dark:border-slate-700 text-dark dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
               {t('home.view_all')}
+            </Link>
+          </div>
+        </section>
+
+        <section className="py-20 px-4 container mx-auto bg-gray-50 dark:bg-darkLight my-12 rounded-2xl">
+          <div className="text-center mb-12" data-aos="fade-up">
+            <h2 className="text-3xl font-bold text-dark dark:text-white mb-4">{t('home.latest_blog') || 'Latest from Blog'}</h2>
+            <p className="text-gray-600 dark:text-gray-400">{t('home.blog_glimpse') || 'Thoughts on web development, mobile apps, and learning'}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            {featuredBlogs.map((blog, index) => (
+              <BlogCard key={blog.id} blog={blog} data-aos="fade-up" data-aos-delay={index * 100} />
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link to="/blog" className="inline-block px-8 py-3 rounded-full border border-gray-300 dark:border-slate-700 text-dark dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+              {t('home.view_all_blogs') || 'View All Blogs'}
             </Link>
           </div>
         </section>

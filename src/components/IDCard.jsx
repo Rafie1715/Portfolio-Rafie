@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import profileImg from '/images/profile.webp';
-import upnLogo from '/images/upnvj_logo.webp';
+import { GraduationCap, Building2 } from 'lucide-react';
 
 const IDCard = () => {
     const [rotation, setRotation] = useState({ x: 0, y: 0 });
@@ -29,37 +28,38 @@ const IDCard = () => {
         <div className="w-full max-w-[360px] sm:max-w-[420px] mx-auto"
             style={{ perspective: '1200px', perspectiveOrigin: 'center top' }}>
             
-            {/* Lanyard Rope & Clip */}
+            {/* Lanyard - Modern Sleek Design */}
             <motion.div 
-                className="relative mx-auto w-12 h-32 mb-4"
+                className="relative mx-auto w-10 h-28 mb-4"
                 animate={{ 
-                    rotateZ: isHovered ? [0, 3, -3, 0] : 0,
+                    scaleY: isHovered ? [1, 1.05, 1] : 1,
                 }}
                 transition={{ 
-                    duration: 2,
+                    duration: 1.5,
                     repeat: isHovered ? Infinity : 0,
                     ease: "easeInOut"
                 }}
             >
-                {/* Lanyard String */}
-                <div className="absolute left-1/2 -translate-x-1/2 w-1 h-28 bg-gradient-to-b from-gray-400 via-gray-500 to-gray-600 rounded-full shadow-md">
-                    {/* String Texture */}
-                    <div className="absolute inset-0 opacity-30" style={{
-                        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.3) 3px, rgba(0,0,0,0.3) 4px)',
+                {/* Lanyard Ribbon - Sleek Metal Bar */}
+                <div className="absolute left-1/2 -translate-x-1/2 w-2.5 h-24 bg-gradient-to-b from-slate-300 via-slate-400 to-slate-500 rounded-full shadow-lg">
+                    {/* Metallic shine */}
+                    <div className="absolute left-0.5 top-2 w-1 h-16 bg-white/40 rounded-full blur-sm"></div>
+                    {/* Subtle texture */}
+                    <div className="absolute inset-0 opacity-20" style={{
+                        backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.5) 1px, rgba(255,255,255,0.5) 2px)',
                     }}></div>
                 </div>
 
-                {/* Lanyard Clip */}
-                <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-8 h-6 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 rounded-t-lg shadow-lg border border-gray-600">
-                    <div className="absolute inset-1 bg-gradient-to-br from-gray-200 to-gray-300 rounded-t-md"></div>
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-2 bg-gray-600 rounded-b-sm"></div>
-                    {/* Metal sheen */}
-                    <div className="absolute top-1 left-2 w-1 h-2 bg-white/60 rounded-full blur-[1px]"></div>
+                {/* Top Hook - Minimalist */}
+                <div className="absolute left-1/2 -translate-x-1/2 top-0 w-5 h-5 rounded-full bg-gradient-to-br from-slate-300 to-slate-500 shadow-md border border-slate-400">
+                    {/* Highlight */}
+                    <div className="absolute top-1 left-1.5 w-1.5 h-1.5 bg-white/50 rounded-full blur-[0.5px]"></div>
                 </div>
 
-                {/* Lanyard Ring/Hook */}
-                <div className="absolute left-1/2 -translate-x-1/2 top-0 w-6 h-6 border-2 border-gray-400 rounded-full bg-gradient-to-br from-gray-300 to-gray-500 shadow-md">
-                    <div className="absolute inset-0.5 border border-white/40 rounded-full"></div>
+                {/* Bottom Clip - Minimal */}
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-4 h-5 bg-gradient-to-br from-slate-300 to-slate-500 rounded-t shadow-md border-t border-l border-r border-slate-400">
+                    {/* Clip detail */}
+                    <div className="absolute inset-1 rounded-t border-t border-white/30"></div>
                 </div>
             </motion.div>
 
@@ -98,7 +98,6 @@ const IDCard = () => {
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-blue-100/50 pointer-events-none"></div>
 
-                {/* Lanyard Hole - Connection Point */}
                 <div className="absolute top-3 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-300 shadow-inner border-2 border-gray-300 dark:border-gray-400 z-50">
                     <div className="absolute inset-0.5 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 shadow-md"></div>
                     <div className="absolute inset-1 rounded-full border border-gray-500/30"></div>
@@ -109,7 +108,18 @@ const IDCard = () => {
                 <div className="absolute top-0 left-0 right-0 py-1.5 sm:h-14 bg-gradient-to-r from-[#004d40] to-[#00695c] flex flex-col sm:flex-row items-center px-3 sm:px-5 justify-between z-10">
                     <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-0">
                         <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center p-0.5">
-                            <img src={upnLogo} alt="UPN" loading="lazy" className="w-full h-full object-contain" onError={(e) => e.target.style.display = 'none'} />
+                            <img 
+                                src="/images/upnvj_logo.webp" 
+                                alt="UPN" 
+                                loading="lazy" 
+                                className="w-full h-full object-contain" 
+                                onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    const fallback = e.target.parentElement?.querySelector('[data-upn-fallback]');
+                                    if (fallback) fallback.style.display = 'flex';
+                                }} 
+                            />
+                            <GraduationCap data-upn-fallback className="w-5 h-5 text-indigo-600 hidden" strokeWidth={1.5} />
                         </div>
                         <div className="leading-none sm:leading-tight text-white text-center sm:text-left">
                             <h1 className="font-bold text-[10px] sm:text-sm tracking-wide">UPN VETERAN JAKARTA</h1>
@@ -125,10 +135,19 @@ const IDCard = () => {
                     <div className="flex flex-col gap-1.5 sm:gap-2 w-24 sm:w-32 shrink-0">
                         <div className="relative w-full aspect-[3/4] rounded-md sm:rounded-lg overflow-hidden border-[1.5px] sm:border-2 border-gray-200 shadow-inner bg-gray-100">
                             <img
-                                src={profileImg}
+                                src="/images/profile.webp"
                                 alt="Profile"
                                 className="w-full h-full object-cover"
+                                onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    const fallback = e.target.parentElement?.querySelector('[data-fallback]');
+                                    if (fallback) fallback.style.display = 'flex';
+                                }}
                             />
+                            {/* Fallback - Show avatar if image fails to load */}
+                            <div data-fallback className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500 via-blue-400 to-cyan-400 text-white font-bold text-3xl sm:text-4xl" style={{ display: 'none' }}>
+                                RR
+                            </div>
                             <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-cyan-500/10 mix-blend-overlay"></div>
                         </div>
                         <div className="w-8 h-6 sm:w-10 sm:h-8 rounded-sm sm:rounded bg-gradient-to-br from-yellow-200 to-yellow-500 border border-yellow-600 shadow-sm mx-auto opacity-80 flex items-center justify-center">
