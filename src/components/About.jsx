@@ -1,11 +1,14 @@
 import { motion } from 'framer-motion';
 import cvFile from '/assets/CV Rafie Rojagat Bachri.pdf';
 import IDCard from './IDCard';
+import ThreeIDCard from './ThreeIDCard';
 import { useTranslation, Trans } from 'react-i18next';
-import { Building2 } from 'lucide-react';
+import { Building2, Box, CreditCard } from 'lucide-react';
+import { useState } from 'react';
 
 const About = () => {
   const { t } = useTranslation();
+  const [is3D, setIs3D] = useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -54,15 +57,40 @@ const About = () => {
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-20">
 
           <motion.div
-            className="lg:w-5/12 w-full flex justify-center order-1 sticky top-24 z-10"
+            className="lg:w-5/12 w-full flex flex-col items-center order-1 sticky top-24 z-10"
             initial={{ opacity: 0, scale: 0.5 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
           >
+            {/* Toggle Button */}
+            <div className="mb-4 flex gap-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-1.5 rounded-xl shadow-lg border border-slate-200 dark:border-slate-600">
+              <button
+                onClick={() => setIs3D(false)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  !is3D 
+                    ? 'bg-primary text-white shadow-sm' 
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                }`}
+              >
+                <CreditCard size={16} />
+                2D Card
+              </button>
+              <button
+                onClick={() => setIs3D(true)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  is3D 
+                    ? 'bg-primary text-white shadow-sm' 
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                }`}
+              >
+                <Box size={16} />
+                3D Nametag
+              </button>
+            </div>
 
             <div className="py-10 w-full flex justify-center">
-              <IDCard />
+              {is3D ? <ThreeIDCard /> : <IDCard />}
             </div>
           </motion.div>
 
