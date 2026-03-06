@@ -106,9 +106,26 @@ const Hero = () => {
             </motion.div>
         </Tilt>
 
-        <motion.p variants={itemVariants} className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400 mb-6 mt-3 md:mt-4 font-normal max-w-2xl mx-auto leading-relaxed px-4">
-          {t('hero.tagline')}
-        </motion.p>
+        <motion.div variants={itemVariants} className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400 mb-6 mt-3 md:mt-4 font-normal max-w-2xl mx-auto leading-relaxed px-4 min-h-[1.5em]">
+          <Typewriter
+            onInit={(typewriter) => {
+              typewriter
+                .typeString(t('hero.tagline'))
+                .pauseFor(3000)
+                .deleteAll()
+                .pauseFor(500)
+                .start();
+            }}
+            options={{
+              autoStart: true,
+              loop: true,
+              delay: 30,
+              deleteSpeed: 20,
+              cursor: '|',
+              wrapperClassName: "text-gray-500 dark:text-gray-400"
+            }}
+          />
+        </motion.div>
 
         <motion.div variants={itemVariants} className="mb-6 md:mb-8 w-full max-w-3xl px-4 sm:px-0">
           <Marquee gradient={false} speed={12} pauseOnHover={true} className="text-[11px] sm:text-xs md:text-sm text-gray-600 dark:text-gray-400">
