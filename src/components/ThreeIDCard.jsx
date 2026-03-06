@@ -32,6 +32,9 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     angularDamping: 2,
     linearDamping: 2
   };
+  const CARD_BASE_SIZE = 1024;
+  const CARD_SUPERSAMPLE = 4;
+  const CARD_TEXTURE_SIZE = CARD_BASE_SIZE * CARD_SUPERSAMPLE;
 
   const { nodes, materials } = useGLTF(TAG_MODEL_URL);
   
@@ -46,28 +49,30 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   
   const idCardTexture = useMemo(() => {
     const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 1024;
+    canvas.width = CARD_TEXTURE_SIZE;
+    canvas.height = CARD_TEXTURE_SIZE;
     const context = canvas.getContext('2d');
 
     if (!context) {
       return null;
     }
 
-    // Flip vertically to match UV orientation
-    context.scale(1, -1);
-    context.translate(0, -canvas.height);
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
+
+    // Keep 1024-based drawing coordinates while rendering at 4x resolution.
+    context.setTransform(CARD_SUPERSAMPLE, 0, 0, -CARD_SUPERSAMPLE, 0, canvas.height);
 
     // White background
     context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillRect(0, 0, CARD_BASE_SIZE, CARD_BASE_SIZE);
 
     // Header with gradient
-    const headerGradient = context.createLinearGradient(0, 0, canvas.width, 0);
+    const headerGradient = context.createLinearGradient(0, 0, CARD_BASE_SIZE, 0);
     headerGradient.addColorStop(0, '#004d40');
     headerGradient.addColorStop(1, '#00695c');
     context.fillStyle = headerGradient;
-    context.fillRect(0, 0, canvas.width, 100);
+    context.fillRect(0, 0, CARD_BASE_SIZE, 100);
 
     // Heritage circle logo
     context.fillStyle = '#ffffff';
@@ -82,7 +87,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     // Header text - smaller
     context.fillStyle = '#ffffff';
     context.font = 'bold 24px Arial';
-    context.fillText('UPN VETERAN', 110, 45);
+    context.fillText('UPN VETERAN JAKARTA', 110, 45);
     context.font = '600 11px Arial';
     context.fillText('Fac. Computer Science', 110, 60);
     context.font = 'bold 13px Arial';
@@ -198,10 +203,14 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     context.fillRect(70, 460, 85, 60);
 
     const texture = new THREE.CanvasTexture(canvas);
+    texture.generateMipmaps = false;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.anisotropy = 32;
     texture.needsUpdate = true;
     texture.colorSpace = THREE.SRGBColorSpace;
     return texture;
-  }, [profileImage]);
+  }, [CARD_BASE_SIZE, CARD_SUPERSAMPLE, CARD_TEXTURE_SIZE, profileImage]);
 
   const lanyardTexture = useMemo(() => {
     const canvas = document.createElement('canvas');
@@ -212,6 +221,9 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     if (!context) {
       return null;
     }
+
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
 
     context.fillStyle = '#0f766e';
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -248,34 +260,30 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   const backCardTexture = useMemo(() => {
     const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 1024;
+    canvas.width = CARD_TEXTURE_SIZE;
+    canvas.height = CARD_TEXTURE_SIZE;
     const context = canvas.getContext('2d');
 
     if (!context) {
       return null;
     }
 
-    // Flip vertically to match UV orientation
-    context.scale(1, -1);
-    context.translate(0, -canvas.height);
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
+
+    // Keep 1024-based drawing coordinates while rendering at 4x resolution.
+    context.setTransform(CARD_SUPERSAMPLE, 0, 0, -CARD_SUPERSAMPLE, 0, canvas.height);
 
     // White background
     context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillRect(0, 0, CARD_BASE_SIZE, CARD_BASE_SIZE);
 
     // Header with gradient (matching front)
-    const headerGradient = context.createLinearGradient(0, 0, canvas.width, 0);
+    const headerGradient = context.createLinearGradient(0, 0, CARD_BASE_SIZE, 0);
     headerGradient.addColorStop(0, '#004d40');
     headerGradient.addColorStop(1, '#00695c');
     context.fillStyle = headerGradient;
-    context.fillRect(0, 0, canvas.width, 100);
-
-    // Header text
-    context.fillStyle = '#ffffff';
-    context.font = 'bold 28px Arial';
-    context.textAlign = 'center';
-    context.fillText('PROFESSIONAL PORTFOLIO', canvas.width / 2, 55);
+    context.fillRect(0, 0, CARD_BASE_SIZE, 100);
 
     // Main content area
     let yPos = 160;
@@ -289,12 +297,12 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     context.fillStyle = '#6b7280';
     context.font = '20px Arial';
     yPos += 35;
-    context.fillText('@rafirojagat', 80, yPos);
+    context.fillText('@Rafie1715', 80, yPos);
     
     yPos += 30;
     context.fillStyle = '#111827';
     context.font = '18px Arial';
-    context.fillText('github.com/rafirojagat', 80, yPos);
+    context.fillText('github.com/Rafie1715', 80, yPos);
 
     // Divider line
     yPos += 50;
@@ -302,7 +310,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     context.lineWidth = 2;
     context.beginPath();
     context.moveTo(80, yPos);
-    context.lineTo(canvas.width - 80, yPos);
+    context.lineTo(CARD_BASE_SIZE - 80, yPos);
     context.stroke();
 
     // LinkedIn QR placeholder (decorative pattern)
@@ -312,7 +320,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     context.fillText('LinkedIn', 80, yPos);
     
     // QR code placeholder - simple grid pattern
-    const qrX = canvas.width - 220;
+    const qrX = CARD_BASE_SIZE - 220;
     const qrY = yPos - 30;
     const qrSize = 140;
     context.fillStyle = '#111827';
@@ -338,7 +346,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     context.lineWidth = 2;
     context.beginPath();
     context.moveTo(80, yPos);
-    context.lineTo(canvas.width - 80, yPos);
+    context.lineTo(CARD_BASE_SIZE - 80, yPos);
     context.stroke();
 
     // Contact Section
@@ -350,10 +358,10 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     yPos += 40;
     context.fillStyle = '#6b7280';
     context.font = '20px Arial';
-    context.fillText('✉ rafierojagat@gmail.com', 80, yPos);
+    context.fillText('✉ rojagatrafie@gmail.com', 80, yPos);
     
     yPos += 35;
-    context.fillText('🌐 rafiersyavanarojagat.site', 80, yPos);
+    context.fillText('🌐 rafierb.me', 80, yPos);
 
     // Divider line
     yPos += 50;
@@ -361,23 +369,11 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     context.lineWidth = 2;
     context.beginPath();
     context.moveTo(80, yPos);
-    context.lineTo(canvas.width - 80, yPos);
+    context.lineTo(CARD_BASE_SIZE - 80, yPos);
     context.stroke();
 
-    // Tagline Section
-    yPos += 60;
-    context.fillStyle = '#004d40';
-    context.font = 'bold 26px Arial';
-    context.textAlign = 'center';
-    context.fillText('Software Engineering Student', canvas.width / 2, yPos);
-    
-    yPos += 35;
-    context.fillStyle = '#6b7280';
-    context.font = '20px Arial';
-    context.fillText('Informatics • UPN Veteran Jakarta', canvas.width / 2, yPos);
-
     // Footer section with social media
-    yPos = canvas.height - 160;
+    yPos = CARD_BASE_SIZE - 160;
     context.fillStyle = '#111827';
     context.font = 'bold 20px Arial';
     context.textAlign = 'left';
@@ -386,28 +382,29 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     yPos += 35;
     context.fillStyle = '#6b7280';
     context.font = '18px Arial';
-    context.fillText('Instagram: @rafie.rojagat', 80, yPos);
-    
-    yPos += 30;
-    context.fillText('Twitter: @rafirojagat', 80, yPos);
+    context.fillText('Instagram: @rafierb', 80, yPos);
 
     // Bottom stripe with gold accent
-    const bottomGradient = context.createLinearGradient(0, canvas.height - 80, canvas.width, canvas.height - 80);
+    const bottomGradient = context.createLinearGradient(0, CARD_BASE_SIZE - 80, CARD_BASE_SIZE, CARD_BASE_SIZE - 80);
     bottomGradient.addColorStop(0, '#004d40');
     bottomGradient.addColorStop(1, '#facc15');
     context.fillStyle = bottomGradient;
-    context.fillRect(0, canvas.height - 80, canvas.width, 80);
+    context.fillRect(0, CARD_BASE_SIZE - 80, CARD_BASE_SIZE, 80);
 
     context.fillStyle = '#ffffff';
     context.font = 'bold 18px Arial';
     context.textAlign = 'center';
-    context.fillText('ID: 2210511043 • Class of 2022', canvas.width / 2, canvas.height - 42);
+    context.fillText('ID: 2210511043 • Class of 2022', CARD_BASE_SIZE / 2, CARD_BASE_SIZE - 42);
 
     const texture = new THREE.CanvasTexture(canvas);
+    texture.generateMipmaps = false;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.anisotropy = 32;
     texture.needsUpdate = true;
     texture.colorSpace = THREE.SRGBColorSpace;
     return texture;
-  }, []);
+  }, [CARD_BASE_SIZE, CARD_SUPERSAMPLE, CARD_TEXTURE_SIZE]);
   
   const { width, height } = useThree((state) => state.size);
 
@@ -474,7 +471,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       curve.points[0].copy(j3.current.translation());
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
-      curve.points[3].copy(fixed.current.translation());
+      curve.points[3].copy(fixed.current.translation());      
       band.current.geometry.setPoints(curve.getPoints(32));
 
       ang.copy(card.current.angvel());
@@ -528,7 +525,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             <mesh geometry={nodes.card.geometry} position={[0, 0, 0.001]}>
               <meshPhysicalMaterial
                 map={idCardTexture ?? materials.base.map}
-                map-anisotropy={16}
+                map-anisotropy={32}
                 clearcoat={1}
                 clearcoatRoughness={0.15}
                 roughness={0.3}
@@ -541,7 +538,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             <mesh geometry={nodes.card.geometry} position={[0, 0, -0.001]} rotation={[0, Math.PI, 0]}>
               <meshPhysicalMaterial
                 map={backCardTexture ?? materials.base.map}
-                map-anisotropy={16}
+                map-anisotropy={32}
                 clearcoat={1}
                 clearcoatRoughness={0.15}
                 roughness={0.3}
@@ -560,12 +557,14 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         <meshLineGeometry />
         <meshLineMaterial
           color="#0f766e"
-          depthTest={false}
           resolution={[width, height]}
           useMap
           map={lanyardTexture}
           repeat={[-5.5, 1]}
-          lineWidth={1.15}
+          lineWidth={0.9}        
+          transparent={true}     
+          depthWrite={false}   
+          depthTest={true}
         />
       </mesh>
     </>
@@ -575,7 +574,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 export default function ThreeIDCard() {
   return (
     <div className="w-full h-[600px]">
-      <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
+      <Canvas gl={{ antialias: true, powerPreference: 'high-performance' }} dpr={[2, 3]} camera={{ position: [0, 0, 13], fov: 25 }}>
         <ambientLight intensity={Math.PI} />
 
         <Physics debug={false} interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
@@ -583,7 +582,7 @@ export default function ThreeIDCard() {
         </Physics>
 
         <Environment background blur={0.75}>
-          <color attach="background" args={['black']} />
+          <color attach="background" args={['white']} />
           <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
           <Lightformer intensity={3} color="white" position={[-1, -1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
           <Lightformer intensity={3} color="white" position={[1, 1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
