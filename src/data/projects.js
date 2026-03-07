@@ -745,5 +745,67 @@ export const projects = [
       "/images/project-greensort4.webp",
       "/images/project-greensort5.webp"
     ]
+  },
+  {
+    id: "portfolio-website",
+    title: {
+      en: "Personal Portfolio Website",
+      id: "Website Portfolio Pribadi"
+    },
+    category: "web",
+    image: "/images/project-portfolio.webp",
+    impact: {
+      en: "Full-stack Portfolio • Interactive 3D section • Dynamic integrations",
+      id: "Portfolio Full-stack • Section 3D interaktif • Integrasi dinamis"
+    },
+    shortDesc: {
+      en: "A modern personal portfolio website to showcase projects, skills, achievements, and real-time integrations in one platform.",
+      id: "Website portfolio pribadi modern untuk menampilkan proyek, skill, pencapaian, dan integrasi real-time dalam satu platform."
+    },
+    fullDesc: {
+      en: "This portfolio website was built as a central hub for my professional identity as a software developer. The platform presents selected projects with detailed case studies, highlights my technical stack, and includes dynamic integrations such as GitHub statistics, Spotify activity, and visitor tracking. I focused on creating a polished user experience with smooth animations, responsive layouts, bilingual content (English and Indonesian), and an admin workflow for managing project data.",
+      id: "Website portfolio ini dibangun sebagai pusat identitas profesional saya sebagai software developer. Platform ini menampilkan proyek-proyek pilihan dengan studi kasus yang detail, menyoroti tech stack saya, serta menyertakan integrasi dinamis seperti statistik GitHub, aktivitas Spotify, dan visitor tracking. Saya berfokus pada pengalaman pengguna yang rapi dengan animasi halus, layout responsif, konten bilingual (Inggris dan Indonesia), serta alur admin untuk mengelola data proyek."
+    },
+    challenges: {
+      en: "The main challenge was combining multiple complex features (multi-language support, API-driven widgets, SEO optimization, 3D interactive components, and admin content management) while maintaining strong performance and clean UX across desktop and mobile devices.",
+      id: "Tantangan utama adalah menggabungkan banyak fitur kompleks (dukungan multi-bahasa, widget berbasis API, optimasi SEO, komponen 3D interaktif, dan manajemen konten admin) sambil tetap menjaga performa tinggi dan UX yang bersih di desktop maupun mobile."
+    },
+    solution: {
+      en: "I implemented a modular React architecture with reusable components and route-based page composition. Tailwind CSS was used for fast UI iteration and consistent styling, while Firebase supported data workflows. For dynamic sections, I integrated serverless functions and external APIs with graceful fallbacks. I also applied SEO metadata per page and optimized media formats to keep the site lightweight.",
+      id: "Saya menerapkan arsitektur React modular dengan komponen reusable dan komposisi halaman berbasis route. Tailwind CSS digunakan untuk iterasi UI yang cepat dan styling yang konsisten, sementara Firebase mendukung alur data. Untuk section dinamis, saya mengintegrasikan serverless functions dan API eksternal dengan fallback yang aman. Saya juga menerapkan metadata SEO per halaman dan mengoptimalkan format media agar situs tetap ringan."
+    },
+    lessonLearned: {
+      en: "This project strengthened my end-to-end web engineering skills: architecting scalable frontend structure, managing asynchronous external data, improving Core Web Vitals, and balancing visual creativity with maintainable production code.",
+      id: "Proyek ini memperkuat kemampuan web engineering end-to-end saya: merancang struktur frontend yang scalable, mengelola data eksternal asinkron, meningkatkan Core Web Vitals, serta menyeimbangkan kreativitas visual dengan kode production yang mudah dirawat."
+    },
+    features: {
+      en: [
+        "Bilingual Content (English/Indonesian) with i18n",
+        "Dynamic Project Showcase with Detail Pages",
+        "Real-time Integrations (GitHub, Spotify, Visitor Counter)",
+        "Interactive 3D ID Card Section",
+        "Admin Dashboard for Project Management",
+        "SEO Optimization and Social Metadata"
+      ],
+      id: [
+        "Konten Bilingual (Inggris/Indonesia) dengan i18n",
+        "Showcase Proyek Dinamis dengan Halaman Detail",
+        "Integrasi Real-time (GitHub, Spotify, Visitor Counter)",
+        "Section Kartu ID 3D Interaktif",
+        "Dashboard Admin untuk Manajemen Proyek",
+        "Optimasi SEO dan Metadata Sosial"
+      ]
+    },
+    techStack: [
+      { name: "React", icon: "devicon-react-original" },
+      { name: "Vite", icon: "devicon-vitejs-plain" },
+      { name: "Tailwind CSS", icon: "devicon-tailwindcss-plain" },
+      { name: "Firebase", icon: "devicon-firebase-plain" },
+      { name: "Netlify", icon: "devicon-netlify-plain" },
+      { name: "Three.js", icon: "devicon-threejs-original" }
+    ],
+    github: "https://github.com/Rafie1715/Website-Portfolio-Rafie",
+    live: "https://rafie-dev.netlify.app",
+    gallery: []
   }
 ];
