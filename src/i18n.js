@@ -21,7 +21,13 @@ const resources = {
                 view_all: "View All Projects",
                 latest_blog: "Latest from Blog",
                 blog_glimpse: "Thoughts on web development, mobile apps, and learning",
-                view_all_blogs: "View All Blogs"
+                view_all_blogs: "View All Blogs",
+                afk_teaser: {
+                    eyebrow: "Beyond Coding",
+                    title: "Want to know my other side?",
+                    desc: "On the AFK page, I share what I am listening to, playing, and watching. A quick look at my rhythm outside coding.",
+                    cta: "Explore /afk"
+                }
             },
             about: {
                 title: "About Me",
@@ -45,6 +51,10 @@ const resources = {
                 tagline: "Final-year Informatics student at UPN Veteran Jakarta. I build responsive apps for mobile and web.",
                 view_work: "View My Work",
                 contact_me: "Contact Me",
+                afk_cta: {
+                    prefix: "Curious what I do outside coding?",
+                    link: "Check out /afk"
+                },
                 quick_facts: {
                     location: "Jakarta, Indonesia",
                     availability: "Open to Internship",
@@ -136,6 +146,8 @@ const resources = {
             afk: {
                 subtitle: "Away From Keyboard.",
                 seo_desc: "Games, Music, and Movies.",
+                intro_line1: "This page captures my rhythm outside coding, from what I listen to, to what I play and watch.",
+                intro_line2: "For me, AFK moments often become a source of ideas when I get back to building.",
                 status_check: "Status Check",
                 playing: "Playing",
                 offline: "Offline",
@@ -192,7 +204,13 @@ const resources = {
                 view_all: "Lihat Semua Proyek",
                 latest_blog: "Terbaru dari Blog",
                 blog_glimpse: "Pemikiran tentang web development, aplikasi mobile, dan pembelajaran",
-                view_all_blogs: "Lihat Semua Blog"
+                view_all_blogs: "Lihat Semua Blog",
+                afk_teaser: {
+                    eyebrow: "Beyond Coding",
+                    title: "Mau kenal sisi lain saya?",
+                    desc: "Di halaman AFK, saya berbagi apa yang lagi saya dengar, mainkan, dan tonton. Tempat buat lihat ritme hidup saya di luar coding.",
+                    cta: "Explore /afk"
+                }
             },
             about: {
                 title: "Tentang Saya",
@@ -216,6 +234,10 @@ const resources = {
                 tagline: "Mahasiswa tingkat akhir Informatika di UPN Veteran Jakarta. Membangun aplikasi responsif untuk mobile dan web.",
                 view_work: "Lihat Karya Saya",
                 contact_me: "Hubungi Saya",
+                afk_cta: {
+                    prefix: "Penasaran saya ngapain di luar coding?",
+                    link: "Intip halaman /afk"
+                },
                 quick_facts: {
                     location: "Jakarta, Indonesia",
                     availability: "Terbuka untuk magang",
@@ -307,6 +329,8 @@ const resources = {
             afk: {
                 subtitle: "Jauh Dari Keyboard.",
                 seo_desc: "Game, Musik, dan Film.",
+                intro_line1: "Halaman ini berisi ritme saya di luar coding, dari musik yang sedang diputar sampai game dan film yang lagi saya nikmati.",
+                intro_line2: "Buat saya, momen AFK ini justru sering jadi sumber ide saat balik ngoding.",
                 status_check: "Cek Status",
                 playing: "Sedang Main",
                 offline: "Offline",

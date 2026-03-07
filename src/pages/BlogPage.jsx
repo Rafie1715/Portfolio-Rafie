@@ -71,8 +71,8 @@ const BlogPage = () => {
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               {currentLang === 'id' 
-                ? 'Berbagi pengalaman dan pembelajaran dalam web development'
-                : 'Sharing experiences and learnings in web development'}
+                ? 'Berbagi pengalaman dan pembelajaran dalam bidang IT'
+                : 'Sharing experiences and learnings in IT Stuff'}
             </p>
           </motion.div>
 

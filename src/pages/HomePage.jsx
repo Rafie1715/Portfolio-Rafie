@@ -38,6 +38,25 @@ const HomePage = () => {
 
         <Hero />
 
+        <section className="px-4 container mx-auto mt-10">
+          <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-slate-800 dark:to-slate-800/80 p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-5" data-aos="fade-up">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-2">{t('home.afk_teaser.eyebrow')}</p>
+              <h3 className="text-xl md:text-2xl font-bold text-dark dark:text-white mb-2">{t('home.afk_teaser.title')}</h3>
+              <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
+                {t('home.afk_teaser.desc')}
+              </p>
+            </div>
+
+            <Link
+              to="/afk"
+              className="inline-flex items-center justify-center whitespace-nowrap px-6 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
+            >
+              {t('home.afk_teaser.cta')}
+            </Link>
+          </div>
+        </section>
+
         <section className="py-20 px-4 container mx-auto">
           <div className="text-center mb-12" data-aos="fade-up">
             <h2 className="text-3xl font-bold text-dark dark:text-white mb-4">{t('home.featured_work')}</h2>

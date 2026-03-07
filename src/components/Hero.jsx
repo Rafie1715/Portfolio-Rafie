@@ -170,6 +170,14 @@ const Hero = () => {
           </a>
         </motion.div>
 
+        <motion.p variants={itemVariants} className="mt-4 text-sm md:text-base text-gray-500 dark:text-gray-400 px-4 text-center">
+          {t('hero.afk_cta.prefix')}{' '}
+          <a href="/afk" className="font-semibold text-blue-600 dark:text-blue-400 hover:underline underline-offset-4">
+            {t('hero.afk_cta.link')}
+          </a>
+          .
+        </motion.p>
+
         <motion.div variants={itemVariants} className="mt-8 md:mt-12 flex gap-5 md:gap-6 text-2xl md:text-3xl text-gray-400">
             <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="p-2 hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50"><FaGithub /></a>
             <a href="https://linkedin.com/in/rafie-rojagat" target="_blank" rel="noreferrer" className="p-2 hover:text-blue-600 hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50"><FaLinkedin /></a>

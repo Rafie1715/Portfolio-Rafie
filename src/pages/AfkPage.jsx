@@ -124,6 +124,11 @@ const AfkPage = () => {
                         <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 4, repeat: Infinity }} className="inline-block text-6xl mb-4 filter drop-shadow-lg">🎮</motion.div>
                         <h1 className="text-4xl md:text-6xl font-black text-dark dark:text-white mb-2 tracking-tight">/afk</h1>
                         <p className="text-gray-500 font-medium text-lg">{t('afk.subtitle')}</p>
+                        <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
+                            {t('afk.intro_line1')}
+                            {' '}
+                            {t('afk.intro_line2')}
+                        </p>
                     </div>
 
                     <motion.div className="space-y-12" variants={containerVariants} initial="hidden" animate="visible">
