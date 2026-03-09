@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setupItems } from '../data/setup';
 import SEO from '../components/SEO';
@@ -9,8 +9,16 @@ import GitHubActivity from '../components/GitHubActivity';
 const WorkspacePage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const closeButtonRef = useRef(null);
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
+  const currentYear = new Date().getFullYear();
+
+  const toCategoryId = (value) =>
+    String(value || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
 
   const getData = (data) => {
     if (!data) return "";
@@ -57,43 +65,65 @@ const WorkspacePage = () => {
     }
   };
 
-  const categories = [
-    { id: 'all', label: currentLang === 'id' ? 'Semua' : 'All' },
-    { id: 'Daily Driver', label: currentLang === 'id' ? 'Laptop Utama' : 'Daily Driver' },
-    { id: 'Tablet', label: 'Tablet' },
-    { id: 'Mobile', label: currentLang === 'id' ? 'Ponsel' : 'Mobile' },
-    { id: 'Audio', label: currentLang === 'id' ? 'Audio' : 'Audio' },
-    { id: 'Editor', label: 'Editor' },
-    { id: 'IDE', label: 'IDE' },
-    { id: 'DevOps', label: 'DevOps' },
-    { id: 'Productivity', label: currentLang === 'id' ? 'Produktivitas' : 'Productivity' },
-    { id: 'Testing', label: 'Testing' },
-    { id: 'Backend', label: 'Backend' },
-    { id: 'Design', label: currentLang === 'id' ? 'Desain' : 'Design' },
-    { id: 'Music', label: currentLang === 'id' ? 'Musik' : 'Music' },
-    { id: 'Social', label: currentLang === 'id' ? 'Sosial' : 'Social' },
-  ];
+  const categories = useMemo(() => {
+    const categoryMap = new Map();
 
-  const filteredItems = selectedCategory === 'all' 
-    ? setupItems 
-    : setupItems.filter((item) => {
-        try {
-          const categoryData = item?.category;
-          if (!categoryData) return false;
-          
-          const categoryLabel = categories.find((c) => c.id === selectedCategory)?.label;
-          if (!categoryLabel) return false;
-          
-          const categoryText = typeof categoryData === 'object' && categoryData
-            ? (categoryData[currentLang] || categoryData.en || categoryData.id)
-            : categoryData;
-          
-          return String(categoryText || "") === String(categoryLabel || "");
-        } catch (err) {
-          console.warn('Filter error for item:', item, err);
-          return false;
-        }
-      });
+    setupItems.forEach((item) => {
+      const en = item?.category?.en;
+      const id = item?.category?.id || en;
+      const key = String(en || '').trim();
+      if (!key) return;
+
+      const categoryId = toCategoryId(key);
+      if (!categoryMap.has(categoryId)) {
+        categoryMap.set(categoryId, {
+          id: categoryId,
+          key,
+          label: currentLang === 'id' ? String(id || key) : key,
+        });
+      }
+    });
+
+    return [{ id: 'all', label: currentLang === 'id' ? 'Semua' : 'All' }, ...Array.from(categoryMap.values())];
+  }, [currentLang]);
+
+  const filteredItems = useMemo(() => {
+    if (selectedCategory === 'all') return setupItems;
+
+    const selectedMeta = categories.find((c) => c.id === selectedCategory);
+    if (!selectedMeta?.key) return setupItems;
+
+    return setupItems.filter((item) => {
+      try {
+        const itemCategoryKey = item?.category?.en;
+        return String(itemCategoryKey || '') === String(selectedMeta.key);
+      } catch (err) {
+        console.warn('Filter error for item:', item, err);
+        return false;
+      }
+    });
+  }, [selectedCategory, categories]);
+
+  useEffect(() => {
+    if (!selectedImage) return undefined;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setSelectedImage(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    closeButtonRef.current?.focus();
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [selectedImage]);
 
   return (
     <PageTransition>
@@ -132,7 +162,7 @@ const WorkspacePage = () => {
             <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed px-4">
               {t('workspace.subtitle')}<br />
               <span className="text-xs sm:text-sm font-mono text-primary bg-primary/10 px-2 py-1 rounded mt-2 inline-block">
-                {t('workspace.updated')}: 2025
+                {t('workspace.updated')}: {currentYear}
               </span>
             </p>
           </div>
@@ -267,6 +297,9 @@ const WorkspacePage = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4 backdrop-blur-xl"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="workspace-preview-title"
               onClick={() => setSelectedImage(null)}
             >
               <motion.div
@@ -294,6 +327,7 @@ const WorkspacePage = () => {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.1 }}
+                    id="workspace-preview-title"
                     className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
                   >
                     {selectedImage.title}
@@ -324,8 +358,10 @@ const WorkspacePage = () => {
                 </div>
 
                 <button
+                  ref={closeButtonRef}
                   className="absolute top-4 right-4 md:-top-16 md:right-0 md:-right-10 text-white/80 md:text-white/50 hover:text-white transition-colors bg-white/10 hover:bg-white/20 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10 group"
                   onClick={() => setSelectedImage(null)}
+                  aria-label={currentLang === 'id' ? 'Tutup pratinjau' : 'Close preview'}
                 >
                   <i className="fas fa-times text-lg md:text-xl group-hover:rotate-90 transition-transform duration-300"></i>
                 </button>

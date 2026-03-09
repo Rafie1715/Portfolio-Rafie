@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 const ParticlesComponent = lazy(() => import('./ParticlesBackground'));
 
 const Hero = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -80,11 +80,11 @@ const Hero = () => {
 
         <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} perspective={1000} scale={1.02} className="w-full">
             <motion.div variants={itemVariants} className="mb-3 md:mb-2 px-2">
-                 <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-gray-500 dark:text-gray-400 mb-2 md:mb-3">
+                 <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-gray-500 dark:text-gray-400 mb-2 md:mb-3">
                     {t('hero.greeting')}
                  </h2>
                  
-                 <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight leading-tight min-h-[1.2em] break-words">
+                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight leading-tight min-h-[1.2em] break-words">
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-500 animate-gradient-x drop-shadow-sm">
                         <Typewriter
                             onInit={(typewriter) => {
@@ -106,8 +106,9 @@ const Hero = () => {
             </motion.div>
         </Tilt>
 
-        <motion.div variants={itemVariants} className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400 mb-6 mt-3 md:mt-4 font-normal max-w-2xl mx-auto leading-relaxed px-4 min-h-[1.5em]">
+        <motion.div variants={itemVariants} className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-6 mt-3 md:mt-4 font-normal max-w-2xl mx-auto leading-relaxed px-4 min-h-[1.5em]">
           <Typewriter
+            key={i18n.language}
             onInit={(typewriter) => {
               typewriter
                 .typeString(t('hero.tagline'))
