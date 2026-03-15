@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
-import { collection, addDoc } from "firebase/firestore";
-import { useNavigate, Link } from "react-router-dom";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
 
-const AddProject = () => {
+const EditProject = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState("");
@@ -26,11 +29,78 @@ const AddProject = () => {
     liveLink: "",
     githubLink: "",
     imageFile: null,
+    currentImage: "",
   });
 
   const CLOUD_NAME = "djchoocal";
   const UPLOAD_PRESET = "rafie_portfolio";
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+  const getLocalizedText = (value) => {
+    if (typeof value === "string") return value;
+    if (value && typeof value === "object") return value.en || value.id || "";
+    return "";
+  };
+
+  const getLocalizedArray = (value) => {
+    if (Array.isArray(value)) return value;
+    if (value && typeof value === "object") {
+      if (Array.isArray(value.en)) return value.en;
+      if (Array.isArray(value.id)) return value.id;
+    }
+    return [];
+  };
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (!dbFirestore || !id) return;
+
+      try {
+        setInitialLoading(true);
+        const docRef = doc(dbFirestore, "projects", id);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+          setError("Project not found.");
+          return;
+        }
+
+        const data = docSnap.data();
+
+        const prefilledTech = Array.isArray(data.techStack)
+          ? data.techStack
+              .map((item) => (typeof item === "string" ? item : item?.name || ""))
+              .filter(Boolean)
+          : [];
+
+        const featuresArray = getLocalizedArray(data.features);
+
+        setFormData({
+          title: getLocalizedText(data.title),
+          shortDesc: getLocalizedText(data.shortDesc),
+          fullDesc: getLocalizedText(data.fullDesc),
+          challenges: getLocalizedText(data.challenges),
+          solution: getLocalizedText(data.solution),
+          features: featuresArray.join("\n"),
+          category: data.category || "web",
+          liveLink: data.live || "",
+          githubLink: data.github || "",
+          imageFile: null,
+          currentImage: data.image || "",
+        });
+
+        setImagePreview(data.image || null);
+        setTechItems(prefilledTech);
+      } catch (fetchError) {
+        console.error("Error fetching project:", fetchError);
+        setError("Failed to load project data. Please refresh and try again.");
+      } finally {
+        setInitialLoading(false);
+      }
+    };
+
+    fetchProject();
+  }, [dbFirestore, id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -83,7 +153,7 @@ const AddProject = () => {
       setError("Full description is required");
       return false;
     }
-    if (!formData.imageFile) {
+    if (!formData.currentImage && !formData.imageFile) {
       setError("Thumbnail image is required");
       return false;
     }
@@ -107,6 +177,38 @@ const AddProject = () => {
     }
   };
 
+  const uploadImageIfNeeded = async () => {
+    if (!formData.imageFile) return formData.currentImage || "";
+
+    const imgFormData = new FormData();
+    imgFormData.append("file", formData.imageFile);
+    imgFormData.append("upload_preset", UPLOAD_PRESET);
+
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`);
+
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round((event.loaded / event.total) * 100);
+          setUploadProgress(progress);
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText);
+          resolve(response.secure_url);
+        } else {
+          reject(new Error("Image upload failed"));
+        }
+      };
+
+      xhr.onerror = () => reject(new Error("Network error during upload"));
+      xhr.send(imgFormData);
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -125,33 +227,7 @@ const AddProject = () => {
     setLoading(true);
 
     try {
-      const imgFormData = new FormData();
-      imgFormData.append("file", formData.imageFile);
-      imgFormData.append("upload_preset", UPLOAD_PRESET);
-
-      const imageUrl = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`);
-
-        xhr.upload.onprogress = (event) => {
-          if (event.lengthComputable) {
-            const progress = Math.round((event.loaded / event.total) * 100);
-            setUploadProgress(progress);
-          }
-        };
-
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            resolve(response.secure_url);
-          } else {
-            reject("Image upload failed");
-          }
-        };
-
-        xhr.onerror = () => reject("Network error during upload");
-        xhr.send(imgFormData);
-      });
+      const imageUrl = await uploadImageIfNeeded();
 
       const techArray = techItems.map((name) => ({
         name: name.trim(),
@@ -163,7 +239,7 @@ const AddProject = () => {
         .map((f) => f.trim())
         .filter((f) => f !== "");
 
-      await addDoc(collection(dbFirestore, "projects"), {
+      await updateDoc(doc(dbFirestore, "projects", id), {
         title: { en: formData.title, id: formData.title },
         shortDesc: { en: formData.shortDesc, id: formData.shortDesc },
         fullDesc: { en: formData.fullDesc, id: formData.fullDesc },
@@ -175,24 +251,23 @@ const AddProject = () => {
         techStack: techArray,
         live: formData.liveLink || null,
         github: formData.githubLink || null,
-        gallery: [],
-        createdAt: new Date(),
+        updatedAt: new Date(),
       });
 
-      setSuccess("Project published successfully!");
+      setSuccess("Project updated successfully!");
       setHasUnsavedChanges(false);
       setTimeout(() => {
         navigate("/admin/projects");
-      }, 1500);
-    } catch (error) {
-      if (error?.code === "permission-denied") {
+      }, 1200);
+    } catch (submitError) {
+      if (submitError?.code === "permission-denied") {
         setError(
-          "Failed to publish project: Firestore blocked write access (permission-denied). Check Firestore Rules and ensure your account is allowed to write to `projects`."
+          "Failed to update project: Firestore blocked write access (permission-denied). Check Firestore Rules and ensure your account is allowed to write to `projects`."
         );
-      } else if (error?.code === "unauthenticated") {
-        setError("Failed to publish project: your session has expired. Please login again.");
+      } else if (submitError?.code === "unauthenticated") {
+        setError("Failed to update project: your session has expired. Please login again.");
       } else {
-        setError(`Failed to publish project: ${error.message || error}`);
+        setError(`Failed to update project: ${submitError.message || submitError}`);
       }
     } finally {
       setLoading(false);
@@ -219,6 +294,16 @@ const AddProject = () => {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
+        <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 p-10 rounded-2xl border border-gray-200 dark:border-slate-700 text-center">
+          <p className="text-gray-600 dark:text-gray-300">Loading project data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
       <div className="max-w-4xl mx-auto">
@@ -230,8 +315,8 @@ const AddProject = () => {
             <i className="fas fa-arrow-left"></i>
           </button>
           <div>
-            <p className="text-sm uppercase tracking-wider text-primary font-semibold">Create Content</p>
-            <h1 className="text-3xl md:text-4xl font-black text-dark dark:text-white">New Project</h1>
+            <p className="text-sm uppercase tracking-wider text-primary font-semibold">Update Content</p>
+            <h1 className="text-3xl md:text-4xl font-black text-dark dark:text-white">Edit Project</h1>
           </div>
           {hasUnsavedChanges && (
             <span className="ml-auto text-xs font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-3 py-1 rounded-full">
@@ -369,7 +454,7 @@ const AddProject = () => {
                   type="text"
                   value={newTechInput}
                   onChange={(e) => setNewTechInput(e.target.value)}
-                  onKeyPress={(e) => {
+                  onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
                       addTechItem();
@@ -443,13 +528,9 @@ const AddProject = () => {
                       <p className="text-sm text-gray-600 dark:text-gray-400">Click to upload</p>
                     </div>
                   )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
+                  <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                 </label>
+                <p className="text-xs text-gray-500 mt-2">Leave image empty if you want to keep the current thumbnail.</p>
               </div>
 
               <div className="space-y-4">
@@ -500,12 +581,12 @@ const AddProject = () => {
               {loading ? (
                 <>
                   <i className="fas fa-spinner animate-spin"></i>
-                  Uploading... {uploadProgress}%
+                  Saving... {uploadProgress > 0 ? `${uploadProgress}%` : ""}
                 </>
               ) : (
                 <>
-                  <i className="fas fa-rocket"></i>
-                  Publish Project
+                  <i className="fas fa-floppy-disk"></i>
+                  Save Changes
                 </>
               )}
             </button>
@@ -516,4 +597,4 @@ const AddProject = () => {
   );
 };
 
-export default AddProject;
+export default EditProject;

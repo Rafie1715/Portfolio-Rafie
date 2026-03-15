@@ -187,13 +187,21 @@ const ManageProjects = () => {
                     </td>
                     <td className="py-3 px-6 text-center">
                       {project.source === 'cms' ? (
-                        <button 
-                          onClick={() => handleDelete(project.id)}
-                          disabled={deletingId === project.id}
-                          className="text-red-500 hover:text-red-700 font-bold bg-red-100 hover:bg-red-200 py-1 px-3 rounded transition disabled:opacity-70 disabled:cursor-not-allowed"
-                        >
-                          {deletingId === project.id ? 'Deleting...' : 'Delete'}
-                        </button>
+                        <div className="flex items-center justify-center gap-2">
+                          <Link
+                            to={`/admin/edit-project/${project.id}`}
+                            className="text-blue-600 hover:text-blue-800 font-bold bg-blue-100 hover:bg-blue-200 py-1 px-3 rounded transition"
+                          >
+                            Edit
+                          </Link>
+                          <button 
+                            onClick={() => handleDelete(project.id)}
+                            disabled={deletingId === project.id}
+                            className="text-red-500 hover:text-red-700 font-bold bg-red-100 hover:bg-red-200 py-1 px-3 rounded transition disabled:opacity-70 disabled:cursor-not-allowed"
+                          >
+                            {deletingId === project.id ? 'Deleting...' : 'Delete'}
+                          </button>
+                        </div>
                       ) : (
                         <span className="text-xs text-gray-500">Edit in `src/data/projects.js`</span>
                       )}

@@ -29,6 +29,7 @@ const Login = lazy(() => import('./pages/admin/Login'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const ManageProjects = lazy(() => import('./pages/admin/ManageProjects'));
 const AddProject = lazy(() => import('./pages/admin/AddProject'));
+const EditProject = lazy(() => import('./pages/admin/EditProject'));
 
 function App() {
   const location = useLocation();
@@ -85,6 +86,15 @@ function App() {
               element={
                 <RequireAuth>
                   <AddProject />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/admin/edit-project/:id"
+              element={
+                <RequireAuth>
+                  <EditProject />
                 </RequireAuth>
               }
             />
