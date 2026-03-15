@@ -13,6 +13,7 @@ const Projects = () => {
   const [filter, setFilter] = useState('all');
   const [cmsProjects, setCmsProjects] = useState([]);
   const [loadingCms, setLoadingCms] = useState(true);
+  const [cmsStatus, setCmsStatus] = useState('loading');
   const [repos, setRepos] = useState([]);
   const [loadingGithub, setLoadingGithub] = useState(true);
   const { t, i18n } = useTranslation();
@@ -20,7 +21,11 @@ const Projects = () => {
   const { dbFirestore } = useFirebaseInit('dbFirestore');
 
   useEffect(() => {
-    if (!dbFirestore) return; // Wait for Firebase to load
+    if (!dbFirestore) {
+      setLoadingCms(false);
+      setCmsStatus('fallback');
+      return;
+    }
     
     const fetchCmsProjects = async () => {
       try {
@@ -33,14 +38,17 @@ const Projects = () => {
         }));
         
         setCmsProjects(list);
+        setCmsStatus('online');
       } catch (error) {
         console.error("Error fetching Firebase projects:", error);
         try {
             const querySnapshot = await getDocs(collection(dbFirestore, "projects"));
             const list = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setCmsProjects(list);
+            setCmsStatus('online');
         } catch (e) {
             console.error("Firebase fallback failed", e);
+            setCmsStatus('fallback');
         }
       } finally {
         setLoadingCms(false);
@@ -141,6 +149,14 @@ const Projects = () => {
             transition={{ duration: 0.8 }}
             className="h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"
           ></motion.div>
+          <p className={`inline-flex items-center gap-2 mt-4 px-3 py-1 rounded-full text-xs font-semibold border ${
+            cmsStatus === 'online'
+              ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-700/40'
+              : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-700/40'
+          }`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${cmsStatus === 'online' ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+            {cmsStatus === 'online' ? 'CMS online' : 'Using local project fallback'}
+          </p>
         </div>
 
         <div className="flex flex-wrap justify-center gap-3 mb-12">

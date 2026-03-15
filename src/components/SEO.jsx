@@ -28,6 +28,23 @@ const SEO = ({
   const safeDesc = safeText(description);
   const canonicalUrl = url || baseUrl;
   const ogImage = image || `${baseUrl}/og-image.png`;
+  const pathOnly = canonicalUrl.startsWith(baseUrl)
+    ? canonicalUrl.replace(baseUrl, '')
+    : canonicalUrl;
+  const enHref = `${baseUrl}${pathOnly || '/'}`;
+  const idHref = `${enHref}${enHref.includes('?') ? '&' : '?'}lang=id`;
+
+  const normalizeDate = (value) => {
+    if (!value) return undefined;
+    if (value?.toDate && typeof value.toDate === 'function') return value.toDate().toISOString();
+    if (value instanceof Date) return value.toISOString();
+    if (typeof value === 'number') return new Date(value).toISOString();
+    if (typeof value === 'string') return value;
+    return undefined;
+  };
+
+  const publishedIso = normalizeDate(published);
+  const modifiedIso = normalizeDate(modified) || publishedIso;
 
   // Structured Data - Person Schema
   const personSchema = {
@@ -78,17 +95,13 @@ const SEO = ({
       "@type": "Person",
       "name": "Rafie Rojagat"
     },
-    "datePublished": published,
-    "dateModified": modified || published,
+    "datePublished": publishedIso,
+    "dateModified": modifiedIso,
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": canonicalUrl
     }
   } : null;
-
-  const alternateUrl = currentLang === 'en' 
-    ? canonicalUrl.replace(/\?lang=id/, '').replace(/&lang=id/, '')
-    : `${canonicalUrl}${canonicalUrl.includes('?') ? '&' : '?'}lang=id`;
 
   return (
     <Helmet>
@@ -104,9 +117,9 @@ const SEO = ({
       <link rel="canonical" href={canonicalUrl} />
 
       {/* Language Alternates */}
-      <link rel="alternate" hrefLang="en" href={baseUrl + url?.replace(baseUrl, '')} />
-      <link rel="alternate" hrefLang="id" href={`${baseUrl}${url?.replace(baseUrl, '')}${url?.includes('?') ? '&' : '?'}lang=id`} />
-      <link rel="alternate" hrefLang="x-default" href={baseUrl + url?.replace(baseUrl, '')} />
+      <link rel="alternate" hrefLang="en" href={enHref} />
+      <link rel="alternate" hrefLang="id" href={idHref} />
+      <link rel="alternate" hrefLang="x-default" href={enHref} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
@@ -120,6 +133,8 @@ const SEO = ({
       <meta property="og:site_name" content="Rafie Rojagat Portfolio" />
       <meta property="og:locale" content={currentLang === 'id' ? 'id_ID' : 'en_US'} />
       <meta property="og:locale:alternate" content={currentLang === 'id' ? 'en_US' : 'id_ID'} />
+      {publishedIso && <meta property="article:published_time" content={publishedIso} />}
+      {modifiedIso && <meta property="article:modified_time" content={modifiedIso} />}
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />

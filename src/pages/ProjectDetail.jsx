@@ -20,11 +20,13 @@ const ProjectDetail = () => {
 
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     const fetchProject = async () => {
       setLoading(true);
+      setErrorMessage('');
 
       const foundLocal = localProjects.find((p) => p.id === id);
       
@@ -34,7 +36,13 @@ const ProjectDetail = () => {
         return;
       }
 
-      if (!dbFirestore) return; // Wait for Firebase to load
+      if (!dbFirestore) {
+        if (!firebaseLoading) {
+          setErrorMessage('This project is hosted in CMS and could not be loaded right now.');
+          setLoading(false);
+        }
+        return;
+      }
 
       try {
         const docRef = doc(dbFirestore, "projects", id);
@@ -47,6 +55,7 @@ const ProjectDetail = () => {
         }
       } catch (error) {
         console.error("Error fetching project:", error);
+        setErrorMessage('Failed to load project data from CMS. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -54,10 +63,31 @@ const ProjectDetail = () => {
 
     fetchProject();
     window.scrollTo(0, 0);
-  }, [id, navigate, dbFirestore]);
+  }, [id, navigate, dbFirestore, firebaseLoading]);
 
   if (loading) return <Loading />;
-  if (!project) return null;
+  if (!project) {
+    return (
+      <PageTransition>
+        <div className="bg-white dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300">
+          <div className="container mx-auto px-4 max-w-3xl">
+            <div className="rounded-2xl border border-amber-200 dark:border-amber-800/40 bg-amber-50 dark:bg-amber-900/20 p-6 md:p-8">
+              <h1 className="text-2xl md:text-3xl font-bold text-amber-700 dark:text-amber-300 mb-3">Project unavailable</h1>
+              <p className="text-amber-800/90 dark:text-amber-200/90 mb-6">
+                {errorMessage || 'This project could not be loaded at the moment.'}
+              </p>
+              <Link
+                to="/projects"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-semibold hover:bg-secondary transition"
+              >
+                <i className="fas fa-arrow-left"></i> Back to Projects
+              </Link>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
 
   const getData = (data) => {
     if (!data) return "";
@@ -82,6 +112,9 @@ const ProjectDetail = () => {
   const solution = getData(project.solution);
   const lessonLearned = getData(project.lessonLearned);
   const featuresList = getFeatures(project.features);
+  const techKeywords = Array.isArray(project.techStack)
+    ? project.techStack.map((tech) => tech?.name).filter(Boolean).join(', ')
+    : '';
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -116,7 +149,7 @@ const ProjectDetail = () => {
           url={`https://rafie-dev.netlify.app/project/${project.id}`}
           image={project.image}
           type="article"
-          keywords={`${title}, ${project.category}, Software Project, ${project.tech?.join(', ')}, Portfolio Project`}
+          keywords={`${title}, ${project.category}, Software Project, ${techKeywords}, Portfolio Project`}
           published={project.createdAt}
           modified={project.updatedAt}
         />

@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Preferred: set a custom claim { admin: true } on your admin account.
+    function hasAdminClaim() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
+    // Fallback: allow verified admin emails while claims are not yet configured.
+    function hasAdminEmail() {
+      return isSignedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          "admin@rafie.com"
+        ];
+    }
+
+    // Optional UID allowlist fallback.
+    function isAdmin() {
+      return hasAdminClaim()
+        || hasAdminEmail()
+        || (isSignedIn() && request.auth.uid in [
+          // "REPLACE_WITH_ADMIN_UID_1",
+          // "REPLACE_WITH_ADMIN_UID_2"
+        ]);
+    }
+
+    // Public portfolio read access.
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Default deny for all other collections/documents.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
