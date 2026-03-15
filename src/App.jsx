@@ -10,6 +10,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import Chatbot from './components/Chatbot';
 import Footer from './components/Footer';
 import RequireAuth from './components/RequireAuth';
+import { ToastProvider } from './components/ToastProvider';
 import { usePageTracking } from './hooks/usePageTracking';
 
 // Lazy load all routes for code splitting
@@ -42,15 +43,16 @@ function App() {
 
   return (
     <HelmetProvider>
-      <ScrollProgress />
-      <div className="bg-noise"></div>
-      <Spotlight />
+      <ToastProvider>
+        <ScrollProgress />
+        <div className="bg-noise"></div>
+        <Spotlight />
 
-      {!isAdminRoute && <Navbar />}
+        {!isAdminRoute && <Navbar />}
 
-      <Suspense fallback={<Loading />}>
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
+        <Suspense fallback={<Loading />}>
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
@@ -98,13 +100,14 @@ function App() {
                 </RequireAuth>
               }
             />
-          </Routes>
-        </AnimatePresence>
-      </Suspense>
+            </Routes>
+          </AnimatePresence>
+        </Suspense>
 
-      {!isAdminRoute && <Footer />}
+        {!isAdminRoute && <Footer />}
 
-      <Chatbot />
+        <Chatbot />
+      </ToastProvider>
     </HelmetProvider>
   );
 }

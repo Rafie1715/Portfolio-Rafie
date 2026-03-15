@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
+import { useToast } from "../../components/ToastProvider";
 
 const EditProject = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { showToast } = useToast();
 
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -255,6 +257,11 @@ const EditProject = () => {
       });
 
       setSuccess("Project updated successfully!");
+      showToast({
+        type: "success",
+        title: "Project updated",
+        message: "Your changes have been saved to the CMS.",
+      });
       setHasUnsavedChanges(false);
       setTimeout(() => {
         navigate("/admin/projects");
@@ -264,10 +271,25 @@ const EditProject = () => {
         setError(
           "Failed to update project: Firestore blocked write access (permission-denied). Check Firestore Rules and ensure your account is allowed to write to `projects`."
         );
+        showToast({
+          type: "error",
+          title: "Update failed",
+          message: "Firestore denied write access for this account.",
+        });
       } else if (submitError?.code === "unauthenticated") {
         setError("Failed to update project: your session has expired. Please login again.");
+        showToast({
+          type: "error",
+          title: "Session expired",
+          message: "Please login again before updating this project.",
+        });
       } else {
         setError(`Failed to update project: ${submitError.message || submitError}`);
+        showToast({
+          type: "error",
+          title: "Update failed",
+          message: submitError?.message || String(submitError),
+        });
       }
     } finally {
       setLoading(false);

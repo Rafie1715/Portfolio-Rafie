@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { collection, addDoc } from "firebase/firestore";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "../../components/ToastProvider";
 
 const AddProject = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [imagePreview, setImagePreview] = useState(null);
@@ -180,6 +182,11 @@ const AddProject = () => {
       });
 
       setSuccess("Project published successfully!");
+      showToast({
+        type: "success",
+        title: "Project published",
+        message: "Your new project has been added to the CMS.",
+      });
       setHasUnsavedChanges(false);
       setTimeout(() => {
         navigate("/admin/projects");
@@ -189,10 +196,25 @@ const AddProject = () => {
         setError(
           "Failed to publish project: Firestore blocked write access (permission-denied). Check Firestore Rules and ensure your account is allowed to write to `projects`."
         );
+        showToast({
+          type: "error",
+          title: "Publish failed",
+          message: "Firestore denied write access for this account.",
+        });
       } else if (error?.code === "unauthenticated") {
         setError("Failed to publish project: your session has expired. Please login again.");
+        showToast({
+          type: "error",
+          title: "Session expired",
+          message: "Please login again before publishing a project.",
+        });
       } else {
         setError(`Failed to publish project: ${error.message || error}`);
+        showToast({
+          type: "error",
+          title: "Publish failed",
+          message: error?.message || String(error),
+        });
       }
     } finally {
       setLoading(false);
