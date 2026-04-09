@@ -2,7 +2,7 @@
 
 > My digital playground built with React, Tailwind CSS, and AI integration.
 
-Check it out live here: [**https://rafie-dev.netlify.app**](https://rafie-dev.netlify.app)
+Check it out live here: [**https://rafie-dev.netlify.app**](https://rafierb.me)
 
 ## ✨ Key Features
 - **🤖 AI Assistant:** Integrated custom chatbot powered by **Google Gemini API**.
