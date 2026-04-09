@@ -96,6 +96,7 @@ const resources = {
                 source_code: "Source Code",
                 no_projects: "No projects found.",
                 loading: "Loading...",
+                search_placeholder: "Search projects by name, tech, or keyword...",
                 filter: {
                     all: "All",
                     mobile: "Mobile",
@@ -103,7 +104,8 @@ const resources = {
                     python: "Python",
                     java: "Java",
                     ui: "UI/UX",
-                    flutter: "Flutter"
+                    flutter: "Flutter",
+                    game: "Game"
                 },
                 seo_title: "Projects | Rafie Rojagat",
                 seo_desc: "A showcase of my software engineering projects."
@@ -279,14 +281,16 @@ const resources = {
                 source_code: "Kode Sumber",
                 no_projects: "Tidak ada proyek ditemukan.",
                 loading: "Memuat...",
+                search_placeholder: "Cari proyek berdasarkan nama, teknologi, atau kata kunci...",
                 filter: {
                     all: "Semua",
-                    mobile: "Mobile",
-                    web: "Web",
+                    mobile: "Aplikasi Mobile",
+                    web: "Aplikasi Web",
                     python: "Python",
                     java: "Java",
                     ui: "UI/UX",
-                    flutter: "Flutter"
+                    flutter: "Flutter",
+                    game: "Game"
                 },
                 seo_title: "Proyek | Rafie Rojagat",
                 seo_desc: "Pameran proyek rekayasa perangkat lunak saya."

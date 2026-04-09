@@ -11,6 +11,7 @@ import LazyImage from './LazyImage';
 
 const Projects = () => {
   const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [cmsProjects, setCmsProjects] = useState([]);
   const [loadingCms, setLoadingCms] = useState(true);
   const [cmsStatus, setCmsStatus] = useState('loading');
@@ -75,10 +76,37 @@ const Projects = () => {
     fetchRepos();
   }, []);
 
+  const getData = (data) => {
+    if (!data) return "";
+    
+    if (typeof data === 'object' && data.en) {
+      return data[currentLang] || data.en || "";
+    }
+    
+    return String(data);
+  };
+
   const allProjects = [...cmsProjects, ...manualProjects];
-  const filteredProjects = filter === 'all'
+
+  const normalizeCategory = (category) => String(category || '').toLowerCase().trim();
+
+  const filteredByCategory = filter === 'all'
     ? allProjects
-    : allProjects.filter(p => p.category === filter);
+    : allProjects.filter((project) => normalizeCategory(project?.category) === filter);
+
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const filteredProjects = filteredByCategory.filter((project) => {
+    if (!normalizedSearch) return true;
+
+    const title = getData(project?.title).toLowerCase();
+    const shortDesc = getData(project?.shortDesc).toLowerCase();
+    const category = normalizeCategory(project?.category);
+    const techStack = Array.isArray(project?.techStack)
+      ? project.techStack.map((tech) => String(tech?.name || '').toLowerCase()).join(' ')
+      : '';
+
+    return [title, shortDesc, category, techStack].some((text) => text.includes(normalizedSearch));
+  });
 
   const filters = [
     { id: 'all', label: t('projects.filter.all') },
@@ -88,23 +116,13 @@ const Projects = () => {
     { id: 'java', label: t('projects.filter.java') },
     { id: 'ui', label: t('projects.filter.ui') },
     { id: 'flutter', label: t('projects.filter.flutter') },
-    { id: 'game', label: 'Game' }
+    { id: 'game', label: t('projects.filter.game') }
   ];
 
   const langColors = {
     JavaScript: "bg-yellow-400", TypeScript: "bg-blue-500", HTML: "bg-orange-500",
     CSS: "bg-blue-400", Python: "bg-green-500", Dart: "bg-cyan-500", Kotlin: "bg-blue-600",
     default: "bg-gray-400"
-  };
-
-  const getData = (data) => {
-    if (!data) return "";
-    
-    if (typeof data === 'object' && data.en) {
-      return data[currentLang] || data.en || "";
-    }
-    
-    return String(data);
   };
 
   const getImpactText = (project) => {
@@ -157,6 +175,20 @@ const Projects = () => {
             <span className={`w-1.5 h-1.5 rounded-full ${cmsStatus === 'online' ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
             {cmsStatus === 'online' ? 'CMS online' : 'Using local project fallback'}
           </p>
+        </div>
+
+        <div className="max-w-2xl mx-auto mb-6">
+          <div className="relative">
+            <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder={t('projects.search_placeholder')}
+              aria-label={t('projects.search_placeholder')}
+              className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-dark dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/40"
+            />
+          </div>
         </div>
 
         <div className="flex flex-wrap justify-center gap-3 mb-12">
