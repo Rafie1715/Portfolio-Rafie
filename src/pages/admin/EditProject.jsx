@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,6 +9,8 @@ const EditProject = () => {
   const { id } = useParams();
   const { showToast } = useToast();
 
+    const [translatingFields, setTranslatingFields] = useState({});
+    const debounceTimers = useRef({});
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -18,6 +20,14 @@ const EditProject = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [techItems, setTechItems] = useState([]);
   const [newTechInput, setNewTechInput] = useState("");
+  const [localizedFormData, setLocalizedFormData] = useState({
+    title: "",
+    shortDesc: "",
+    fullDesc: "",
+    challenges: "",
+    solution: "",
+    features: "",
+  });
   const { dbFirestore, auth } = useFirebaseInit("all");
 
   const [formData, setFormData] = useState({
@@ -41,6 +51,21 @@ const EditProject = () => {
   const getLocalizedText = (value) => {
     if (typeof value === "string") return value;
     if (value && typeof value === "object") return value.en || value.id || "";
+    return "";
+  };
+
+  const getLocalizedIdText = (value) => {
+    if (typeof value === "string") return "";
+    if (value && typeof value === "object") return value.id || value.en || "";
+    return "";
+  };
+
+  const getLocalizedFeatureText = (value) => {
+    if (Array.isArray(value)) return value.join("\n");
+    if (value && typeof value === "object") {
+      const list = value.id || value.en || [];
+      return Array.isArray(list) ? list.join("\n") : String(list);
+    }
     return "";
   };
 
@@ -91,6 +116,15 @@ const EditProject = () => {
           currentImage: data.image || "",
         });
 
+        setLocalizedFormData({
+          title: getLocalizedIdText(data.title),
+          shortDesc: getLocalizedIdText(data.shortDesc),
+          fullDesc: getLocalizedIdText(data.fullDesc),
+          challenges: getLocalizedIdText(data.challenges),
+          solution: getLocalizedIdText(data.solution),
+          features: getLocalizedFeatureText(data.features),
+        });
+
         setImagePreview(data.image || null);
         setTechItems(prefilledTech);
       } catch (fetchError) {
@@ -110,6 +144,50 @@ const EditProject = () => {
     setHasUnsavedChanges(true);
     setError("");
   };
+
+  const handleLocalizedInputChange = (e) => {
+    const { name, value } = e.target;
+    setLocalizedFormData((prev) => ({ ...prev, [name]: value }));
+    setHasUnsavedChanges(true);
+    setError("");
+  };
+
+    const autoTranslate = async (fieldName, englishText) => {
+      if (!englishText.trim()) {
+        setLocalizedFormData((prev) => ({ ...prev, [fieldName]: "" }));
+        return;
+      }
+      if (debounceTimers.current[fieldName]) {
+        clearTimeout(debounceTimers.current[fieldName]);
+      }
+      setTranslatingFields((prev) => ({ ...prev, [fieldName]: true }));
+      debounceTimers.current[fieldName] = setTimeout(async () => {
+        try {
+          const response = await fetch(
+            `https://api.mymemory.translated.net/get?q=${encodeURIComponent(englishText)}&langpair=en|id`
+          );
+          const result = await response.json();
+          if (result.responseStatus === 200) {
+            const translatedText = result.responseData.translatedText;
+            setLocalizedFormData((prev) => ({ ...prev, [fieldName]: translatedText }));
+          }
+        } catch(err) {
+          console.error("Translation error:", err);
+        } finally {
+          setTranslatingFields((prev) => ({ ...prev, [fieldName]: false }));
+        }
+      }, 800);
+    };
+
+    const handleInputChangeWithAutoTranslate = (e) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      setHasUnsavedChanges(true);
+      setError("");
+      if (["title", "shortDesc", "fullDesc", "challenges", "solution", "features"].includes(name)) {
+        autoTranslate(name, value);
+      }
+    };
 
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
@@ -241,13 +319,31 @@ const EditProject = () => {
         .map((f) => f.trim())
         .filter((f) => f !== "");
 
+      const localizedFeaturesArray = localizedFormData.features
+        .split("\n")
+        .map((f) => f.trim())
+        .filter((f) => f !== "");
+
+      const titleEn = formData.title.trim();
+      const shortDescEn = formData.shortDesc.trim();
+      const fullDescEn = formData.fullDesc.trim();
+      const challengesEn = formData.challenges.trim();
+      const solutionEn = formData.solution.trim();
+
+      const titleId = localizedFormData.title.trim() || titleEn;
+      const shortDescId = localizedFormData.shortDesc.trim() || shortDescEn;
+      const fullDescId = localizedFormData.fullDesc.trim() || fullDescEn;
+      const challengesId = localizedFormData.challenges.trim() || challengesEn;
+      const solutionId = localizedFormData.solution.trim() || solutionEn;
+      const featuresId = localizedFeaturesArray.length > 0 ? localizedFeaturesArray : featuresArray;
+
       await updateDoc(doc(dbFirestore, "projects", id), {
-        title: { en: formData.title, id: formData.title },
-        shortDesc: { en: formData.shortDesc, id: formData.shortDesc },
-        fullDesc: { en: formData.fullDesc, id: formData.fullDesc },
-        challenges: { en: formData.challenges, id: formData.challenges },
-        solution: { en: formData.solution, id: formData.solution },
-        features: { en: featuresArray, id: featuresArray },
+        title: { en: titleEn, id: titleId },
+        shortDesc: { en: shortDescEn, id: shortDescId },
+        fullDesc: { en: fullDescEn, id: fullDescId },
+        challenges: { en: challengesEn, id: challengesId },
+        solution: { en: solutionEn, id: solutionId },
+        features: { en: featuresArray, id: featuresId },
         category: formData.category,
         image: imageUrl,
         techStack: techArray,
@@ -316,6 +412,12 @@ const EditProject = () => {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
+  useEffect(() => {
+    return () => {
+      Object.values(debounceTimers.current).forEach((timerId) => clearTimeout(timerId));
+    };
+  }, []);
+
   if (initialLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
@@ -376,7 +478,7 @@ const EditProject = () => {
                   type="text"
                   name="title"
                   value={formData.title}
-                  onChange={handleInputChange}
+                   onChange={handleInputChangeWithAutoTranslate}
                   placeholder="e.g., Personal Portfolio Website"
                   className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition"
                 />
@@ -410,7 +512,7 @@ const EditProject = () => {
               <textarea
                 name="shortDesc"
                 value={formData.shortDesc}
-                onChange={handleInputChange}
+                onChange={handleInputChangeWithAutoTranslate}
                 placeholder="Brief summary shown on project card..."
                 rows="2"
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"
@@ -424,7 +526,7 @@ const EditProject = () => {
               <textarea
                 name="fullDesc"
                 value={formData.fullDesc}
-                onChange={handleInputChange}
+                onChange={handleInputChangeWithAutoTranslate}
                 placeholder="Detailed explanation of the project..."
                 rows="5"
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"
@@ -443,7 +545,7 @@ const EditProject = () => {
                 <textarea
                   name="challenges"
                   value={formData.challenges}
-                  onChange={handleInputChange}
+                  onChange={handleInputChangeWithAutoTranslate}
                   placeholder="What problem did you face?"
                   rows="3"
                   className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"
@@ -455,12 +557,123 @@ const EditProject = () => {
                 <textarea
                   name="solution"
                   value={formData.solution}
-                  onChange={handleInputChange}
+                  onChange={handleInputChangeWithAutoTranslate}
                   placeholder="How did you solve it?"
                   rows="3"
                   className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"
                 ></textarea>
               </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
+            <h2 className="text-lg font-bold text-dark dark:text-white mb-2 flex items-center gap-2">
+              <i className="fas fa-language text-primary"></i> Indonesian Content
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              Fill the Indonesian version here. Leave blank to reuse the English content.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Title (ID)</label>
+                {translatingFields.title && (
+                  <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
+                    <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                  </span>
+                )}
+                <input
+                  type="text"
+                  name="title"
+                  value={localizedFormData.title}
+                  onChange={handleLocalizedInputChange}
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Short Description (ID)</label>
+                {translatingFields.shortDesc && (
+                  <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
+                    <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                  </span>
+                )}
+                <textarea
+                  name="shortDesc"
+                  value={localizedFormData.shortDesc}
+                  onChange={handleLocalizedInputChange}
+                  rows="2"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"
+                ></textarea>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Full Description (ID)</label>
+              {translatingFields.fullDesc && (
+                <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
+                  <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                </span>
+              )}
+              <textarea
+                name="fullDesc"
+                value={localizedFormData.fullDesc}
+                onChange={handleLocalizedInputChange}
+                rows="5"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"
+              ></textarea>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Challenge (ID)</label>
+                {translatingFields.challenges && (
+                  <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
+                    <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                  </span>
+                )}
+                <textarea
+                  name="challenges"
+                  value={localizedFormData.challenges}
+                  onChange={handleLocalizedInputChange}
+                  rows="3"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"
+                ></textarea>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Solution (ID)</label>
+                {translatingFields.solution && (
+                  <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
+                    <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                  </span>
+                )}
+                <textarea
+                  name="solution"
+                  value={localizedFormData.solution}
+                  onChange={handleLocalizedInputChange}
+                  rows="3"
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"
+                ></textarea>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                Features (ID) <span className="text-xs font-normal text-gray-500">(one per line)</span>
+              </label>
+              {translatingFields.features && (
+                <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
+                  <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                </span>
+              )}
+              <textarea
+                name="features"
+                value={localizedFormData.features}
+                onChange={handleLocalizedInputChange}
+                rows="4"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"
+              ></textarea>
             </div>
           </div>
 
@@ -522,7 +735,7 @@ const EditProject = () => {
               <textarea
                 name="features"
                 value={formData.features}
-                onChange={handleInputChange}
+                onChange={handleInputChangeWithAutoTranslate}
                 placeholder="Login System&#10;Dark Mode&#10;Real-time Chat"
                 rows="4"
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition resize-none"

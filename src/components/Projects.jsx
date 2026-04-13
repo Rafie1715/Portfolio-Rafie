@@ -125,6 +125,52 @@ const Projects = () => {
     default: "bg-gray-400"
   };
 
+  const techIconMap = {
+    react: 'devicon-react-original',
+    'react js': 'devicon-react-original',
+    'react.js': 'devicon-react-original',
+    javascript: 'devicon-javascript-plain',
+    typescript: 'devicon-typescript-plain',
+    html: 'devicon-html5-plain',
+    html5: 'devicon-html5-plain',
+    css: 'devicon-css3-plain',
+    css3: 'devicon-css3-plain',
+    tailwind: 'devicon-tailwindcss-plain',
+    'tailwindcss': 'devicon-tailwindcss-plain',
+    php: 'devicon-php-plain',
+    mysql: 'devicon-mysql-plain',
+    python: 'devicon-python-plain',
+    java: 'devicon-java-plain',
+    kotlin: 'devicon-kotlin-plain',
+    dart: 'devicon-dart-plain',
+    flutter: 'devicon-flutter-plain',
+    firebase: 'devicon-firebase-plain',
+    figma: 'devicon-figma-plain',
+    'android studio': 'devicon-androidstudio-plain',
+    android: 'devicon-androidstudio-plain',
+    tensorflow: 'devicon-tensorflow-original',
+    opencv: 'devicon-opencv-plain',
+    bootstrap: 'devicon-bootstrap-plain',
+    git: 'devicon-git-plain',
+    github: 'devicon-github-original',
+    node: 'devicon-nodejs-plain',
+    express: 'devicon-express-original',
+    mongodb: 'devicon-mongodb-plain',
+    vue: 'devicon-vuejs-plain',
+    nextjs: 'devicon-nextjs-original',
+    'next.js': 'devicon-nextjs-original',
+  };
+
+  const resolveTechIcon = (tech) => {
+    const techName = String(tech?.name || tech || '').toLowerCase().trim();
+    const providedIcon = String(tech?.icon || '').trim();
+    const mappedIcon = techIconMap[techName];
+
+    if (mappedIcon) return mappedIcon;
+    if (providedIcon && !/^fas fa-code$/i.test(providedIcon)) return providedIcon;
+    return 'fas fa-code';
+  };
+
   const getImpactText = (project) => {
     if (project?.impact) return getData(project.impact);
 
@@ -286,8 +332,8 @@ const Projects = () => {
                                   <motion.i 
                                       key={idx} 
                                       whileHover={{ y: -3, color: "#2563eb" }} 
-                                      className={`${tech.icon ? tech.icon : ''} transition-colors cursor-help`} 
-                                      title={tech.name}
+                                      className={`${resolveTechIcon(tech)} transition-colors cursor-help`} 
+                                      title={tech?.name || String(tech || '')}
                                   ></motion.i>
                               ))}
                             </div>
