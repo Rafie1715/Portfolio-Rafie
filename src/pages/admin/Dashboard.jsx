@@ -71,6 +71,28 @@ const Dashboard = () => {
               Open Projects Page <i className="fas fa-up-right-from-square text-xs"></i>
             </Link>
           </div>
+
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
+            <div className="w-11 h-11 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center mb-4">
+              <i className="fas fa-certificate"></i>
+            </div>
+            <h2 className="text-xl font-bold mb-2 dark:text-white">Manage Certifications</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-5">Review and manage certification items shown in the About page carousel.</p>
+            <Link to="/admin/certifications" className="inline-flex items-center justify-center gap-2 text-center bg-amber-600 text-white px-4 py-2.5 rounded-lg w-full hover:bg-amber-700 transition font-semibold">
+              Open Certification Manager <i className="fas fa-arrow-right text-xs"></i>
+            </Link>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
+            <div className="w-11 h-11 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center mb-4">
+              <i className="fas fa-award"></i>
+            </div>
+            <h2 className="text-xl font-bold mb-2 dark:text-white">Add New Certification</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-5">Publish a new certification with bilingual fields, badge, and thumbnail image.</p>
+            <Link to="/admin/add-certification" className="inline-flex items-center justify-center gap-2 text-center bg-indigo-600 text-white px-4 py-2.5 rounded-lg w-full hover:bg-indigo-700 transition font-semibold">
+              Create Certification <i className="fas fa-wand-magic-sparkles text-xs"></i>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
@@ -31,14 +31,27 @@ const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const ManageProjects = lazy(() => import('./pages/admin/ManageProjects'));
 const AddProject = lazy(() => import('./pages/admin/AddProject'));
 const EditProject = lazy(() => import('./pages/admin/EditProject'));
+const ManageCertifications = lazy(() => import('./pages/admin/ManageCertifications'));
+const AddCertification = lazy(() => import('./pages/admin/AddCertification'));
+const EditCertification = lazy(() => import('./pages/admin/EditCertification'));
 
 function App() {
   const location = useLocation();
   
-  // Track page views
   usePageTracking();
 
-  // Opsional: Cek apakah sedang di halaman admin/login agar Navbar/Footer bisa disembunyikan (kalau mau)
+  useEffect(() => {
+    const preloadAboutPage = () => import('./pages/AboutPage');
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(preloadAboutPage);
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timerId = window.setTimeout(preloadAboutPage, 1500);
+    return () => window.clearTimeout(timerId);
+  }, []);
+
   const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname === '/login';
 
   return (
@@ -97,6 +110,33 @@ function App() {
               element={
                 <RequireAuth>
                   <EditProject />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/admin/certifications"
+              element={
+                <RequireAuth>
+                  <ManageCertifications />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/admin/add-certification"
+              element={
+                <RequireAuth>
+                  <AddCertification />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/admin/edit-certification/:id"
+              element={
+                <RequireAuth>
+                  <EditCertification />
                 </RequireAuth>
               }
             />

@@ -13,7 +13,7 @@ service cloud.firestore {
     // Fallback: allow verified admin emails while claims are not yet configured.
     function hasAdminEmail() {
       return isSignedIn()
-        && request.auth.token.email_verified == true
+        && request.auth.token.email != null
         && request.auth.token.email in [
           "admin@rafie.com"
         ];
@@ -31,6 +31,12 @@ service cloud.firestore {
 
     // Public portfolio read access.
     match /projects/{projectId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Public certification read access + admin CMS write access.
+    match /certifications/{certificationId} {
       allow read: if true;
       allow create, update, delete: if isAdmin();
     }

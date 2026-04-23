@@ -1,40 +1,87 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { certifications } from '../data/certifications';
-// 1. Import Hook
 import { useTranslation } from 'react-i18next';
+import { collection, getDocs } from 'firebase/firestore';
+import { useFirebaseInit } from '../hooks/useFirebaseInit';
 
 const Certifications = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);    
   const [selectedImage, setSelectedImage] = useState(null);
-  const [isPaused, setIsPaused] = useState(false); // State untuk pause auto-slide
+  const [isPaused, setIsPaused] = useState(false);
+  const [certItems, setCertItems] = useState(certifications);
   const autoSlideRef = useRef();
+  const { dbFirestore } = useFirebaseInit('dbFirestore');
 
-  // 2. Inisialisasi Hook
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || 'en';
 
-  // 3. Logika Auto Slide
+  const getText = (value) => {
+    if (!value) return '';
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      return value[currentLang] || value.en || value.id || '';
+    }
+    return String(value);
+  };
+
   useEffect(() => {
-    if (isPaused) return; // Jangan jalankan timer kalau sedang dipause
+    const fetchCertifications = async () => {
+      if (!dbFirestore) return;
+
+      try {
+        const querySnapshot = await getDocs(collection(dbFirestore, 'certifications'));
+        const cmsCertifications = querySnapshot.docs
+          .map((entry) => ({ id: entry.id, ...entry.data() }))
+          .filter((item) => item.isPublished !== false)
+          .sort((a, b) => {
+            const leftOrder = typeof a?.order === 'number' ? a.order : Number.MAX_SAFE_INTEGER;
+            const rightOrder = typeof b?.order === 'number' ? b.order : Number.MAX_SAFE_INTEGER;
+            if (leftOrder !== rightOrder) return leftOrder - rightOrder;
+            const left = a?.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+            const right = b?.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+            return right - left;
+          });
+
+        const normalizedLocal = certifications.map((item, index) => ({
+          ...item,
+          id: `local-${item.id || index + 1}`,
+          source: 'local',
+        }));
+
+        const merged = [...cmsCertifications.map((item) => ({ ...item, source: 'cms' })), ...normalizedLocal];
+        setCertItems(merged);
+        setCurrentIndex(0);
+      } catch (error) {
+        console.error('Error fetching certifications from CMS:', error);
+      }
+    };
+
+    fetchCertifications();
+  }, [dbFirestore]);
+
+  useEffect(() => {
+    if (isPaused || certItems.length <= 1) return;
 
     autoSlideRef.current = setInterval(() => {
         nextSlide();
-    }, 5000); // Ganti slide setiap 5 detik
+    }, 5000);
 
     return () => clearInterval(autoSlideRef.current);
-  }, [currentIndex, isPaused]);
+  }, [currentIndex, isPaused, certItems.length]);
 
   const prevSlide = () => {
+    if (certItems.length === 0) return;
     setDirection(-1); 
     const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? certifications.length - 1 : currentIndex - 1;
+    const newIndex = isFirstSlide ? certItems.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   };
 
   const nextSlide = () => {
+    if (certItems.length === 0) return;
     setDirection(1); 
-    const isLastSlide = currentIndex === certifications.length - 1;
+    const isLastSlide = currentIndex === certItems.length - 1;
     const newIndex = isLastSlide ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
   };
@@ -42,7 +89,9 @@ const Certifications = () => {
   const goToSlide = (slideIndex) => {
     setDirection(slideIndex > currentIndex ? 1 : -1);
     setCurrentIndex(slideIndex);
-  }
+  };
+
+  const activeCert = certItems[currentIndex] || {};
 
   const slideVariants = {
     enter: (direction) => ({
@@ -131,16 +180,16 @@ const Certifications = () => {
                     >
                         <div className="w-full max-w-4xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row h-auto md:h-[400px]">                                                                                            
                             <div className="w-full md:w-3/5 h-[250px] md:h-full bg-gray-100 dark:bg-slate-900 flex items-center justify-center p-4 md:p-6 relative group/img overflow-hidden">
-                                <motion.img 
-                                    src={certifications[currentIndex].img} 
-                                    alt={certifications[currentIndex].alt || "Certificate"}
+                                  <motion.img 
+                                    src={activeCert.img} 
+                                    alt={getText(activeCert.alt) || "Certificate"}
                                     loading="lazy"
                                     className="max-w-full max-h-full object-contain shadow-md rounded transition-transform duration-500 group-hover/img:scale-105"
                                     layoutId={`cert-img-${currentIndex}`}
                                 />
                                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
                                    <button 
-                                      onClick={() => setSelectedImage(certifications[currentIndex].img)}
+                                      onClick={() => setSelectedImage(activeCert.img)}
                                       className="px-5 py-2 bg-white text-dark rounded-full text-sm font-bold flex items-center gap-2 transform translate-y-4 group-hover/img:translate-y-0 transition-transform hover:bg-primary hover:text-white shadow-lg"
                                    >
                                       <i className="fas fa-expand"></i> View
@@ -156,28 +205,28 @@ const Certifications = () => {
                                 >
                                     {/* Category Badge */}
                                     <div className="flex items-center gap-2 mb-4">
-                                        <span className="text-2xl">{certifications[currentIndex].badge}</span>
-                                        <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full bg-gradient-to-r ${certifications[currentIndex].color} text-white shadow-md`}>
-                                            {certifications[currentIndex].category}
+                                      <span className="text-2xl">{activeCert.badge || '🏆'}</span>
+                                      <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full bg-gradient-to-r ${activeCert.color || 'from-blue-500 to-blue-600'} text-white shadow-md`}>
+                                        {getText(activeCert.category) || 'General'}
                                         </span>
                                     </div>
 
                                     <h3 className="text-xl font-bold text-dark dark:text-white mb-2 leading-tight">
-                                        {certifications[currentIndex].title || "Certificate Title"}
+                                      {getText(activeCert.title) || "Certificate Title"}
                                     </h3>
                                     <p className="text-primary font-semibold mb-4 text-sm uppercase tracking-wide">
-                                        {certifications[currentIndex].issuer || "Issuer Name"}
+                                      {getText(activeCert.issuer) || "Issuer Name"}
                                     </p>
                                     
                                     <div className="h-px w-full bg-gray-200 dark:bg-slate-600 mb-4"></div>
                                     
                                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                                        {t('certifications.issued')}: <span className="text-dark dark:text-gray-200 font-medium">{certifications[currentIndex].date || "2024"}</span>
+                                      {t('certifications.issued')}: <span className="text-dark dark:text-gray-200 font-medium">{activeCert.date || "2024"}</span>
                                     </p>
                                     
-                                    {certifications[currentIndex].link && (
+                                    {activeCert.link && (
                                         <a 
-                                            href={certifications[currentIndex].link}
+                                        href={activeCert.link}
                                             target="_blank"
                                             rel="noreferrer"
                                             className="inline-flex items-center justify-center w-full py-2.5 bg-gray-100 dark:bg-slate-700 text-dark dark:text-white rounded-lg text-sm font-bold hover:bg-primary hover:text-white transition-all gap-2 group/link"
@@ -201,7 +250,7 @@ const Certifications = () => {
                     <i className="fas fa-chevron-left"></i>
                 </button>
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    {currentIndex + 1} / {certifications.length}
+                  {certItems.length === 0 ? '0 / 0' : `${currentIndex + 1} / ${certItems.length}`}
                 </span>
                 <button 
                     onClick={nextSlide}
@@ -212,7 +261,7 @@ const Certifications = () => {
             </div>
 
             <div className="flex justify-center gap-2 flex-wrap px-4">
-                {certifications.map((_, slideIndex) => (
+                {certItems.map((_, slideIndex) => (
                     <button
                         key={slideIndex}
                         onClick={() => goToSlide(slideIndex)}
