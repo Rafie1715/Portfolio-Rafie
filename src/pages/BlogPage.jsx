@@ -45,6 +45,9 @@ const BlogPage = () => {
   const pageDescription = currentLang === 'id' 
     ? 'Artikel dan tulisan tentang web development, performance optimization, dan teknologi terkini'
     : 'Articles and writings about web development, performance optimization, and latest technologies';
+  const blogTitlePrefix = t('pages.blog.title_prefix');
+  const blogTitleHighlight = t('pages.blog.title_highlight');
+  const blogSubtitle = t('pages.blog.subtitle');
 
   return (
     <PageTransition>
@@ -57,22 +60,36 @@ const BlogPage = () => {
         <link rel="canonical" href={`${window.location.origin}/blog`} />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 pt-24 pb-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
+      <div className="bg-white dark:bg-dark min-h-screen pt-20 md:pt-24 pb-12 md:pb-20 transition-colors duration-300 relative overflow-hidden">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white dark:from-dark dark:via-transparent dark:to-dark" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 blur-[120px] rounded-full" />
+        </div>
+
+        <div className="container mx-auto px-4 max-w-6xl relative z-10 mb-16">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-12"
+            className="text-center mb-12 md:mb-20"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              {currentLang === 'id' ? '📝 Blog' : '📝 Blog'}
+            <motion.div
+              animate={{ y: [0, -15, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="inline-block relative"
+            >
+              <div className="p-4 md:p-5 rounded-2xl md:rounded-3xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-xl relative z-10">
+                <i className="fas fa-book-open text-3xl md:text-5xl text-dark dark:text-white bg-clip-text bg-gradient-to-r from-primary to-secondary"></i>
+              </div>
+              <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full transform scale-150 z-0 animate-pulse" />
+            </motion.div>
+
+            <h1 className="mt-6 md:mt-8 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-dark dark:text-white mb-4 md:mb-6 tracking-tight px-4">
+              {blogTitlePrefix} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">{blogTitleHighlight}</span>
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              {currentLang === 'id' 
-                ? 'Berbagi pengalaman dan pembelajaran dalam bidang IT'
-                : 'Sharing experiences and learnings in IT Stuff'}
+            <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed px-4">
+              {blogSubtitle}
             </p>
           </motion.div>
 

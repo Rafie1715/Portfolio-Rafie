@@ -5,16 +5,21 @@ import SpotifyNowPlaying from '../components/SpotifyNowPlaying';
 import SpotifyTopTracks from '../components/SpotifyTopTracks';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
+import { useFirebaseInit } from '../hooks/useFirebaseInit';
+import { collection, getDocs } from 'firebase/firestore';
 
 const AfkPage = () => {
     const DISCORD_ID = "717196208996876379";
     const { t } = useTranslation();
+    const { dbFirestore } = useFirebaseInit('dbFirestore');
 
     const [games, setGames] = useState([]);
     const [recentGames, setRecentGames] = useState([]);
     const [steamUser, setSteamUser] = useState(null);
     const [movies, setMovies] = useState([]);
+    const [watchlist, setWatchlist] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingWatchlist, setLoadingWatchlist] = useState(true);
     const [discordData, setDiscordData] = useState(null);
 
     useEffect(() => {
@@ -38,6 +43,65 @@ const AfkPage = () => {
         };
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchWatchlist = async () => {
+            if (!dbFirestore) return;
+
+            try {
+                setLoadingWatchlist(true);
+                const snapshot = await getDocs(collection(dbFirestore, 'movieWatchlist'));
+                const items = snapshot.docs
+                    .map((entry) => ({ id: entry.id, ...entry.data() }))
+                    .filter((item) => item.isPublished !== false)
+                    .map((item) => ({
+                        id: item.id,
+                        movieId: Number.parseInt(String(item.movieId), 10),
+                        note: item.note || '',
+                        order: Number.isFinite(Number(item.order)) ? Number(item.order) : Number.MAX_SAFE_INTEGER,
+                    }))
+                    .filter((item) => Number.isFinite(item.movieId) && item.movieId > 0)
+                    .sort((a, b) => a.order - b.order);
+
+                if (items.length === 0) {
+                    setWatchlist([]);
+                    return;
+                }
+
+                const movieIds = items.map((item) => item.movieId).join(',');
+                const detailRes = await fetch(`/.netlify/functions/movies?ids=${movieIds}`);
+                const detailData = await detailRes.json();
+
+                const movieMap = new Map(
+                    (Array.isArray(detailData) ? detailData : [])
+                        .filter((movie) => movie?.id)
+                        .map((movie) => [movie.id, movie])
+                );
+
+                const enrichedWatchlist = items
+                    .map((item) => {
+                        const movie = movieMap.get(item.movieId);
+                        if (!movie) return null;
+                        return {
+                            ...movie,
+                            watchId: item.id,
+                            note: item.note,
+                            watchOrder: item.order,
+                        };
+                    })
+                    .filter(Boolean);
+
+                setWatchlist(enrichedWatchlist);
+            } catch (error) {
+                console.error('Error fetching watchlist:', error);
+                setWatchlist([]);
+            } finally {
+                setLoadingWatchlist(false);
+            }
+        };
+
+        fetchWatchlist();
+    }, [dbFirestore]);
 
     useEffect(() => {
         if (!DISCORD_ID) return;
@@ -70,18 +134,6 @@ const AfkPage = () => {
         };
     }, []);
 
-    const groupMoviesByYear = (movieList) => {
-        const grouped = {};
-        movieList.forEach(movie => {
-            if (!movie.release_date) return;
-            const year = movie.release_date.split('-')[0];
-            if (!grouped[year]) grouped[year] = [];
-            grouped[year].push(movie);
-        });
-        return Object.entries(grouped).sort((a, b) => b[0] - a[0]);
-    };
-    const moviesByYear = groupMoviesByYear(movies);
-
     const getDiscordStatus = () => {
         if (!discordData) return { text: t('afk.offline'), color: 'bg-gray-500', isOnline: false, avatar: steamUser?.avatar };
 
@@ -108,6 +160,18 @@ const AfkPage = () => {
     const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
     const itemVariants = { hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100 } } };
     const MusicBars = () => (<div className="flex gap-1 items-end h-4"> {[1, 2, 3, 4].map((bar) => (<motion.div key={bar} className="w-1 bg-[#1DB954]" animate={{ height: [4, 16, 8, 12, 4] }} transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse", delay: bar * 0.1 }} />))} </div>);
+
+    const groupMoviesByYear = (movieList) => {
+        const grouped = {};
+        movieList.forEach(movie => {
+            if (!movie.release_date) return;
+            const year = movie.release_date.split('-')[0];
+            if (!grouped[year]) grouped[year] = [];
+            grouped[year].push(movie);
+        });
+        return Object.entries(grouped).sort((a, b) => b[0] - a[0]);
+    };
+    const moviesByYear = groupMoviesByYear(movies);
 
     return (
         <PageTransition>
@@ -250,7 +314,6 @@ const AfkPage = () => {
                                                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 group-hover:opacity-70 transition-opacity"></div>
                                                             <div className="absolute bottom-0 left-0 p-5 w-full">
                                                                 <div className="flex items-center gap-2 mb-2">
-                                                                    {t('afk.best_year')}
                                                                     <span className="bg-yellow-500 text-black text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-yellow-500/20 uppercase tracking-wide">{t('afk.best_year')}</span>
                                                                     <span className="text-yellow-400 text-xs font-bold">⭐ {fav.myRating || fav.vote_average.toFixed(1)}</span>
                                                                 </div>
@@ -277,6 +340,54 @@ const AfkPage = () => {
                                 )}
                             </motion.section>
                         </div>
+
+                        <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-fuchsia-500/10 transition-all duration-500">
+                            <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3 mb-5">
+                                <span className="text-3xl filter drop-shadow-md">📌</span> {t('afk.want_to_watch')}
+                            </h2>
+
+                            {loadingWatchlist ? (
+                                <div className="animate-pulse h-32 bg-gray-200 dark:bg-slate-700 rounded-xl"></div>
+                            ) : watchlist.length === 0 ? (
+                                <div className="text-sm text-gray-500 dark:text-gray-400 rounded-xl border border-dashed border-gray-300 dark:border-slate-600 px-4 py-6 text-center">
+                                    {t('afk.no_watchlist')}
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {watchlist.map((movie, index) => (
+                                        <a
+                                            key={movie.watchId || movie.id}
+                                            href={`https://www.themoviedb.org/movie/${movie.id}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="group flex gap-4 p-3 rounded-2xl bg-white/70 dark:bg-slate-700/40 border border-gray-200 dark:border-slate-600/70 hover:border-primary/40 transition"
+                                        >
+                                            <img
+                                                src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                                                className="w-20 h-28 rounded-lg object-cover shadow-sm"
+                                                loading="lazy"
+                                                alt={movie.title}
+                                            />
+                                            <div className="min-w-0">
+                                                <p className="text-xs uppercase tracking-wider text-primary font-bold mb-1">
+                                                    #{index + 1} Watchlist
+                                                </p>
+                                                <h4 className="text-base md:text-lg font-extrabold text-dark dark:text-white line-clamp-1 group-hover:text-primary transition-colors">
+                                                    {movie.title}
+                                                </h4>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                    ⭐ {movie.vote_average?.toFixed?.(1) ?? '-'}
+                                                    {movie.release_date ? ` • ${movie.release_date.split('-')[0]}` : ''}
+                                                </p>
+                                                {movie.note && (
+                                                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">{movie.note}</p>
+                                                )}
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
+                            )}
+                        </motion.section>
 
                         <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-8 md:p-10 shadow-xl hover:shadow-blue-500/10 transition-all duration-500">
                             <div className="flex items-center justify-between mb-8">

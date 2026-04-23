@@ -41,6 +41,18 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    // Public AFK curated movie picks + admin CMS write access.
+    match /moviePicks/{pickId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Public AFK watchlist + admin CMS write access.
+    match /movieWatchlist/{itemId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
     // Default deny for all other collections/documents.
     match /{document=**} {
       allow read, write: if false;

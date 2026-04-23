@@ -34,6 +34,8 @@ const EditProject = lazy(() => import('./pages/admin/EditProject'));
 const ManageCertifications = lazy(() => import('./pages/admin/ManageCertifications'));
 const AddCertification = lazy(() => import('./pages/admin/AddCertification'));
 const EditCertification = lazy(() => import('./pages/admin/EditCertification'));
+const ManageMoviePicks = lazy(() => import('./pages/admin/ManageMoviePicks'));
+const CinemaLogPreview = lazy(() => import('./pages/admin/CinemaLogPreview'));
 
 function App() {
   const location = useLocation();
@@ -128,6 +130,24 @@ function App() {
               element={
                 <RequireAuth>
                   <AddCertification />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/admin/movie-picks"
+              element={
+                <RequireAuth>
+                  <ManageMoviePicks />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/admin/cinema-log-preview"
+              element={
+                <RequireAuth>
+                  <CinemaLogPreview />
                 </RequireAuth>
               }
             />

@@ -139,6 +139,11 @@ const resources = {
                     title_highlight: "Me",
                     subtitle: "Discover my journey as a developer, my skills, experience, and the passion I bring to every project."
                 },
+                blog: {
+                    title_prefix: "My",
+                    title_highlight: "Blog",
+                    subtitle: "Sharing experiences and learnings in IT Stuff."
+                },
                 contact: {
                     title_prefix: "Get in",
                     title_highlight: "Touch",
@@ -160,6 +165,13 @@ const resources = {
                 recent_games: "Recently Played",
                 no_recent_games: "No recent activity.",
                 cinema_log: "Cinema Log",
+                want_to_watch: "Want to Watch",
+                no_watchlist: "No watchlist yet.",
+                now_in_cinema: "Now in Cinema",
+                no_now_in_cinema: "No cinema data available right now.",
+                rafie_picks: "Rafie's Picks",
+                curated_pick: "Curated Pick",
+                no_rafie_picks: "No curated picks yet.",
                 best_year: "Best of Year",
                 steam_library: "Steam Library",
                 hours: "hrs total",
@@ -324,6 +336,11 @@ const resources = {
                     title_highlight: "Saya",
                     subtitle: "Temukan perjalanan saya sebagai developer, keahlian, pengalaman, dan passion yang saya bawa ke setiap proyek."
                 },
+                blog: {
+                    title_prefix: "Blog",
+                    title_highlight: "Saya",
+                    subtitle: "Berbagi pengalaman dan pembelajaran di dunia IT."
+                },
                 contact: {
                     title_prefix: "Hubungi",
                     title_highlight: "Saya",
@@ -345,6 +362,13 @@ const resources = {
                 recent_games: "Baru Saja Dimainkan",
                 no_recent_games: "Tidak ada aktivitas terbaru.",
                 cinema_log: "Catatan Film",
+                want_to_watch: "Ingin Ditonton",
+                no_watchlist: "Belum ada watchlist.",
+                now_in_cinema: "Now in Cinema",
+                no_now_in_cinema: "Data bioskop belum tersedia saat ini.",
+                rafie_picks: "Pilihan Rafie",
+                curated_pick: "Pilihan Kurasi",
+                no_rafie_picks: "Belum ada pilihan kurasi.",
                 best_year: "Terbaik Tahun Ini",
                 steam_library: "Perpustakaan Steam",
                 hours: "jam total",

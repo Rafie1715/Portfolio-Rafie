@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:netlify": "netlify dev",
+    "dev:functions": "netlify functions:serve",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

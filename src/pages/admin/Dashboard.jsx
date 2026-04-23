@@ -93,6 +93,20 @@ const Dashboard = () => {
               Create Certification <i className="fas fa-wand-magic-sparkles text-xs"></i>
             </Link>
           </div>
+
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
+            <div className="w-11 h-11 rounded-lg bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-4">
+              <i className="fas fa-film"></i>
+            </div>
+            <h2 className="text-xl font-bold mb-2 dark:text-white">Manage Movie Lists</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-5">Manage watched picks and want-to-watch list for AFK page, then preview safely.</p>
+            <Link to="/admin/movie-picks" className="inline-flex items-center justify-center gap-2 text-center bg-cyan-600 text-white px-4 py-2.5 rounded-lg w-full hover:bg-cyan-700 transition font-semibold mb-2">
+              Open Movie Manager <i className="fas fa-arrow-right text-xs"></i>
+            </Link>
+            <Link to="/admin/cinema-log-preview" className="inline-flex items-center justify-center gap-2 text-center border border-gray-300 dark:border-slate-600 text-dark dark:text-white px-4 py-2.5 rounded-lg w-full hover:border-primary hover:text-primary transition font-semibold">
+              Open Preview <i className="fas fa-up-right-from-square text-xs"></i>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
