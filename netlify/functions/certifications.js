@@ -38,7 +38,9 @@ const getAdminApp = () => {
   const privateKey = serviceAccount?.privateKey || getPrivateKey();
 
   if (!projectId || !clientEmail || !privateKey) {
-    throw new Error("Missing Firebase Admin credentials.");
+    throw new Error(
+      "Missing Firebase Admin credentials. Set FIREBASE_SERVICE_ACCOUNT_JSON, or set FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY in Netlify environment variables."
+    );
   }
 
   return admin.initializeApp({
