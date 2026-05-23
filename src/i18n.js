@@ -15,18 +15,19 @@ const resources = {
                 contact: "Contact"
             },
             home: {
-                featured_work: "Featured Work",
-                glimpse: "A glimpse of what I've built.",
-                view_details: "View Details →",
+                highlights: "Portfolio Highlights",
+                featured_work: "Selected Work",
+                glimpse: "A few projects that show how I think, build, and solve problems.",
+                view_work: "About Me",
                 view_all: "View All Projects",
                 latest_blog: "Latest from Blog",
                 blog_glimpse: "Thoughts on web development, mobile apps, and learning",
                 view_all_blogs: "View All Blogs",
                 afk_teaser: {
                     eyebrow: "Beyond Coding",
-                    title: "Want to know my other side?",
-                    desc: "On the AFK page, I share what I am listening to, playing, and watching. A quick look at my rhythm outside coding.",
-                    cta: "Explore /afk"
+                    title: "A glimpse beyond the code",
+                    desc: "See what I listen to, play, and watch. It is where I recharge and often find new ideas.",
+                    cta: "Open /afk"
                 }
             },
             about: {
@@ -35,25 +36,25 @@ const resources = {
                 hello: "Hello, I'm",
                 desc1: "I'm a final-year <1>Informatics student</1> at UPN “Veteran” Jakarta with a strong interest in <3>Front-End and Mobile Development</3>.",
                 desc2: "Skilled in building responsive apps using <1>JavaScript</1>, <3>React</3>, and <5>Kotlin</5>. Highly motivated to enhance technical skills through internship opportunities to create impactful digital solutions.",
-                download_cv: "Download CV",
+                card_label: "Profile Card",
+                card_note: "Classic Card is shown by default for a cleaner reading flow.",
+                card_show_3d: "Show 3D Preview",
+                card_hide_3d: "Hide 3D Preview",
+                card_preview_hint: "Drag to interact. This preview is experimental.",
                 edu_title: "Education",
                 uni_name: "Universitas Pembangunan Nasional \"Veteran\" Jakarta",
                 uni_major: "Informatics (2022 - Present)",
                 hs_name: "SMA Negeri 13 Jakarta",
                 hs_major: "Science (2019 - 2022)"
             },
-            contact: {
-                title: "Get in Touch",
-                send: "Send Message"
-            },
             hero: {
                 greeting: "Hi there, I'm",
-                tagline: "Final-year Informatics student at UPN Veteran Jakarta. I build responsive apps for mobile and web.",
-                view_work: "View My Work",
-                contact_me: "Contact Me",
+                tagline: "Final-year Informatics student at UPN Veteran Jakarta building responsive web and mobile products with a focus on clean UI and practical UX.",
+                view_work: "About Me",
+                contact_me: "Let's Connect",
                 afk_cta: {
-                    prefix: "Curious what I do outside coding?",
-                    link: "Check out /afk"
+                    prefix: "Want a quick look outside my coding life?",
+                    link: "Visit /afk"
                 },
                 quick_facts: {
                     location: "Jakarta, Indonesia",
@@ -212,18 +213,19 @@ const resources = {
                 contact: "Kontak"
             },
             home: {
+                highlights: "Sorotan Portofolio",
                 featured_work: "Karya Pilihan",
-                glimpse: "Sekilas tentang apa yang telah saya bangun.",
+                glimpse: "Beberapa proyek yang menunjukkan cara saya berpikir, membangun, dan menyelesaikan masalah.",
                 view_details: "Lihat Detail →",
                 view_all: "Lihat Semua Proyek",
                 latest_blog: "Terbaru dari Blog",
-                blog_glimpse: "Pemikiran tentang web development, aplikasi mobile, dan pembelajaran",
+                blog_glimpse: "Pemikiran tentang pengembangan web, aplikasi mobile, dan proses belajar.",
                 view_all_blogs: "Lihat Semua Blog",
                 afk_teaser: {
-                    eyebrow: "Beyond Coding",
-                    title: "Mau kenal sisi lain saya?",
-                    desc: "Di halaman AFK, saya berbagi apa yang lagi saya dengar, mainkan, dan tonton. Tempat buat lihat ritme hidup saya di luar coding.",
-                    cta: "Explore /afk"
+                    eyebrow: "Di Luar Coding",
+                    title: "Sekilas tentang sisi saya di luar coding",
+                    desc: "Lihat apa yang saya dengar, mainkan, dan tonton. Di sana saya mengisi ulang energi dan sering menemukan ide baru.",
+                    cta: "Buka /afk"
                 }
             },
             about: {
@@ -232,25 +234,25 @@ const resources = {
                 hello: "Halo, saya",
                 desc1: "Saya mahasiswa tingkat akhir <1>Informatika</1> di UPN “Veteran” Jakarta dengan ketertarikan kuat pada <3>Pengembangan Front-End dan Mobile</3>.",
                 desc2: "Terampil membangun aplikasi responsif menggunakan <1>JavaScript</1>, <3>React</3>, dan <5>Kotlin</5>. Sangat termotivasi untuk meningkatkan keterampilan teknis melalui kesempatan magang guna menciptakan solusi digital yang berdampak.",
-                download_cv: "Unduh CV",
+                card_label: "Kartu Profil",
+                card_note: "Classic Card ditampilkan secara default agar alur baca lebih rapi.",
+                card_show_3d: "Tampilkan Pratinjau 3D",
+                card_hide_3d: "Sembunyikan Pratinjau 3D",
+                card_preview_hint: "Geser untuk berinteraksi. Pratinjau ini masih eksperimental.",
                 edu_title: "Pendidikan",
                 uni_name: "Universitas Pembangunan Nasional \"Veteran\" Jakarta",
                 uni_major: "Informatika (2022 - Sekarang)",
                 hs_name: "SMA Negeri 13 Jakarta",
                 hs_major: "IPA (2019 - 2022)"
             },
-            contact: {
-                title: "Hubungi Saya",
-                send: "Kirim Pesan"
-            },
             hero: {
                 greeting: "Halo, saya",
-                tagline: "Mahasiswa tingkat akhir Informatika di UPN Veteran Jakarta. Membangun aplikasi responsif untuk mobile dan web.",
-                view_work: "Lihat Karya Saya",
-                contact_me: "Hubungi Saya",
+                tagline: "Mahasiswa tingkat akhir Informatika di UPN Veteran Jakarta yang membangun produk web dan mobile responsif dengan fokus pada UI yang rapi dan UX yang praktis.",
+                view_work: "Tentang Saya",
+                contact_me: "Mari Terhubung",
                 afk_cta: {
-                    prefix: "Penasaran saya ngapain di luar coding?",
-                    link: "Intip halaman /afk"
+                    prefix: "Ingin lihat sisi saya di luar coding?",
+                    link: "Kunjungi /afk"
                 },
                 quick_facts: {
                     location: "Jakarta, Indonesia",

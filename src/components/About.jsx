@@ -3,12 +3,12 @@ import cvFile from '/assets/CV Rafie Rojagat Bachri.pdf';
 import IDCard from './IDCard';
 import ThreeIDCard from './ThreeIDCard';
 import { useTranslation, Trans } from 'react-i18next';
-import { Building2, Box, CreditCard } from 'lucide-react';
+import { Building2, Box } from 'lucide-react';
 import { useState } from 'react';
 
 const About = () => {
   const { t } = useTranslation();
-  const [is3D, setIs3D] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -63,35 +63,48 @@ const About = () => {
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
           >
-            {/* Toggle Button */}
-            <div className="mb-4 flex gap-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-1.5 rounded-xl shadow-lg border border-slate-200 dark:border-slate-600">
+            <div className="mb-4 w-full max-w-[460px]">
+              <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 text-center">
+                {t('about.card_label')}
+              </p>
+              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-3 rounded-xl shadow-lg border border-slate-200 dark:border-slate-600">
+                <p className="text-sm text-center text-slate-600 dark:text-slate-300 mb-2">
+                  {t('about.card_note')}
+                </p>
               <button
-                onClick={() => setIs3D(false)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  !is3D 
-                    ? 'bg-primary text-white shadow-sm' 
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
-                }`}
-              >
-                <CreditCard size={16} />
-                2D Card
-              </button>
-              <button
-                onClick={() => setIs3D(true)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  is3D 
-                    ? 'bg-primary text-white shadow-sm' 
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                onClick={() => setIsPreviewOpen((prev) => !prev)}
+                className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  isPreviewOpen
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600'
                 }`}
               >
                 <Box size={16} />
-                3D Nametag
+                {isPreviewOpen ? t('about.card_hide_3d') : t('about.card_show_3d')}
               </button>
             </div>
-
-            <div className="py-10 w-full flex justify-center">
-              {is3D ? <ThreeIDCard /> : <IDCard />}
+              {isPreviewOpen && (
+                <p className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
+                  {t('about.card_preview_hint')}
+                </p>
+              )}
             </div>
+
+            <div className="py-6 w-full flex justify-center">
+              <IDCard />
+            </div>
+
+            {isPreviewOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 12 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+                className="w-full"
+              >
+                <ThreeIDCard />
+              </motion.div>
+            )}
           </motion.div>
 
           <motion.div

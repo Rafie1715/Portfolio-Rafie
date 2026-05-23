@@ -6,7 +6,6 @@ import Tilt from 'react-parallax-tilt';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
-// Lazy load particles for performance optimization - removes 114KB from initial bundle
 const ParticlesComponent = lazy(() => import('./ParticlesBackground'));
 
 const Hero = () => {
@@ -161,7 +160,7 @@ const Hero = () => {
         </motion.div>
  
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-5 md:gap-6 w-full px-4 sm:px-0">
-          <a href="/projects" className="group relative px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-105 hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center">
+          <a href="/about" className="group relative px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-105 hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center">
             <span className="relative z-10">{t('hero.view_work')}</span>
             <div className="absolute inset-0 h-full w-full scale-0 rounded-full transition-all duration-300 group-hover:scale-100 group-hover:bg-white/20"></div>
           </a>
