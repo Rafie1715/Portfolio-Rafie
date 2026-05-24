@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
 import SpotifyNowPlaying from '../components/SpotifyNowPlaying';
@@ -6,7 +6,7 @@ import SpotifyTopTracks from '../components/SpotifyTopTracks';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { useFirebaseInit } from '../hooks/useFirebaseInit';
-import { collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, limit } from 'firebase/firestore';
 
 const AfkPage = () => {
     const DISCORD_ID = "717196208996876379";
@@ -21,28 +21,116 @@ const AfkPage = () => {
     const [loading, setLoading] = useState(true);
     const [loadingWatchlist, setLoadingWatchlist] = useState(true);
     const [discordData, setDiscordData] = useState(null);
+    const [reactionPhase, setReactionPhase] = useState('idle');
+    const [reactionMessage, setReactionMessage] = useState('Tekan mulai, lalu klik saat tombol berubah warna.');
+    const [reactionTime, setReactionTime] = useState(null);
+    const [bestReactionTime, setBestReactionTime] = useState(null);
+    const [reactionHistory, setReactionHistory] = useState(() => {
+        if (typeof window === 'undefined') return [];
+        try {
+            const stored = localStorage.getItem('afk-reaction-leaderboard');
+            return stored ? JSON.parse(stored) : [];
+        } catch {
+            return [];
+        }
+    });
+    const [reactionSaved, setReactionSaved] = useState(false);
+    const reactionStartRef = useRef(null);
+    const reactionTimerRef = useRef(null);
+    const reactionAudioRef = useRef(null);
+
+    const getReactionInitials = () => {
+        const sourceName = steamUser?.personaname || 'Rafie Rojagat';
+        const initials = sourceName
+            .split(/\s+/)
+            .filter(Boolean)
+            .map((part) => part[0])
+            .join('')
+            .slice(0, 4)
+            .toUpperCase();
+
+        return initials || 'RR';
+    };
+
+    const playSuccessTone = () => {
+        try {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) return;
+
+            if (!reactionAudioRef.current) {
+                reactionAudioRef.current = new AudioContextClass();
+            }
+
+            const audioContext = reactionAudioRef.current;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(1320, audioContext.currentTime + 0.14);
+
+            gainNode.gain.setValueAtTime(0.0001, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.06, audioContext.currentTime + 0.02);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.18);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.2);
+        } catch (error) {
+            console.error('Unable to play success tone:', error);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchSteamData = async () => {
             try {
+                setLoading(true);
                 const steamRes = await fetch('/.netlify/functions/steam');
                 const steamData = await steamRes.json();
                 if (steamData.games) setGames(steamData.games);
+                else setGames([]);
                 if (steamData.recent) setRecentGames(steamData.recent);
+                else setRecentGames([]);
                 if (steamData.user) setSteamUser(steamData.user);
-
-                const moviesRes = await fetch('/.netlify/functions/movies');
-                const moviesData = await moviesRes.json();
-                if (Array.isArray(moviesData)) setMovies(moviesData);
-
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("Error fetching steam data:", error);
+                setGames([]);
+                setRecentGames([]);
+                setSteamUser(null);
             } finally {
                 setLoading(false);
             }
         };
-        fetchData();
+
+        const fetchOther = async () => {
+            try {
+                const moviesRes = await fetch('/.netlify/functions/movies');
+                const moviesData = await moviesRes.json();
+                if (Array.isArray(moviesData)) setMovies(moviesData);
+            } catch (error) {
+                console.error("Error fetching movies:", error);
+            }
+        };
+
+        fetchSteamData();
+        fetchOther();
     }, []);
+
+    const retrySteam = async () => {
+        try {
+            setLoading(true);
+            const steamRes = await fetch('/.netlify/functions/steam');
+            const steamData = await steamRes.json();
+            if (steamData.games) setGames(steamData.games);
+            if (steamData.recent) setRecentGames(steamData.recent);
+            if (steamData.user) setSteamUser(steamData.user);
+        } catch (error) {
+            console.error('Retry steam error', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         const fetchWatchlist = async () => {
@@ -173,6 +261,135 @@ const AfkPage = () => {
     };
     const moviesByYear = groupMoviesByYear(movies);
 
+    useEffect(() => {
+        return () => {
+            if (reactionTimerRef.current) {
+                clearTimeout(reactionTimerRef.current);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        try {
+            localStorage.setItem('afk-reaction-leaderboard', JSON.stringify(reactionHistory.slice(0, 5)));
+        } catch {
+            // ignore storage issues
+        }
+    }, [reactionHistory]);
+
+    useEffect(() => {
+        const loadReactionLeaderboard = async () => {
+            if (!dbFirestore) return;
+
+            try {
+                const leaderboardQuery = query(
+                    collection(dbFirestore, 'reactionScores'),
+                    orderBy('score', 'asc'),
+                    limit(5)
+                );
+                const snapshot = await getDocs(leaderboardQuery);
+                const scores = snapshot.docs.map((doc) => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        score: data.score,
+                        initials: typeof data.initials === 'string' ? data.initials : 'RR',
+                        createdAtMs: data.createdAt?.toMillis?.() || null,
+                    };
+                }).filter((item) => Number.isFinite(item.score));
+
+                if (scores.length > 0) {
+                    setReactionHistory(scores);
+                }
+            } catch (error) {
+                console.error('Error loading reaction leaderboard:', error);
+            }
+        };
+
+        loadReactionLeaderboard();
+    }, [dbFirestore]);
+
+    const startReactionGame = () => {
+        if (reactionTimerRef.current) {
+            clearTimeout(reactionTimerRef.current);
+        }
+
+        setReactionPhase('waiting');
+        setReactionTime(null);
+        setReactionMessage('Siap... tunggu tombol berubah warna.');
+
+        const delay = 1500 + Math.floor(Math.random() * 2500);
+        reactionTimerRef.current = setTimeout(() => {
+            reactionStartRef.current = performance.now();
+            setReactionPhase('go');
+            setReactionMessage('Sekarang! Klik secepat mungkin.');
+        }, delay);
+    };
+
+    const handleReactionClick = async () => {
+        if (reactionPhase === 'waiting') {
+            if (reactionTimerRef.current) {
+                clearTimeout(reactionTimerRef.current);
+            }
+            setReactionPhase('idle');
+            setReactionMessage('Terlalu cepat. Coba lagi dan tunggu warna berubah.');
+            return;
+        }
+
+        if (reactionPhase === 'go') {
+            const elapsed = Math.round(performance.now() - reactionStartRef.current);
+            setReactionTime(elapsed);
+            setBestReactionTime((prev) => (prev === null || elapsed < prev ? elapsed : prev));
+            setReactionSaved(false);
+            setReactionPhase('result');
+            setReactionMessage(`Refleks kamu ${elapsed} ms.`);
+            playSuccessTone();
+
+            const entry = {
+                score: elapsed,
+                createdAt: serverTimestamp(),
+                source: 'afk-reaction-time',
+                initials: getReactionInitials(),
+            };
+
+            if (dbFirestore) {
+                try {
+                    await addDoc(collection(dbFirestore, 'reactionScores'), entry);
+                    setReactionSaved(true);
+
+                    const leaderboardQuery = query(
+                        collection(dbFirestore, 'reactionScores'),
+                        orderBy('score', 'asc'),
+                        limit(5)
+                    );
+                    const snapshot = await getDocs(leaderboardQuery);
+                    const scores = snapshot.docs.map((doc) => {
+                        const data = doc.data();
+                        return {
+                            id: doc.id,
+                            score: data.score,
+                            initials: typeof data.initials === 'string' ? data.initials : 'RR',
+                            createdAtMs: data.createdAt?.toMillis?.() || null,
+                        };
+                    }).filter((item) => Number.isFinite(item.score));
+                    setReactionHistory(scores);
+                } catch (error) {
+                    console.error('Error saving reaction score to Firestore:', error);
+                }
+            } else {
+                setReactionHistory((prev) => [
+                    ...prev,
+                    { score: elapsed, date: new Date().toISOString() }
+                ].sort((a, b) => a.score - b.score).slice(0, 5));
+                setReactionSaved(true);
+            }
+
+            return;
+        }
+
+        startReactionGame();
+    };
+
     return (
         <PageTransition>
             <div className="bg-gray-50 dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300 relative overflow-hidden">
@@ -194,6 +411,33 @@ const AfkPage = () => {
                             {t('afk.intro_line2')}
                         </p>
                     </div>
+
+                    <motion.div
+                        variants={itemVariants}
+                        whileHover={{ y: -4 }}
+                        className="mb-12 rounded-[2rem] border border-white/30 dark:border-slate-700/60 bg-white/55 dark:bg-slate-800/55 backdrop-blur-xl shadow-lg p-6 md:p-7"
+                    >
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                            <div>
+                                <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold mb-2">Ringkasan AFK</p>
+                                <h2 className="text-2xl font-bold text-dark dark:text-white">Hal kecil di luar coding</h2>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full md:w-auto md:min-w-[480px]">
+                                <div className="rounded-2xl bg-white/70 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 px-4 py-3">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">Musik</p>
+                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">Playlist santai / fokus</p>
+                                </div>
+                                <div className="rounded-2xl bg-white/70 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 px-4 py-3">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">Game</p>
+                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">Steam + game kecil</p>
+                                </div>
+                                <div className="rounded-2xl bg-white/70 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 px-4 py-3">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">Film</p>
+                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">Rekomendasi & watchlist</p>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
 
                     <motion.div className="space-y-12" variants={containerVariants} initial="hidden" animate="visible">
 
@@ -227,9 +471,157 @@ const AfkPage = () => {
                             </div>
                         </motion.div>
 
+                        <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-cyan-500/10 transition-all duration-500">
+                            <div className="flex items-center justify-between gap-4 mb-6">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3">
+                                        <span className="text-3xl filter drop-shadow-md">⚡</span> Waktu Reaksi
+                                    </h2>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Klik saat tombol berubah warna. Semakin kecil nilainya, semakin cepat refleksmu.</p>
+                                </div>
+                                <div className="text-right text-xs text-gray-500 dark:text-gray-400">
+                                    {bestReactionTime !== null ? <p>Terbaik: <span className="font-bold text-dark dark:text-white">{bestReactionTime} ms</span></p> : <p>Terbaik: belum ada</p>}
+                                    {reactionTime !== null && <p className="mt-1">Terakhir: <span className="font-bold text-dark dark:text-white">{reactionTime} ms</span></p>}
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col items-center gap-4">
+                                <button
+                                    onClick={handleReactionClick}
+                                    className={`w-full max-w-md min-h-[150px] rounded-[2rem] border-2 font-black text-xl md:text-2xl transition-all duration-200 ${
+                                        reactionPhase === 'go'
+                                            ? 'bg-green-500 border-green-400 text-white shadow-2xl shadow-green-500/30'
+                                            : reactionPhase === 'waiting'
+                                                ? 'bg-red-500 border-red-400 text-white shadow-2xl shadow-red-500/30'
+                                                : 'bg-slate-900 dark:bg-slate-700 border-slate-600 text-white hover:scale-[1.01]'
+                                    }`}
+                                >
+                                    {reactionPhase === 'idle' && 'Mulai'}
+                                    {reactionPhase === 'waiting' && 'Jangan klik dulu'}
+                                    {reactionPhase === 'go' && 'KLIK SEKARANG!'}
+                                    {reactionPhase === 'result' && 'Main lagi'}
+                                </button>
+
+                                <AnimatePresence mode="wait">
+                                    <motion.p
+                                        key={reactionMessage}
+                                        initial={{ opacity: 0, y: 6 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -6 }}
+                                        className="text-sm text-gray-600 dark:text-gray-300 text-center max-w-xl"
+                                    >
+                                        {reactionMessage}
+                                    </motion.p>
+                                </AnimatePresence>
+
+                                <AnimatePresence>
+                                    {reactionSaved && (
+                                        <motion.p
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.95 }}
+                                            className="text-xs font-bold text-green-600 dark:text-green-400"
+                                        >
+                                            Skor berhasil disimpan.
+                                        </motion.p>
+                                    )}
+                                </AnimatePresence>
+
+                                <div className="flex items-center gap-3">
+                                    <button onClick={startReactionGame} className="px-5 py-2.5 rounded-full bg-primary text-white font-bold hover:shadow-lg transition-all">Mulai ulang</button>
+                                    <button onClick={() => { if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current); setReactionPhase('idle'); setReactionTime(null); setReactionMessage('Tekan mulai, lalu klik saat tombol berubah warna.'); }} className="px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-dark dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">Reset</button>
+                                </div>
+
+                                <div className="w-full max-w-xl mt-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-700/40 px-4 py-3 text-center">
+                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">Status</p>
+                                        <p className="mt-1 text-sm font-bold text-dark dark:text-white">
+                                            {reactionPhase === 'go' ? 'Gas!' : reactionPhase === 'waiting' ? 'Tunggu' : reactionPhase === 'result' ? 'Hasil' : 'Siap'}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-700/40 px-4 py-3 text-center">
+                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">Terbaik</p>
+                                        <p className="mt-1 text-sm font-bold text-dark dark:text-white">{bestReactionTime !== null ? `${bestReactionTime} ms` : '-'}</p>
+                                    </div>
+                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-700/40 px-4 py-3 text-center">
+                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">Terakhir</p>
+                                        <p className="mt-1 text-sm font-bold text-dark dark:text-white">{reactionTime !== null ? `${reactionTime} ms` : '-'}</p>
+                                    </div>
+                                </div>
+
+                                <div className="w-full max-w-xl mt-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-700/30 px-4 py-4">
+                                    <div className="flex items-center justify-between gap-3 mb-3">
+                                        <p className="text-xs uppercase tracking-[0.25em] text-gray-500 font-bold">Top 5 Skor</p>
+                                    </div>
+                                    {reactionHistory.length === 0 ? (
+                                        <p className="text-sm text-gray-500 italic">Belum ada skor. Coba main sekali dulu.</p>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            {reactionHistory.map((entry, index) => (
+                                                <motion.div
+                                                    key={`${entry.id || entry.date || entry.score}-${index}`}
+                                                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    transition={{ duration: 0.25, delay: index * 0.04 }}
+                                                    className={`flex items-center justify-between rounded-xl px-3 py-2 border shadow-sm ${
+                                                        index === 0
+                                                            ? 'bg-amber-50/90 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30'
+                                                            : index === 1
+                                                                ? 'bg-slate-100/80 dark:bg-slate-700/50 border-slate-300 dark:border-slate-500/40'
+                                                                : index === 2
+                                                                    ? 'bg-orange-50/90 dark:bg-orange-500/10 border-orange-200 dark:border-orange-500/30'
+                                                                    : 'bg-white/70 dark:bg-slate-800/60 border-slate-100 dark:border-slate-700'
+                                                    }`}
+                                                >
+                                                    <div className="flex items-center gap-3 min-w-0">
+                                                        <span className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-black ${
+                                                            index === 0
+                                                                ? 'bg-amber-400 text-black'
+                                                                : index === 1
+                                                                    ? 'bg-slate-400 text-white'
+                                                                    : index === 2
+                                                                        ? 'bg-orange-400 text-black'
+                                                                        : 'bg-primary/10 text-primary'
+                                                        }`}>
+                                                            {entry.initials || 'RR'}
+                                                        </span>
+                                                        <div className="min-w-0">
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-sm font-bold text-dark dark:text-white">#{index + 1}</span>
+                                                                {index < 3 && (
+                                                                    <span className="text-[10px] font-black uppercase tracking-wider text-primary">
+                                                                        {index === 0 ? 'Emas' : index === 1 ? 'Perak' : 'Perunggu'}
+                                                                    </span>
+                                                                )}
+                                                                {index === 0 && (
+                                                                    <span className="inline-flex items-center justify-center rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-black text-amber-500 dark:text-amber-300">
+                                                                        <i className="fas fa-crown mr-1"></i> Juara 1
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">Skor refleks</p>
+                                                        </div>
+                                                    </div>
+                                                    <motion.span
+                                                        key={entry.score}
+                                                        initial={{ scale: 0.95 }}
+                                                        animate={{ scale: [1, 1.06, 1] }}
+                                                        transition={{ duration: 0.35 }}
+                                                        className="text-sm font-mono text-primary font-bold"
+                                                    >
+                                                        {entry.score} ms
+                                                    </motion.span>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </motion.section>
+
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                            <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 h-full shadow-xl hover:shadow-blue-500/10 transition-all duration-500 flex flex-col">
+                            <motion.section variants={itemVariants} className="bg-white/65 dark:bg-slate-800/55 backdrop-blur-md border border-white/30 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 h-full shadow-xl hover:shadow-blue-500/10 transition-all duration-500 flex flex-col">
                                 <div className="flex items-center gap-5 mb-8">
                                     <div className="relative">
                                         <motion.div className={`absolute -inset-1 rounded-full blur opacity-40 ${statusInfo.isOnline ? 'bg-green-500' : 'bg-gray-500'}`} animate={{ opacity: [0.4, 0.7, 0.4] }} transition={{ duration: 2, repeat: Infinity }}></motion.div>
@@ -294,7 +686,7 @@ const AfkPage = () => {
                                 </div>
                             </motion.section>
 
-                            <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-yellow-500/10 transition-all duration-500 flex flex-col h-[600px]">
+                            <motion.section variants={itemVariants} className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-md border border-white/25 dark:border-slate-700/50 rounded-[2.5rem] p-5 md:p-7 shadow-lg hover:shadow-yellow-500/10 transition-all duration-500 flex flex-col h-[540px] lg:h-[560px]">
                                 <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3 mb-6 flex-shrink-0">
                                     <span className="text-3xl filter drop-shadow-md">🍿</span> {t('afk.cinema_log')}
                                 </h2>
@@ -397,17 +789,30 @@ const AfkPage = () => {
                                 <div className="h-[2px] flex-grow ml-6 bg-gray-200 dark:bg-slate-700/50 rounded-full"></div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                {games.slice(0, 16).map((game) => (
-                                    <div key={game.appid} className="flex items-center gap-4 p-4 rounded-2xl bg-white/50 dark:bg-slate-700/40 hover:bg-white dark:hover:bg-slate-700/80 border border-transparent hover:border-gray-200 dark:hover:border-slate-600 transition-all cursor-default shadow-sm hover:shadow-md">
-                                        <img src={`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`} className="w-12 h-12 rounded-lg object-cover shadow-sm" alt={game.name} />
-                                        <div className="overflow-hidden">
-                                            <p className="text-sm font-bold text-dark dark:text-white truncate">{game.name}</p>
-                                            <p className="text-xs text-gray-500 font-mono">{Math.floor(game.playtime_forever / 60)} {t('afk.hours')}</p>
-                                        </div>
+                            {loading ? (
+                                <div className="py-8 text-center text-gray-500">Loading Steam library…</div>
+                            ) : games.length === 0 ? (
+                                <div className="py-8 text-center text-gray-500">
+                                    <p className="mb-3">Tidak ada data Steam yang dapat ditampilkan.</p>
+                                    <p className="text-sm mb-4">Kemungkinan penyebab: profil Steam Anda disetel privat, API key tidak aktif, atau fungsi Netlify tidak berjalan secara lokal.</p>
+                                    <div className="flex items-center justify-center gap-3">
+                                        <button onClick={retrySteam} className="px-4 py-2 bg-primary text-white rounded-md">Coba lagi</button>
+                                        <a href={steamUser?.profileurl || `https://steamcommunity.com/profiles/${import.meta.env.VITE_STEAM_ID || ''}`} target="_blank" rel="noreferrer" className="px-4 py-2 border rounded-md">Lihat profil Steam</a>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {games.slice(0, 18).map((game) => (
+                                        <div key={game.appid} className="flex items-center gap-3 p-3 rounded-2xl bg-white/45 dark:bg-slate-700/35 hover:bg-white/70 dark:hover:bg-slate-700/60 border border-transparent hover:border-gray-200 dark:hover:border-slate-600 transition-all cursor-default shadow-sm hover:shadow-md">
+                                            <img src={`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`} className="w-12 h-12 rounded-lg object-cover shadow-sm" alt={game.name} />
+                                            <div className="overflow-hidden">
+                                                <p className="text-sm font-bold text-dark dark:text-white truncate">{game.name}</p>
+                                                <p className="text-xs text-gray-500 font-mono">{Math.floor(game.playtime_forever / 60)} {t('afk.hours')}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
 
                             {steamUser && (
                                 <div className="mt-10 text-center">
