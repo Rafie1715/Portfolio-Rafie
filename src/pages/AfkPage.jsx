@@ -22,7 +22,7 @@ const AfkPage = () => {
     const [loadingWatchlist, setLoadingWatchlist] = useState(true);
     const [discordData, setDiscordData] = useState(null);
     const [reactionPhase, setReactionPhase] = useState('idle');
-    const [reactionMessage, setReactionMessage] = useState('Tekan mulai, lalu klik saat tombol berubah warna.');
+    const [reactionMessage, setReactionMessage] = useState('');
     const [reactionTime, setReactionTime] = useState(null);
     const [bestReactionTime, setBestReactionTime] = useState(null);
     const [reactionHistory, setReactionHistory] = useState(() => {
@@ -270,6 +270,10 @@ const AfkPage = () => {
     }, []);
 
     useEffect(() => {
+        setReactionMessage(t('afk.reaction_game.message_ready'));
+    }, [t]);
+
+    useEffect(() => {
         try {
             localStorage.setItem('afk-reaction-leaderboard', JSON.stringify(reactionHistory.slice(0, 5)));
         } catch {
@@ -316,13 +320,13 @@ const AfkPage = () => {
 
         setReactionPhase('waiting');
         setReactionTime(null);
-        setReactionMessage('Siap... tunggu tombol berubah warna.');
+        setReactionMessage(t('afk.reaction_game.message_wait'));
 
         const delay = 1500 + Math.floor(Math.random() * 2500);
         reactionTimerRef.current = setTimeout(() => {
             reactionStartRef.current = performance.now();
             setReactionPhase('go');
-            setReactionMessage('Sekarang! Klik secepat mungkin.');
+            setReactionMessage(t('afk.reaction_game.message_go'));
         }, delay);
     };
 
@@ -332,7 +336,7 @@ const AfkPage = () => {
                 clearTimeout(reactionTimerRef.current);
             }
             setReactionPhase('idle');
-            setReactionMessage('Terlalu cepat. Coba lagi dan tunggu warna berubah.');
+            setReactionMessage(t('afk.reaction_game.message_early'));
             return;
         }
 
@@ -342,7 +346,7 @@ const AfkPage = () => {
             setBestReactionTime((prev) => (prev === null || elapsed < prev ? elapsed : prev));
             setReactionSaved(false);
             setReactionPhase('result');
-            setReactionMessage(`Refleks kamu ${elapsed} ms.`);
+            setReactionMessage(`${elapsed} ms`);
             playSuccessTone();
 
             const entry = {
@@ -419,21 +423,21 @@ const AfkPage = () => {
                     >
                         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                             <div>
-                                <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold mb-2">Ringkasan AFK</p>
-                                <h2 className="text-2xl font-bold text-dark dark:text-white">Hal kecil di luar coding</h2>
+                                <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold mb-2">{t('afk.afk_snapshot.label')}</p>
+                                <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.afk_snapshot.title')}</h2>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full md:w-auto md:min-w-[480px]">
                                 <div className="rounded-2xl bg-white/70 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 px-4 py-3">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wider">Musik</p>
-                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">Playlist santai / fokus</p>
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">{t('afk.afk_snapshot.musik.label')}</p>
+                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">{t('afk.afk_snapshot.musik.desc')}</p>
                                 </div>
                                 <div className="rounded-2xl bg-white/70 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 px-4 py-3">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wider">Game</p>
-                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">Steam + game kecil</p>
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">{t('afk.afk_snapshot.game.label')}</p>
+                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">{t('afk.afk_snapshot.game.desc')}</p>
                                 </div>
                                 <div className="rounded-2xl bg-white/70 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 px-4 py-3">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wider">Film</p>
-                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">Rekomendasi & watchlist</p>
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">{t('afk.afk_snapshot.film.label')}</p>
+                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">{t('afk.afk_snapshot.film.desc')}</p>
                                 </div>
                             </div>
                         </div>
@@ -475,13 +479,13 @@ const AfkPage = () => {
                             <div className="flex items-center justify-between gap-4 mb-6">
                                 <div>
                                     <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3">
-                                        <span className="text-3xl filter drop-shadow-md">⚡</span> Waktu Reaksi
+                                        <span className="text-3xl filter drop-shadow-md">⚡</span> {t('afk.reaction_game.title')}
                                     </h2>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Klik saat tombol berubah warna. Semakin kecil nilainya, semakin cepat refleksmu.</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('afk.reaction_game.subtitle')}</p>
                                 </div>
                                 <div className="text-right text-xs text-gray-500 dark:text-gray-400">
-                                    {bestReactionTime !== null ? <p>Terbaik: <span className="font-bold text-dark dark:text-white">{bestReactionTime} ms</span></p> : <p>Terbaik: belum ada</p>}
-                                    {reactionTime !== null && <p className="mt-1">Terakhir: <span className="font-bold text-dark dark:text-white">{reactionTime} ms</span></p>}
+                                    {bestReactionTime !== null ? <p>{t('afk.reaction_game.best')}: <span className="font-bold text-dark dark:text-white">{bestReactionTime} ms</span></p> : <p>{t('afk.reaction_game.best')}: belum ada</p>}
+                                    {reactionTime !== null && <p className="mt-1">{t('afk.reaction_game.last')}: <span className="font-bold text-dark dark:text-white">{reactionTime} ms</span></p>}
                                 </div>
                             </div>
 
@@ -496,10 +500,10 @@ const AfkPage = () => {
                                                 : 'bg-slate-900 dark:bg-slate-700 border-slate-600 text-white hover:scale-[1.01]'
                                     }`}
                                 >
-                                    {reactionPhase === 'idle' && 'Mulai'}
-                                    {reactionPhase === 'waiting' && 'Jangan klik dulu'}
-                                    {reactionPhase === 'go' && 'KLIK SEKARANG!'}
-                                    {reactionPhase === 'result' && 'Main lagi'}
+                                    {reactionPhase === 'idle' && t('afk.reaction_game.start_btn')}
+                                    {reactionPhase === 'waiting' && t('afk.reaction_game.waiting_btn')}
+                                    {reactionPhase === 'go' && t('afk.reaction_game.go_btn')}
+                                    {reactionPhase === 'result' && t('afk.reaction_game.retry_btn')}
                                 </button>
 
                                 <AnimatePresence mode="wait">
@@ -528,33 +532,33 @@ const AfkPage = () => {
                                 </AnimatePresence>
 
                                 <div className="flex items-center gap-3">
-                                    <button onClick={startReactionGame} className="px-5 py-2.5 rounded-full bg-primary text-white font-bold hover:shadow-lg transition-all">Mulai ulang</button>
-                                    <button onClick={() => { if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current); setReactionPhase('idle'); setReactionTime(null); setReactionMessage('Tekan mulai, lalu klik saat tombol berubah warna.'); }} className="px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-dark dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">Reset</button>
+                                    <button onClick={startReactionGame} className="px-5 py-2.5 rounded-full bg-primary text-white font-bold hover:shadow-lg transition-all">{t('afk.reaction_game.restart_btn')}</button>
+                                    <button onClick={() => { if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current); setReactionPhase('idle'); setReactionTime(null); setReactionMessage(t('afk.reaction_game.message_ready')); }} className="px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-dark dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">{t('afk.reaction_game.reset_btn')}</button>
                                 </div>
 
                                 <div className="w-full max-w-xl mt-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
                                     <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-700/40 px-4 py-3 text-center">
-                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">Status</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">{t('afk.reaction_game.status')}</p>
                                         <p className="mt-1 text-sm font-bold text-dark dark:text-white">
-                                            {reactionPhase === 'go' ? 'Gas!' : reactionPhase === 'waiting' ? 'Tunggu' : reactionPhase === 'result' ? 'Hasil' : 'Siap'}
+                                            {reactionPhase === 'go' ? t('afk.reaction_game.status_go') : reactionPhase === 'waiting' ? t('afk.reaction_game.status_wait') : reactionPhase === 'result' ? t('afk.reaction_game.status_result') : t('afk.reaction_game.status_ready')}
                                         </p>
                                     </div>
                                     <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-700/40 px-4 py-3 text-center">
-                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">Terbaik</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">{t('afk.reaction_game.best')}</p>
                                         <p className="mt-1 text-sm font-bold text-dark dark:text-white">{bestReactionTime !== null ? `${bestReactionTime} ms` : '-'}</p>
                                     </div>
                                     <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-700/40 px-4 py-3 text-center">
-                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">Terakhir</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">{t('afk.reaction_game.last')}</p>
                                         <p className="mt-1 text-sm font-bold text-dark dark:text-white">{reactionTime !== null ? `${reactionTime} ms` : '-'}</p>
                                     </div>
                                 </div>
 
                                 <div className="w-full max-w-xl mt-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-700/30 px-4 py-4">
                                     <div className="flex items-center justify-between gap-3 mb-3">
-                                        <p className="text-xs uppercase tracking-[0.25em] text-gray-500 font-bold">Top 5 Skor</p>
+                                        <p className="text-xs uppercase tracking-[0.25em] text-gray-500 font-bold">{t('afk.reaction_game.leaderboard.title')}</p>
                                     </div>
                                     {reactionHistory.length === 0 ? (
-                                        <p className="text-sm text-gray-500 italic">Belum ada skor. Coba main sekali dulu.</p>
+                                        <p className="text-sm text-gray-500 italic">{t('afk.reaction_game.leaderboard.empty')}</p>
                                     ) : (
                                         <div className="space-y-2">
                                             {reactionHistory.map((entry, index) => (
@@ -590,16 +594,16 @@ const AfkPage = () => {
                                                                 <span className="text-sm font-bold text-dark dark:text-white">#{index + 1}</span>
                                                                 {index < 3 && (
                                                                     <span className="text-[10px] font-black uppercase tracking-wider text-primary">
-                                                                        {index === 0 ? 'Emas' : index === 1 ? 'Perak' : 'Perunggu'}
+                                                                        {index === 0 ? t('afk.reaction_game.leaderboard.gold') : index === 1 ? t('afk.reaction_game.leaderboard.silver') : t('afk.reaction_game.leaderboard.bronze')}
                                                                     </span>
                                                                 )}
                                                                 {index === 0 && (
                                                                     <span className="inline-flex items-center justify-center rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-black text-amber-500 dark:text-amber-300">
-                                                                        <i className="fas fa-crown mr-1"></i> Juara 1
+                                                                        <i className="fas fa-crown mr-1"></i> {t('afk.reaction_game.leaderboard.champion')}
                                                                     </span>
                                                                 )}
                                                             </div>
-                                                            <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">Skor refleks</p>
+                                                            <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">{t('afk.reaction_game.leaderboard.desc')}</p>
                                                         </div>
                                                     </div>
                                                     <motion.span
