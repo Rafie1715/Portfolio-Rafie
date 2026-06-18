@@ -5,8 +5,10 @@ import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import GitHubActivity from '../components/GitHubActivity';
+import LazyImage from '../components/LazyImage';
 
 const WorkspacePage = () => {
+  const WORKSPACE_FALLBACK_IMAGE = '/images/project-portfolio.webp';
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const closeButtonRef = useRef(null);
@@ -84,8 +86,12 @@ const WorkspacePage = () => {
       }
     });
 
-    return [{ id: 'all', label: currentLang === 'id' ? 'Semua' : 'All' }, ...Array.from(categoryMap.values())];
-  }, [currentLang]);
+    const sortedCategories = Array.from(categoryMap.values()).sort((a, b) =>
+      String(a.label || '').localeCompare(String(b.label || ''), currentLang)
+    );
+
+    return [{ id: 'all', label: t('workspace.filter_all') }, ...sortedCategories];
+  }, [currentLang, t]);
 
   const filteredItems = useMemo(() => {
     if (selectedCategory === 'all') return setupItems;
@@ -124,6 +130,13 @@ const WorkspacePage = () => {
       document.body.style.overflow = originalOverflow;
     };
   }, [selectedImage]);
+
+  const handleWorkspaceImageError = (event) => {
+    const target = event.currentTarget;
+    if (target?.src && !target.src.endsWith(WORKSPACE_FALLBACK_IMAGE)) {
+      target.src = WORKSPACE_FALLBACK_IMAGE;
+    }
+  };
 
   return (
     <PageTransition>
@@ -167,19 +180,20 @@ const WorkspacePage = () => {
             </p>
           </div>
 
-          <div className="mb-12 overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0">
-            <div className="flex md:flex-wrap md:justify-center gap-2 sm:gap-3 min-w-max md:min-w-0">
+          <div className="mb-12 overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex md:flex-wrap md:justify-center gap-2 sm:gap-3 min-w-max md:min-w-0 snap-x snap-mandatory">
               {categories.map((cat) => (
                 <motion.button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-pressed={selectedCategory === cat.id}
                   className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition-all whitespace-nowrap ${
                     selectedCategory === cat.id
                       ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/30'
                       : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50'
-                  }`}
+                  } snap-start`}
                 >
                   {cat.label}
                 </motion.button>
@@ -213,17 +227,29 @@ const WorkspacePage = () => {
                   variants={itemVariants}
                   whileHover={{ y: -4, scale: 1.01 }}
                   onClick={handleItemClick}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      handleItemClick();
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${item.title} - ${category}. ${t('workspace.open_preview')}`}
                   className={`group relative rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer 
                     bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm 
                     border border-white/50 dark:border-slate-700/50 
                     shadow-lg hover:shadow-xl md:hover:shadow-2xl hover:shadow-primary/20 
-                    transition-all duration-300 ${getSizeClasses(item.size)}`}
+                    transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 dark:focus:ring-offset-dark ${getSizeClasses(item.size)}`}
                 >
-                  <img
+                  <LazyImage
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    wrapperClassName="w-full h-full"
+                    placeholderClassName="rounded-2xl md:rounded-3xl"
                     loading="lazy"
+                    onError={handleWorkspaceImageError}
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300"></div>
@@ -277,12 +303,10 @@ const WorkspacePage = () => {
               className="text-center mb-12 md:mb-16 px-4"
             >
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-dark dark:text-white mb-3 md:mb-4 tracking-tight">
-                Development <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">Activity</span>
+                {t('workspace.activity_title_prefix')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">{t('workspace.activity_title_highlight')}</span>
               </h2>
               <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                {currentLang === 'id' 
-                  ? 'Pantau perjalanan coding saya - kontribusi konsisten, proyek aktif, dan komitmen terhadap pertumbuhan berkelanjutan.'
-                  : 'Track my coding journey - consistent contributions, active projects, and commitment to continuous growth.'}
+                {t('workspace.activity_desc')}
               </p>
             </motion.div>
           </div>
@@ -300,6 +324,7 @@ const WorkspacePage = () => {
               role="dialog"
               aria-modal="true"
               aria-labelledby="workspace-preview-title"
+              aria-describedby="workspace-preview-desc"
               onClick={() => setSelectedImage(null)}
             >
               <motion.div
@@ -315,6 +340,7 @@ const WorkspacePage = () => {
                     src={selectedImage.image}
                     alt={selectedImage.title}
                     className="w-full h-auto max-h-[60vh] md:max-h-[70vh] object-contain"
+                    onError={handleWorkspaceImageError}
                   />
 
                   <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-black/50 backdrop-blur-md px-2 py-0.5 md:px-3 md:py-1 rounded-full border border-white/10">
@@ -337,6 +363,7 @@ const WorkspacePage = () => {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
+                    id="workspace-preview-desc"
                     className="text-sm sm:text-base md:text-lg text-gray-400 leading-relaxed"
                   >
                     {selectedImage.desc}

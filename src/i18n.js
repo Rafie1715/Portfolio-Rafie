@@ -127,7 +127,12 @@ const resources = {
                 title_highlight: "Workspace",
                 subtitle: "The hardware, gadgets, and software that power my productivity.",
                 updated: "Updated",
-                view_product: "View Product"
+                view_product: "View Product",
+                filter_all: "All",
+                open_preview: "Open preview",
+                activity_title_prefix: "Development",
+                activity_title_highlight: "Activity",
+                activity_desc: "Track my coding journey - consistent contributions, active projects, and commitment to continuous growth."
             },
             pages: {
                 projects: {
@@ -363,7 +368,12 @@ const resources = {
                 title_highlight: "Kerja Saya",
                 subtitle: "Perangkat keras, gadget, dan perangkat lunak yang mendukung produktivitas saya.",
                 updated: "Diperbarui",
-                view_product: "Lihat Produk"
+                view_product: "Lihat Produk",
+                filter_all: "Semua",
+                open_preview: "Buka pratinjau",
+                activity_title_prefix: "Aktivitas",
+                activity_title_highlight: "Development",
+                activity_desc: "Pantau perjalanan coding saya - kontribusi konsisten, proyek aktif, dan komitmen terhadap pertumbuhan berkelanjutan."
             },
             pages: {
                 projects: {
