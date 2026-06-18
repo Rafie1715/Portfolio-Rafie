@@ -66,8 +66,13 @@ const HomePage = () => {
                       {shortDesc}
                     </p>
 
-                    <Link to={`/project/${project.id}`} className="text-primary font-medium hover:underline mt-auto">
-                      {t('home.view_details')}
+                    <Link
+                      to={`/project/${project.id}`}
+                      aria-label={`${title} - View Details`}
+                      className="inline-flex items-center gap-2 w-fit mt-auto rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-all duration-300 hover:bg-primary hover:text-white hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    >
+                      <span>View Details</span>
+                      <i className="fas fa-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-0.5"></i>
                     </Link>
                   </div>
                 </SpotlightCard>

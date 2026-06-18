@@ -49,7 +49,7 @@ const SpotlightCard = ({ children, className = "" }) => {
         }}
       />
       <motion.div
-        className="absolute -inset-px rounded-2xl opacity-0"
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0"
         animate={{
           opacity: isHovered ? 0.3 : 0,
           boxShadow: isHovered ? "0 0 20px rgba(37, 99, 235, 0.3), inset 0 0 20px rgba(37, 99, 235, 0.1)" : "0 0 0px rgba(37, 99, 235, 0)"
