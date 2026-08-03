@@ -1,4 +1,4 @@
-const admin = require("firebase-admin");
+import admin from "firebase-admin";
 
 const parseAllowlist = () => {
   const raw = process.env.VITE_ADMIN_EMAILS || process.env.ADMIN_EMAILS || "";
@@ -73,7 +73,7 @@ const isAllowedAdmin = (decodedToken) => {
   return allowlist.includes(email);
 };
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
     return sendJson(200, { ok: true });
   }

@@ -1,4 +1,4 @@
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   const API_KEY = process.env.VITE_TMDB_API_KEY;
 
   if (!API_KEY) {
