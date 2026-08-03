@@ -763,8 +763,8 @@ export const projects = [
       id: "Website portfolio pribadi modern untuk menampilkan proyek, skill, pencapaian, dan integrasi real-time dalam satu platform."
     },
     fullDesc: {
-      en: "This portfolio website was built as a central hub for my professional identity as a software developer. The platform presents selected projects with detailed case studies, highlights my technical stack, and includes dynamic integrations such as GitHub statistics, Spotify activity, and visitor tracking. I focused on creating a polished user experience with smooth animations, responsive layouts, bilingual content (English and Indonesian), and an admin workflow for managing project data.",
-      id: "Website portfolio ini dibangun sebagai pusat identitas profesional saya sebagai software developer. Platform ini menampilkan proyek-proyek pilihan dengan studi kasus yang detail, menyoroti tech stack saya, serta menyertakan integrasi dinamis seperti statistik GitHub, aktivitas Spotify, dan visitor tracking. Saya berfokus pada pengalaman pengguna yang rapi dengan animasi halus, layout responsif, konten bilingual (Inggris dan Indonesia), serta alur admin untuk mengelola data proyek."
+      en: "This portfolio website was built as a central hub for my professional identity as a software developer. The platform presents selected projects with detailed case studies, highlights my technical stack, and includes dynamic integrations such as GitHub statistics and visitor tracking. I focused on creating a polished user experience with smooth animations, responsive layouts, bilingual content (English and Indonesian), and an admin workflow for managing project data.",
+      id: "Website portfolio ini dibangun sebagai pusat identitas profesional saya sebagai software developer. Platform ini menampilkan proyek-proyek pilihan dengan studi kasus yang detail, menyoroti tech stack saya, serta menyertakan integrasi dinamis seperti statistik GitHub dan visitor tracking. Saya berfokus pada pengalaman pengguna yang rapi dengan animasi halus, layout responsif, konten bilingual (Inggris dan Indonesia), serta alur admin untuk mengelola data proyek."
     },
     challenges: {
       en: "The main challenge was combining multiple complex features (multi-language support, API-driven widgets, SEO optimization, 3D interactive components, and admin content management) while maintaining strong performance and clean UX across desktop and mobile devices.",
@@ -782,7 +782,7 @@ export const projects = [
       en: [
         "Bilingual Content (English/Indonesian) with i18n",
         "Dynamic Project Showcase with Detail Pages",
-        "Real-time Integrations (GitHub, Spotify, Visitor Counter)",
+        "Real-time Integrations (GitHub, Visitor Counter)",
         "Interactive 3D ID Card Section",
         "Admin Dashboard for Project Management",
         "SEO Optimization and Social Metadata"
@@ -790,7 +790,7 @@ export const projects = [
       id: [
         "Konten Bilingual (Inggris/Indonesia) dengan i18n",
         "Showcase Proyek Dinamis dengan Halaman Detail",
-        "Integrasi Real-time (GitHub, Spotify, Visitor Counter)",
+        "Integrasi Real-time (GitHub, Visitor Counter)",
         "Section Kartu ID 3D Interaktif",
         "Dashboard Admin untuk Manajemen Proyek",
         "Optimasi SEO dan Metadata Sosial"

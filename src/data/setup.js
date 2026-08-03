@@ -131,18 +131,6 @@ export const setupItems = [
     link: "https://www.figma.com/"
   },
   {
-    id: 12,
-    title: "Spotify",
-    desc: {
-      en: "'Lofi Girl' for focus, 'Rock' for tight deadlines.",
-      id: "'Lofi Girl' untuk fokus, 'Rock' untuk tenggat waktu ketat."
-    },
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSglMa6ApLLxUP-oUF2QSC-BUw1DQ_3WzJPFw&s",
-    category: { en: "Music", id: "Musik" },
-    size: "small",
-    link: "https://open.spotify.com/"
-  },
-  {
     id: 13,
     title: "Discord",
     desc: {

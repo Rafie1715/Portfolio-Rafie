@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
-import SpotifyNowPlaying from '../components/SpotifyNowPlaying';
-import SpotifyTopTracks from '../components/SpotifyTopTracks';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { useFirebaseInit } from '../hooks/useFirebaseInit';
@@ -13,12 +11,9 @@ const AfkPage = () => {
     const { t } = useTranslation();
     const { dbFirestore } = useFirebaseInit('dbFirestore');
 
-    const [games, setGames] = useState([]);
-    const [recentGames, setRecentGames] = useState([]);
-    const [steamUser, setSteamUser] = useState(null);
     const [movies, setMovies] = useState([]);
     const [watchlist, setWatchlist] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingMovies, setLoadingMovies] = useState(true);
     const [loadingWatchlist, setLoadingWatchlist] = useState(true);
     const [discordData, setDiscordData] = useState(null);
     const [reactionPhase, setReactionPhase] = useState('idle');
@@ -40,7 +35,7 @@ const AfkPage = () => {
     const reactionAudioRef = useRef(null);
 
     const getReactionInitials = () => {
-        const sourceName = steamUser?.personaname || 'Rafie Rojagat';
+        const sourceName = 'Rafie Rojagat';
         const initials = sourceName
             .split(/\s+/)
             .filter(Boolean)
@@ -83,54 +78,23 @@ const AfkPage = () => {
     };
 
     useEffect(() => {
-        const fetchSteamData = async () => {
-            try {
-                setLoading(true);
-                const steamRes = await fetch('/.netlify/functions/steam');
-                const steamData = await steamRes.json();
-                if (steamData.games) setGames(steamData.games);
-                else setGames([]);
-                if (steamData.recent) setRecentGames(steamData.recent);
-                else setRecentGames([]);
-                if (steamData.user) setSteamUser(steamData.user);
-            } catch (error) {
-                console.error("Error fetching steam data:", error);
-                setGames([]);
-                setRecentGames([]);
-                setSteamUser(null);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         const fetchOther = async () => {
             try {
+                setLoadingMovies(true);
                 const moviesRes = await fetch('/.netlify/functions/movies');
-                const moviesData = await moviesRes.json();
+                const moviesText = await moviesRes.text();
+                const moviesData = moviesText ? JSON.parse(moviesText) : [];
                 if (Array.isArray(moviesData)) setMovies(moviesData);
             } catch (error) {
                 console.error("Error fetching movies:", error);
+                setMovies([]);
+            } finally {
+                setLoadingMovies(false);
             }
         };
 
-        fetchSteamData();
         fetchOther();
     }, []);
-
-    const retrySteam = async () => {
-        try {
-            setLoading(true);
-            const steamRes = await fetch('/.netlify/functions/steam');
-            const steamData = await steamRes.json();
-            if (steamData.games) setGames(steamData.games);
-            if (steamData.recent) setRecentGames(steamData.recent);
-            if (steamData.user) setSteamUser(steamData.user);
-        } catch (error) {
-            console.error('Retry steam error', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
         const fetchWatchlist = async () => {
@@ -223,7 +187,7 @@ const AfkPage = () => {
     }, []);
 
     const getDiscordStatus = () => {
-        if (!discordData) return { text: t('afk.offline'), color: 'bg-gray-500', isOnline: false, avatar: steamUser?.avatar };
+        if (!discordData) return { text: t('afk.offline'), color: 'bg-gray-500', isOnline: false, avatar: 'https://cdn-icons-png.flaticon.com/512/847/847969.png' };
 
         const statusColors = { online: 'bg-green-500', idle: 'bg-yellow-500', dnd: 'bg-red-500', offline: 'bg-gray-500' };
         const gameActivity = discordData.activities?.find(act => act.type === 0);
@@ -247,7 +211,6 @@ const AfkPage = () => {
 
     const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
     const itemVariants = { hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100 } } };
-    const MusicBars = () => (<div className="flex gap-1 items-end h-4"> {[1, 2, 3, 4].map((bar) => (<motion.div key={bar} className="w-1 bg-[#1DB954]" animate={{ height: [4, 16, 8, 12, 4] }} transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse", delay: bar * 0.1 }} />))} </div>);
 
     const groupMoviesByYear = (movieList) => {
         const grouped = {};
@@ -445,36 +408,6 @@ const AfkPage = () => {
 
                     <motion.div className="space-y-12" variants={containerVariants} initial="hidden" animate="visible">
 
-                        <motion.div
-                            variants={itemVariants}
-                            whileHover={{ y: -5 }}
-                            className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 rounded-[2rem] p-8 md:p-10 shadow-lg hover:shadow-2xl hover:shadow-green-500/10 transition-all duration-500"
-                        >
-                            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-                                <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3">
-                                    <i className="fab fa-spotify text-[#1DB954] text-3xl"></i>
-                                    {t('afk.on_repeat')}
-                                    <MusicBars />
-                                </h2>
-                                <div className="text-xs font-bold text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/20 px-4 py-1.5 rounded-full w-fit flex items-center gap-2">
-                                    <span className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                                    </span>
-                                    {t('afk.live_spotify')}
-                                </div>
-                            </div>
-
-                            <div className="mb-8 transform transition-all duration-300">
-                                <SpotifyNowPlaying />
-                            </div>
-
-                            <div className="pt-6 border-t border-gray-200 dark:border-slate-700/50">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-6">{t('afk.top_tracks')}</h3>
-                                <SpotifyTopTracks />
-                            </div>
-                        </motion.div>
-
                         <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-cyan-500/10 transition-all duration-500">
                             <div className="flex items-center justify-between gap-4 mb-6">
                                 <div>
@@ -670,31 +603,13 @@ const AfkPage = () => {
                                     </AnimatePresence>
                                 </div>
 
-                                <div className="mt-auto">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2"><i className="fas fa-history"></i> {t('afk.recent_games')}</h3>
-                                        <div className="h-[1px] flex-grow ml-4 bg-gray-200 dark:bg-slate-700/50"></div>
-                                    </div>
-                                    {recentGames.length > 0 ? (
-                                        <div className="flex gap-4 overflow-x-auto pb-4 pt-1 scrollbar-hide">
-                                            {recentGames.map((game) => (
-                                                <a key={game.appid} href={`https://store.steampowered.com/app/${game.appid}`} target="_blank" rel="noreferrer" className="flex-shrink-0 w-24 group relative rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                                    <img src={`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`} className="w-full h-32 object-cover bg-gray-800" alt={game.name} />
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
-                                                        <p className="text-[9px] text-white font-bold leading-tight line-clamp-2">{game.name}</p>
-                                                    </div>
-                                                </a>
-                                            ))}
-                                        </div>
-                                    ) : (<p className="text-sm text-gray-400 italic">{t('afk.no_recent_games')}</p>)}
-                                </div>
                             </motion.section>
 
                             <motion.section variants={itemVariants} className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-md border border-white/25 dark:border-slate-700/50 rounded-[2.5rem] p-5 md:p-7 shadow-lg hover:shadow-yellow-500/10 transition-all duration-500 flex flex-col h-[540px] lg:h-[560px]">
                                 <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3 mb-6 flex-shrink-0">
                                     <span className="text-3xl filter drop-shadow-md">🍿</span> {t('afk.cinema_log')}
                                 </h2>
-                                {loading ? (<div className="animate-pulse h-full bg-gray-200 dark:bg-slate-700 rounded-xl"></div>) : (
+                                {loadingMovies ? (<div className="animate-pulse h-full bg-gray-200 dark:bg-slate-700 rounded-xl"></div>) : (
                                     <div className="space-y-10 flex-1 overflow-y-auto scrollbar-hide pr-2 min-h-0">
                                         {moviesByYear.map(([year, yearMovies]) => {
                                             const fav = yearMovies.find(m => m.isFavorite);
@@ -781,48 +696,6 @@ const AfkPage = () => {
                                             </div>
                                         </a>
                                     ))}
-                                </div>
-                            )}
-                        </motion.section>
-
-                        <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-8 md:p-10 shadow-xl hover:shadow-blue-500/10 transition-all duration-500">
-                            <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-xl font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest flex items-center gap-3">
-                                    <i className="fab fa-steam text-2xl"></i> {t('afk.steam_library')}
-                                </h3>
-                                <div className="h-[2px] flex-grow ml-6 bg-gray-200 dark:bg-slate-700/50 rounded-full"></div>
-                            </div>
-
-                            {loading ? (
-                                <div className="py-8 text-center text-gray-500">Loading Steam library…</div>
-                            ) : games.length === 0 ? (
-                                <div className="py-8 text-center text-gray-500">
-                                    <p className="mb-3">Tidak ada data Steam yang dapat ditampilkan.</p>
-                                    <p className="text-sm mb-4">Kemungkinan penyebab: profil Steam Anda disetel privat, API key tidak aktif, atau fungsi Netlify tidak berjalan secara lokal.</p>
-                                    <div className="flex items-center justify-center gap-3">
-                                        <button onClick={retrySteam} className="px-4 py-2 bg-primary text-white rounded-md">Coba lagi</button>
-                                        <a href={steamUser?.profileurl || `https://steamcommunity.com/profiles/${import.meta.env.VITE_STEAM_ID || ''}`} target="_blank" rel="noreferrer" className="px-4 py-2 border rounded-md">Lihat profil Steam</a>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                    {games.slice(0, 18).map((game) => (
-                                        <div key={game.appid} className="flex items-center gap-3 p-3 rounded-2xl bg-white/45 dark:bg-slate-700/35 hover:bg-white/70 dark:hover:bg-slate-700/60 border border-transparent hover:border-gray-200 dark:hover:border-slate-600 transition-all cursor-default shadow-sm hover:shadow-md">
-                                            <img src={`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/header.jpg`} className="w-12 h-12 rounded-lg object-cover shadow-sm" alt={game.name} />
-                                            <div className="overflow-hidden">
-                                                <p className="text-sm font-bold text-dark dark:text-white truncate">{game.name}</p>
-                                                <p className="text-xs text-gray-500 font-mono">{Math.floor(game.playtime_forever / 60)} {t('afk.hours')}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {steamUser && (
-                                <div className="mt-10 text-center">
-                                    <a href={`${steamUser.profileurl}/games/?tab=all`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 dark:bg-slate-700 text-dark dark:text-white rounded-full text-sm font-bold hover:bg-primary hover:text-white transition-all shadow-sm">
-                                        <i className="fab fa-steam"></i> {t('afk.view_library')} <i className="fas fa-arrow-right ml-1"></i>
-                                    </a>
                                 </div>
                             )}
                         </motion.section>

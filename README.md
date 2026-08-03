@@ -6,7 +6,6 @@ Check it out live here: [**https://rafierb.me**](https://rafierb.me)
 
 ## ✨ Key Features
 - **🤖 AI Assistant:** Integrated custom chatbot powered by **Google Gemini API**.
-- **🎵 Live Music:** Real-time **Spotify API** integration (Now Playing & Top Tracks).
 - **🕹️ Interactive UI:** 3D physics-based nametag and custom cursor interactions.
 - **⚡ Performance:** Lazy loading, WebP optimization, and Lighthouse score 95+.
 
