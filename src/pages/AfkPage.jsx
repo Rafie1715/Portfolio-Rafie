@@ -81,6 +81,32 @@ const AfkPage = () => {
         const fetchOther = async () => {
             try {
                 setLoadingMovies(true);
+                if (dbFirestore) {
+                    const picksSnapshot = await getDocs(collection(dbFirestore, 'moviePicks'));
+                    const picks = picksSnapshot.docs
+                        .map((entry) => ({ id: entry.id, ...entry.data() }))
+                        .filter((item) => item.isPublished !== false)
+                        .map((item) => ({
+                            movieId: Number.parseInt(String(item.movieId), 10),
+                            order: Number.isFinite(Number(item.order)) ? Number(item.order) : Number.MAX_SAFE_INTEGER,
+                        }))
+                        .filter((item) => Number.isFinite(item.movieId) && item.movieId > 0)
+                        .sort((a, b) => a.order - b.order);
+
+                    if (picks.length > 0) {
+                        const movieIds = picks.map((item) => item.movieId).join(',');
+                        const detailRes = await fetch(`/.netlify/functions/movies?ids=${movieIds}`);
+                        const detailText = await detailRes.text();
+                        const detailData = detailText ? JSON.parse(detailText) : [];
+
+                        if (Array.isArray(detailData)) {
+                            setMovies(detailData);
+                            return;
+                        }
+                    }
+                }
+
+                // Fallback to legacy static config when no admin picks are available.
                 const moviesRes = await fetch('/.netlify/functions/movies');
                 const moviesText = await moviesRes.text();
                 const moviesData = moviesText ? JSON.parse(moviesText) : [];
@@ -94,7 +120,7 @@ const AfkPage = () => {
         };
 
         fetchOther();
-    }, []);
+    }, [dbFirestore]);
 
     useEffect(() => {
         const fetchWatchlist = async () => {
