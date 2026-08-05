@@ -218,7 +218,9 @@ const resources = {
                 best_year: "Best of Year",
                 steam_library: "Steam Library",
                 hours: "hrs total",
-                view_library: "View Full Library"
+                view_library: "View Full Library",
+                spotify: "My Spotify",
+                now_playing: "Now Playing"
             },
             contact: {
                 seo_title: "Contact | Rafie Rojagat",
@@ -458,7 +460,9 @@ const resources = {
                 best_year: "Terbaik Tahun Ini",
                 steam_library: "Perpustakaan Steam",
                 hours: "jam total",
-                view_library: "Lihat Semua"
+                view_library: "Lihat Semua",
+                spotify: "Spotify Saya",
+                now_playing: "Sedang Diputar"
             },
             contact: {
                 seo_title: "Kontak | Rafie Rojagat",

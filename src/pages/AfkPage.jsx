@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { useFirebaseInit } from '../hooks/useFirebaseInit';
 import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, limit } from 'firebase/firestore';
+import SpotifyNowPlaying from '../components/SpotifyNowPlaying';
+import SpotifyTopTracks from '../components/SpotifyTopTracks';
+import SpotifyPlayer from '../components/SpotifyPlayer';
 
 const AfkPage = () => {
     const DISCORD_ID = "717196208996876379";
@@ -408,6 +411,8 @@ const AfkPage = () => {
 
                 <div className="container mx-auto px-4 max-w-5xl relative z-10">
 
+                    <SpotifyPlayer />
+
                     <div className="text-center mb-16">
                         <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 4, repeat: Infinity }} className="inline-block text-6xl mb-4 filter drop-shadow-lg">🎮</motion.div>
                         <h1 className="text-4xl md:text-6xl font-black text-dark dark:text-white mb-2 tracking-tight">/afk</h1>
@@ -738,6 +743,23 @@ const AfkPage = () => {
                                     ))}
                                 </div>
                             )}
+                        </motion.section>
+
+                        <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-green-500/10 transition-all duration-500">
+                            <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3 mb-8">
+                                <span className="text-3xl filter drop-shadow-md">🎵</span> {t('afk.spotify')}
+                            </h2>
+                            
+                            <div className="space-y-12">
+                                <div>
+                                    <h3 className="text-lg font-bold text-dark dark:text-white mb-4">{t('afk.now_playing')}</h3>
+                                    <SpotifyNowPlaying />
+                                </div>
+                                
+                                <div>
+                                    <SpotifyTopTracks />
+                                </div>
+                            </div>
                         </motion.section>
 
                     </motion.div>
