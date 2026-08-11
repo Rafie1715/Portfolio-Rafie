@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
 import cvFile from '/assets/CV Rafie Rojagat Bachri.pdf';
 import IDCard from './IDCard';
-import ThreeIDCard from './ThreeIDCard';
 import { useTranslation, Trans } from 'react-i18next';
 import { Building2, Box } from 'lucide-react';
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
+
+const ThreeIDCard = lazy(() => import('./ThreeIDCard'));
 
 const About = () => {
   const { t } = useTranslation();
@@ -102,7 +103,15 @@ const About = () => {
                 transition={{ duration: 0.25, ease: 'easeOut' }}
                 className="w-full"
               >
-                <ThreeIDCard />
+                <Suspense
+                  fallback={
+                    <div className="w-full max-w-[520px] mx-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 text-center text-sm text-slate-500 dark:text-slate-400">
+                      {t('about.card_loading_3d')}
+                    </div>
+                  }
+                >
+                  <ThreeIDCard />
+                </Suspense>
               </motion.div>
             )}
           </motion.div>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Tilt from 'react-parallax-tilt';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projects as manualProjects } from '../data/projects';
 import { useFirebaseInit } from '../hooks/useFirebaseInit';
@@ -272,7 +271,7 @@ const Projects = () => {
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2000} className="h-full">
+                      <div className="h-full">
                         <div className="group bg-white dark:bg-darkLight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 dark:border-slate-700/50 flex flex-col h-full relative">                        
                           <div className="h-52 overflow-hidden relative">
                             <LazyImage 
@@ -358,7 +357,7 @@ const Projects = () => {
                           </div>
 
                         </div>
-                      </Tilt>
+                      </div>
                     </motion.div>
                   );
                 })}

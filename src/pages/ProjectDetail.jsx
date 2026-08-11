@@ -112,9 +112,49 @@ const ProjectDetail = () => {
   const solution = getData(project.solution);
   const lessonLearned = getData(project.lessonLearned);
   const featuresList = getFeatures(project.features);
-  const techKeywords = Array.isArray(project.techStack)
-    ? project.techStack.map((tech) => tech?.name).filter(Boolean).join(', ')
-    : '';
+  const techStack = Array.isArray(project.techStack) ? project.techStack : [];
+  const techNames = techStack.map((tech) => tech?.name).filter(Boolean);
+  const techKeywords = techNames.join(', ');
+  const impactSummary = getData(project.impact);
+  const impactParts = typeof impactSummary === 'string'
+    ? impactSummary.split(/[•|]/).map((part) => part.trim()).filter(Boolean)
+    : [];
+  const firstFeature = featuresList[0] || shortDesc;
+  const teamText = impactParts.find((part, index) => (
+    index > 0 && /(team|tim|member|anggota|solo|lead|cohort)/i.test(part)
+  ));
+  const resultText = impactParts.find((part, index) => (
+    index > 0 && part !== teamText
+  ));
+  const availableLinks = [
+    project.live && t('projects.live_site'),
+    project.github && t('projects.source_code'),
+    project.figma && t('projects.design'),
+    project.prototype && t('projects.prototype'),
+  ].filter(Boolean);
+
+  const selectedImpactCards = [
+    {
+      label: t('projectDetail.impact.role'),
+      value: impactParts[0] || `${project.category || 'Software'} Project`,
+      icon: 'fas fa-user-tie',
+    },
+    {
+      label: t('projectDetail.impact.team'),
+      value: teamText || (/solo/i.test(impactParts[0] || '') ? 'Solo project' : t('projectDetail.impact.team_fallback')),
+      icon: 'fas fa-users',
+    },
+    {
+      label: t('projectDetail.impact.result'),
+      value: resultText || firstFeature,
+      icon: 'fas fa-chart-line',
+    },
+    {
+      label: t('projectDetail.impact.tech_link'),
+      value: [techNames.slice(0, 3).join(', '), availableLinks.join(' + ')].filter(Boolean).join(' / '),
+      icon: 'fas fa-link',
+    },
+  ].filter((item) => item.value);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -245,8 +285,53 @@ const ProjectDetail = () => {
               src={project.image}
               alt={title}
               className="w-full h-auto object-cover"
+              sizes="100vw"
+              wrapperClassName="w-full"
             />
           </motion.div>
+
+          {selectedImpactCards.length > 0 && (
+            <motion.section
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={fadeInBottom}
+              className="mb-12 rounded-2xl border border-blue-100 dark:border-blue-900/40 bg-blue-50/70 dark:bg-blue-950/20 p-5 md:p-6"
+            >
+              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-400 mb-2">
+                    {t('projectDetail.impact.eyebrow')}
+                  </p>
+                  <h2 className="text-2xl font-bold text-dark dark:text-white">
+                    {t('projectDetail.impact.title')}
+                  </h2>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-300 max-w-lg">
+                  {t('projectDetail.impact.desc')}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {selectedImpactCards.map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-xl border border-white/80 dark:border-slate-700 bg-white/85 dark:bg-slate-900/70 p-4 shadow-sm"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 flex items-center justify-center mb-3">
+                      <i className={item.icon}></i>
+                    </div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
+                      {item.label}
+                    </p>
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 leading-relaxed">
+                      {item.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </motion.section>
+          )}
 
           <motion.div
             initial="hidden"
@@ -257,7 +342,7 @@ const ProjectDetail = () => {
           >
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{t('projectDetail.tech_used')}</h3>
             <div className="flex flex-wrap gap-3">
-              {project.techStack.map((tech, idx) => (
+              {techStack.map((tech, idx) => (
                 <motion.div
                   key={idx}
                   whileHover={{ y: -5, backgroundColor: "rgba(37, 99, 235, 0.1)" }}

@@ -41,6 +41,7 @@ const resources = {
                 card_show_3d: "Show 3D Preview",
                 card_hide_3d: "Hide 3D Preview",
                 card_preview_hint: "Drag to interact. This preview is experimental.",
+                card_loading_3d: "Loading interactive 3D preview...",
                 edu_title: "Education",
                 uni_name: "Universitas Pembangunan Nasional \"Veteran\" Jakarta",
                 uni_major: "Informatics (2022 - Present)",
@@ -50,7 +51,16 @@ const resources = {
             hero: {
                 greeting: "Hi there, I'm",
                 tagline: "Final-year Informatics student at UPN Veteran Jakarta building responsive web and mobile products with a focus on clean UI and practical UX.",
+                role_phrases: [
+                    "Final-year Informatics student specializing in Front‑End & Mobile (React, Kotlin).",
+                    "Built production Android apps using MVVM, Coroutines, and Retrofit.",
+                    "Seeking internship or entry-level roles — available to contribute immediately.",
+                    "Thesis: Sleep quality classification app with 92.06% accuracy using Random Forest.",
+                    "Experienced in end-to-end projects integrating Android, Firebase, and ML."
+                ],
                 view_work: "About Me",
+                view_projects: "View Projects",
+                download_cv: "Download CV",
                 contact_me: "Let's Connect",
                 afk_cta: {
                     prefix: "Want a quick look outside my coding life?",
@@ -79,7 +89,25 @@ const resources = {
             },
             skills: {
                 title: "Technical Skills",
-                description: "My digital toolbox. I'm constantly learning and expanding this list."
+                description: "My digital toolbox, grouped by the kind of work I use each skill for.",
+                categories: {
+                    frontend: {
+                        title: "Frontend Engineering",
+                        desc: "Building responsive interfaces, polished interactions, and production-ready React pages."
+                    },
+                    mobile: {
+                        title: "Mobile Development",
+                        desc: "Creating Android and cross-platform app experiences with practical user flows."
+                    },
+                    backend: {
+                        title: "Backend & Data",
+                        desc: "Working with APIs, databases, authentication, and cloud-backed app workflows."
+                    },
+                    tools: {
+                        title: "Tools & Workflow",
+                        desc: "Designing, versioning, debugging, and shipping projects with a reliable toolchain."
+                    }
+                }
             },
             certifications: {
                 title: "Certifications",
@@ -113,6 +141,16 @@ const resources = {
             },
             projectDetail: {
                 category_label: "Project",
+                impact: {
+                    eyebrow: "Recruiter Snapshot",
+                    title: "Selected Impact",
+                    desc: "A quick read on what I owned, what the project needed, and where to inspect the work.",
+                    role: "Role",
+                    team: "Team",
+                    result: "Result",
+                    tech_link: "Tech & Link",
+                    team_fallback: "Solo or team project"
+                },
                 overview: "Project Overview",
                 features: "Key Features",
                 tech_used: "Technologies Used",
@@ -283,6 +321,7 @@ const resources = {
                 card_show_3d: "Tampilkan Pratinjau 3D",
                 card_hide_3d: "Sembunyikan Pratinjau 3D",
                 card_preview_hint: "Geser untuk berinteraksi. Pratinjau ini masih eksperimental.",
+                card_loading_3d: "Memuat pratinjau 3D interaktif...",
                 edu_title: "Pendidikan",
                 uni_name: "Universitas Pembangunan Nasional \"Veteran\" Jakarta",
                 uni_major: "Informatika (2022 - Sekarang)",
@@ -292,7 +331,16 @@ const resources = {
             hero: {
                 greeting: "Halo, saya",
                 tagline: "Mahasiswa tingkat akhir Informatika di UPN Veteran Jakarta yang membangun produk web dan mobile responsif dengan fokus pada UI yang rapi dan UX yang praktis.",
+                role_phrases: [
+                    "Mahasiswa tingkat akhir Informatika, fokus Front‑End & Mobile (React, Kotlin).",
+                    "Mengembangkan aplikasi Android produksi dengan MVVM, Coroutines, dan Retrofit.",
+                    "Mencari posisi magang atau entry-level — siap berkontribusi segera.",
+                    "Skripsi: Aplikasi klasifikasi kualitas tidur dengan akurasi 92.06% menggunakan Random Forest.",
+                    "Berpengalaman membangun proyek end-to-end: Android, Firebase, dan integrasi ML."
+                ],
                 view_work: "Tentang Saya",
+                view_projects: "Lihat Proyek",
+                download_cv: "Unduh CV",
                 contact_me: "Mari Terhubung",
                 afk_cta: {
                     prefix: "Ingin lihat sisi saya di luar coding?",
@@ -321,7 +369,25 @@ const resources = {
             },
             skills: {
                 title: "Keahlian Teknis",
-                description: "Alat tempur digital saya. Saya terus belajar dan memperluas daftar ini."
+                description: "Alat kerja digital saya, dikelompokkan berdasarkan jenis pekerjaan yang saya bangun.",
+                categories: {
+                    frontend: {
+                        title: "Frontend Engineering",
+                        desc: "Membangun antarmuka responsif, interaksi rapi, dan halaman React yang siap produksi."
+                    },
+                    mobile: {
+                        title: "Mobile Development",
+                        desc: "Membuat pengalaman aplikasi Android dan lintas platform dengan alur pengguna yang praktis."
+                    },
+                    backend: {
+                        title: "Backend & Data",
+                        desc: "Mengelola API, database, autentikasi, dan workflow aplikasi berbasis cloud."
+                    },
+                    tools: {
+                        title: "Tools & Workflow",
+                        desc: "Mendesain, versioning, debugging, dan merilis proyek dengan toolchain yang stabil."
+                    }
+                }
             },
             certifications: {
                 title: "Sertifikasi",
@@ -355,6 +421,16 @@ const resources = {
             },
             projectDetail: {
                 category_label: "Proyek",
+                impact: {
+                    eyebrow: "Ringkasan Rekruter",
+                    title: "Selected Impact",
+                    desc: "Ringkasan cepat tentang peran saya, kebutuhan proyek, dan tautan untuk mengecek hasilnya.",
+                    role: "Peran",
+                    team: "Tim",
+                    result: "Hasil",
+                    tech_link: "Tech & Link",
+                    team_fallback: "Proyek mandiri atau tim"
+                },
                 overview: "Ringkasan Proyek",
                 features: "Fitur Utama",
                 tech_used: "Teknologi yang Digunakan",
