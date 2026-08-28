@@ -24,12 +24,18 @@ export default defineConfig({
           'animation': ['framer-motion'],
           'i18n': ['i18next', 'react-i18next'],
           'firebase': ['firebase/app', 'firebase/firestore', 'firebase/auth'],
-          'ui-libs': ['react-helmet-async', 'react-fast-marquee', 'typewriter-effect'],
+          'ui-libs': ['react-helmet-async'],
+          'three-core': ['three'],
+          'three-react': ['@react-three/fiber'],
+          'three-drei': ['@react-three/drei'],
+          'rapier-runtime': ['@dimforge/rapier3d-compat'],
+          'three-physics': ['@react-three/rapier'],
+          'three-utils': ['three-stdlib', 'meshline'],
         },
       },
     },
-    // Optimize chunk size
-    chunkSizeWarningLimit: 1000,
+    // Rapier compat ships its WASM runtime inline (~2.06 MB raw) in one lazy chunk.
+    chunkSizeWarningLimit: 2100,
     // Enable minification with esbuild (default, faster than terser)
     minify: 'esbuild',
   },

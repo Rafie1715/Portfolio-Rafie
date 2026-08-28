@@ -2,52 +2,51 @@ import Contact from '../components/Contact';
 import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { BriefcaseBusiness } from 'lucide-react';
 
 const ContactPage = () => {
   const { t } = useTranslation();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <PageTransition>
-    <div className="bg-white dark:bg-dark min-h-screen pt-20 md:pt-24 pb-12 md:pb-20 transition-colors duration-300 relative overflow-hidden">
-      <SEO 
-        title={t('contact.seo_title')} 
-        description={t('contact.seo_desc')} 
-        url="https://rafie-dev.netlify.app/contact"
-        keywords="Contact Rafie Rojagat, Hire Software Engineer, Developer Contact Form, Get in Touch, Collaboration Opportunities"
-        type="website"
-      />
+      <main className="relative min-h-screen overflow-hidden bg-white pb-12 pt-20 transition-colors duration-300 dark:bg-dark md:pb-20 md:pt-24">
+        <SEO
+          title={t('contact.seo_title')}
+          description={t('contact.seo_desc')}
+          url="https://rafierb.me/contact"
+          keywords="Contact Rafie Rojagat, Hire Software Engineer, Android Developer Contact, Front-End Developer, Collaboration Opportunities"
+          type="website"
+        />
 
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white dark:from-dark dark:via-transparent dark:to-dark"></div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 blur-[120px] rounded-full"></div>
-      </div>
-
-      <div className="container mx-auto px-4 max-w-6xl relative z-10 mb-16">
-        <div className="text-center mb-12 md:mb-20">
-          <motion.div
-            animate={{ y: [0, -15, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-block relative"
-          >
-            <div className="p-4 md:p-5 rounded-2xl md:rounded-3xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-xl relative z-10">
-              <i className="fas fa-envelope text-3xl md:text-5xl text-dark dark:text-white bg-clip-text bg-gradient-to-r from-primary to-secondary"></i>
-            </div>
-            <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full transform scale-150 z-0 animate-pulse"></div>
-          </motion.div>
-
-          <h1 className="mt-6 md:mt-8 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-dark dark:text-white mb-4 md:mb-6 tracking-tight px-4">
-            {t('pages.contact.title_prefix')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">{t('pages.contact.title_highlight')}</span>
-          </h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed px-4">
-            {t('pages.contact.subtitle')}
-          </p>
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[32rem] opacity-60 dark:opacity-25">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
         </div>
-      </div>
 
-      <Contact />
-    </div>
+        <header className="relative z-10 mx-auto max-w-6xl px-4 pb-8 pt-10 sm:px-6 md:pb-12 md:pt-14 lg:px-8">
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="max-w-3xl"
+          >
+            <p className="mb-4 flex items-center gap-2 text-sm font-bold uppercase text-primary">
+              <BriefcaseBusiness className="h-4 w-4" aria-hidden="true" />
+              {t('pages.contact.eyebrow')}
+            </p>
+            <h1 className="max-w-3xl text-4xl font-black leading-tight text-dark dark:text-white sm:text-5xl md:text-6xl">
+              {t('pages.contact.title_prefix')}{' '}
+              <span className="text-primary">{t('pages.contact.title_highlight')}</span>
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-gray-300 md:text-lg">
+              {t('pages.contact.subtitle')}
+            </p>
+          </motion.div>
+        </header>
+
+        <Contact />
+      </main>
     </PageTransition>
   );
 };

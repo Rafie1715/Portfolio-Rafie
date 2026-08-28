@@ -1,324 +1,463 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import {
+  AlertCircle,
+  Check,
+  CheckCircle2,
+  Clock3,
+  Copy,
+  Download,
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Send,
+  ShieldCheck,
+} from 'lucide-react';
 import { trackFormSubmission, trackExternalLink } from '../utils/analytics';
+
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xanjlvvr';
+const CONTACT_EMAIL = 'rojagatrafie@gmail.com';
+const MESSAGE_MAX_LENGTH = 2000;
+const KNOWN_FIELDS = new Set(['name', 'email', 'topic', 'message']);
+
+const socialLinks = [
+  {
+    label: 'LinkedIn',
+    url: 'https://linkedin.com/in/rafie-rojagat',
+    icon: <Linkedin className="h-5 w-5" aria-hidden="true" />,
+  },
+  {
+    label: 'GitHub',
+    url: 'https://github.com/Rafie1715',
+    icon: <Github className="h-5 w-5" aria-hidden="true" />,
+  },
+  {
+    label: 'Instagram',
+    url: 'https://instagram.com/rafie_rb',
+    icon: <Instagram className="h-5 w-5" aria-hidden="true" />,
+  },
+];
 
 const Contact = () => {
   const { t } = useTranslation();
-  const [status, setStatus] = useState("");
-  const [focusedField, setFocusedField] = useState(null);
+  const shouldReduceMotion = useReducedMotion();
+  const [submission, setSubmission] = useState({ status: 'idle', message: '' });
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [messageLength, setMessageLength] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const feedbackRef = useRef(null);
+  const copyTimerRef = useRef(null);
+  const requestControllerRef = useRef(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    setStatus("loading");
+  const isSubmitting = submission.status === 'loading';
+  const hasFeedback = !['idle', 'loading'].includes(submission.status);
 
-    const data = new FormData(form);
+  useEffect(() => {
+    if (hasFeedback) {
+      feedbackRef.current?.focus();
+    }
+  }, [hasFeedback, submission.status]);
+
+  useEffect(() => () => {
+    if (copyTimerRef.current) {
+      window.clearTimeout(copyTimerRef.current);
+    }
+    requestControllerRef.current?.abort();
+  }, []);
+
+  const clearFieldError = (field) => {
+    setFieldErrors((current) => {
+      if (!current[field]) return current;
+      const next = { ...current };
+      delete next[field];
+      return next;
+    });
+  };
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTACT_EMAIL);
+      setCopied(true);
+      if (copyTimerRef.current) window.clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      window.location.href = `mailto:${CONTACT_EMAIL}`;
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const controller = new AbortController();
+    requestControllerRef.current = controller;
+    const timeoutId = window.setTimeout(() => controller.abort(), 12000);
+
+    setSubmission({ status: 'loading', message: '' });
+    setFieldErrors({});
 
     try {
-      const response = await fetch("https://formspree.io/f/xanjlvvr", {
-        method: "POST",
-        body: data,
-        headers: {
-          'Accept': 'application/json'
-        }
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+        signal: controller.signal,
       });
+      const payload = await response.json().catch(() => ({}));
 
       if (response.ok) {
         trackFormSubmission('contact_form', true);
-        setStatus("success");
-        form.reset(); 
-        setTimeout(() => setStatus(""), 5000);
-      } else {
-        trackFormSubmission('contact_form', false);
-        setStatus("error");
+        setSubmission({ status: 'success', message: t('contact.form.success') });
+        form.reset();
+        setMessageLength(0);
+        return;
       }
+
+      trackFormSubmission('contact_form', false);
+
+      if (response.status === 429) {
+        setSubmission({ status: 'rate-limit', message: t('contact.form.rate_limit') });
+        return;
+      }
+
+      const errors = Array.isArray(payload.errors) ? payload.errors : [];
+      const nextFieldErrors = errors.reduce((result, error) => {
+        if (KNOWN_FIELDS.has(error.field)) {
+          result[error.field] = error.message || t('contact.form.validation_error');
+        }
+        return result;
+      }, {});
+
+      if (Object.keys(nextFieldErrors).length > 0) {
+        setFieldErrors(nextFieldErrors);
+        setSubmission({ status: 'error', message: t('contact.form.validation_error') });
+        window.setTimeout(() => {
+          document.getElementById(Object.keys(nextFieldErrors)[0])?.focus();
+        }, 0);
+        return;
+      }
+
+      setSubmission({
+        status: 'error',
+        message: errors[0]?.message || t('contact.form.error'),
+      });
     } catch (error) {
       trackFormSubmission('contact_form', false);
-      setStatus("error");
-    }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2
+      setSubmission({
+        status: error.name === 'AbortError' ? 'timeout' : 'error',
+        message: error.name === 'AbortError'
+          ? t('contact.form.timeout')
+          : t('contact.form.error'),
+      });
+    } finally {
+      window.clearTimeout(timeoutId);
+      if (requestControllerRef.current === controller) {
+        requestControllerRef.current = null;
       }
     }
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { type: "spring", stiffness: 50 }
-    }
-  };
+  const revealProps = shouldReduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 18 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.15 },
+        transition: { duration: 0.4, ease: 'easeOut' },
+      };
 
-  const socialHover = {
-    hover: { 
-      y: -5, 
-      scale: 1.05,
-      transition: { type: "spring", stiffness: 300 } 
-    }
-  };
+  const inputClass = 'min-h-12 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark outline-none transition-colors placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:placeholder:text-gray-500';
+
+  const fieldError = (field) => fieldErrors[field] && (
+    <p id={`${field}-error`} className="mt-2 flex items-center gap-1.5 text-sm font-medium text-red-600 dark:text-red-400">
+      <AlertCircle className="h-4 w-4 flex-none" aria-hidden="true" />
+      {fieldErrors[field]}
+    </p>
+  );
 
   return (
-    <section id="contact" className="py-24 bg-white dark:bg-dark relative overflow-hidden transition-colors duration-300">      
-      <motion.div 
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"
-      ></motion.div>
-      <motion.div 
-          animate={{ scale: [1, 1.5, 1], rotate: [0, -45, 0] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-0 left-0 w-80 h-80 bg-secondary/5 rounded-full blur-[100px] pointer-events-none"
-      ></motion.div>
-
-      <div className="container mx-auto px-4 relative z-10">        
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-12">          
-          <motion.div 
-            className="md:w-1/3 space-y-8"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+    <section id="contact" className="relative z-10 pb-16 md:pb-20">
+      <div className="mx-auto grid max-w-6xl items-start gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(19rem,0.75fr)] lg:gap-14 lg:px-8">
+        <motion.div {...revealProps}>
+          <form
+            onSubmit={handleSubmit}
+            aria-busy={isSubmitting}
+            className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:p-7 md:p-8"
           >
-            <div className="bg-gradient-to-br from-primary/10 to-secondary/10 dark:bg-gradient-to-br dark:from-primary/5 dark:to-secondary/5 backdrop-blur-sm p-8 rounded-2xl border border-primary/20 dark:border-primary/10 shadow-md hover:shadow-xl hover:border-primary/40 transition-all duration-300">
-              <h3 className="text-xl font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
-                <span className="w-2 h-6 bg-gradient-to-b from-primary to-secondary rounded-full"></span>
-                {t('contact.info_title')}
-              </h3>
-              
-              <div className="space-y-6">                
-                <motion.a 
-                  href="mailto:rojagatrafie@gmail.com"
-                  className="flex items-start space-x-4 p-4 rounded-xl hover:bg-white dark:hover:bg-slate-800 transition-all group cursor-pointer"
-                  whileHover={{ x: 8, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl flex items-center justify-center text-primary flex-shrink-0 shadow-sm group-hover:from-primary group-hover:to-primary group-hover:text-white transition-all">
-                    <i className="fas fa-envelope text-lg"></i>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide font-bold">Email</p>
-                    <p className="text-dark dark:text-slate-200 font-medium hover:text-primary transition-colors break-all">
-                      rojagatrafie@gmail.com
-                    </p>
-                  </div>
-                </motion.a>
+            <div className="mb-7">
+              <p className="mb-2 text-sm font-bold uppercase text-primary">{t('contact.form.eyebrow')}</p>
+              <h2 className="text-2xl font-black text-dark dark:text-white sm:text-3xl">
+                {t('contact.form.title')}
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-600 dark:text-gray-400 sm:text-base">
+                {t('contact.form.subtitle')}
+              </p>
+            </div>
 
-                <motion.div 
-                  className="flex items-start space-x-4 p-4 rounded-xl hover:bg-white dark:hover:bg-slate-800 transition-all"
-                  whileHover={{ x: 8, scale: 1.02 }}
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-secondary/20 to-secondary/10 rounded-xl flex items-center justify-center text-secondary flex-shrink-0 shadow-sm group-hover:from-secondary group-hover:to-secondary group-hover:text-white transition-all">
-                    <i className="fas fa-map-marker-alt text-lg"></i>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide font-bold">{t('contact.location')}</p>
-                    <p className="text-dark dark:text-slate-200 font-medium">Jakarta, Indonesia 🇮🇩</p>
-                  </div>
-                </motion.div>
+            <div className="absolute left-[-5000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+              <label htmlFor="company-website">Company website</label>
+              <input id="company-website" type="text" name="_gotcha" tabIndex="-1" autoComplete="off" />
+            </div>
+            <input type="hidden" name="_subject" value="New portfolio contact" />
 
-                <motion.div 
-                  className="flex items-start space-x-4 p-4 rounded-xl hover:bg-white dark:hover:bg-slate-800 transition-all"
-                  whileHover={{ x: 8, scale: 1.02 }}
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400/20 to-blue-400/10 rounded-xl flex items-center justify-center text-blue-500 flex-shrink-0 shadow-sm">
-                    <i className="fas fa-clock text-lg"></i>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide font-bold">Response Time</p>
-                    <p className="text-dark dark:text-slate-200 font-medium">Usually within 24 hours ⚡</p>
-                  </div>
-                </motion.div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="name" className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200">
+                  {t('contact.form.name_label')} <span className="text-red-600" aria-hidden="true">*</span>
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  minLength="2"
+                  maxLength="80"
+                  required
+                  aria-invalid={Boolean(fieldErrors.name)}
+                  aria-describedby={fieldErrors.name ? 'name-error' : undefined}
+                  onChange={() => clearFieldError('name')}
+                  className={inputClass}
+                  placeholder={t('contact.form.name_placeholder')}
+                />
+                {fieldError('name')}
               </div>
 
-              <div className="mt-10 pt-6 border-t border-gray-200 dark:border-slate-700/50">
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 font-medium">{t('contact.follow_me')}</p>
-                <div className="flex space-x-3 flex-wrap gap-3">
-                  {[
-                    { icon: "fab fa-linkedin-in", url: "https://linkedin.com/in/rafie-rojagat", color: "from-[#0077b5] to-[#0066cc]", text: "LinkedIn" },
-                    { icon: "fab fa-github", url: "https://github.com/Rafie1715", color: "from-[#24292e] to-[#0d1117]", text: "GitHub" },
-                    { icon: "fab fa-instagram", url: "https://instagram.com/rafie_rb", color: "from-[#E1306C] to-[#C13584]", text: "Instagram" }
-                  ].map((social, index) => (
-                    <motion.a
-                      key={index}
-                      href={social.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => trackExternalLink(social.text.toLowerCase(), social.url)}
-                      whileHover={{ y: -8, scale: 1.15 }}
-                      whileTap={{ scale: 0.9 }}
-                      className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${social.color} flex items-center justify-center text-white transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 border border-white/20 min-h-[44px] min-w-[44px]`}
-                      title={social.text}
-                    >
-                      <i className={`${social.icon} text-lg sm:text-xl`}></i>
-                    </motion.a>
-                  ))}
-                </div>
+              <div>
+                <label htmlFor="email" className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200">
+                  {t('contact.form.email_label')} <span className="text-red-600" aria-hidden="true">*</span>
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  maxLength="254"
+                  required
+                  aria-invalid={Boolean(fieldErrors.email)}
+                  aria-describedby={fieldErrors.email ? 'email-error' : undefined}
+                  onChange={() => clearFieldError('email')}
+                  className={inputClass}
+                  placeholder={t('contact.form.email_placeholder')}
+                />
+                {fieldError('email')}
               </div>
             </div>
-          </motion.div>
 
-          <motion.div 
-             className="md:w-2/3"
-             variants={containerVariants}
-             initial="hidden"
-             whileInView="visible"
-             viewport={{ once: true }}
-          >
-            <form onSubmit={handleSubmit} className="bg-gradient-to-br from-white to-gray-50/50 dark:bg-gradient-to-br dark:from-slate-800 dark:to-slate-800/50 p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700/50 relative overflow-hidden">
-              
-              {/* Animated border */}
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-secondary/20 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <motion.div 
-                  variants={itemVariants} 
-                  className="group relative"
-                >
-                  <label htmlFor="name" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${focusedField === 'name' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>
-                    {t('contact.form.name_label')}
-                    <span className="text-primary ml-1">*</span>
-                  </label>
-                  <div className="relative">
-                    <motion.div
-                      initial={{ scaleX: 0 }}
-                      animate={focusedField === 'name' ? { scaleX: 1 } : { scaleX: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-primary to-secondary origin-left rounded-full"
-                    ></motion.div>
-                    <input 
-                      type="text" 
-                      name="name" 
-                      id="name" 
-                      required
-                      onFocus={() => setFocusedField('name')}
-                      onBlur={() => setFocusedField(null)}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 outline-none transition-all duration-300 focus:bg-white dark:text-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder-gray-400 dark:placeholder-gray-500"
-                      placeholder={t('contact.form.name_placeholder')}
-                    />
-                  </div>
-                </motion.div>
-
-                <motion.div 
-                  variants={itemVariants} 
-                  className="group relative"
-                >
-                  <label htmlFor="email" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${focusedField === 'email' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>
-                    {t('contact.form.email_label')}
-                    <span className="text-primary ml-1">*</span>
-                  </label>
-                  <div className="relative">
-                    <motion.div
-                      initial={{ scaleX: 0 }}
-                      animate={focusedField === 'email' ? { scaleX: 1 } : { scaleX: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-primary to-secondary origin-left rounded-full"
-                    ></motion.div>
-                    <input 
-                      type="email" 
-                      name="email" 
-                      id="email" 
-                      required
-                      onFocus={() => setFocusedField('email')}
-                      onBlur={() => setFocusedField(null)}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 outline-none transition-all duration-300 focus:bg-white dark:text-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder-gray-400 dark:placeholder-gray-500"
-                      placeholder={t('contact.form.email_placeholder')}
-                    />
-                  </div>
-                </motion.div>
-              </div>
-
-              <motion.div 
-                variants={itemVariants} 
-                className="mb-8 group relative"
+            <div className="mt-5">
+              <label htmlFor="topic" className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200">
+                {t('contact.form.topic_label')} <span className="text-red-600" aria-hidden="true">*</span>
+              </label>
+              <select
+                id="topic"
+                name="topic"
+                defaultValue=""
+                required
+                aria-invalid={Boolean(fieldErrors.topic)}
+                aria-describedby={fieldErrors.topic ? 'topic-error' : undefined}
+                onChange={() => clearFieldError('topic')}
+                className={inputClass}
               >
-                <label htmlFor="message" className={`block text-sm font-bold mb-2 transition-colors duration-300 ${focusedField === 'message' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>
-                  {t('contact.form.message_label')}
-                  <span className="text-primary ml-1">*</span>
+                <option value="" disabled>{t('contact.form.topic_placeholder')}</option>
+                <option value="Hiring">{t('contact.form.topics.hiring')}</option>
+                <option value="Internship">{t('contact.form.topics.internship')}</option>
+                <option value="Collaboration">{t('contact.form.topics.collaboration')}</option>
+                <option value="Freelance">{t('contact.form.topics.freelance')}</option>
+                <option value="Other">{t('contact.form.topics.other')}</option>
+              </select>
+              {fieldError('topic')}
+            </div>
+
+            <div className="mt-5">
+              <div className="mb-2 flex items-end justify-between gap-4">
+                <label htmlFor="message" className="block text-sm font-bold text-gray-700 dark:text-gray-200">
+                  {t('contact.form.message_label')} <span className="text-red-600" aria-hidden="true">*</span>
                 </label>
-                <div className="relative">
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    animate={focusedField === 'message' ? { scaleX: 1 } : { scaleX: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-primary to-secondary origin-left rounded-full"
-                  ></motion.div>
-                  <textarea 
-                    name="message" 
-                    id="message" 
-                    rows="5" 
-                    required
-                    onFocus={() => setFocusedField('message')}
-                    onBlur={() => setFocusedField(null)}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 outline-none transition-all duration-300 focus:bg-white dark:text-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder-gray-400 dark:placeholder-gray-500 resize-none"
-                    placeholder={t('contact.form.message_placeholder')}
-                  ></textarea>
-                </div>
-              </motion.div>
+                <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                  {messageLength}/{MESSAGE_MAX_LENGTH}
+                </span>
+              </div>
+              <textarea
+                id="message"
+                name="message"
+                rows="6"
+                minLength="20"
+                maxLength={MESSAGE_MAX_LENGTH}
+                required
+                aria-invalid={Boolean(fieldErrors.message)}
+                aria-describedby={fieldErrors.message ? 'message-error' : 'message-help'}
+                onChange={(event) => {
+                  setMessageLength(event.target.value.length);
+                  clearFieldError('message');
+                }}
+                className={`${inputClass} resize-y`}
+                placeholder={t('contact.form.message_placeholder')}
+              />
+              {fieldError('message')}
+              {!fieldErrors.message && (
+                <p id="message-help" className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  {t('contact.form.message_help')}
+                </p>
+              )}
+            </div>
 
-              <motion.div variants={itemVariants} className="text-right relative">
-                <motion.button 
-                  type="submit" 
-                  disabled={status === 'loading'}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`relative overflow-hidden inline-flex items-center justify-center px-8 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-primary/40 transition-all min-h-[44px] ${status === 'loading' ? 'opacity-80 cursor-not-allowed' : ''}`}
+            {hasFeedback && (
+              <div
+                ref={feedbackRef}
+                tabIndex="-1"
+                role={submission.status === 'success' ? 'status' : 'alert'}
+                aria-live={submission.status === 'success' ? 'polite' : 'assertive'}
+                className={`mt-6 flex items-start gap-3 rounded-lg border px-4 py-3 text-sm font-semibold outline-none focus:ring-2 ${
+                  submission.status === 'success'
+                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800 focus:ring-emerald-300 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
+                    : 'border-red-200 bg-red-50 text-red-800 focus:ring-red-300 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300'
+                }`}
+              >
+                {submission.status === 'success'
+                  ? <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
+                  : <AlertCircle className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />}
+                <span>{submission.message}</span>
+              </div>
+            )}
+
+            <div className="mt-7 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-65 dark:focus:ring-offset-slate-900 sm:w-auto"
+              >
+                <Send className={`h-4 w-4 ${isSubmitting && !shouldReduceMotion ? 'animate-pulse' : ''}`} aria-hidden="true" />
+                {isSubmitting ? t('contact.form.sending') : t('contact.form.send_btn')}
+              </button>
+
+              <p className="flex max-w-sm items-start gap-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                <ShieldCheck className="mt-0.5 h-4 w-4 flex-none" aria-hidden="true" />
+                <span>
+                  {t('contact.form.privacy_prefix')}{' '}
+                  <a
+                    href="https://formspree.io/legal/privacy-policy/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold underline decoration-gray-300 underline-offset-2 hover:text-primary dark:decoration-slate-600"
+                  >
+                    Formspree
+                  </a>.
+                </span>
+              </p>
+            </div>
+          </form>
+        </motion.div>
+
+        <motion.aside
+          {...revealProps}
+          transition={shouldReduceMotion ? undefined : { duration: 0.4, delay: 0.08, ease: 'easeOut' }}
+          aria-labelledby="contact-details-title"
+          className="border-t border-gray-200 pt-8 dark:border-slate-700 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-1"
+        >
+          <div className="border-l-2 border-emerald-500 pl-4">
+            <p className="text-xs font-bold uppercase text-emerald-700 dark:text-emerald-400">
+              {t('contact.availability_label')}
+            </p>
+            <p className="mt-1 font-bold text-dark dark:text-white">{t('contact.availability')}</p>
+          </div>
+
+          <h2 id="contact-details-title" className="mt-8 text-xl font-black text-dark dark:text-white">
+            {t('contact.info_title')}
+          </h2>
+
+          <dl className="mt-5 divide-y divide-gray-200 border-y border-gray-200 dark:divide-slate-700 dark:border-slate-700">
+            <div className="flex gap-3 py-4">
+              <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-blue-50 text-primary dark:bg-blue-950/50">
+                <Mail className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <dt className="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Email</dt>
+                <dd className="mt-1 flex min-w-0 items-center gap-2">
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="min-w-0 break-words text-sm font-semibold text-dark hover:text-primary dark:text-gray-200 [overflow-wrap:anywhere]"
+                  >
+                    {CONTACT_EMAIL}
+                  </a>
+                  <button
+                    type="button"
+                    onClick={handleCopyEmail}
+                    className="flex h-9 w-9 flex-none items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:text-gray-400 dark:hover:bg-slate-800"
+                    aria-label={copied ? t('contact.email_copied') : t('contact.copy_email')}
+                    title={copied ? t('contact.email_copied') : t('contact.copy_email')}
+                  >
+                    {copied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+                  </button>
+                  <span className="sr-only" role="status" aria-live="polite">
+                    {copied ? t('contact.email_copied') : ''}
+                  </span>
+                </dd>
+              </div>
+            </div>
+
+            <div className="flex gap-3 py-4">
+              <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-cyan-50 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300">
+                <MapPin className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <dt className="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">{t('contact.location')}</dt>
+                <dd className="mt-1 text-sm font-semibold text-dark dark:text-gray-200">Jakarta, Indonesia</dd>
+              </div>
+            </div>
+
+            <div className="flex gap-3 py-4">
+              <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
+                <Clock3 className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <dt className="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">{t('contact.response_time_label')}</dt>
+                <dd className="mt-1 text-sm font-semibold text-dark dark:text-gray-200">{t('contact.response_time')}</dd>
+              </div>
+            </div>
+          </dl>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            <a
+              href="/assets/CV Rafie Rojagat Bachri.pdf"
+              download="CV_Rafie_Rojagat_Bachri.pdf"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-primary/40 px-4 py-2.5 text-sm font-bold text-primary transition-colors hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              {t('contact.download_cv')}
+            </a>
+            <a
+              href="https://linkedin.com/in/rafie-rojagat"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackExternalLink('linkedin', 'https://linkedin.com/in/rafie-rojagat')}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500/40 dark:bg-white dark:text-slate-900 dark:hover:bg-gray-200"
+            >
+              <Linkedin className="h-4 w-4" aria-hidden="true" />
+              LinkedIn
+            </a>
+          </div>
+
+          <div className="mt-7">
+            <p className="text-sm font-semibold text-gray-600 dark:text-gray-300">{t('contact.profiles')}</p>
+            <div className="mt-3 flex gap-2">
+              {socialLinks.map(({ label, url, icon }) => (
+                <a
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => trackExternalLink(label.toLowerCase(), url)}
+                  className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition-colors hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:text-gray-300"
+                  aria-label={`${t('contact.open_profile')} ${label}`}
+                  title={label}
                 >
-                  {status === 'loading' && (
-                    <motion.div 
-                        animate={{ rotate: 360 }}
-                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                        className="mr-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-                    />
-                  )}
-                  
-                  {status === 'loading' ? t('contact.form.sending') : t('contact.form.send_btn')}
-                  
-                  {!status && (
-                    <motion.i 
-                      className="fas fa-paper-plane ml-2"
-                      initial={{ x: 0, y: 0 }}
-                      whileHover={{ x: 5, y: -5 }}
-                    ></motion.i>
-                  )}
-                </motion.button>
-
-                <AnimatePresence>
-                    {status === 'success' && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 10, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.9 }}
-                        className="absolute bottom-full right-0 mb-4 px-4 py-3 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 text-green-600 dark:text-green-400 rounded-xl text-sm font-bold flex items-center shadow-md border border-green-200 dark:border-green-800/30"
-                    >
-                        <i className="fas fa-check-circle mr-2"></i> {t('contact.form.success')}
-                    </motion.div>
-                    )}
-                    {status === 'error' && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 10, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.9 }}
-                        className="absolute bottom-full right-0 mb-4 px-4 py-3 bg-gradient-to-r from-red-100 to-orange-100 dark:from-red-900/30 dark:to-orange-900/30 text-red-600 dark:text-red-400 rounded-xl text-sm font-bold flex items-center shadow-md border border-red-200 dark:border-red-800/30"
-                    >
-                        <i className="fas fa-exclamation-circle mr-2"></i> {t('contact.form.error')}
-                    </motion.div>
-                    )}
-                </AnimatePresence>
-              </motion.div>
-
-            </form>
-          </motion.div>
-        </div>
+                  {icon}
+                </a>
+              ))}
+            </div>
+          </div>
+        </motion.aside>
       </div>
     </section>
   );

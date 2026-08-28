@@ -1,5 +1,156 @@
 export const projects = [
   {
+    id: "OD60ttuTSwZW62TRJFm6",
+    title: {
+      en: "RestUP - Sleep Quality Monitoring App",
+      id: "RestUP - Aplikasi Pemantauan Kualitas Tidur"
+    },
+    category: "mobile",
+    image: "/images/project-restup.jpg",
+    featuredOrder: 1,
+    year: "2026",
+    impact: {
+      en: "Thesis Researcher | Sleep quality prediction | 92.06% accuracy",
+      id: "Peneliti Skripsi | Prediksi kualitas tidur | Akurasi 92,06%"
+    },
+    impactDetails: {
+      role: {
+        en: "Thesis Researcher and ML Developer",
+        id: "Peneliti Skripsi dan ML Developer"
+      },
+      team: {
+        en: "Independent thesis project",
+        id: "Proyek skripsi mandiri"
+      },
+      result: {
+        en: "92.06% Random Forest accuracy",
+        id: "Akurasi Random Forest 92,06%"
+      },
+      scope: {
+        en: "Sleep quality monitoring and prediction",
+        id: "Pemantauan dan prediksi kualitas tidur"
+      }
+    },
+    shortDesc: {
+      en: "An Android application that tracks, analyzes, and classifies sleep quality using a Random Forest machine learning algorithm.",
+      id: "Aplikasi Android yang melacak, menganalisis, dan mengklasifikasikan kualitas tidur menggunakan algoritma machine learning Random Forest."
+    },
+    fullDesc: {
+      en: "RestUP is my Informatics thesis project focused on helping users understand their sleep quality through a practical Android experience. The application combines sleep activity tracking, a guided daily check-in, classification results, weekly statistics, and educational content in one product flow.",
+      id: "RestUP adalah proyek skripsi Informatika saya yang berfokus membantu pengguna memahami kualitas tidurnya melalui pengalaman Android yang praktis. Aplikasi ini menggabungkan pelacakan aktivitas tidur, check-in harian terpandu, hasil klasifikasi, statistik mingguan, dan konten edukasi dalam satu alur produk."
+    },
+    challenges: {
+      en: "The central challenge was turning sleep activity and self-assessment data into a classification that remained understandable and useful inside a mobile interface.",
+      id: "Tantangan utamanya adalah mengubah data aktivitas tidur dan penilaian mandiri menjadi klasifikasi yang tetap mudah dipahami dan berguna dalam antarmuka mobile."
+    },
+    solution: {
+      en: "I designed a guided tracking and assessment flow in Kotlin, used Firebase for application data, and evaluated a Random Forest model with Scikit-Learn. The final model reached 92.06% classification accuracy.",
+      id: "Saya merancang alur pelacakan dan penilaian terpandu dengan Kotlin, menggunakan Firebase untuk data aplikasi, serta mengevaluasi model Random Forest dengan Scikit-Learn. Model akhir mencapai akurasi klasifikasi 92,06%."
+    },
+    lessonLearned: {
+      en: "This project strengthened my ability to connect machine learning evaluation with product decisions and to translate technical output into clear, actionable feedback for users.",
+      id: "Proyek ini memperkuat kemampuan saya menghubungkan evaluasi machine learning dengan keputusan produk serta menerjemahkan keluaran teknis menjadi umpan balik yang jelas dan dapat ditindaklanjuti pengguna."
+    },
+    features: {
+      en: [
+        "Sleep activity tracking",
+        "Guided daily sleep assessment",
+        "Random Forest quality classification",
+        "Weekly statistics and sleep education"
+      ],
+      id: [
+        "Pelacakan aktivitas tidur",
+        "Penilaian tidur harian terpandu",
+        "Klasifikasi kualitas dengan Random Forest",
+        "Statistik mingguan dan edukasi tidur"
+      ]
+    },
+    techStack: [
+      { name: "Kotlin", icon: "devicon-kotlin-plain" },
+      { name: "Android Studio", icon: "devicon-androidstudio-plain" },
+      { name: "Firebase", icon: "devicon-firebase-plain" },
+      { name: "Scikit-Learn", icon: "devicon-python-plain" },
+      { name: "Machine Learning", icon: "fas fa-brain" }
+    ],
+    gallery: []
+  },
+  {
+    id: "mandiri-news",
+    title: {
+      en: "Mandiri News - Android News App",
+      id: "Mandiri News - Aplikasi Berita Android"
+    },
+    category: "mobile",
+    image: "/images/project-mandiri-news.jpg",
+    conceptualCover: true,
+    featuredOrder: 2,
+    year: "2026",
+    impact: {
+      en: "Mobile Apps Developer | 3 screens and 3 REST endpoints | 88.71/100",
+      id: "Mobile Apps Developer | 3 layar dan 3 REST endpoint | 88,71/100"
+    },
+    impactDetails: {
+      role: {
+        en: "Mobile Apps Developer",
+        id: "Mobile Apps Developer"
+      },
+      team: {
+        en: "Project-Based Virtual Internship",
+        id: "Project-Based Virtual Internship"
+      },
+      result: {
+        en: "Excellent predicate, 88.71/100",
+        id: "Predikat Excellent, 88,71/100"
+      },
+      scope: {
+        en: "3 main screens and 3 REST endpoints",
+        id: "3 layar utama dan 3 REST endpoint"
+      }
+    },
+    shortDesc: {
+      en: "An Android news reader built during the Bank Mandiri x Rakamin virtual internship with paginated REST data and endless scrolling.",
+      id: "Aplikasi pembaca berita Android dari virtual internship Bank Mandiri x Rakamin dengan data REST terpaginasikan dan endless scrolling."
+    },
+    fullDesc: {
+      en: "Mandiri News was developed for the Bank Mandiri x Rakamin Project-Based Virtual Internship in March 2026. I built three primary Android screens and connected them to three REST endpoints so users could browse and continuously load business news in a clear mobile flow.",
+      id: "Mandiri News dikembangkan dalam Project-Based Virtual Internship Bank Mandiri x Rakamin pada Maret 2026. Saya membangun tiga layar utama Android dan menghubungkannya ke tiga REST endpoint agar pengguna dapat menelusuri dan memuat berita bisnis secara berkelanjutan dalam alur mobile yang jelas."
+    },
+    challenges: {
+      en: "The main challenge was keeping paginated API data predictable and the interface responsive while new pages were loaded continuously.",
+      id: "Tantangan utamanya adalah menjaga data API terpaginasikan tetap konsisten dan antarmuka tetap responsif saat halaman baru dimuat secara berkelanjutan."
+    },
+    solution: {
+      en: "I structured the application with MVVM, used Retrofit for the REST layer, Kotlin Coroutines for asynchronous work, and Paging 3 to manage endless scrolling and loading states.",
+      id: "Saya menyusun aplikasi dengan MVVM, menggunakan Retrofit untuk lapisan REST, Kotlin Coroutines untuk proses asinkron, dan Paging 3 untuk mengelola endless scrolling serta loading state."
+    },
+    lessonLearned: {
+      en: "This project strengthened my understanding of production-oriented Android architecture, API state handling, and paginated mobile experiences.",
+      id: "Proyek ini memperkuat pemahaman saya tentang arsitektur Android yang berorientasi produksi, penanganan state API, dan pengalaman mobile terpaginasikan."
+    },
+    features: {
+      en: [
+        "Three primary news screens",
+        "Three REST API integrations",
+        "Paginated news feed with Paging 3",
+        "Responsive asynchronous loading"
+      ],
+      id: [
+        "Tiga layar berita utama",
+        "Integrasi tiga REST API",
+        "Feed berita terpaginasikan dengan Paging 3",
+        "Pemuatan asinkron yang responsif"
+      ]
+    },
+    techStack: [
+      { name: "Kotlin", icon: "devicon-kotlin-plain" },
+      { name: "Android Studio", icon: "devicon-androidstudio-plain" },
+      { name: "Retrofit", icon: "fas fa-code" },
+      { name: "Coroutines", icon: "devicon-kotlin-plain" },
+      { name: "Paging 3", icon: "fas fa-layer-group" }
+    ],
+    gallery: []
+  },
+  {
     id: "planetku",
     title: {
       en: "Planetku (Smart Waste Management App)",
@@ -7,6 +158,26 @@ export const projects = [
     },
     category: "mobile",
     image: "/images/project-planetku.webp",
+    featuredOrder: 3,
+    year: "2024",
+    impactDetails: {
+      role: {
+        en: "Mobile Development Lead",
+        id: "Lead Mobile Development"
+      },
+      team: {
+        en: "6-member cross-functional team",
+        id: "Tim lintas fungsi beranggotakan 6 orang"
+      },
+      result: {
+        en: "90% waste classification accuracy",
+        id: "Akurasi klasifikasi sampah 90%"
+      },
+      scope: {
+        en: "5+ waste classes with on-device AI",
+        id: "5+ kelas sampah dengan AI pada perangkat"
+      }
+    },
     impact: {
       en: "Mobile Dev Lead • Built AI waste classifier • 6-member team",
       id: "Mobile Dev Lead • Bangun AI classifier • Tim 6 orang"
@@ -68,6 +239,26 @@ export const projects = [
     },
     category: "mobile",
     image: "/images/project-cinemazone.webp",
+    featuredOrder: 4,
+    year: "2024",
+    impactDetails: {
+      role: {
+        en: "Solo Android Developer",
+        id: "Solo Android Developer"
+      },
+      team: {
+        en: "Independent project",
+        id: "Proyek mandiri"
+      },
+      result: {
+        en: "4 key booking features delivered",
+        id: "4 fitur utama pemesanan diselesaikan"
+      },
+      scope: {
+        en: "2 real-time Firebase services",
+        id: "2 layanan Firebase real-time"
+      }
+    },
     impact: {
       en: "Solo Developer • Real-time seat booking • Firebase integration",
       id: "Solo Developer • Booking kursi real-time • Integrasi Firebase"
@@ -125,6 +316,26 @@ export const projects = [
     },
     category: "web",
     image: "/images/project-computercrafter.webp",
+    featuredOrder: 5,
+    year: "2023",
+    impactDetails: {
+      role: {
+        en: "Full-stack Developer",
+        id: "Full-stack Developer"
+      },
+      team: {
+        en: "Collaborative web project",
+        id: "Proyek web kolaboratif"
+      },
+      result: {
+        en: "100% tested compatibility mismatches detected",
+        id: "100% mismatch kompatibilitas uji terdeteksi"
+      },
+      scope: {
+        en: "50+ PC components managed",
+        id: "50+ komponen PC dikelola"
+      }
+    },
     impact: {
       en: "Full-stack Dev • Built compatibility logic • MySQL + PHP",
       id: "Full-stack Dev • Logic kompatibilitas • MySQL + PHP"
@@ -805,7 +1016,7 @@ export const projects = [
       { name: "Three.js", icon: "devicon-threejs-original" }
     ],
     github: "https://github.com/Rafie1715/Website-Portfolio-Rafie",
-    live: "https://rafie-dev.netlify.app",
+    live: "https://rafierb.me",
     gallery: []
   }
 ];

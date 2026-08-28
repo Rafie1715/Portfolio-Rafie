@@ -61,3 +61,127 @@
 .dark .bg-noise {
   opacity: 0.04;
 }
+
+.hero-blueprint-sweep {
+  position: absolute;
+  inset-inline: -4rem;
+  top: 0;
+  height: 1px;
+  color: rgb(37 99 235 / 0.8);
+  background: linear-gradient(90deg, transparent, rgb(37 99 235 / 0.45) 28%, rgb(6 182 212 / 0.55) 50%, rgb(37 99 235 / 0.45) 72%, transparent);
+  opacity: 0;
+  transform: translate3d(0, -20px, 0);
+  animation: hero-blueprint-scan 9s ease-in-out infinite;
+  animation-play-state: paused;
+  will-change: transform, opacity;
+}
+
+.hero-blueprint-sweep.is-active {
+  animation-play-state: running;
+}
+
+.hero-blueprint-node {
+  position: absolute;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  background: rgb(255 255 255 / 0.9);
+  box-shadow: 0 0 10px rgb(37 99 235 / 0.65);
+  transform: rotate(45deg);
+}
+
+.dark .hero-blueprint-node {
+  background: rgb(15 23 42 / 0.9);
+}
+
+@keyframes hero-blueprint-scan {
+  0%, 7% {
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+  }
+  12% {
+    opacity: 0.55;
+  }
+  38% {
+    opacity: 0.35;
+    transform: translate3d(0, 78vh, 0);
+  }
+  43%, 100% {
+    opacity: 0;
+    transform: translate3d(0, 78vh, 0);
+  }
+}
+
+.afk-equalizer {
+  position: absolute;
+  top: 7rem;
+  right: max(2rem, 6vw);
+  height: 148px;
+  align-items: flex-end;
+  gap: 7px;
+  color: rgb(37 99 235);
+  opacity: 0.12;
+}
+
+.afk-equalizer-bar {
+  width: 4px;
+  border-radius: 1px;
+  background: currentColor;
+  transform: scaleY(0.22);
+  transform-origin: bottom;
+  animation: afk-equalizer-pulse var(--afk-duration) ease-in-out infinite alternate;
+  animation-delay: var(--afk-delay);
+  animation-play-state: paused;
+  will-change: transform, opacity;
+}
+
+.afk-equalizer.is-active .afk-equalizer-bar {
+  animation-play-state: running;
+}
+
+.afk-film-strip {
+  position: absolute;
+  top: 9rem;
+  left: max(1.5rem, 5vw);
+  width: 46px;
+  grid-auto-rows: 26px;
+  gap: 9px;
+  padding: 10px 7px;
+  border-inline: 1px solid rgb(245 158 11 / 0.65);
+  opacity: 0.1;
+  transform: rotate(-7deg) translate3d(0, -24px, 0);
+  animation: afk-film-drift 12s ease-in-out infinite alternate;
+  animation-play-state: paused;
+  will-change: transform;
+}
+
+.afk-film-strip.is-active {
+  animation-play-state: running;
+}
+
+.afk-film-frame {
+  border: 1px solid rgb(245 158 11 / 0.7);
+  background: rgb(245 158 11 / 0.08);
+}
+
+@keyframes afk-equalizer-pulse {
+  from {
+    opacity: 0.4;
+    transform: scaleY(0.22);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes afk-film-drift {
+  from {
+    transform: rotate(-7deg) translate3d(0, -24px, 0);
+  }
+  to {
+    transform: rotate(-7deg) translate3d(0, 38px, 0);
+  }
+}

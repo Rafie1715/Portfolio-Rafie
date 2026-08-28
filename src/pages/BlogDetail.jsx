@@ -1,293 +1,288 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
-import { Calendar, Clock, Tag, ArrowLeft, Share2 } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  CalendarDays,
+  Check,
+  Clock3,
+  Play,
+  Share2,
+} from 'lucide-react';
+import BlogCard from '../components/BlogCard';
+import SEO from '../components/SEO';
 import PageTransition from '../components/PageTransition';
 import { blogs } from '../data/blogs';
+import {
+  getBlogLanguage,
+  getBlogReadingMinutes,
+  getLocalizedBlogValue,
+  getLocalizedSections,
+  sortBlogsByDate,
+} from '../utils/blog';
 import { trackEvent } from '../utils/analytics';
+
+const impactKeys = ['role', 'team', 'result', 'scope'];
 
 const BlogDetail = () => {
   const { slug } = useParams();
-  const navigate = useNavigate();
-  const { i18n } = useTranslation();
-  const currentLang = i18n.language;
-  
-  const [blog, setBlog] = useState(null);
+  const { t, i18n } = useTranslation();
+  const shouldReduceMotion = useReducedMotion();
+  const language = getBlogLanguage(i18n);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const blog = useMemo(() => blogs.find((item) => item.slug === slug), [slug]);
 
   useEffect(() => {
-    const foundBlog = blogs.find(b => b.slug === slug);
-    if (foundBlog) {
-      setBlog(foundBlog);
-      // Track blog view
-      trackEvent('Blog', 'View', foundBlog.title.en);
-    } else {
-      navigate('/blog');
+    if (!blog) return undefined;
+    trackEvent('Blog', 'View', getLocalizedBlogValue(blog.title, 'en'));
+    return undefined;
+  }, [blog]);
+
+  useEffect(() => {
+    if (!linkCopied) return undefined;
+    const timeoutId = window.setTimeout(() => setLinkCopied(false), 2200);
+    return () => window.clearTimeout(timeoutId);
+  }, [linkCopied]);
+
+  const relatedBlogs = useMemo(() => {
+    if (!blog) return [];
+    return sortBlogsByDate(blogs.filter((item) => item.id !== blog.id))
+      .sort((first, second) => Number(second.category === blog.category) - Number(first.category === blog.category))
+      .slice(0, 2);
+  }, [blog]);
+
+  if (!blog) return <Navigate to="/blog" replace />;
+
+  const title = getLocalizedBlogValue(blog.title, language);
+  const excerpt = getLocalizedBlogValue(blog.excerpt, language);
+  const sections = getLocalizedSections(blog, language);
+  const readingMinutes = getBlogReadingMinutes(blog, language);
+  const formattedDate = new Date(blog.publishedAt).toLocaleDateString(
+    language === 'id' ? 'id-ID' : 'en-US',
+    { year: 'numeric', month: 'long', day: 'numeric' },
+  );
+  const canonicalUrl = `https://rafierb.me/blog/${blog.slug}`;
+  const socialImage = blog.image.startsWith('http') ? blog.image : `https://rafierb.me${blog.image}`;
+
+  const revealProps = shouldReduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 16 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.45, ease: 'easeOut' },
+      };
+
+  const handleShare = async () => {
+    const shareData = { title, text: excerpt, url: window.location.href };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        setLinkCopied(true);
+      }
+      trackEvent('Blog', 'Share', getLocalizedBlogValue(blog.title, 'en'));
+    } catch (error) {
+      if (error?.name !== 'AbortError') {
+        await navigator.clipboard?.writeText(window.location.href);
+        setLinkCopied(true);
+      }
     }
-  }, [slug, navigate]);
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString(currentLang === 'id' ? 'id-ID' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: blog.title[currentLang],
-        text: blog.excerpt[currentLang],
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert(currentLang === 'id' ? 'Link disalin!' : 'Link copied!');
-    }
-    trackEvent('Blog', 'Share', blog.title.en);
-  };
-
-  if (!blog) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">
-            {currentLang === 'id' ? 'Memuat...' : 'Loading...'}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Format content markdown-style to HTML-like structure
-  const formatContent = (content) => {
-    return content
-      .split('\n')
-      .map((line, index) => {
-        // Headers
-        if (line.startsWith('# ')) {
-          return <h1 key={index} className="text-4xl font-bold mt-8 mb-4 text-gray-900 dark:text-white">{line.substring(2)}</h1>;
-        }
-        if (line.startsWith('## ')) {
-          return <h2 key={index} className="text-3xl font-bold mt-6 mb-3 text-gray-900 dark:text-white">{line.substring(3)}</h2>;
-        }
-        if (line.startsWith('### ')) {
-          return <h3 key={index} className="text-2xl font-bold mt-5 mb-2 text-gray-900 dark:text-white">{line.substring(4)}</h3>;
-        }
-        
-        // Code blocks
-        if (line.startsWith('```')) {
-          return null; // Handle code blocks separately
-        }
-        
-        // Lists
-        if (line.startsWith('- ')) {
-          return <li key={index} className="ml-6 text-gray-700 dark:text-gray-300 mb-2">{line.substring(2)}</li>;
-        }
-        
-        // Regular paragraphs
-        if (line.trim()) {
-          return <p key={index} className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">{line}</p>;
-        }
-        
-        return <br key={index} />;
-      });
   };
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>{blog.title[currentLang]} - Rafie's Blog</title>
-        <meta name="description" content={blog.excerpt[currentLang]} />
-        <meta property="og:title" content={blog.title[currentLang]} />
-        <meta property="og:description" content={blog.excerpt[currentLang]} />
-        <meta property="og:type" content="article" />
-        <meta property="article:published_time" content={blog.publishedAt} />
-        <meta property="article:author" content={blog.author} />
-        {blog.tags.map((tag, index) => (
-          <meta key={index} property="article:tag" content={tag} />
-        ))}
-        <link rel="canonical" href={`${window.location.origin}/blog/${blog.slug}`} />
-      </Helmet>
+      <SEO
+        title={`${title} | Rafie's Blog`}
+        description={excerpt}
+        url={canonicalUrl}
+        image={socialImage}
+        type="article"
+        author={blog.author}
+        keywords={blog.tags.join(', ')}
+        published={blog.publishedAt}
+        modified={blog.updatedAt || blog.publishedAt}
+      />
 
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 pt-24 pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Back Button */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8"
-          >
+      <main className="relative min-h-screen overflow-hidden bg-white pb-20 pt-24 text-dark transition-colors duration-300 dark:bg-dark dark:text-white md:pt-28">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#8080800d_1px,transparent_1px),linear-gradient(to_bottom,#8080800d_1px,transparent_1px)] bg-[size:24px_24px]"
+          aria-hidden="true"
+        />
+
+        <article className="relative z-10">
+          <motion.header {...revealProps} className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <Link
               to="/blog"
-              className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-bold text-gray-600 transition hover:text-primary dark:text-gray-300"
             >
-              <ArrowLeft className="w-5 h-5" />
-              <span>{currentLang === 'id' ? 'Kembali ke Blog' : 'Back to Blog'}</span>
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              {t('pages.blog.back')}
             </Link>
-          </motion.div>
 
-          {/* Article Header */}
-          <motion.article
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden"
-          >
-            {/* Hero Image */}
-            <div className="relative h-64 md:h-96 bg-gradient-to-br from-blue-500 to-purple-600">
-              {blog.image && (
-                <img
-                  src={blog.image}
-                  alt={blog.title[currentLang]}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              
-              {/* Category Badge */}
-              <div className="absolute top-6 left-6">
-                <span className="px-4 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-sm font-semibold rounded-full text-gray-800 dark:text-gray-200">
-                  {blog.category[currentLang]}
+            <div className="mt-10 flex flex-wrap items-center gap-3 text-xs font-bold uppercase">
+              <span className="text-primary">{t(`pages.blog.categories.${blog.category}`)}</span>
+              <span className="h-1 w-1 rounded-full bg-gray-300 dark:bg-slate-600" aria-hidden="true" />
+              <span className="text-gray-500 dark:text-gray-400">{t('pages.blog.published')} {formattedDate}</span>
+            </div>
+
+            <h1 className="mt-4 max-w-4xl text-3xl font-black leading-tight sm:text-4xl md:text-5xl">
+              {title}
+            </h1>
+            <p className="mt-5 max-w-3xl text-base leading-relaxed text-gray-600 dark:text-gray-300 sm:text-lg">
+              {excerpt}
+            </p>
+
+            <div className="mt-7 flex flex-wrap items-center justify-between gap-5 border-t border-gray-200 pt-5 dark:border-slate-700">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <span className="font-bold text-dark dark:text-white">{blog.author}</span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock3 className="h-4 w-4" aria-hidden="true" />
+                  {t('pages.blog.read_time', { count: readingMinutes })}
                 </span>
               </div>
-
-              {/* Share Button */}
               <button
+                type="button"
                 onClick={handleShare}
-                className="absolute top-6 right-6 p-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-full hover:bg-white dark:hover:bg-gray-800 transition-colors"
-                aria-label="Share"
+                className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-bold text-gray-600 transition hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-700 dark:text-gray-300"
+                aria-label={t('pages.blog.share')}
+                title={t('pages.blog.share')}
               >
-                <Share2 className="w-5 h-5 text-gray-800 dark:text-gray-200" />
+                {linkCopied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Share2 className="h-4 w-4" aria-hidden="true" />}
+                <span>{linkCopied ? t('pages.blog.copied') : t('pages.blog.share')}</span>
               </button>
             </div>
+          </motion.header>
 
-            {/* Content */}
-            <div className="p-8 md:p-12">
-              {/* Title */}
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-                {blog.title[currentLang]}
-              </h1>
-
-              {/* Meta Info */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                    {blog.author[0]}
-                  </div>
-                  <span className="font-medium text-gray-900 dark:text-white">{blog.author}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>{formatDate(blog.publishedAt)}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  <span>{blog.readTime}</span>
-                </div>
+          {!blog.videoId && (
+            <motion.div {...revealProps} className="mx-auto mt-10 max-w-6xl px-4 sm:px-6 lg:px-8">
+              <div className="aspect-[16/9] overflow-hidden rounded-lg bg-gray-100 dark:bg-slate-800">
+                <img src={blog.image} alt={title} decoding="async" className="h-full w-full object-cover" />
               </div>
+            </motion.div>
+          )}
 
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-8">
-                {blog.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="flex items-center gap-1 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 rounded-full"
-                  >
-                    <Tag className="w-3 h-3" />
-                    {tag}
-                  </span>
+          {blog.impact && (
+            <section className="mx-auto mt-12 max-w-4xl border-y border-gray-200 px-4 py-8 dark:border-slate-700 sm:px-6 lg:px-8" aria-labelledby="article-impact-title">
+              <p id="article-impact-title" className="text-sm font-bold uppercase text-primary">
+                {t('pages.blog.impact_eyebrow')}
+              </p>
+              <dl className="mt-5 grid gap-x-7 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+                {impactKeys.map((key) => (
+                  <div key={key}>
+                    <dt className="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">{t(`pages.blog.${key}`)}</dt>
+                    <dd className="mt-1.5 text-sm font-bold leading-relaxed text-dark dark:text-white">
+                      {getLocalizedBlogValue(blog.impact[key], language)}
+                    </dd>
+                  </div>
                 ))}
-              </div>
+              </dl>
+            </section>
+          )}
 
-              {/* Excerpt */}
-              <div className="text-lg text-gray-600 dark:text-gray-300 mb-8 pb-8 border-b border-gray-200 dark:border-gray-700 italic">
-                {blog.excerpt[currentLang]}
-              </div>
-
-              {/* YouTube Video Embed */}
-              {blog.videoUrl && (
-                <div className="mb-8">
-                  <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg bg-gray-900">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${blog.videoUrl}?rel=0`}
-                      title={blog.title[currentLang]}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="absolute inset-0 w-full h-full"
-                    />
-                  </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-3 text-center">
-                    {currentLang === 'id' ? '🎥 Video Tutorial CodeVox' : '🎥 CodeVox Tutorial Video'}
-                  </p>
-                </div>
-              )}
-
-              {/* Main Content */}
-              <div className="prose prose-lg dark:prose-invert max-w-none">
-                <div className="text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
-                  {formatContent(blog.content[currentLang])}
-                </div>
-              </div>
-
-              {/* Share Footer */}
-              <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex items-center justify-between">
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {currentLang === 'id' ? 'Bagikan artikel ini:' : 'Share this article:'}
-                  </p>
+          {blog.videoId && (
+            <section className="mx-auto mt-12 max-w-4xl px-4 sm:px-6 lg:px-8" aria-labelledby="article-video-title">
+              <p id="article-video-title" className="text-sm font-bold uppercase text-primary">
+                {t('pages.blog.video_eyebrow')}
+              </p>
+              <div className="mt-4 aspect-video overflow-hidden rounded-lg bg-slate-950 shadow-sm">
+                {videoLoaded ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${blog.videoId}?rel=0&autoplay=1`}
+                    title={`${t('pages.blog.video_eyebrow')}: ${title}`}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="h-full w-full"
+                  />
+                ) : (
                   <button
-                    onClick={handleShare}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                    type="button"
+                    onClick={() => setVideoLoaded(true)}
+                    className="group relative h-full w-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+                    aria-label={`${t('pages.blog.play_video')}: ${title}`}
                   >
-                    <Share2 className="w-4 h-4" />
-                    <span>{currentLang === 'id' ? 'Bagikan' : 'Share'}</span>
+                    <img src={blog.image} alt="" className="h-full w-full object-cover opacity-75" />
+                    <span className="absolute inset-0 bg-black/25" aria-hidden="true" />
+                    <span className="absolute inset-0 flex items-center justify-center">
+                      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-primary shadow-lg transition-transform group-hover:scale-105">
+                        <Play className="ml-1 h-7 w-7 fill-current" aria-hidden="true" />
+                      </span>
+                    </span>
                   </button>
-                </div>
+                )}
               </div>
-            </div>
-          </motion.article>
+            </section>
+          )}
 
-          {/* Related Articles */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-12"
-          >
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              {currentLang === 'id' ? 'Artikel Lainnya' : 'Other Articles'}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {blogs
-                .filter(b => b.id !== blog.id)
-                .slice(0, 2)
-                .map((relatedBlog) => (
-                  <Link
-                    key={relatedBlog.id}
-                    to={`/blog/${relatedBlog.slug}`}
-                    className="group p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all"
-                  >
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      {relatedBlog.title[currentLang]}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2">
-                      {relatedBlog.excerpt[currentLang]}
-                    </p>
-                  </Link>
-                ))}
+          <div className="mx-auto mt-12 max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-wrap gap-2" aria-label={language === 'id' ? 'Tag artikel' : 'Article tags'}>
+              {blog.tags.map((tag) => (
+                <span key={tag} className="rounded border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-600 dark:border-slate-700 dark:bg-slate-900 dark:text-gray-300">
+                  {tag}
+                </span>
+              ))}
             </div>
-          </motion.div>
-        </div>
-      </div>
+
+            <div className="mt-10 space-y-10">
+              {sections.map((section) => (
+                <section key={section.heading}>
+                  <h2 className="text-2xl font-black leading-tight sm:text-3xl">{section.heading}</h2>
+                  <div className="mt-4 space-y-4 text-base leading-8 text-gray-700 dark:text-gray-300 sm:text-lg">
+                    {section.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                    {section.bullets && (
+                      <ul className="space-y-3 pl-1">
+                        {section.bullets.map((bullet) => (
+                          <li key={bullet} className="flex gap-3">
+                            <Check className="mt-1.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                            <span>{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            {blog.projectId && (
+              <div className="mt-12 border-y border-gray-200 py-7 dark:border-slate-700">
+                <Link
+                  to={`/project/${blog.projectId}`}
+                  className="inline-flex items-center gap-2 font-bold text-primary transition hover:text-blue-700 dark:hover:text-blue-300"
+                >
+                  {t('pages.blog.open_project')}
+                  <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+                </Link>
+              </div>
+            )}
+
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-gray-200 pt-7 dark:border-slate-700">
+              <p className="font-bold">{t('pages.blog.share')}</p>
+              <button
+                type="button"
+                onClick={handleShare}
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-dark"
+              >
+                {linkCopied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Share2 className="h-4 w-4" aria-hidden="true" />}
+                {linkCopied ? t('pages.blog.copied') : t('pages.blog.share')}
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <section className="relative z-10 mx-auto mt-20 max-w-6xl border-t border-gray-200 px-4 pt-12 dark:border-slate-700 sm:px-6 lg:px-8" aria-labelledby="related-articles-title">
+          <p className="text-sm font-bold uppercase text-primary">{t('pages.blog.related_eyebrow')}</p>
+          <h2 id="related-articles-title" className="mt-2 text-3xl font-black">{t('pages.blog.related_title')}</h2>
+          <div className="mt-7 grid gap-6 md:grid-cols-2">
+            {relatedBlogs.map((relatedBlog) => <BlogCard key={relatedBlog.id} blog={relatedBlog} />)}
+          </div>
+        </section>
+      </main>
     </PageTransition>
   );
 };

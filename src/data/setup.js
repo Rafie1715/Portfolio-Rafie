@@ -1,145 +1,205 @@
 export const setupItems = [
   {
-    id: 1,
-    title: "Acer Nitro 5",
-    desc: {
-      en: "Ryzen 5 Powerhouse. Handles Android Studio builds & light gaming sessions efficiently.",
-      id: "Bertenaga Ryzen 5. Menangani build Android Studio & sesi gaming ringan dengan efisien."
+    id: 'acer-nitro-5',
+    title: 'Acer Nitro 5',
+    group: 'hardware',
+    icon: 'laptop',
+    image: '/images/workspace/acer-nitro-5.webp',
+    category: {
+      en: 'Primary development machine',
+      id: 'Perangkat pengembangan utama',
     },
-    image: "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//109/MTA-83745928/acer_acer-predator-nitro-5-an515-57-921p-core-i9-11900h-16gb-512gb-rtx3060_full01.jpg", 
-    category: { en: "Daily Driver", id: "Laptop Utama" },
-    size: "large", 
-    link: "https://www.acer.com/ac/en/US/content/series/nitro5"
+    desc: {
+      en: 'My main machine for Android Studio, React development, local builds, and everyday project work.',
+      id: 'Perangkat utama untuk Android Studio, pengembangan React, build lokal, dan pengerjaan proyek sehari-hari.',
+    },
+    usage: {
+      en: 'Keeps mobile and web development in one environment, from implementation through local testing.',
+      id: 'Menyatukan pengembangan mobile dan web dalam satu lingkungan, dari implementasi sampai pengujian lokal.',
+    },
+    link: 'https://www.acer.com/us-en/laptops/nitro/nitro-5',
+    linkType: 'product',
   },
   {
-    id: 2,
-    title: "Redmi Pad 2 Pro",
-    desc: {
-      en: "My dedicated second screen. Perfect for reading documentation & watching tutorials while coding.",
-      id: "Layar kedua khusus saya. Sempurna untuk membaca dokumentasi & menonton tutorial saat coding."
+    id: 'redmi-pad-pro',
+    title: 'Redmi Pad Pro',
+    group: 'hardware',
+    icon: 'tablet',
+    image: '/images/workspace/redmi-pad-pro.jpg',
+    category: {
+      en: 'Documentation screen',
+      id: 'Layar dokumentasi',
     },
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU790m1CO5m3qxvxdM7yw0NQgkwbYMu98-Sw&s",
-    category: { en: "Tablet", id: "Tablet" },
-    size: "large", 
-    link: "https://www.mi.com/global/product/redmi-pad-pro/"
+    desc: {
+      en: 'A secondary screen for documentation, references, tutorials, and reviewing responsive interfaces.',
+      id: 'Layar kedua untuk dokumentasi, referensi, tutorial, dan meninjau antarmuka responsif.',
+    },
+    usage: {
+      en: 'Reduces context switching while coding and gives me another viewport for interface checks.',
+      id: 'Mengurangi perpindahan konteks saat coding dan memberi viewport tambahan untuk mengecek antarmuka.',
+    },
+    link: 'https://www.mi.com/global/product/redmi-pad-pro/',
+    linkType: 'product',
   },
   {
-    id: 3,
-    title: "Samsung Galaxy A33",
-    desc: {
-      en: "Daily driver & main device for testing Android apps directly on hardware.",
-      id: "Ponsel harian & perangkat utama untuk menguji aplikasi Android langsung di hardware."
+    id: 'samsung-galaxy-a33',
+    title: 'Samsung Galaxy A33 5G',
+    group: 'hardware',
+    icon: 'smartphone',
+    image: '/images/workspace/samsung-galaxy-a33.jpg',
+    category: {
+      en: 'Physical Android test device',
+      id: 'Perangkat uji Android fisik',
     },
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF0Pg8YCQbacORV3xYeGuMx5GsJ_zmEW6mtg&s",
-    category: { en: "Mobile", id: "Ponsel" },
-    size: "small",
-    link: "https://www.samsung.com"
+    desc: {
+      en: 'My daily phone and primary physical device for validating Android builds beyond the emulator.',
+      id: 'Ponsel harian sekaligus perangkat fisik utama untuk memvalidasi build Android di luar emulator.',
+    },
+    usage: {
+      en: 'Used to check touch behavior, permissions, performance, and real-device UI before demos.',
+      id: 'Digunakan untuk mengecek interaksi sentuh, permission, performa, dan UI perangkat nyata sebelum demo.',
+    },
+    link: 'https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a33-5g-awesome-blue-128gb-sm-a336elbhxid/',
+    linkType: 'product',
   },
   {
-    id: 4,
-    title: "TWS / Audio",
-    desc: {
-      en: "Essential noise isolation for deep focus coding in public spaces or cafes.",
-      id: "Isolasi suara penting untuk fokus coding mendalam di ruang publik atau kafe."
+    id: 'visual-studio-code',
+    title: 'Visual Studio Code',
+    group: 'development',
+    icon: 'code',
+    category: {
+      en: 'Web editor',
+      id: 'Editor web',
     },
-    image: "https://res.cloudinary.com/pusatroxymas/image/upload/w_1024/v1696923971/prod_mproducts/chxx390574_/2023/fpk_231010_183f4f18-a52d-47f5-8b17-e13a75903e60.jpg.jpg",
-    category: { en: "Audio", id: "Audio" },
-    size: "small",
+    desc: {
+      en: 'My primary editor for React, JavaScript, serverless functions, and quick repository work.',
+      id: 'Editor utama untuk React, JavaScript, serverless function, dan pekerjaan repository sehari-hari.',
+    },
+    usage: {
+      en: 'Prettier, Git integration, and focused extensions keep the feedback loop fast and predictable.',
+      id: 'Prettier, integrasi Git, dan ekstensi terpilih menjaga feedback loop tetap cepat dan konsisten.',
+    },
+    link: 'https://code.visualstudio.com/',
+    linkType: 'website',
   },
   {
-    id: 5,
-    title: "Visual Studio Code",
-    desc: {
-      en: "The industry standard. My setup includes Prettier, GitLens, and tons of snippets.",
-      id: "Standar industri. Setup saya mencakup Prettier, GitLens, dan banyak snippet."
+    id: 'android-studio',
+    title: 'Android Studio',
+    group: 'development',
+    icon: 'smartphone',
+    category: {
+      en: 'Android IDE',
+      id: 'IDE Android',
     },
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSY2JEzCppRpKpOx5u62PHXEfEO2dCHNFUg2A&s",
-    category: { en: "Editor", id: "Editor" },
-    size: "small",
-    link: "https://code.visualstudio.com/"
+    desc: {
+      en: 'The main environment for Kotlin, Jetpack Compose, Gradle builds, emulators, and device debugging.',
+      id: 'Lingkungan utama untuk Kotlin, Jetpack Compose, Gradle build, emulator, dan debugging perangkat.',
+    },
+    usage: {
+      en: 'Covers the complete Android loop from UI implementation to profiling and signed builds.',
+      id: 'Mencakup alur Android lengkap dari implementasi UI hingga profiling dan signed build.',
+    },
+    link: 'https://developer.android.com/studio',
+    linkType: 'website',
   },
   {
-    id: 6,
-    title: "Android Studio",
-    desc: {
-      en: "The mothership for mobile dev. Heavy, but indispensable for crafting robust Kotlin applications.",
-      id: "Induk pengembangan seluler. Berat, tapi sangat diperlukan untuk membuat aplikasi Kotlin yang tangguh."
+    id: 'firebase',
+    title: 'Firebase',
+    group: 'development',
+    icon: 'database',
+    category: {
+      en: 'Backend services',
+      id: 'Layanan backend',
     },
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvtUq4kZ6gYaGWwpKy27aQeBKqxm0cK1kgtw&s",
-    category: { en: "IDE", id: "IDE" },
-    size: "small",
-    link: "https://developer.android.com/studio"
+    desc: {
+      en: 'A practical backend layer for authentication, Firestore data, and real-time product features.',
+      id: 'Lapisan backend praktis untuk autentikasi, data Firestore, dan fitur produk real-time.',
+    },
+    usage: {
+      en: 'Useful for shipping prototypes quickly while keeping authentication and data flows structured.',
+      id: 'Berguna untuk merilis prototipe dengan cepat sambil menjaga autentikasi dan alur data tetap terstruktur.',
+    },
+    link: 'https://firebase.google.com/',
+    linkType: 'website',
   },
   {
-    id: 7,
-    title: "GitHub",
-    desc: {
-      en: "Version control headquarters. Collaboration, CI/CD actions, and green contribution dots.",
-      id: "Markas kontrol versi. Kolaborasi, aksi CI/CD, dan titik kontribusi hijau."
+    id: 'figma',
+    title: 'Figma',
+    group: 'design-productivity',
+    icon: 'pen-tool',
+    category: {
+      en: 'Interface design',
+      id: 'Desain antarmuka',
     },
-    image: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-    category: { en: "DevOps", id: "DevOps" },
-    size: "small",
-    link: "https://github.com/"
+    desc: {
+      en: 'Where I explore flows, wireframes, component states, and responsive layouts before implementation.',
+      id: 'Tempat saya mengeksplorasi alur, wireframe, state komponen, dan layout responsif sebelum implementasi.',
+    },
+    usage: {
+      en: 'Helps reduce UI rework by clarifying hierarchy and interaction states before code.',
+      id: 'Membantu mengurangi revisi UI dengan memperjelas hierarki dan state interaksi sebelum coding.',
+    },
+    link: 'https://www.figma.com/',
+    linkType: 'website',
   },
   {
-    id: 8,
-    title: "Notion",
-    desc: {
-      en: "My second brain. Manages lecture notes, project deadlines, and life goals.",
-      id: "Otak kedua saya. Mengelola catatan kuliah, tenggat waktu proyek, dan tujuan hidup."
+    id: 'notion',
+    title: 'Notion',
+    group: 'design-productivity',
+    icon: 'notebook',
+    category: {
+      en: 'Planning and notes',
+      id: 'Perencanaan dan catatan',
     },
-    image: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
-    category: { en: "Productivity", id: "Produktivitas" },
-    size: "small",
-    link: "https://www.notion.so/"
+    desc: {
+      en: 'My workspace for requirements, research notes, project checklists, and lightweight documentation.',
+      id: 'Ruang kerja untuk requirement, catatan riset, checklist proyek, dan dokumentasi ringan.',
+    },
+    usage: {
+      en: 'Keeps project context visible before tasks move into implementation and version control.',
+      id: 'Menjaga konteks proyek tetap terlihat sebelum tugas masuk ke implementasi dan version control.',
+    },
+    link: 'https://www.notion.so/',
+    linkType: 'website',
   },
   {
-    id: 9,
-    title: "Postman",
-    desc: {
-      en: "My API playground. Testing endpoints and debugging JSON responses before writing code.",
-      id: "Taman bermain API saya. Menguji endpoint dan debugging respons JSON sebelum menulis kode."
+    id: 'postman',
+    title: 'Postman',
+    group: 'testing-delivery',
+    icon: 'test',
+    category: {
+      en: 'API testing',
+      id: 'Pengujian API',
     },
-    image: "https://avatars.slack-edge.com/2024-04-05/6934042159649_ac803d1cddbcbef8f110_512.png",
-    category: { en: "Testing", id: "Testing" },
-    size: "small",
-    link: "https://www.postman.com/"
+    desc: {
+      en: 'Used to inspect endpoints, authentication, payloads, and failure responses before UI integration.',
+      id: 'Digunakan untuk memeriksa endpoint, autentikasi, payload, dan respons gagal sebelum integrasi UI.',
+    },
+    usage: {
+      en: 'Separates API problems from interface problems and makes integration debugging more deliberate.',
+      id: 'Memisahkan masalah API dari masalah antarmuka sehingga debugging integrasi lebih terarah.',
+    },
+    link: 'https://www.postman.com/',
+    linkType: 'website',
   },
   {
-    id: 10,
-    title: "Firebase",
-    desc: {
-      en: "My go-to serverless backend. Auth, Realtime DB, and Hosting (like this portfolio!).",
-      id: "Backend serverless andalan. Auth, Realtime DB, dan Hosting (seperti portofolio ini!)."
+    id: 'github',
+    title: 'GitHub',
+    group: 'testing-delivery',
+    icon: 'git-branch',
+    category: {
+      en: 'Version control and delivery',
+      id: 'Version control dan delivery',
     },
-    image: "https://firebase.google.com/static/images/brand-guidelines/logo-logomark.png",
-    category: { en: "Backend", id: "Backend" },
-    size: "small",
-    link: "https://firebase.google.com/"
+    desc: {
+      en: 'The shared source of truth for repositories, code review, project history, and automated workflows.',
+      id: 'Sumber utama untuk repository, code review, riwayat proyek, dan workflow otomatis.',
+    },
+    usage: {
+      en: 'Keeps changes reviewable and provides a clear trail from an idea to a shipped iteration.',
+      id: 'Menjaga perubahan tetap dapat ditinjau dan memberi jejak jelas dari ide hingga iterasi yang dirilis.',
+    },
+    link: 'https://github.com/Rafie1715',
+    linkType: 'profile',
   },
-  {
-    id: 11,
-    title: "Figma",
-    desc: {
-      en: "Where ideas take shape. UI wireframing before diving into CSS chaos.",
-      id: "Tempat ide terbentuk. Wireframing UI sebelum terjun ke kekacauan CSS."
-    },
-    image: "https://play-lh.googleusercontent.com/hoVBnPBRehmXsCqESLXRH2E3OTxklkwKZlb1psn7imm0VUSobn2nevS9RRFWb9GM4-o",
-    category: { en: "Design", id: "Desain" },
-    size: "small",
-    link: "https://www.figma.com/"
-  },
-  {
-    id: 13,
-    title: "Discord",
-    desc: {
-      en: "For team collaboration, community discussions, and gaming breaks.",
-      id: "Untuk kolaborasi tim, diskusi komunitas, dan istirahat gaming."
-    },
-    image: "https://images-eds-ssl.xboxlive.com/image?url=4rt9.lXDC4H_93laV1_eHHFT949fUipzkiFOBH3fAiZZUCdYojwUyX2aTonS1aIwMrx6NUIsHfUHSLzjGJFxxsG72wAo9EWJR4yQWyJJaDaK1XdUso6cUMpI9hAdPUU_FNs11cY1X284vsHrnWtRw7oqRpN1m9YAg21d_aNKnIo-&format=source&h=210",
-    category: { en: "Social", id: "Sosial" },
-    size: "small",
-    link: "https://discord.com/"
-  }
 ];

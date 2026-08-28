@@ -9,7 +9,12 @@ export const certifications = [
     link: "",
     category: "Mobile",
     badge: "🏆",
-    color: "from-blue-500 to-blue-600"
+    color: "from-blue-500 to-blue-600",
+    featured: true,
+    summary: {
+      en: "Completed 900+ hours of mobile development training and collaborated in a six-member capstone team.",
+      id: "Menyelesaikan 900+ jam pelatihan mobile development dan berkolaborasi dalam tim capstone beranggotakan enam orang."
+    }
   },
   { 
     id: 2, 
@@ -33,7 +38,8 @@ export const certifications = [
     link: "https://www.dicoding.com/certificates/1OP844E2LZQK",
     category: "Android",
     badge: "📱",
-    color: "from-green-500 to-green-600"
+    color: "from-green-500 to-green-600",
+    featured: true
   },
   { 
     id: 4, 
@@ -45,7 +51,8 @@ export const certifications = [
     link: "https://www.dicoding.com/certificates/NVP74NQKGPR0",
     category: "ML & Android",
     badge: "🤖",
-    color: "from-purple-500 to-purple-600"
+    color: "from-purple-500 to-purple-600",
+    featured: true
   },
   { 
     id: 5, 
@@ -57,7 +64,8 @@ export const certifications = [
     link: "https://www.dicoding.com/certificates/4EXG7D58GPRL",
     category: "Android",
     badge: "📱",
-    color: "from-green-500 to-green-600"
+    color: "from-green-500 to-green-600",
+    featured: true
   },
   { 
     id: 6, 
@@ -105,7 +113,8 @@ export const certifications = [
     link: "https://www.credly.com/badges/57b4d1aa-8d54-4f52-a9b4-d602023016c3/linked_in_profile",
     category: "Data",
     badge: "📊",
-    color: "from-red-500 to-red-600"
+    color: "from-red-500 to-red-600",
+    featured: true
   },
   { 
     id: 10, 
@@ -153,7 +162,8 @@ export const certifications = [
     link: "https://www.dicoding.com/certificates/JMZVV083RZN9",
     category: "React",
     badge: "⚛️",
-    color: "from-cyan-500 to-cyan-600"
+    color: "from-cyan-500 to-cyan-600",
+    featured: true
   },
   { 
     id: 14, 
@@ -173,11 +183,16 @@ export const certifications = [
     alt: "IBM Code Certificate",
     title: "Code Generation and Optimization using IBM Granite",
     issuer: "IBM",
-    date: "2025",
+    date: "July 2025",
     link: "https://www.credly.com/badges/258db53c-754b-4f6a-a2ab-32f2a0e9c0f3/linked_in_profile",
     category: "AI/ML",
     badge: "🤖",
-    color: "from-purple-500 to-purple-600"
+    color: "from-purple-500 to-purple-600",
+    featured: true,
+    summary: {
+      en: "Applied IBM Granite for AI-assisted code generation and optimization workflows.",
+      id: "Menerapkan IBM Granite untuk workflow pembuatan dan optimasi kode berbantuan AI."
+    }
   },
   { 
     id: 16, 
@@ -189,7 +204,8 @@ export const certifications = [
     link: "https://www.dicoding.com/certificates/4EXG3EE1DZRL",
     category: "Frontend",
     badge: "🎨",
-    color: "from-cyan-500 to-cyan-600"
+    color: "from-cyan-500 to-cyan-600",
+    featured: true
   },
   { 
     id: 17, 
@@ -238,5 +254,47 @@ export const certifications = [
     category: "Language",
     badge: "📘",
     color: "from-yellow-500 to-yellow-600"
+  },
+  {
+    id: 21,
+    alt: "BNSP Programming Assistant competency certificate",
+    title: "Programming Assistant Competency",
+    issuer: "BNSP",
+    date: "February 2026",
+    link: "",
+    category: "Programming",
+    featured: true,
+    summary: {
+      en: "Demonstrated programming competency in more than two languages and completed over ten logic problems.",
+      id: "Mendemonstrasikan kompetensi pemrograman dalam lebih dari dua bahasa dan menyelesaikan lebih dari sepuluh soal logika."
+    }
+  },
+  {
+    id: 22,
+    alt: "AWS re Start cloud training",
+    title: "AWS re/Start",
+    issuer: "Amazon Web Services",
+    date: "October 2025",
+    link: "",
+    category: "Cloud",
+    featured: true,
+    summary: {
+      en: "Completed 12 weeks and 400+ hours of cloud training covering more than five AWS services.",
+      id: "Menyelesaikan 12 minggu dan 400+ jam pelatihan cloud yang mencakup lebih dari lima layanan AWS."
+    }
+  },
+  {
+    id: 23,
+    alt: "Google AI Professional Certificate",
+    title: "Google AI Professional Certificate",
+    issuer: "Google",
+    date: "August 2026",
+    link: "",
+    category: "Artificial Intelligence",
+    featured: true,
+    summary: {
+      en: "Completed seven courses and created more than 20 AI-assisted artifacts and custom AI solutions.",
+      id: "Menyelesaikan tujuh kursus serta membuat lebih dari 20 artefak berbantuan AI dan solusi AI kustom."
+    }
   }
 ];

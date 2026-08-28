@@ -1,192 +1,567 @@
 export const blogs = [
   {
-    id: 1,
-    slug: "pengalaman-mengajar-codevox-hima",
+    id: 6,
+    slug: 'restup-random-forest-android',
     title: {
-      en: "CodeVox Session: Web Development Fundamentals",
-      id: "Sesi CodeVox: Fundamental Web Development"
+      en: 'From Sleep Data to a Useful Android Prediction: Building RestUP',
+      id: 'Dari Data Tidur ke Prediksi Android yang Berguna: Membangun RestUP',
     },
     excerpt: {
-      en: "A CodeVox learning session video featuring me, covering core web development topics and hands-on practice for HIMA Informatics UPN students.",
-      id: "Video sesi pembelajaran CodeVox yang menampilkan saya, membahas topik inti web development dan praktik langsung untuk mahasiswa HIMA Informatika UPN."
+      en: 'How I connected a Random Forest model, Firebase data, and a guided Android flow to make sleep-quality results understandable.',
+      id: 'Cara saya menghubungkan model Random Forest, data Firebase, dan alur Android terpandu agar hasil kualitas tidur mudah dipahami.',
     },
-    content: {
-      en: `
-This CodeVox session features me presenting a hands-on web development class for HIMA Informatics UPN students. The session focuses on fundamentals and practical workflows that students can apply to build their first projects.
-We covered HTML structure for semantic layout and page sections, CSS basics for styling, spacing, and layout principles, and a JavaScript intro for DOM basics and simple interactivity. We also discussed responsive design with a mobile-first mindset and layout adjustments so the projects look good across devices.
-The session combined short explanations with live coding, so participants could follow along and practice immediately. The embedded video below shows the teaching flow, examples, and how we build a simple responsive page step by step.
-Sharing knowledge in CodeVox helped create a collaborative learning culture and gave participants confidence to keep building. Thanks to HIMA Informatics UPN Veteran Jakarta for hosting this program.
-      `,
-      id: `
-Sesi CodeVox ini menampilkan saya saat mengajar kelas web development untuk mahasiswa HIMA Informatika UPN. Fokusnya pada fundamental dan alur kerja praktis yang bisa langsung dipakai untuk membangun project pertama.
-Materi yang dibahas mencakup struktur HTML untuk layout semantik dan section halaman, dasar CSS untuk styling, spacing, dan prinsip layout, serta pengantar JavaScript untuk DOM dasar dan interaksi sederhana. Kami juga membahas responsive design dengan mindset mobile-first dan penyesuaian layout agar project terlihat rapi di berbagai perangkat.
-Format belajarnya menggabungkan penjelasan singkat dengan live coding, supaya peserta bisa langsung praktik dan mengikuti step-nya. Video yang di-embed di bawah menampilkan alur mengajar, contoh materi, dan proses membuat halaman responsive step by step.
-Berbagi ilmu lewat CodeVox membangun budaya belajar bareng dan meningkatkan kepercayaan diri peserta untuk terus belajar. Terima kasih untuk HIMA Informatika UPN Veteran Jakarta yang sudah menyelenggarakan program ini.
-      `
+    author: 'Rafie Rojagat Bachri',
+    publishedAt: '2026-08-28',
+    updatedAt: '2026-08-28',
+    category: 'case-study',
+    tags: ['Android', 'Kotlin', 'Random Forest', 'Firebase'],
+    image: '/images/project-restup.jpg',
+    featured: true,
+    projectId: 'OD60ttuTSwZW62TRJFm6',
+    impact: {
+      role: { en: 'Thesis Researcher and ML Developer', id: 'Peneliti Skripsi dan ML Developer' },
+      team: { en: 'Independent thesis project', id: 'Proyek skripsi mandiri' },
+      result: { en: '92.06% Random Forest accuracy', id: 'Akurasi Random Forest 92,06%' },
+      scope: { en: 'Sleep monitoring and prediction', id: 'Pemantauan dan prediksi tidur' },
     },
-    author: "Rafie",
-    publishedAt: "2026-01-15",
-    category: {
-      en: "Web Development",
-      id: "Pengembangan Web"
+    sections: {
+      en: [
+        {
+          heading: 'The product problem',
+          paragraphs: [
+            'RestUP began as my Informatics thesis project. The goal was not only to classify sleep quality, but also to help users understand what the result meant through a practical Android experience.',
+            'The main challenge was translating sleep activity and self-assessment data into feedback that remained clear, useful, and approachable inside a mobile interface.',
+          ],
+        },
+        {
+          heading: 'Designing a guided flow',
+          paragraphs: ['I organized the experience around a repeatable daily flow so users could record relevant activity, complete a guided assessment, and review the classification without jumping between disconnected screens.'],
+          bullets: [
+            'Sleep activity tracking and a guided daily check-in',
+            'Random Forest sleep-quality classification',
+            'Weekly statistics for reviewing patterns over time',
+            'Educational content that gives the result practical context',
+          ],
+        },
+        {
+          heading: 'Connecting model evaluation and Android',
+          paragraphs: [
+            'The application flow was built with Kotlin, while Firebase handled application data. I evaluated the Random Forest model with Scikit-Learn and treated the model output as one part of the product rather than the entire experience.',
+            'That separation helped me think carefully about loading states, result presentation, and the amount of technical detail a user actually needs to make sense of a prediction.',
+          ],
+        },
+        {
+          heading: 'Result and lesson',
+          paragraphs: ['The final Random Forest model reached 92.06% classification accuracy. More importantly, the project taught me how to connect machine-learning evaluation with product decisions and turn technical output into feedback users can act on.'],
+        },
+      ],
+      id: [
+        {
+          heading: 'Masalah produk yang ingin diselesaikan',
+          paragraphs: [
+            'RestUP berawal dari proyek skripsi Informatika saya. Tujuannya bukan hanya mengklasifikasikan kualitas tidur, tetapi juga membantu pengguna memahami arti hasil tersebut melalui pengalaman Android yang praktis.',
+            'Tantangan utamanya adalah menerjemahkan data aktivitas tidur dan penilaian mandiri menjadi umpan balik yang tetap jelas, berguna, dan mudah dipahami dalam antarmuka mobile.',
+          ],
+        },
+        {
+          heading: 'Merancang alur yang terpandu',
+          paragraphs: ['Saya menyusun pengalaman pengguna di sekitar alur harian yang konsisten agar pengguna dapat mencatat aktivitas, menyelesaikan penilaian terpandu, dan melihat klasifikasi tanpa berpindah di antara layar yang tidak terhubung.'],
+          bullets: [
+            'Pelacakan aktivitas tidur dan check-in harian terpandu',
+            'Klasifikasi kualitas tidur menggunakan Random Forest',
+            'Statistik mingguan untuk melihat pola dari waktu ke waktu',
+            'Konten edukasi yang memberi konteks praktis pada hasil',
+          ],
+        },
+        {
+          heading: 'Menghubungkan evaluasi model dan Android',
+          paragraphs: [
+            'Alur aplikasi dibangun dengan Kotlin, sedangkan Firebase menangani data aplikasi. Saya mengevaluasi model Random Forest menggunakan Scikit-Learn dan memperlakukan keluaran model sebagai salah satu bagian produk, bukan keseluruhan pengalaman.',
+            'Pemisahan tersebut membantu saya memikirkan loading state, penyajian hasil, dan seberapa banyak detail teknis yang benar-benar dibutuhkan pengguna untuk memahami prediksi.',
+          ],
+        },
+        {
+          heading: 'Hasil dan pembelajaran',
+          paragraphs: ['Model Random Forest akhir mencapai akurasi klasifikasi 92,06%. Hal terpenting yang saya pelajari adalah cara menghubungkan evaluasi machine learning dengan keputusan produk dan mengubah keluaran teknis menjadi umpan balik yang dapat ditindaklanjuti pengguna.'],
+        },
+      ],
     },
-    tags: ["CodeVox", "Teaching", "Web Development", "HIMA", "Community"],
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80",
-    videoUrl: "LV_gu2XvIa8",
-    readTime: "4 min read"
+  },
+  {
+    id: 7,
+    slug: 'mandiri-news-paging-android',
+    title: {
+      en: 'Building a Predictable Paginated News Feed on Android',
+      id: 'Membangun Feed Berita Android yang Terpaginasikan dan Konsisten',
+    },
+    excerpt: {
+      en: 'What I learned combining MVVM, Retrofit, Coroutines, and Paging 3 across three screens and three REST endpoints.',
+      id: 'Pembelajaran saya saat menggabungkan MVVM, Retrofit, Coroutines, dan Paging 3 pada tiga layar serta tiga REST endpoint.',
+    },
+    author: 'Rafie Rojagat Bachri',
+    publishedAt: '2026-08-28',
+    updatedAt: '2026-08-28',
+    category: 'case-study',
+    tags: ['Android', 'Kotlin', 'Paging 3', 'REST API'],
+    image: '/images/project-mandiri-news.jpg',
+    projectId: 'mandiri-news',
+    impact: {
+      role: { en: 'Mobile Apps Developer', id: 'Mobile Apps Developer' },
+      team: { en: 'Project-Based Virtual Internship', id: 'Project-Based Virtual Internship' },
+      result: { en: 'Excellent predicate, 88.71/100', id: 'Predikat Excellent, 88,71/100' },
+      scope: { en: '3 screens and 3 REST endpoints', id: '3 layar dan 3 REST endpoint' },
+    },
+    sections: {
+      en: [
+        {
+          heading: 'Project context',
+          paragraphs: [
+            'Mandiri News was developed during the Bank Mandiri x Rakamin Project-Based Virtual Internship in March 2026. I was responsible for building a mobile flow that could browse and continuously load business news from paginated REST data.',
+            'The delivered scope covered three primary Android screens and integrations with three REST endpoints.',
+          ],
+        },
+        {
+          heading: 'The pagination challenge',
+          paragraphs: ['The central engineering challenge was keeping the interface responsive while new pages were loaded. Loading, empty, success, and failure states also needed to remain predictable as users moved through the feed.'],
+        },
+        {
+          heading: 'Architecture and implementation',
+          paragraphs: ['I structured the application with MVVM to separate interface state from data access. Retrofit handled the REST layer, Kotlin Coroutines handled asynchronous work, and Paging 3 coordinated endless scrolling and page loading.'],
+          bullets: [
+            'Separate presentation and data responsibilities with MVVM',
+            'Represent API loading and failure states explicitly',
+            'Load additional pages without blocking the interface',
+            'Keep the feed stable when results are appended',
+          ],
+        },
+        {
+          heading: 'Result and lesson',
+          paragraphs: ['The project received an Excellent predicate with a score of 88.71/100. It strengthened my understanding of production-oriented Android architecture, API state handling, and the details that make a paginated experience feel reliable.'],
+        },
+      ],
+      id: [
+        {
+          heading: 'Konteks proyek',
+          paragraphs: [
+            'Mandiri News dikembangkan dalam Project-Based Virtual Internship Bank Mandiri x Rakamin pada Maret 2026. Saya bertanggung jawab membangun alur mobile untuk menelusuri dan memuat berita bisnis secara berkelanjutan dari data REST terpaginasikan.',
+            'Ruang lingkup yang diselesaikan mencakup tiga layar utama Android dan integrasi dengan tiga REST endpoint.',
+          ],
+        },
+        {
+          heading: 'Tantangan pagination',
+          paragraphs: ['Tantangan engineering utamanya adalah menjaga antarmuka tetap responsif ketika halaman baru dimuat. Loading, empty, success, dan failure state juga harus tetap konsisten saat pengguna menjelajahi feed.'],
+        },
+        {
+          heading: 'Arsitektur dan implementasi',
+          paragraphs: ['Saya menyusun aplikasi dengan MVVM untuk memisahkan state antarmuka dari akses data. Retrofit menangani lapisan REST, Kotlin Coroutines menjalankan proses asinkron, dan Paging 3 mengatur endless scrolling serta pemuatan halaman.'],
+          bullets: [
+            'Memisahkan tanggung jawab presentasi dan data dengan MVVM',
+            'Merepresentasikan loading dan failure state API secara eksplisit',
+            'Memuat halaman tambahan tanpa memblokir antarmuka',
+            'Menjaga feed stabil ketika hasil baru ditambahkan',
+          ],
+        },
+        {
+          heading: 'Hasil dan pembelajaran',
+          paragraphs: ['Proyek ini memperoleh predikat Excellent dengan nilai 88,71/100. Saya semakin memahami arsitektur Android yang berorientasi produksi, penanganan state API, dan detail yang membuat pengalaman terpaginasikan terasa andal.'],
+        },
+      ],
+    },
+  },
+  {
+    id: 8,
+    slug: 'planetku-on-device-waste-classification',
+    title: {
+      en: 'Leading the Mobile Build for an On-Device Waste Classifier',
+      id: 'Memimpin Pengembangan Mobile untuk Klasifikasi Sampah pada Perangkat',
+    },
+    excerpt: {
+      en: 'How a six-person Bangkit capstone team connected TensorFlow Lite classification with a responsive Kotlin experience.',
+      id: 'Cara tim capstone Bangkit beranggotakan enam orang menghubungkan klasifikasi TensorFlow Lite dengan pengalaman Kotlin yang responsif.',
+    },
+    author: 'Rafie Rojagat Bachri',
+    publishedAt: '2026-08-28',
+    updatedAt: '2026-08-28',
+    category: 'case-study',
+    tags: ['Android', 'TensorFlow Lite', 'Coroutines', 'Teamwork'],
+    image: '/images/project-planetku.webp',
+    projectId: 'planetku',
+    impact: {
+      role: { en: 'Mobile Development Lead', id: 'Lead Mobile Development' },
+      team: { en: '6-member cross-functional team', id: 'Tim lintas fungsi beranggotakan 6 orang' },
+      result: { en: '90% waste-classification accuracy', id: 'Akurasi klasifikasi sampah 90%' },
+      scope: { en: '5+ classes with on-device AI', id: '5+ kelas dengan AI pada perangkat' },
+    },
+    sections: {
+      en: [
+        {
+          heading: 'A cross-functional capstone',
+          paragraphs: [
+            'Planetku was built as a Bangkit 2024 capstone by a six-member cross-functional team. The product focused on waste sorting, recycling awareness, carbon calculation, and access to nearby waste banks.',
+            'As Mobile Development Lead, I was responsible for connecting the Android experience with the work produced by the machine-learning and cloud tracks.',
+          ],
+        },
+        {
+          heading: 'The on-device constraint',
+          paragraphs: ['The initial waste-classification model was too large and slow for a comfortable camera flow. The challenge was to run analysis on the device without making the interface feel frozen.'],
+        },
+        {
+          heading: 'Working across disciplines',
+          paragraphs: ['The mobile and machine-learning teams worked together to optimize the TensorFlow Lite model for deployment. On Android, I used Kotlin Coroutines to move image analysis away from the main interface thread and keep user feedback responsive.'],
+          bullets: [
+            'Camera and gallery-based waste classification',
+            'Real-time carbon-footprint calculation',
+            'Interactive waste-bank map locator',
+            'User reward and point system',
+          ],
+        },
+        {
+          heading: 'Outcome and lesson',
+          paragraphs: ['The final classifier covered more than five waste classes and reached 90% accuracy. The project taught me that successful AI integration depends as much on model constraints, asynchronous product behavior, and team communication as it does on model output.'],
+        },
+      ],
+      id: [
+        {
+          heading: 'Capstone lintas fungsi',
+          paragraphs: [
+            'Planetku dibangun sebagai capstone Bangkit 2024 oleh tim lintas fungsi beranggotakan enam orang. Produk ini berfokus pada pemilahan sampah, kesadaran daur ulang, perhitungan karbon, dan akses ke bank sampah terdekat.',
+            'Sebagai Lead Mobile Development, saya bertanggung jawab menghubungkan pengalaman Android dengan hasil kerja track machine learning dan cloud.',
+          ],
+        },
+        {
+          heading: 'Batasan pemrosesan pada perangkat',
+          paragraphs: ['Model klasifikasi sampah awal terlalu besar dan lambat untuk alur kamera yang nyaman. Tantangannya adalah menjalankan analisis pada perangkat tanpa membuat antarmuka terasa berhenti.'],
+        },
+        {
+          heading: 'Bekerja lintas disiplin',
+          paragraphs: ['Tim mobile dan machine learning bekerja sama mengoptimalkan model TensorFlow Lite untuk deployment. Pada Android, saya menggunakan Kotlin Coroutines untuk memindahkan analisis gambar dari thread antarmuka utama dan menjaga umpan balik tetap responsif.'],
+          bullets: [
+            'Klasifikasi sampah melalui kamera dan galeri',
+            'Perhitungan jejak karbon secara real-time',
+            'Peta lokasi bank sampah interaktif',
+            'Sistem poin dan hadiah pengguna',
+          ],
+        },
+        {
+          heading: 'Hasil dan pembelajaran',
+          paragraphs: ['Classifier akhir mencakup lebih dari lima kelas sampah dan mencapai akurasi 90%. Proyek ini mengajarkan bahwa integrasi AI yang berhasil bergantung pada batasan model, perilaku produk yang asinkron, dan komunikasi tim, bukan hanya keluaran model.'],
+        },
+      ],
+    },
+  },
+  {
+    id: 1,
+    slug: 'pengalaman-mengajar-codevox-hima',
+    title: { en: 'CodeVox: Teaching Web Development Fundamentals', id: 'CodeVox: Mengajar Fundamental Web Development' },
+    excerpt: {
+      en: 'A practical teaching session that introduced semantic HTML, CSS layout, JavaScript basics, and responsive thinking.',
+      id: 'Sesi belajar praktis tentang HTML semantik, layout CSS, dasar JavaScript, dan cara berpikir responsif.',
+    },
+    author: 'Rafie Rojagat Bachri',
+    publishedAt: '2026-01-15',
+    category: 'web',
+    tags: ['CodeVox', 'Teaching', 'Web Development'],
+    image: '/images/blog/codevox-web.jpg',
+    videoId: 'LV_gu2XvIa8',
+    sections: {
+      en: [
+        {
+          heading: 'Session goal',
+          paragraphs: ['This CodeVox session introduced web development through a small project that participants could follow and extend. The goal was to connect fundamental concepts with a visible result instead of presenting each technology in isolation.'],
+        },
+        {
+          heading: 'Topics covered',
+          bullets: [
+            'Semantic HTML for meaningful page structure',
+            'CSS spacing and layout fundamentals',
+            'JavaScript and basic DOM interaction',
+            'Responsive adjustments with a mobile-first mindset',
+          ],
+        },
+        {
+          heading: 'Teaching approach',
+          paragraphs: ['I alternated short explanations with live coding so participants could immediately see how each concept affected the page. The recording documents the examples and the step-by-step construction of a responsive interface.'],
+        },
+        {
+          heading: 'What I learned',
+          paragraphs: ['Teaching the session reinforced the importance of explaining the reason behind a technique before introducing syntax. It also helped me practice turning a broad topic into a sequence that beginners could follow.'],
+        },
+      ],
+      id: [
+        {
+          heading: 'Tujuan sesi',
+          paragraphs: ['Sesi CodeVox ini memperkenalkan web development melalui proyek kecil yang dapat diikuti dan dikembangkan peserta. Tujuannya adalah menghubungkan konsep fundamental dengan hasil yang terlihat, bukan menjelaskan setiap teknologi secara terpisah.'],
+        },
+        {
+          heading: 'Materi yang dibahas',
+          bullets: [
+            'HTML semantik untuk struktur halaman yang bermakna',
+            'Dasar spacing dan layout menggunakan CSS',
+            'JavaScript dan interaksi dasar dengan DOM',
+            'Penyesuaian responsif dengan pendekatan mobile-first',
+          ],
+        },
+        {
+          heading: 'Pendekatan mengajar',
+          paragraphs: ['Saya menyelingi penjelasan singkat dengan live coding agar peserta dapat langsung melihat pengaruh setiap konsep pada halaman. Rekaman sesi mendokumentasikan contoh dan proses membangun antarmuka responsif secara bertahap.'],
+        },
+        {
+          heading: 'Pembelajaran saya',
+          paragraphs: ['Mengajar sesi ini menegaskan pentingnya menjelaskan alasan di balik sebuah teknik sebelum memperkenalkan sintaks. Saya juga berlatih mengubah topik luas menjadi urutan belajar yang mudah diikuti pemula.'],
+        },
+      ],
+    },
   },
   {
     id: 2,
-    slug: "codevox-dasar-git-github",
-    title: {
-      en: "CodeVox Session: Git & GitHub Fundamentals",
-      id: "Sesi CodeVox: Dasar-Dasar Git & GitHub"
-    },
+    slug: 'codevox-dasar-git-github',
+    title: { en: 'CodeVox: A Beginner-Friendly Git Workflow', id: 'CodeVox: Alur Kerja Git yang Ramah Pemula' },
     excerpt: {
-      en: "Learning version control essentials with Git and GitHub in this CodeVox session, covering basic commands and collaborative workflows for beginners.",
-      id: "Mempelajari dasar version control dengan Git dan GitHub di sesi CodeVox ini, membahas command dasar dan alur kerja kolaboratif untuk pemula."
+      en: 'Breaking version control into a practical workflow for tracking changes, using remotes, and collaborating safely.',
+      id: 'Menguraikan version control menjadi alur praktis untuk melacak perubahan, memakai remote, dan berkolaborasi dengan aman.',
     },
-    content: {
-      en: `
-This CodeVox session introduces Git and GitHub fundamentals for students who want to start managing their code properly. Version control is essential for any developer, and this session breaks down the basics so anyone can get started.
-We covered what version control is and why it matters for tracking changes, collaborating with others, and keeping project history safe. Then we went through Git basics like initializing repositories, staging changes with git add, committing with meaningful messages, and checking status and logs.
-The session also explained how to use GitHub for remote repositories, pushing local code to GitHub, pulling updates from collaborators, and understanding branches for feature development. We walked through a simple workflow so students could see how Git fits into daily coding practice.
-The embedded video below shows the teaching flow, command demonstrations, and how we set up a repository step by step. Learning Git early helps students build good habits and prepares them for team projects and open source contributions.
-Thanks to HIMA Informatics UPN Veteran Jakarta for providing this learning opportunity to the student community.
-      `,
-      id: `
-Sesi CodeVox ini memperkenalkan fundamental Git dan GitHub untuk mahasiswa yang ingin mulai mengelola code dengan baik. Version control sangat penting buat developer, dan sesi ini membahas dasarnya supaya siapa saja bisa mulai belajar.
-Kami membahas apa itu version control dan kenapa penting untuk tracking perubahan, kolaborasi dengan orang lain, dan menjaga history project tetap aman. Kemudian kami mempelajari dasar Git seperti inisialisasi repository, staging perubahan dengan git add, commit dengan pesan yang jelas, dan cek status serta log.
-Sesi ini juga menjelaskan cara pakai GitHub untuk remote repository, push code lokal ke GitHub, pull update dari kolaborator, dan memahami branch untuk pengembangan fitur. Kami mempraktikkan workflow sederhana supaya mahasiswa bisa lihat bagaimana Git masuk ke rutinitas coding sehari-hari.
-Video yang di-embed di bawah menampilkan alur mengajar, demonstrasi command, dan cara setup repository step by step. Belajar Git sejak awal membantu mahasiswa membangun kebiasaan baik dan mempersiapkan mereka untuk project tim dan kontribusi open source.
-Terima kasih untuk HIMA Informatika UPN Veteran Jakarta yang sudah menyediakan kesempatan belajar ini untuk komunitas mahasiswa.
-      `
+    author: 'Rafie Rojagat Bachri',
+    publishedAt: '2026-01-20',
+    category: 'learning',
+    tags: ['Git', 'GitHub', 'CodeVox'],
+    image: '/images/blog/codevox-git.jpg',
+    videoId: 'BWuW_Lq5x1s',
+    sections: {
+      en: [
+        {
+          heading: 'Why this session mattered',
+          paragraphs: ['Git can feel abstract when commands are taught without a project workflow. This CodeVox session focused on the purpose of version control first, then connected each command to a common development task.'],
+        },
+        {
+          heading: 'Workflow covered',
+          bullets: [
+            'Initialize a repository and inspect its status',
+            'Stage changes and write meaningful commits',
+            'Push and pull from a GitHub remote',
+            'Use branches to isolate feature work',
+          ],
+        },
+        {
+          heading: 'Demonstrating collaboration',
+          paragraphs: ['The live demonstration followed a repository from local setup to a remote workflow. This gave participants a mental model for where changes live and why pulling before pushing reduces avoidable conflicts.'],
+        },
+        {
+          heading: 'What I learned',
+          paragraphs: ['The session improved how I explain state and history without relying on jargon. A clear visual sequence was more useful for beginners than introducing many commands at once.'],
+        },
+      ],
+      id: [
+        {
+          heading: 'Mengapa sesi ini penting',
+          paragraphs: ['Git dapat terasa abstrak ketika command diajarkan tanpa alur proyek. Sesi CodeVox ini dimulai dari tujuan version control, lalu menghubungkan setiap command dengan aktivitas pengembangan yang umum.'],
+        },
+        {
+          heading: 'Alur yang dibahas',
+          bullets: [
+            'Menginisialisasi repository dan memeriksa statusnya',
+            'Melakukan staging dan menulis commit yang bermakna',
+            'Melakukan push dan pull dari remote GitHub',
+            'Menggunakan branch untuk memisahkan pengembangan fitur',
+          ],
+        },
+        {
+          heading: 'Mendemonstrasikan kolaborasi',
+          paragraphs: ['Demonstrasi langsung mengikuti repository dari setup lokal hingga alur remote. Dengan begitu, peserta memiliki gambaran tentang lokasi perubahan dan alasan melakukan pull sebelum push untuk mengurangi konflik.'],
+        },
+        {
+          heading: 'Pembelajaran saya',
+          paragraphs: ['Sesi ini meningkatkan cara saya menjelaskan state dan riwayat perubahan tanpa terlalu bergantung pada jargon. Urutan visual yang jelas lebih berguna bagi pemula daripada memperkenalkan banyak command sekaligus.'],
+        },
+      ],
     },
-    author: "Rafie",
-    publishedAt: "2026-01-20",
-    category: {
-      en: "Version Control",
-      id: "Version Control"
-    },
-    tags: ["Git", "GitHub", "Version Control", "CodeVox", "Beginner"],
-    image: "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=800&q=80",
-    videoUrl: "BWuW_Lq5x1s",
-    readTime: "5 min read"
   },
   {
     id: 3,
-    slug: "codevox-pengenalan-android-kotlin",
-    title: {
-      en: "CodeVox Session: Android Development with Kotlin",
-      id: "Sesi CodeVox: Pengenalan Android Development Menggunakan Kotlin"
-    },
+    slug: 'codevox-pengenalan-android-kotlin',
+    title: { en: 'CodeVox: Building a First Android App with Kotlin', id: 'CodeVox: Membangun Aplikasi Android Pertama dengan Kotlin' },
     excerpt: {
-      en: "Getting started with Android development using Kotlin in this CodeVox session, covering basic concepts and building your first Android app.",
-      id: "Memulai Android development menggunakan Kotlin di sesi CodeVox ini, membahas konsep dasar dan membuat aplikasi Android pertama kamu."
+      en: 'Introducing Kotlin, Android project structure, interface layouts, user input, and debugging through a first application.',
+      id: 'Memperkenalkan Kotlin, struktur proyek Android, layout antarmuka, input pengguna, dan debugging melalui aplikasi pertama.',
     },
-    content: {
-      en: `
-This CodeVox session introduces Android development with Kotlin for students interested in mobile app development. Kotlin is Google's preferred language for Android, and this session covers the fundamentals so beginners can start building apps.
-We started with why Android development matters and how Kotlin simplifies the development process. Then we covered basic Kotlin syntax, Android project structure, and how the Android development environment is set up. We discussed Activities, the main building blocks of Android apps, and how to create UI layouts using XML.
-The session walked through handling user input, navigation between screens, and basic debugging. We saw how to use Android Studio effectively and how to run apps on emulators and real devices. The practical approach meant students could follow along and see their first app come to life.
-The embedded video below shows the setup process, coding demonstrations, and how we build a simple Android app from scratch. Learning Kotlin and Android early opens the door to mobile development and shows how skills transfer from web development to app development.
-Thanks to HIMA Informatics UPN Veteran Jakarta for supporting this learning opportunity for the student community.
-      `,
-      id: `
-Sesi CodeVox ini memperkenalkan Android development dengan Kotlin untuk mahasiswa yang tertarik dengan mobile app development. Kotlin adalah bahasa pilihan Google untuk Android, dan sesi ini membahas fundamental supaya pemula bisa mulai membuild apps.
-Kami mulai dengan kenapa Android development penting dan bagaimana Kotlin menyederhanakan proses development. Kemudian kami membahas dasar sintaks Kotlin, struktur project Android, dan cara setup environment untuk Android development. Kami diskusikan Activities sebagai building blocks utama Android apps dan cara membuat UI layout menggunakan XML.
-Sesi ini menunjukkan cara handle user input, navigasi antar screen, dan debugging dasar. Kami lihat cara pakai Android Studio secara efektif dan cara jalankan apps di emulator dan device asli. Pendekatan praktis membuat mahasiswa bisa follow along dan lihat app pertama mereka jadi kenyataan.
-Video yang di-embed di bawah menampilkan proses setup, demonstrasi coding, dan cara membuild simple Android app dari nol. Belajar Kotlin dan Android sejak awal membuka pintu ke mobile development dan menunjukkan bagaimana skill transfer dari web development ke app development.
-Terima kasih untuk HIMA Informatika UPN Veteran Jakarta yang support kesempatan belajar ini untuk komunitas mahasiswa.
-      `
+    author: 'Rafie Rojagat Bachri',
+    publishedAt: '2026-01-25',
+    category: 'android',
+    tags: ['Android', 'Kotlin', 'CodeVox'],
+    image: '/images/blog/codevox-android-kotlin.jpg',
+    videoId: 'd7QkvUAFkpE',
+    sections: {
+      en: [
+        {
+          heading: 'Starting from the project structure',
+          paragraphs: ['This CodeVox session introduced Android development by showing how a Kotlin project is organized before writing a feature. Understanding where interface, resource, and Kotlin files live made the first implementation less intimidating.'],
+        },
+        {
+          heading: 'Topics covered',
+          bullets: [
+            'Kotlin syntax used in a small Android feature',
+            'Android project structure and resources',
+            'Activity responsibilities and XML layouts',
+            'User input, basic debugging, and device testing',
+          ],
+        },
+        {
+          heading: 'Building and testing together',
+          paragraphs: ['Participants followed the setup, implementation, and run cycle in Android Studio. I demonstrated both the emulator and a physical device so the session connected code with observable application behavior.'],
+        },
+        {
+          heading: 'What I learned',
+          paragraphs: ['This session helped me explain Android as a collection of responsibilities rather than a long setup checklist. That framing made it easier to connect unfamiliar files with the interface participants were building.'],
+        },
+      ],
+      id: [
+        {
+          heading: 'Memulai dari struktur proyek',
+          paragraphs: ['Sesi CodeVox ini memperkenalkan Android development dengan menunjukkan susunan proyek Kotlin sebelum menulis fitur. Memahami lokasi file antarmuka, resource, dan Kotlin membuat implementasi pertama terasa lebih mudah.'],
+        },
+        {
+          heading: 'Materi yang dibahas',
+          bullets: [
+            'Sintaks Kotlin yang digunakan dalam fitur Android sederhana',
+            'Struktur proyek Android dan resource',
+            'Tanggung jawab Activity dan layout XML',
+            'Input pengguna, debugging dasar, dan pengujian perangkat',
+          ],
+        },
+        {
+          heading: 'Membangun dan menguji bersama',
+          paragraphs: ['Peserta mengikuti siklus setup, implementasi, dan menjalankan aplikasi di Android Studio. Saya mendemonstrasikan emulator dan perangkat fisik agar sesi menghubungkan kode dengan perilaku aplikasi yang dapat diamati.'],
+        },
+        {
+          heading: 'Pembelajaran saya',
+          paragraphs: ['Sesi ini membantu saya menjelaskan Android sebagai kumpulan tanggung jawab, bukan daftar setup yang panjang. Kerangka tersebut memudahkan peserta menghubungkan file yang belum familiar dengan antarmuka yang sedang dibangun.'],
+        },
+      ],
     },
-    author: "Rafie",
-    publishedAt: "2026-01-25",
-    category: {
-      en: "Mobile Development",
-      id: "Mobile Development"
-    },
-    tags: ["Android", "Kotlin", "Mobile Development", "CodeVox", "Beginner"],
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
-    videoUrl: "d7QkvUAFkpE",
-    readTime: "5 min read"
   },
   {
     id: 4,
-    slug: "codevox-android-input-navigation-lifecycle",
-    title: {
-      en: "CodeVox Session: Android Development - Input, Navigation, and Lifecycle",
-      id: "Sesi CodeVox: Android Development - Input, Navigasi, dan Lifecycle"
-    },
+    slug: 'codevox-android-input-navigation-lifecycle',
+    title: { en: 'CodeVox: Android Input, Navigation, and Lifecycle', id: 'CodeVox: Input, Navigasi, dan Lifecycle Android' },
     excerpt: {
-      en: "Deep dive into Android development with Kotlin, covering handling user input, implementing navigation between screens, and understanding the Android activity lifecycle.",
-      id: "Selami Android development dengan Kotlin, membahas cara handle user input, implementasi navigasi antar screen, dan memahami lifecycle activity Android."
+      en: 'A deeper Android session on validating input, moving data between screens, and understanding Activity lifecycle states.',
+      id: 'Sesi Android lanjutan tentang validasi input, perpindahan data antar layar, dan pemahaman state Activity lifecycle.',
     },
-    content: {
-      en: `
-This CodeVox session takes a deeper dive into Android development, focusing on three critical concepts that every Android developer needs to master: user input handling, screen navigation, and the activity lifecycle.
-We started by exploring different ways to handle user input in Android apps, from button clicks to text input validation. Understanding how to capture and process user interactions is fundamental to building responsive applications.
-Next, we covered navigation between screens in Android. We discussed how to pass data between Activities using Intents, handle intent filters, and manage navigation stacks. Proper navigation is essential for creating a good user experience and preventing navigation issues like back button problems.
-The session then deep-dived into the Android activity lifecycle, one of the most important concepts in Android development. We explained each lifecycle state: onCreate, onStart, onResume, onPause, onStop, and onDestroy. Understanding these states helps you manage resources efficiently and preserve app state when the activity is paused or destroyed.
-The embedded video below shows practical demonstrations of handling input with event listeners, implementing navigation with Intents, and logging lifecycle methods to understand when each state is called. Mastering these concepts will help you build more robust and efficient Android applications.
-Thanks to HIMA Informatics UPN Veteran Jakarta for continuing to support quality Android learning in the student community.
-      `,
-      id: `
-Sesi CodeVox ini menggali lebih dalam ke Android development, fokus pada tiga konsep penting yang wajib dikuasai setiap Android developer: handling user input, navigasi antar screen, dan activity lifecycle.
-Kami mulai dengan explore berbagai cara handle user input di Android apps, dari button clicks hingga text input validation. Memahami cara capture dan process user interactions adalah fundamental untuk build aplikasi yang responsive.
-Selanjutnya, kami bahas navigasi antar screen di Android. Kami diskusikan cara pass data antar Activities menggunakan Intents, handle intent filters, dan manage navigation stacks. Navigasi yang tepat adalah essential untuk create good user experience dan prevent navigation issues seperti back button problems.
-Sesi ini juga deep-dive ke Android activity lifecycle, salah satu konsep paling penting di Android development. Kami jelaskan setiap lifecycle state: onCreate, onStart, onResume, onPause, onStop, dan onDestroy. Memahami state-state ini membantu manage resources secara efisien dan preserve app state ketika activity di-pause atau destroyed.
-Video yang di-embed di bawah menampilkan demonstrasi praktis handling input dengan event listeners, implementasi navigasi dengan Intents, dan logging lifecycle methods untuk understand kapan setiap state dipanggil. Menguasai konsep-konsep ini akan membantu build Android applications yang lebih robust dan efficient.
-Terima kasih untuk HIMA Informatika UPN Veteran Jakarta yang terus support quality Android learning di komunitas mahasiswa.
-      `
+    author: 'Rafie Rojagat Bachri',
+    publishedAt: '2026-01-30',
+    category: 'android',
+    tags: ['Android', 'Kotlin', 'Lifecycle'],
+    image: '/images/blog/codevox-android-lifecycle.jpg',
+    videoId: 'HDlEZcqGv5w',
+    sections: {
+      en: [
+        {
+          heading: 'Moving beyond a static screen',
+          paragraphs: ['This follow-up CodeVox session focused on the behavior that turns an Android layout into an application: responding to input, moving between screens, and preserving predictable state.'],
+        },
+        {
+          heading: 'Concepts demonstrated',
+          bullets: [
+            'Validate text input and respond to button events',
+            'Pass data between Activities with Intents',
+            'Manage back-stack expectations during navigation',
+            'Observe onCreate, onStart, onResume, onPause, onStop, and onDestroy',
+          ],
+        },
+        {
+          heading: 'Making lifecycle visible',
+          paragraphs: ['I logged lifecycle callbacks while moving the application between foreground and background states. Seeing the sequence in real time helped connect lifecycle theory with resource handling and state preservation.'],
+        },
+        {
+          heading: 'What I learned',
+          paragraphs: ['The session reinforced that lifecycle concepts are easier to understand through observation than memorization. Demonstrating cause and effect made a complex topic more concrete.'],
+        },
+      ],
+      id: [
+        {
+          heading: 'Melampaui layar statis',
+          paragraphs: ['Sesi lanjutan CodeVox ini berfokus pada perilaku yang mengubah layout Android menjadi aplikasi: merespons input, berpindah antar layar, dan menjaga state tetap konsisten.'],
+        },
+        {
+          heading: 'Konsep yang didemonstrasikan',
+          bullets: [
+            'Memvalidasi input teks dan merespons event tombol',
+            'Mengirim data antar-Activity menggunakan Intent',
+            'Mengelola ekspektasi back stack saat navigasi',
+            'Mengamati onCreate, onStart, onResume, onPause, onStop, dan onDestroy',
+          ],
+        },
+        {
+          heading: 'Membuat lifecycle terlihat',
+          paragraphs: ['Saya mencatat callback lifecycle ketika aplikasi berpindah antara foreground dan background. Melihat urutannya secara langsung membantu menghubungkan teori lifecycle dengan pengelolaan resource dan penyimpanan state.'],
+        },
+        {
+          heading: 'Pembelajaran saya',
+          paragraphs: ['Sesi ini menegaskan bahwa konsep lifecycle lebih mudah dipahami melalui pengamatan daripada hafalan. Demonstrasi sebab dan akibat membuat topik yang kompleks menjadi lebih konkret.'],
+        },
+      ],
     },
-    author: "Rafie",
-    publishedAt: "2026-01-30",
-    category: {
-      en: "Mobile Development",
-      id: "Mobile Development"
-    },
-    tags: ["Android", "Kotlin", "Mobile Development", "CodeVox", "Intermediate"],
-    image: "https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=800&q=80",
-    videoUrl: "HDlEZcqGv5w",
-    readTime: "6 min read"
   },
   {
     id: 5,
-    slug: "codevox-machine-learning-dasar",
-    title: {
-      en: "CodeVox Session: Machine Learning Basics",
-      id: "Sesi CodeVox: Dasar-Dasar Machine Learning"
-    },
+    slug: 'codevox-machine-learning-dasar',
+    title: { en: 'CodeVox: Machine Learning Fundamentals', id: 'CodeVox: Fundamental Machine Learning' },
     excerpt: {
-      en: "An introductory CodeVox session on machine learning fundamentals, covering core concepts, datasets, and simple model training workflows.",
-      id: "Sesi pengantar CodeVox tentang fundamental machine learning, membahas konsep inti, dataset, dan alur training model sederhana."
+      en: 'Building intuition for datasets, features, labels, train-test splits, model evaluation, and overfitting.',
+      id: 'Membangun intuisi tentang dataset, fitur, label, train-test split, evaluasi model, dan overfitting.',
     },
-    content: {
-      en: `
-This CodeVox session introduces the fundamentals of machine learning for beginners who want to understand how data can be turned into predictions. We focus on the big-picture workflow and practical steps so students can build intuition before diving deeper.
-We started with the basics: what machine learning is, how it differs from traditional programming, and why data quality matters. Then we discussed datasets, features, labels, and the train-test split so participants understand how models learn.
-The session covered supervised learning with simple examples, including how to evaluate model performance using accuracy and confusion matrices. We also touched on common pitfalls such as overfitting and how to avoid it with proper validation.
-The embedded video below shows the teaching flow, dataset walkthroughs, and a simple model training demo. This session is a solid starting point for students who want to explore machine learning in a structured way.
-Thanks to HIMA Informatics UPN Veteran Jakarta for continuing to support data and machine learning learning opportunities for the student community.
-      `,
-      id: `
-Sesi CodeVox ini memperkenalkan fundamental machine learning untuk pemula yang ingin memahami bagaimana data bisa diubah menjadi prediksi. Fokusnya pada alur besar dan langkah-langkah praktis supaya peserta punya intuisi sebelum masuk lebih dalam.
-Kami mulai dari dasar: apa itu machine learning, bedanya dengan pemrograman tradisional, dan kenapa kualitas data itu penting. Lalu kami membahas dataset, fitur, label, serta train-test split agar peserta paham bagaimana model belajar.
-Sesi ini membahas supervised learning dengan contoh sederhana, termasuk cara mengevaluasi performa model menggunakan accuracy dan confusion matrix. Kami juga menyinggung masalah umum seperti overfitting dan cara menghindarinya dengan validasi yang tepat.
-Video yang di-embed di bawah menampilkan alur mengajar, walkthrough dataset, dan demo training model sederhana. Sesi ini cocok sebagai titik awal untuk mahasiswa yang ingin belajar machine learning secara terstruktur.
-Terima kasih untuk HIMA Informatika UPN Veteran Jakarta yang terus mendukung kesempatan belajar data dan machine learning di komunitas mahasiswa.
-      `
+    author: 'Rafie Rojagat Bachri',
+    publishedAt: '2026-02-05',
+    category: 'learning',
+    tags: ['Machine Learning', 'Data', 'CodeVox'],
+    image: '/images/blog/codevox-ml.jpg',
+    videoId: '-tm9UPP0SYs',
+    sections: {
+      en: [
+        {
+          heading: 'Building intuition first',
+          paragraphs: ['This CodeVox session introduced machine learning as a workflow for learning patterns from data. The focus was on understanding the role of each step before moving into more advanced algorithms.'],
+        },
+        {
+          heading: 'Topics covered',
+          bullets: [
+            'Differences between traditional programming and machine learning',
+            'Datasets, features, labels, and train-test splits',
+            'Supervised learning through a simple example',
+            'Accuracy, confusion matrices, validation, and overfitting',
+          ],
+        },
+        {
+          heading: 'From data to evaluation',
+          paragraphs: ['The demonstration followed a small dataset through preparation, training, and evaluation. Keeping the example compact made it possible to discuss why a high score alone does not guarantee a useful model.'],
+        },
+        {
+          heading: 'What I learned',
+          paragraphs: ['Teaching this topic improved how I separate model terminology from the decisions behind it. Starting with the question and data made the evaluation metrics easier to explain.'],
+        },
+      ],
+      id: [
+        {
+          heading: 'Membangun intuisi terlebih dahulu',
+          paragraphs: ['Sesi CodeVox ini memperkenalkan machine learning sebagai alur untuk mempelajari pola dari data. Fokusnya adalah memahami peran setiap tahap sebelum masuk ke algoritma yang lebih lanjut.'],
+        },
+        {
+          heading: 'Materi yang dibahas',
+          bullets: [
+            'Perbedaan pemrograman tradisional dan machine learning',
+            'Dataset, fitur, label, serta train-test split',
+            'Supervised learning melalui contoh sederhana',
+            'Accuracy, confusion matrix, validasi, dan overfitting',
+          ],
+        },
+        {
+          heading: 'Dari data menuju evaluasi',
+          paragraphs: ['Demonstrasi mengikuti sebuah dataset kecil dari persiapan, training, hingga evaluasi. Contoh yang ringkas memungkinkan pembahasan tentang alasan skor tinggi saja belum menjamin sebuah model berguna.'],
+        },
+        {
+          heading: 'Pembelajaran saya',
+          paragraphs: ['Mengajar topik ini meningkatkan cara saya memisahkan istilah model dari keputusan di baliknya. Memulai dari pertanyaan dan data membuat metrik evaluasi lebih mudah dijelaskan.'],
+        },
+      ],
     },
-    author: "Rafie",
-    publishedAt: "2026-02-05",
-    category: {
-      en: "Machine Learning",
-      id: "Machine Learning"
-    },
-    tags: ["Machine Learning", "CodeVox", "Beginner", "Data"],
-    image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&q=80",
-    videoUrl: "-tm9UPP0SYs",
-    readTime: "5 min read"
-  }
+  },
 ];

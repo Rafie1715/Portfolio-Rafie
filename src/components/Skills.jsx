@@ -1,100 +1,108 @@
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  BrainCircuit,
+  Database,
+  MonitorSmartphone,
+  Smartphone,
+  Wrench,
+} from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { skillsData } from "../data/skills";
-import { motion } from "framer-motion";
-import { useTranslation } from 'react-i18next';
 
 const findSkill = (name) => (
   skillsData.find((skill) => skill.name.toLowerCase() === name.toLowerCase()) || {
     name,
-    icon: 'fas fa-code',
+    icon: "fas fa-code text-gray-500",
   }
 );
 
 const Skills = () => {
   const { t } = useTranslation();
-
+  const reduceMotion = useReducedMotion();
   const categories = [
     {
-      title: t('skills.categories.frontend.title'),
-      desc: t('skills.categories.frontend.desc'),
-      icon: 'fas fa-window-maximize',
-      skills: ['React', 'JavaScript', 'Tailwind CSS', 'Vite', 'HTML5', 'CSS3'].map(findSkill),
+      key: "mobile",
+      Icon: Smartphone,
+      color: "text-blue-600 bg-blue-50 dark:bg-blue-950/40",
+      skills: ["Kotlin", "Jetpack Compose", "Android Studio", "Retrofit", "MVVM", "Coroutines", "Paging 3", "Material Design"],
     },
     {
-      title: t('skills.categories.mobile.title'),
-      desc: t('skills.categories.mobile.desc'),
-      icon: 'fas fa-mobile-screen-button',
-      skills: ['Kotlin', 'Android Studio', 'Flutter', 'Firebase'].map(findSkill),
+      key: "frontend",
+      Icon: MonitorSmartphone,
+      color: "text-cyan-700 bg-cyan-50 dark:bg-cyan-950/40",
+      skills: ["React.js", "Next.js", "JavaScript", "Tailwind CSS", "Bootstrap"],
     },
     {
-      title: t('skills.categories.backend.title'),
-      desc: t('skills.categories.backend.desc'),
-      icon: 'fas fa-server',
-      skills: ['Node.js', 'PHP', 'MySQL', 'Firebase'].map(findSkill),
+      key: "ai",
+      Icon: BrainCircuit,
+      color: "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40",
+      skills: ["Python", "Machine Learning", "Scikit-Learn", "Prompt Engineering", "Generative AI"],
     },
     {
-      title: t('skills.categories.tools.title'),
-      desc: t('skills.categories.tools.desc'),
-      icon: 'fas fa-screwdriver-wrench',
-      skills: ['Git', 'Figma', 'VS Code', 'Python', 'Java'].map(findSkill),
+      key: "backend",
+      Icon: Database,
+      color: "text-amber-700 bg-amber-50 dark:bg-amber-950/40",
+      skills: ["Node.js", "Express.js", "REST API", "MySQL", "Firebase"],
+    },
+    {
+      key: "tools",
+      Icon: Wrench,
+      color: "text-rose-700 bg-rose-50 dark:bg-rose-950/40",
+      skills: ["Git", "GitHub", "Postman", "VS Code", "Figma"],
     },
   ];
 
   return (
-    <section id="skills" className="py-24 bg-white dark:bg-dark relative overflow-hidden">
-      <div className="container mx-auto px-4">
+    <section id="skills" className="bg-gray-50 py-16 dark:bg-slate-950 sm:py-20">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="mb-10 max-w-2xl"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">
-            {t('skills.title')}
-          </h2>
-          <div className="w-20 h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full mb-6"></div>
-          <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-            {t('skills.description')}
+          <p className="mb-3 text-sm font-bold uppercase text-primary">{t("skills.eyebrow")}</p>
+          <h2 className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">{t("skills.title")}</h2>
+          <p className="mt-4 text-base leading-7 text-gray-600 dark:text-gray-400">
+            {t("skills.description")}
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {categories.map((category, index) => (
-            <motion.div
-              key={category.title}
-              initial={{ opacity: 0, y: 24 }}
+            <motion.article
+              key={category.key}
+              initial={reduceMotion ? false : { opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.45, delay: index * 0.06 }}
-              className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50/70 dark:bg-slate-900/50 p-5 md:p-6 shadow-sm"
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.35, delay: index * 0.04 }}
+              className="rounded-lg border border-gray-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900 sm:p-6"
             >
-              <div className="flex items-start gap-4 mb-5">
-                <div className="w-11 h-11 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-primary dark:text-blue-300 flex items-center justify-center flex-shrink-0">
-                  <i className={category.icon}></i>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-dark dark:text-white mb-1">
-                    {category.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                    {category.desc}
-                  </p>
-                </div>
+              <div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-lg ${category.color}`}>
+                <category.Icon className="h-5 w-5" aria-hidden="true" />
               </div>
+              <h3 className="text-lg font-bold text-dark dark:text-white">
+                {t(`skills.categories.${category.key}.title`)}
+              </h3>
+              <p className="mt-2 min-h-[44px] text-sm leading-6 text-gray-600 dark:text-gray-400">
+                {t(`skills.categories.${category.key}.desc`)}
+              </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {category.skills.map((skill) => (
-                  <div
-                    key={`${category.title}-${skill.name}`}
-                    className="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-3 min-h-[52px]"
-                  >
-                    <i className={`${skill.icon} text-xl`}></i>
-                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 leading-tight">
-                      {skill.name}
-                    </span>
-                  </div>
-                ))}
+              <div className="mt-5 border-t border-gray-100 pt-2 dark:border-slate-800">
+                {category.skills.map((skillName) => {
+                  const skill = findSkill(skillName);
+                  return (
+                    <div
+                      key={`${category.key}-${skill.name}`}
+                      className="flex min-h-10 items-center gap-3 border-b border-gray-100 py-2 last:border-0 dark:border-slate-800"
+                    >
+                      <i className={`${skill.icon} w-5 text-center text-lg`} aria-hidden="true" />
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{skill.name}</span>
+                    </div>
+                  );
+                })}
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
       </div>

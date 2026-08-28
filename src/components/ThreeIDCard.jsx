@@ -152,15 +152,15 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     dataY += 24;
     context.fillText('BACHRI', dataX, dataY);
 
-    // ID NUMBER
+    // FOCUS
     dataY += 45;
     context.fillStyle = '#6b7280';
     context.font = 'bold 14px Arial';
-    context.fillText('ID NUMBER', dataX, dataY);
+    context.fillText('FOCUS', dataX, dataY);
     context.fillStyle = '#111827';
     context.font = 'bold 19px Arial';
     dataY += 28;
-    context.fillText('2210511043', dataX, dataY);
+    context.fillText('Mobile & Web', dataX, dataY);
 
     // MAJOR
     dataY += 45;
@@ -172,28 +172,28 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     dataY += 28;
     context.fillText('Informatics', dataX, dataY);
 
-    // CLASS OF
+    // GRADUATED
     dataY += 45;
     context.fillStyle = '#6b7280';
     context.font = 'bold 14px Arial';
-    context.fillText('CLASS OF', dataX, dataY);
+    context.fillText('GRADUATED', dataX, dataY);
     context.fillStyle = '#111827';
     context.font = 'bold 19px Arial';
     dataY += 28;
-    context.fillText('2022', dataX, dataY);
+    context.fillText('2026', dataX, dataY);
 
-    // STATUS
+    // AVAILABILITY
     dataY += 45;
     context.fillStyle = '#6b7280';
     context.font = 'bold 14px Arial';
-    context.fillText('STATUS', dataX, dataY);
+    context.fillText('AVAILABILITY', dataX, dataY);
     dataY += 8;
     context.fillStyle = '#dcfce7';
-    context.fillRect(dataX, dataY, 110, 32);
+    context.fillRect(dataX, dataY, 170, 32);
     context.fillStyle = '#166534';
-    context.font = 'bold 18px Arial';
+    context.font = 'bold 16px Arial';
     dataY += 23;
-    context.fillText('ACTIVE', dataX + 12, dataY);
+    context.fillText('OPEN TO WORK', dataX + 12, dataY);
 
     // Chip gold at bottom
     const chipGradient = context.createLinearGradient(0, 0, 90, 0);
@@ -394,7 +394,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     context.fillStyle = '#ffffff';
     context.font = 'bold 18px Arial';
     context.textAlign = 'center';
-    context.fillText('ID: 2210511043 • Class of 2022', CARD_BASE_SIZE / 2, CARD_BASE_SIZE - 42);
+    context.fillText('Android | Front-End | AI', CARD_BASE_SIZE / 2, CARD_BASE_SIZE - 42);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.generateMipmaps = false;

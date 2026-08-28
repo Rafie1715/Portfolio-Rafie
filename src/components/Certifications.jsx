@@ -1,311 +1,230 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { certifications } from '../data/certifications';
-import { useTranslation } from 'react-i18next';
-import { collection, getDocs } from 'firebase/firestore';
-import { useFirebaseInit } from '../hooks/useFirebaseInit';
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Award, ExternalLink, Grid2X2, Image as ImageIcon, ListFilter, X } from "lucide-react";
+import { collection, getDocs } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
+import { certifications } from "../data/certifications";
+import { useFirebaseInit } from "../hooks/useFirebaseInit";
+
+const normalizeTitle = (value) => {
+  const title = typeof value === "object" ? value?.en || value?.id || "" : value || "";
+  const normalized = String(title).trim().toLowerCase();
+
+  if (normalized.includes("programming assistant") || normalized.includes("asisten program")) {
+    return "bnsp-programming-assistant";
+  }
+
+  return normalized;
+};
+
+const mergeCertifications = (cmsItems) => {
+  const merged = new Map();
+  const localItems = certifications.map((item) => ({ ...item, id: `local-${item.id}`, source: "local" }));
+
+  [...localItems, ...cmsItems].forEach((item) => {
+    const key = normalizeTitle(item.title) || String(item.id);
+    const current = merged.get(key);
+    const preserveFeaturedCopy = Boolean(current?.featured);
+    merged.set(key, current ? {
+      ...current,
+      ...item,
+      title: preserveFeaturedCopy ? current.title : item.title,
+      date: preserveFeaturedCopy ? current.date : item.date,
+      img: item.img || current.img,
+      link: item.link || current.link,
+      featured: Boolean(current.featured || item.featured),
+      summary: item.summary || current.summary,
+    } : item);
+  });
+
+  return Array.from(merged.values());
+};
 
 const Certifications = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);    
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const [certItems, setCertItems] = useState(certifications);
-  const autoSlideRef = useRef();
-  const { dbFirestore } = useFirebaseInit('dbFirestore');
-
   const { t, i18n } = useTranslation();
-  const currentLang = i18n.language || 'en';
+  const reduceMotion = useReducedMotion();
+  const { dbFirestore } = useFirebaseInit("dbFirestore");
+  const [certItems, setCertItems] = useState(() => mergeCertifications([]));
+  const [showAll, setShowAll] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const language = i18n.resolvedLanguage?.startsWith("id") ? "id" : "en";
 
   const getText = (value) => {
-    if (!value) return '';
-    if (typeof value === 'object' && !Array.isArray(value)) {
-      return value[currentLang] || value.en || value.id || '';
+    if (!value) return "";
+    if (typeof value === "object" && !Array.isArray(value)) {
+      return value[language] || value.en || value.id || "";
     }
     return String(value);
   };
 
   useEffect(() => {
-    const fetchCertifications = async () => {
-      if (!dbFirestore) return;
+    if (!dbFirestore) return undefined;
+    let cancelled = false;
 
+    const fetchCertifications = async () => {
       try {
-        const querySnapshot = await getDocs(collection(dbFirestore, 'certifications'));
-        const cmsCertifications = querySnapshot.docs
-          .map((entry) => ({ id: entry.id, ...entry.data() }))
+        const snapshot = await getDocs(collection(dbFirestore, "certifications"));
+        const cmsItems = snapshot.docs
+          .map((entry) => ({ id: `cms-${entry.id}`, ...entry.data(), source: "cms" }))
           .filter((item) => item.isPublished !== false)
           .sort((a, b) => {
-            const leftOrder = typeof a?.order === 'number' ? a.order : Number.MAX_SAFE_INTEGER;
-            const rightOrder = typeof b?.order === 'number' ? b.order : Number.MAX_SAFE_INTEGER;
-            if (leftOrder !== rightOrder) return leftOrder - rightOrder;
-            const left = a?.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
-            const right = b?.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
-            return right - left;
+            const leftOrder = typeof a.order === "number" ? a.order : Number.MAX_SAFE_INTEGER;
+            const rightOrder = typeof b.order === "number" ? b.order : Number.MAX_SAFE_INTEGER;
+            return leftOrder - rightOrder;
           });
 
-        const normalizedLocal = certifications.map((item, index) => ({
-          ...item,
-          id: `local-${item.id || index + 1}`,
-          source: 'local',
-        }));
-
-        const merged = [...cmsCertifications.map((item) => ({ ...item, source: 'cms' })), ...normalizedLocal];
-        setCertItems(merged);
-        setCurrentIndex(0);
+        if (!cancelled) setCertItems(mergeCertifications(cmsItems));
       } catch (error) {
-        console.error('Error fetching certifications from CMS:', error);
+        console.error("Error fetching certifications from CMS:", error);
       }
     };
 
     fetchCertifications();
+    return () => {
+      cancelled = true;
+    };
   }, [dbFirestore]);
 
   useEffect(() => {
-    if (isPaused || certItems.length <= 1) return;
+    if (!selectedImage) return undefined;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setSelectedImage(null);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedImage]);
 
-    autoSlideRef.current = setInterval(() => {
-        nextSlide();
-    }, 5000);
-
-    return () => clearInterval(autoSlideRef.current);
-  }, [currentIndex, isPaused, certItems.length]);
-
-  const prevSlide = () => {
-    if (certItems.length === 0) return;
-    setDirection(-1); 
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? certItems.length - 1 : currentIndex - 1;
-    setCurrentIndex(newIndex);
-  };
-
-  const nextSlide = () => {
-    if (certItems.length === 0) return;
-    setDirection(1); 
-    const isLastSlide = currentIndex === certItems.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
-  };
-
-  const goToSlide = (slideIndex) => {
-    setDirection(slideIndex > currentIndex ? 1 : -1);
-    setCurrentIndex(slideIndex);
-  };
-
-  const activeCert = certItems[currentIndex] || {};
-
-  const slideVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 100 : -100,
-      opacity: 0,
-      scale: 0.9, 
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      transition: {
-        x: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.4 },
-        scale: { duration: 0.4 },
-      }
-    },
-    exit: (direction) => ({
-      zIndex: 0,
-      x: direction < 0 ? 100 : -100, 
-      opacity: 0,
-      scale: 0.9,
-      transition: {
-        x: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.2 },
-      }
-    }),
-  };
+  const featuredItems = useMemo(() => certItems.filter((item) => item.featured), [certItems]);
+  const visibleItems = showAll || featuredItems.length === 0 ? certItems : featuredItems;
 
   return (
-    <section id="certifications" className="py-24 bg-white dark:bg-dark relative overflow-hidden transition-colors duration-300">      
-      <AnimatePresence mode='wait'>
-         <motion.div 
-            key={currentIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full blur-[100px] md:blur-[150px] -z-10 pointer-events-none bg-primary/20"
-         ></motion.div>
-      </AnimatePresence>
-
-      <div className="container mx-auto px-4 max-w-6xl">        
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
+    <section id="certifications" className="bg-gray-50 py-16 dark:bg-slate-950 sm:py-20">
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-10 md:mb-16"
+          className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">
-            {t('certifications.title')}
-          </h2>
-          <div className="w-20 h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
+          <div className="max-w-2xl">
+            <p className="mb-3 text-sm font-bold uppercase text-primary">{t("certifications.eyebrow")}</p>
+            <h2 className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">
+              {t("certifications.title")}
+            </h2>
+            <p className="mt-4 leading-7 text-gray-600 dark:text-gray-400">
+              {t("certifications.subtitle")}
+            </p>
+          </div>
+
+          {certItems.length > featuredItems.length && featuredItems.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowAll((current) => !current)}
+              className="inline-flex items-center justify-center gap-2 self-start rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-bold text-gray-800 transition hover:border-primary hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:border-slate-600 dark:bg-slate-900 dark:text-white sm:self-auto"
+              aria-expanded={showAll}
+            >
+              {showAll ? <ListFilter className="h-4 w-4" aria-hidden="true" /> : <Grid2X2 className="h-4 w-4" aria-hidden="true" />}
+              {showAll ? t("certifications.show_selected") : t("certifications.view_all", { count: certItems.length })}
+            </button>
+          )}
         </motion.div>
 
-        <div 
-            className="relative w-full flex flex-col items-center"
-            onMouseEnter={() => setIsPaused(true)} 
-            onMouseLeave={() => setIsPaused(false)} 
-        >            
-            <div className="relative w-full min-h-[500px] md:h-[500px] flex items-center justify-center overflow-hidden mb-8">                
-                <button 
-                    onClick={prevSlide}
-                    className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-white/10 backdrop-blur-md text-dark dark:text-white border border-white/20 hover:bg-white hover:text-primary transition-all shadow-lg hover:scale-110"
-                >
-                    <i className="fas fa-chevron-left text-xl"></i>
-                </button>
-                
-                <button 
-                    onClick={nextSlide}
-                    className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-white/10 backdrop-blur-md text-dark dark:text-white border border-white/20 hover:bg-white hover:text-primary transition-all shadow-lg hover:scale-110"
-                >
-                    <i className="fas fa-chevron-right text-xl"></i>
-                </button>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {visibleItems.map((certification, index) => {
+            const title = getText(certification.title);
+            const summary = getText(certification.summary);
 
-                <AnimatePresence initial={false} custom={direction} mode="popLayout">
-                    <motion.div
-                        key={currentIndex}
-                        custom={direction}
-                        variants={slideVariants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        className="w-full md:absolute md:inset-0 px-2 md:px-16 flex items-center justify-center"
-                    >
-                        <div className="w-full max-w-4xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row h-auto md:h-[400px]">                                                                                            
-                            <div className="w-full md:w-3/5 h-[250px] md:h-full bg-gray-100 dark:bg-slate-900 flex items-center justify-center p-4 md:p-6 relative group/img overflow-hidden">
-                                  <motion.img 
-                                    src={activeCert.img} 
-                                    alt={getText(activeCert.alt) || "Certificate"}
-                                    loading="lazy"
-                                    className="max-w-full max-h-full object-contain shadow-md rounded transition-transform duration-500 group-hover/img:scale-105"
-                                    layoutId={`cert-img-${currentIndex}`}
-                                />
-                                <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                                   <button 
-                                      onClick={() => setSelectedImage(activeCert.img)}
-                                      className="px-5 py-2 bg-white text-dark rounded-full text-sm font-bold flex items-center gap-2 transform translate-y-4 group-hover/img:translate-y-0 transition-transform hover:bg-primary hover:text-white shadow-lg"
-                                   >
-                                      <i className="fas fa-expand"></i> View
-                                   </button>
-                                </div>
-                            </div>
-
-                            <div className="w-full md:w-2/5 p-6 md:p-8 flex flex-col justify-center border-t md:border-t-0 md:border-l border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50">
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.2 }}
-                                >
-                                    {/* Category Badge */}
-                                    <div className="flex items-center gap-2 mb-4">
-                                      <span className="text-2xl">{activeCert.badge || '🏆'}</span>
-                                      <span className={`inline-block px-3 py-1 text-xs font-bold rounded-full bg-gradient-to-r ${activeCert.color || 'from-blue-500 to-blue-600'} text-white shadow-md`}>
-                                        {getText(activeCert.category) || 'General'}
-                                        </span>
-                                    </div>
-
-                                    <h3 className="text-xl font-bold text-dark dark:text-white mb-2 leading-tight">
-                                      {getText(activeCert.title) || "Certificate Title"}
-                                    </h3>
-                                    <p className="text-primary font-semibold mb-4 text-sm uppercase tracking-wide">
-                                      {getText(activeCert.issuer) || "Issuer Name"}
-                                    </p>
-                                    
-                                    <div className="h-px w-full bg-gray-200 dark:bg-slate-600 mb-4"></div>
-                                    
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                                      {t('certifications.issued')}: <span className="text-dark dark:text-gray-200 font-medium">{activeCert.date || "2024"}</span>
-                                    </p>
-                                    
-                                    {activeCert.link && (
-                                        <a 
-                                        href={activeCert.link}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="inline-flex items-center justify-center w-full py-2.5 bg-gray-100 dark:bg-slate-700 text-dark dark:text-white rounded-lg text-sm font-bold hover:bg-primary hover:text-white transition-all gap-2 group/link"
-                                        >
-                                            {t('certifications.verify')} <i className="fas fa-external-link-alt group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-transform"></i>
-                                        </a>
-                                    )}
-                                </motion.div>
-                            </div>
-
-                        </div>
-                    </motion.div>
-                </AnimatePresence>
-            </div>
-
-            <div className="flex md:hidden items-center justify-between w-full max-w-xs px-4 mb-6">
-                 <button 
-                    onClick={prevSlide}
-                    className="p-3 rounded-full bg-gray-100 dark:bg-slate-800 text-dark dark:text-white shadow-md active:scale-90 transition-transform"
-                >
-                    <i className="fas fa-chevron-left"></i>
-                </button>
-                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  {certItems.length === 0 ? '0 / 0' : `${currentIndex + 1} / ${certItems.length}`}
-                </span>
-                <button 
-                    onClick={nextSlide}
-                    className="p-3 rounded-full bg-gray-100 dark:bg-slate-800 text-dark dark:text-white shadow-md active:scale-90 transition-transform"
-                >
-                    <i className="fas fa-chevron-right"></i>
-                </button>
-            </div>
-
-            <div className="flex justify-center gap-2 flex-wrap px-4">
-                {certItems.map((_, slideIndex) => (
-                    <button
-                        key={slideIndex}
-                        onClick={() => goToSlide(slideIndex)}
-                        className={`h-2 rounded-full transition-all duration-300 ${
-                            currentIndex === slideIndex 
-                            ? 'w-8 bg-primary shadow-lg shadow-primary/30' 
-                            : 'w-2 bg-gray-300 dark:bg-slate-600 hover:bg-primary/50'
-                        }`}
-                        aria-label={`Go to slide ${slideIndex + 1}`}
+            return (
+              <motion.article
+                key={certification.id}
+                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.3, delay: Math.min(index * 0.03, 0.18) }}
+                className="flex flex-row overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900 sm:min-h-[260px] sm:flex-col"
+              >
+                {certification.img ? (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedImage({ src: certification.img, alt: getText(certification.alt) || title })}
+                    className="group relative block w-24 flex-none overflow-hidden bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary dark:bg-slate-800 sm:w-full"
+                    aria-label={t("certifications.preview", { title })}
+                  >
+                    <img
+                      src={certification.img}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full min-h-40 w-full object-cover transition duration-300 group-hover:scale-[1.02] sm:aspect-[16/8] sm:min-h-0"
                     />
-                ))}
-            </div>
+                    <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-md bg-black/70 text-white opacity-90 transition group-hover:bg-black">
+                      <ImageIcon className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                  </button>
+                ) : (
+                  <div className="flex w-24 flex-none items-center justify-center bg-gray-100 dark:bg-slate-800 sm:aspect-[16/8] sm:w-full">
+                    <Award className="h-9 w-9 text-primary sm:h-12 sm:w-12" aria-hidden="true" />
+                  </div>
+                )}
 
+                <div className="min-w-0 flex flex-1 flex-col p-4 sm:p-5">
+                  <div className="mb-3 flex flex-col gap-1 text-xs font-bold uppercase text-primary sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                    <span>{getText(certification.category) || t("certifications.general")}</span>
+                    <span className="text-gray-500 dark:text-gray-400">{certification.date}</span>
+                  </div>
+                  <h3 className="text-lg font-bold leading-snug text-dark dark:text-white">{title}</h3>
+                  <p className="mt-2 text-sm font-semibold text-gray-600 dark:text-gray-300">
+                    {getText(certification.issuer)}
+                  </p>
+                  {summary && (
+                    <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-400">{summary}</p>
+                  )}
+
+                  {certification.link && (
+                    <a
+                      href={certification.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-bold text-primary hover:text-blue-700 focus:outline-none focus-visible:underline dark:hover:text-blue-300"
+                    >
+                      {t("certifications.verify")}
+                      <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                    </a>
+                  )}
+                </div>
+              </motion.article>
+            );
+          })}
         </div>
       </div>
 
       <AnimatePresence>
         {selectedImage && (
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedImage.alt}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4 backdrop-blur-md"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4"
             onClick={() => setSelectedImage(null)}
           >
-            <motion.div 
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                className="relative max-w-5xl w-full max-h-screen flex items-center justify-center"
-                onClick={(e) => e.stopPropagation()} 
-            >
-                <img
-                    src={selectedImage}
-                    alt="Full Preview"
-                    className="w-auto h-auto max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-white/10"
-                />
-                <button
-                    className="absolute -top-12 right-0 md:-right-4 text-white/70 hover:text-white transition-colors bg-white/10 hover:bg-white/20 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10"
-                    onClick={() => setSelectedImage(null)}
-                >
-                    <i className="fas fa-times text-xl"></i>
-                </button>
-            </motion.div>
+            <div className="relative flex h-full w-full max-w-6xl items-center justify-center" onClick={(event) => event.stopPropagation()}>
+              <img src={selectedImage.src} alt={selectedImage.alt} className="max-h-[88vh] max-w-full rounded-lg object-contain" />
+              <button
+                type="button"
+                onClick={() => setSelectedImage(null)}
+                aria-label={t("certifications.close_preview")}
+                className="absolute right-0 top-0 flex h-11 w-11 items-center justify-center rounded-md bg-black/70 text-white hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

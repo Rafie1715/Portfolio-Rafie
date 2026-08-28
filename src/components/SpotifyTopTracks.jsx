@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 export default function SpotifyTopTracks() {
+  const { t } = useTranslation();
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,9 +11,9 @@ export default function SpotifyTopTracks() {
   const [selectedTrack, setSelectedTrack] = useState(null);
 
   const timeRanges = [
-    { id: 'short_term', label: '4 weeks' },
-    { id: 'medium_term', label: '6 months' },
-    { id: 'long_term', label: 'All time' },
+    { id: 'short_term', label: t('afk.spotify_ranges.four_weeks') },
+    { id: 'medium_term', label: t('afk.spotify_ranges.six_months') },
+    { id: 'long_term', label: t('afk.spotify_ranges.all_time') },
   ];
 
   useEffect(() => {
@@ -22,15 +24,15 @@ export default function SpotifyTopTracks() {
         const data = await response.json();
 
         if (data.error || !data.items) {
-          setError('Unable to fetch top tracks');
+          setError(true);
           setTracks([]);
           return;
         }
 
-        setTracks(data.items.slice(0, 10)); // Top 10 tracks
+        setTracks(data.items.slice(0, 5));
         setError(null);
       } catch (err) {
-        setError('Unable to fetch Spotify data');
+        setError(true);
         console.error('Spotify error:', err);
       } finally {
         setLoading(false);
@@ -45,7 +47,7 @@ export default function SpotifyTopTracks() {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+          staggerChildren: 0.06,
       },
     },
   };
@@ -58,16 +60,17 @@ export default function SpotifyTopTracks() {
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h3 className="text-lg font-bold text-white mb-3">My Top Tracks</h3>
-        <div className="flex gap-2 flex-wrap">
+        <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">{t('afk.top_tracks')}</h3>
+        <div className="inline-flex max-w-full gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 p-1 overflow-x-auto">
           {timeRanges.map((range) => (
             <button
+              type="button"
               key={range.id}
               onClick={() => setTimeRange(range.id)}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
+              className={`whitespace-nowrap px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
                 timeRange === range.id
-                  ? 'bg-green-500 text-black'
-                  : 'bg-green-500/20 text-green-300 hover:bg-green-500/30'
+                  ? 'bg-green-500 text-slate-950'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               {range.label}
@@ -87,11 +90,11 @@ export default function SpotifyTopTracks() {
         </div>
       ) : error ? (
         <div className="bg-red-500/10 border border-red-500/20 rounded p-4">
-          <p className="text-red-400 text-sm">{error}</p>
+          <p className="text-red-400 text-sm">{t('afk.spotify_status.unavailable')}</p>
         </div>
       ) : tracks.length === 0 ? (
         <div className="text-gray-400 text-sm text-center py-8">
-          No tracks found
+          {t('afk.spotify_status.no_tracks')}
         </div>
       ) : (
         <motion.div
@@ -117,21 +120,17 @@ export default function SpotifyTopTracks() {
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={async () => {
-                      if (window.spotifyPlayerPlay) {
-                        const uri = `spotify:track:${track.id}`;
-                        const ok = await window.spotifyPlayerPlay(uri);
-                        if (!ok) setSelectedTrack(track);
-                      } else {
-                        setSelectedTrack(track);
-                      }
-                    }}
-                    className="px-3 py-1 rounded-full bg-green-500 text-black text-xs font-semibold hover:scale-105 transition"
-                    aria-label={`Play ${track.name}`}
+                    type="button"
+                    onClick={() => setSelectedTrack(track)}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500 text-slate-950 hover:bg-green-400 transition-colors"
+                    aria-label={`${t('afk.play_track')} ${track.name}`}
+                    title={`${t('afk.play_track')} ${track.name}`}
                   >
-                    Play
+                    <i className="fas fa-play text-xs" aria-hidden="true" />
                   </button>
-                  <a href={track.external_urls?.spotify} target="_blank" rel="noopener noreferrer" className="text-xs text-green-700 dark:text-green-300 hover:underline">Open</a>
+                  <a href={track.external_urls?.spotify} target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-lg text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors" aria-label={`${t('afk.open_spotify')}: ${track.name}`} title={t('afk.open_spotify')}>
+                    <i className="fas fa-arrow-up-right-from-square text-xs" aria-hidden="true" />
+                  </a>
                 </div>
               </div>
             </motion.div>
@@ -144,7 +143,9 @@ export default function SpotifyTopTracks() {
                   <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{selectedTrack.name}</p>
                   <p className="text-xs text-slate-600 dark:text-gray-400 truncate">{selectedTrack.artists[0]?.name}</p>
                 </div>
-                <button onClick={() => setSelectedTrack(null)} className="text-xs text-slate-600 dark:text-gray-300 hover:underline">Close</button>
+                <button type="button" onClick={() => setSelectedTrack(null)} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-slate-700" aria-label={t('afk.close_player')} title={t('afk.close_player')}>
+                  <i className="fas fa-xmark" aria-hidden="true" />
+                </button>
               </div>
               <div className="rounded overflow-hidden">
                 <iframe
@@ -153,7 +154,7 @@ export default function SpotifyTopTracks() {
                   width="100%"
                   height="80"
                   frameBorder="0"
-                  allowtransparency="true"
+                  allowTransparency="true"
                   allow="encrypted-media"
                 ></iframe>
               </div>

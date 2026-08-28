@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
@@ -7,9 +7,7 @@ import Loading from './components/Loading';
 import ScrollProgress from './components/ScrollProgress';
 import Spotlight from './components/Spotlight';
 import { HelmetProvider } from 'react-helmet-async';
-import Chatbot from './components/Chatbot';
 import Footer from './components/Footer';
-import RequireAuth from './components/RequireAuth';
 import { ToastProvider } from './components/ToastProvider';
 import { usePageTracking } from './hooks/usePageTracking';
 
@@ -24,6 +22,8 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const AfkPage = lazy(() => import('./pages/AfkPage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
+const Chatbot = lazy(() => import('./components/Chatbot'));
+const RequireAuth = lazy(() => import('./components/RequireAuth'));
 
 // Lazy load admin pages - defers Firebase loading until admin routes accessed
 const Login = lazy(() => import('./pages/admin/Login'));
@@ -39,19 +39,27 @@ const CinemaLogPreview = lazy(() => import('./pages/admin/CinemaLogPreview'));
 
 function App() {
   const location = useLocation();
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [hasEngaged, setHasEngaged] = useState(false);
   
   usePageTracking();
 
   useEffect(() => {
-    const preloadAboutPage = () => import('./pages/AboutPage');
+    const desktopQuery = window.matchMedia('(min-width: 768px)');
+    const updateViewport = () => setIsDesktop(desktopQuery.matches);
+    const revealChatbot = () => {
+      if (window.scrollY > 320) setHasEngaged(true);
+    };
 
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      const idleId = window.requestIdleCallback(preloadAboutPage);
-      return () => window.cancelIdleCallback(idleId);
-    }
+    updateViewport();
+    revealChatbot();
+    desktopQuery.addEventListener('change', updateViewport);
+    window.addEventListener('scroll', revealChatbot, { passive: true });
 
-    const timerId = window.setTimeout(preloadAboutPage, 1500);
-    return () => window.clearTimeout(timerId);
+    return () => {
+      desktopQuery.removeEventListener('change', updateViewport);
+      window.removeEventListener('scroll', revealChatbot);
+    };
   }, []);
 
   const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname === '/login';
@@ -166,7 +174,11 @@ function App() {
 
         {!isAdminRoute && <Footer />}
 
-        <Chatbot />
+        {!isAdminRoute && isDesktop && hasEngaged && (
+          <Suspense fallback={null}>
+            <Chatbot />
+          </Suspense>
+        )}
       </ToastProvider>
     </HelmetProvider>
   );

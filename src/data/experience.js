@@ -1,29 +1,40 @@
 export const experiences = [
   {
     id: 1,
-    logo: "/images/ksm-logo.webp",
-    title: {
-      en: "Head of Web Development Class",
-      id: "Kepala Kelas Web Development"
-    },
-    org: "Kelompok Studi Mahasiswa (KSM) Multimedia UPNVJ",
-    date: {
-      en: "Feb 2025 - Jan 2026",
-      id: "Feb 2025 - Jan 2026"
-    },
+    icon: "mobile",
+    title: { en: "Mobile Apps Developer", id: "Mobile Apps Developer" },
+    org: "Bank Mandiri x Rakamin Academy",
+    type: { en: "Project-Based Virtual Internship", id: "Project-Based Virtual Internship" },
+    date: { en: "March 2026", id: "Maret 2026" },
     description: {
       en: [
-        "Led a mentoring team of 2 to instruct 26 students in a comprehensive web development curriculum (Front-End & Back-End).",
-        "Delivered comprehensive Front-End training ranging from fundamentals (HTML, CSS, JavaScript) to modern frameworks like React, culminating in the development of final Capstone Projects.",
-        "Developed and managed all learning materials, assignments, and assessments for the class.",
-        "Actively served on various committees for KSM Multimedia programs and events."
+        "Engineered the Mandiri News Android app with three main screens powered by three REST API endpoints.",
+        "Implemented MVVM, Retrofit, Kotlin Coroutines, and Paging 3 to support maintainable data flows and endless scrolling.",
+        "Earned an Excellent predicate with an average score of 88.71/100.",
       ],
       id: [
-        "Memimpin tim mentoring yang terdiri dari 2 orang untuk mengajar 26 siswa dalam kurikulum pengembangan web yang komprehensif (Front-End & Back-End).",
-        "Memberikan pelatihan Front-End yang komprehensif mulai dari dasar (HTML, CSS, JavaScript) hingga framework modern seperti React, yang berpuncak pada pengembangan Proyek Capstone akhir.",
-        "Mengembangkan dan mengelola semua materi pembelajaran, tugas, dan penilaian untuk kelas.",
-        "Aktif menjabat di berbagai kepanitiaan untuk program dan acara KSM Multimedia."
-      ]
+        "Mengembangkan aplikasi Android Mandiri News dengan tiga layar utama yang terhubung ke tiga endpoint REST API.",
+        "Menerapkan MVVM, Retrofit, Kotlin Coroutines, dan Paging 3 untuk alur data yang terstruktur serta endless scrolling.",
+        "Meraih predikat Excellent dengan nilai rata-rata 88,71/100.",
+      ],
+    },
+  },
+  {
+    id: 2,
+    logo: "/images/ksm-logo.webp",
+    icon: "teaching",
+    title: { en: "Head of Web Development Class", id: "Kepala Kelas Web Development" },
+    org: "KSM Multimedia UPN Veteran Jakarta",
+    date: { en: "Feb 2025 - Jan 2026", id: "Feb 2025 - Jan 2026" },
+    description: {
+      en: [
+        "Led a two-person mentoring team to teach front-end and back-end development to 26 students through capstone projects.",
+        "Spoke about web development at Multimedia Vibes Project for more than 30 students at SMA PKP Jakarta Islamic School.",
+      ],
+      id: [
+        "Memimpin tim mentoring beranggotakan dua orang untuk mengajar front-end dan back-end kepada 26 mahasiswa hingga proyek capstone.",
+        "Menjadi pembicara materi web development dalam Multimedia Vibes Project untuk lebih dari 30 siswa SMA PKP Jakarta Islamic School.",
+      ],
     },
     docs: [
       "/images/ksm-doc1.webp",
@@ -36,30 +47,25 @@ export const experiences = [
       "/images/ksm-doc8.webp",
       "/images/ksm-doc9.webp",
       "/images/ksm-doc10.webp",
-      "/images/ksm-doc11.webp"
-    ]
+      "/images/ksm-doc11.webp",
+    ],
   },
   {
-    id: 2,
+    id: 3,
     logo: "/images/hmif-logo.webp",
-    title: {
-      en: "Staff of Information and Technology",
-      id: "Staf Informasi dan Teknologi"
-    },
-    org: "Himpunan Mahasiswa Informatika (HMIF) UPNVJ",
-    date: {
-      en: "Jan 2025 - Jan 2026",
-      id: "Jan 2025 - Jan 2026"
-    },
+    icon: "organization",
+    title: { en: "Information Technology Staff", id: "Staf Informasi dan Teknologi" },
+    org: "Himpunan Mahasiswa Informatika UPN Veteran Jakarta",
+    date: { en: "Jan 2025 - Jan 2026", id: "Jan 2025 - Jan 2026" },
     description: {
       en: [
-        "Managed the 'CodeVox' educational program, creating and editing video tutorials for the HMIF YouTube channel.",
-        "Actively served on various committees for HMIF programs and events."
+        "Directed CodeVox and produced or refined five technical tutorial videos for the organization.",
+        "Mentored 15 incoming Informatics students during MABIM and supported their transition into university life.",
       ],
       id: [
-        "Mengelola program pendidikan 'CodeVox', membuat dan mengedit video tutorial untuk saluran YouTube HMIF.",
-        "Aktif menjabat di berbagai kepanitiaan untuk program dan acara HMIF."
-      ]
+        "Mengarahkan program CodeVox serta memproduksi atau menyempurnakan lima video tutorial teknis untuk organisasi.",
+        "Mendampingi 15 mahasiswa baru Informatika dalam MABIM dan membantu proses adaptasi mereka di perkuliahan.",
+      ],
     },
     docs: [
       "/images/hmif-doc1.webp",
@@ -74,32 +80,37 @@ export const experiences = [
       "/images/hmif-doc10.webp",
       "/images/hmif-doc11.webp",
       "/images/hmif-doc12.webp",
-      "/images/hmif-doc13.webp"
-    ]
+      "/images/hmif-doc13.webp",
+    ],
   },
   {
-    id: 3,
+    id: 4,
     logo: "/images/bangkit_academy-logo.webp",
+    icon: "mobile",
     title: {
       en: "Mobile Development Cohort",
-      id: "Peserta Mobile Development"
+      id: "Mobile Development Cohort",
     },
-    org: "Bangkit Academy by Google, GoTo, Traveloka",
+    org: "Bangkit Academy led by Google, GoTo, & Traveloka",
+    type: {
+      en: "Independent Study Program",
+      id: "Program Studi Independen",
+    },
     date: {
       en: "Sep 2024 - Jan 2025",
-      id: "Sep 2024 - Jan 2025"
+      id: "Sep 2024 - Jan 2025",
     },
     description: {
       en: [
-        "Completed 900+ hours of intensive curriculum in Android Development.",
-        "Developed 'Planetku' capstone project with Machine Learning integration.",
-        "Gained soft skills and career readiness training from industry experts."
+        "Completed more than 900 hours of intensive mobile development, technical, and career-readiness learning.",
+        "Collaborated in a six-member capstone team to build Planetku, an AI-assisted waste classification product.",
+        "Delivered a model with 90% accuracy across more than five waste classes and integrated it into the product workflow.",
       ],
       id: [
-        "Menyelesaikan 900+ jam kurikulum intensif dalam Pengembangan Android.",
-        "Mengembangkan proyek capstone 'Planetku' dengan integrasi Machine Learning.",
-        "Memperoleh pelatihan soft skill dan kesiapan karier dari para ahli industri."
-      ]
+        "Menyelesaikan lebih dari 900 jam pembelajaran intensif mobile development, teknis, dan kesiapan karier.",
+        "Berkolaborasi dalam tim capstone beranggotakan enam orang untuk membangun Planetku, produk klasifikasi sampah berbantuan AI.",
+        "Menghasilkan model dengan akurasi 90% untuk lebih dari lima kelas sampah dan mengintegrasikannya ke dalam alur produk.",
+      ],
     },
     docs: [
       "/images/bangkit-doc1.webp",
@@ -109,7 +120,7 @@ export const experiences = [
       "/images/bangkit-doc5.webp",
       "/images/bangkit-doc6.webp",
       "/images/bangkit-doc7.webp",
-      "/images/bangkit-doc8.webp"
-    ]
-  }
+      "/images/bangkit-doc8.webp",
+    ],
+  },
 ];

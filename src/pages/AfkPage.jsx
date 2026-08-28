@@ -1,13 +1,44 @@
-import { useState, useEffect, useRef } from 'react';
+import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { useFirebaseInit } from '../hooks/useFirebaseInit';
 import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, limit } from 'firebase/firestore';
-import SpotifyNowPlaying from '../components/SpotifyNowPlaying';
-import SpotifyTopTracks from '../components/SpotifyTopTracks';
-import SpotifyPlayer from '../components/SpotifyPlayer';
+
+const SpotifyNowPlaying = lazy(() => import('../components/SpotifyNowPlaying'));
+const SpotifyTopTracks = lazy(() => import('../components/SpotifyTopTracks'));
+
+const AMBIENT_EQUALIZER_BARS = [42, 78, 58, 112, 72, 132, 88, 54, 104, 68, 122, 48];
+const AMBIENT_FILM_FRAMES = Array.from({ length: 9 });
+
+const useNearViewport = (rootMargin = '480px 0px') => {
+    const ref = useRef(null);
+    const [isNearViewport, setIsNearViewport] = useState(
+        () => typeof window !== 'undefined' && !('IntersectionObserver' in window),
+    );
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return undefined;
+
+        if (!('IntersectionObserver' in window)) return undefined;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (!entry.isIntersecting) return;
+                setIsNearViewport(true);
+                observer.disconnect();
+            },
+            { rootMargin },
+        );
+
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, [rootMargin]);
+
+    return [ref, isNearViewport];
+};
 
 const AfkPage = () => {
     const DISCORD_ID = "717196208996876379";
@@ -33,9 +64,28 @@ const AfkPage = () => {
         }
     });
     const [reactionSaved, setReactionSaved] = useState(false);
+    const [showMovieArchive, setShowMovieArchive] = useState(false);
     const reactionStartRef = useRef(null);
     const reactionTimerRef = useRef(null);
     const reactionAudioRef = useRef(null);
+    const afkHeaderRef = useRef(null);
+    const [isAfkHeaderVisible, setIsAfkHeaderVisible] = useState(true);
+    const [musicSectionRef, shouldLoadMusic] = useNearViewport();
+    const [cinemaSectionRef, shouldLoadCinema] = useNearViewport();
+    const [reactionSectionRef, shouldLoadLeaderboard] = useNearViewport('320px 0px');
+    const [watchlistSectionRef, shouldLoadWatchlist] = useNearViewport('360px 0px');
+
+    useEffect(() => {
+        const element = afkHeaderRef.current;
+        if (!element) return undefined;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsAfkHeaderVisible(entry.isIntersecting),
+            { threshold: 0.08 },
+        );
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, []);
 
     const getReactionInitials = () => {
         const sourceName = 'Rafie Rojagat';
@@ -81,6 +131,8 @@ const AfkPage = () => {
     };
 
     useEffect(() => {
+        if (!shouldLoadCinema) return undefined;
+
         const fetchOther = async () => {
             try {
                 setLoadingMovies(true);
@@ -88,9 +140,9 @@ const AfkPage = () => {
                 const moviesText = await moviesRes.text();
                 const moviesData = moviesText ? JSON.parse(moviesText) : [];
                 const legacyMovies = Array.isArray(moviesData) ? moviesData : [];
+                setMovies(legacyMovies);
 
                 if (!dbFirestore) {
-                    setMovies(legacyMovies);
                     return;
                 }
 
@@ -130,18 +182,23 @@ const AfkPage = () => {
                 setMovies(mergedMovies);
             } catch (error) {
                 console.error("Error fetching movies:", error);
-                setMovies([]);
             } finally {
                 setLoadingMovies(false);
             }
         };
 
         fetchOther();
-    }, [dbFirestore]);
+        return undefined;
+    }, [dbFirestore, shouldLoadCinema]);
 
     useEffect(() => {
+        if (!shouldLoadWatchlist) return undefined;
+
         const fetchWatchlist = async () => {
-            if (!dbFirestore) return;
+            if (!dbFirestore) {
+                setLoadingWatchlist(false);
+                return;
+            }
 
             try {
                 setLoadingWatchlist(true);
@@ -196,7 +253,8 @@ const AfkPage = () => {
         };
 
         fetchWatchlist();
-    }, [dbFirestore]);
+        return undefined;
+    }, [dbFirestore, shouldLoadWatchlist]);
 
     useEffect(() => {
         if (!DISCORD_ID) return;
@@ -252,8 +310,8 @@ const AfkPage = () => {
     };
     const statusInfo = getDiscordStatus();
 
-    const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
-    const itemVariants = { hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 100 } } };
+    const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.07 } } };
+    const itemVariants = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.42, ease: 'easeOut' } } };
 
     const groupMoviesByYear = (movieList) => {
         const grouped = {};
@@ -266,6 +324,7 @@ const AfkPage = () => {
         return Object.entries(grouped).sort((a, b) => b[0] - a[0]);
     };
     const moviesByYear = groupMoviesByYear(movies);
+    const visibleMovieGroups = showMovieArchive ? moviesByYear : moviesByYear.slice(0, 2);
 
     useEffect(() => {
         return () => {
@@ -288,6 +347,8 @@ const AfkPage = () => {
     }, [reactionHistory]);
 
     useEffect(() => {
+        if (!shouldLoadLeaderboard) return undefined;
+
         const loadReactionLeaderboard = async () => {
             if (!dbFirestore) return;
 
@@ -317,7 +378,8 @@ const AfkPage = () => {
         };
 
         loadReactionLeaderboard();
-    }, [dbFirestore]);
+        return undefined;
+    }, [dbFirestore, shouldLoadLeaderboard]);
 
     const startReactionGame = () => {
         if (reactionTimerRef.current) {
@@ -400,199 +462,313 @@ const AfkPage = () => {
         startReactionGame();
     };
 
+    const getMovieRating = (movie) => {
+        const rating = Number(movie?.myRating ?? movie?.vote_average);
+        return Number.isFinite(rating) ? rating.toFixed(1) : '-';
+    };
+
+    const currentMoments = [
+        {
+            key: 'music',
+            icon: 'fa-headphones',
+            label: t('afk.afk_snapshot.musik.label'),
+            description: t('afk.afk_snapshot.musik.desc'),
+        },
+        {
+            key: 'game',
+            icon: 'fa-gamepad',
+            label: t('afk.afk_snapshot.game.label'),
+            description: statusInfo.gameDetails?.name || t('afk.afk_snapshot.game.desc'),
+        },
+        {
+            key: 'film',
+            icon: 'fa-film',
+            label: t('afk.afk_snapshot.film.label'),
+            description: t('afk.afk_snapshot.film.desc'),
+        },
+    ];
+
     return (
         <PageTransition>
             <div className="bg-gray-50 dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300 relative overflow-hidden">
                 <SEO title="AFK | Rafie Rojagat" description={t('afk.seo_desc')} url="https://rafierb.me/afk" />
 
-                <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                    <motion.div animate={{ x: [-100, 100, -100], y: [-50, 50, -50], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px]" />
-                </div>
-
-                <div className="container mx-auto px-4 max-w-5xl relative z-10">
-
-                    <SpotifyPlayer />
-
-                    <div className="text-center mb-16">
-                        <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 4, repeat: Infinity }} className="inline-block text-6xl mb-4 filter drop-shadow-lg">🎮</motion.div>
-                        <h1 className="text-4xl md:text-6xl font-black text-dark dark:text-white mb-2 tracking-tight">/afk</h1>
-                        <p className="text-gray-500 font-medium text-lg">{t('afk.subtitle')}</p>
-                        <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
-                            {t('afk.intro_line1')}
-                            {' '}
-                            {t('afk.intro_line2')}
-                        </p>
+                <div className="absolute inset-x-0 top-0 h-[500px] overflow-hidden pointer-events-none z-0" aria-hidden="true">
+                    <div className={`afk-equalizer hidden md:flex ${isAfkHeaderVisible ? 'is-active' : ''}`}>
+                        {AMBIENT_EQUALIZER_BARS.map((height, index) => (
+                            <span
+                                key={height + index}
+                                className="afk-equalizer-bar"
+                                style={{
+                                    height: `${height}px`,
+                                    '--afk-delay': `${index * -0.16}s`,
+                                    '--afk-duration': `${1.8 + (index % 4) * 0.22}s`,
+                                }}
+                            />
+                        ))}
                     </div>
 
-                    <motion.div
-                        variants={itemVariants}
-                        whileHover={{ y: -4 }}
-                        className="mb-12 rounded-[2rem] border border-white/30 dark:border-slate-700/60 bg-white/55 dark:bg-slate-800/55 backdrop-blur-xl shadow-lg p-6 md:p-7"
-                    >
-                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                            <div>
-                                <p className="text-xs uppercase tracking-[0.3em] text-primary font-bold mb-2">{t('afk.afk_snapshot.label')}</p>
-                                <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.afk_snapshot.title')}</h2>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full md:w-auto md:min-w-[480px]">
-                                <div className="rounded-2xl bg-white/70 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 px-4 py-3">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wider">{t('afk.afk_snapshot.musik.label')}</p>
-                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">{t('afk.afk_snapshot.musik.desc')}</p>
-                                </div>
-                                <div className="rounded-2xl bg-white/70 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 px-4 py-3">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wider">{t('afk.afk_snapshot.game.label')}</p>
-                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">{t('afk.afk_snapshot.game.desc')}</p>
-                                </div>
-                                <div className="rounded-2xl bg-white/70 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 px-4 py-3">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wider">{t('afk.afk_snapshot.film.label')}</p>
-                                    <p className="text-sm font-bold text-dark dark:text-white mt-1">{t('afk.afk_snapshot.film.desc')}</p>
-                                </div>
-                            </div>
+                    <div className={`afk-film-strip hidden sm:grid ${isAfkHeaderVisible ? 'is-active' : ''}`}>
+                        {AMBIENT_FILM_FRAMES.map((_, index) => (
+                            <span key={index} className="afk-film-frame" />
+                        ))}
+                    </div>
+                </div>
+
+                <div className="container mx-auto px-4 max-w-6xl relative z-10">
+                    <header ref={afkHeaderRef} className="text-center max-w-3xl mx-auto pt-2 mb-9">
+                        <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary mb-4" aria-hidden="true">
+                            <i className="fas fa-gamepad text-lg" />
                         </div>
-                    </motion.div>
+                        <h1 className="text-4xl md:text-5xl font-black text-dark dark:text-white mb-2">/afk</h1>
+                        <p className="text-gray-600 dark:text-gray-300 font-semibold text-base md:text-lg">{t('afk.subtitle')}</p>
+                        <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-3 max-w-2xl mx-auto leading-relaxed">
+                            {t('afk.intro_line1')} {t('afk.intro_line2')}
+                        </p>
+                    </header>
 
-                    <motion.div className="space-y-12" variants={containerVariants} initial="hidden" animate="visible">
-
-                        <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-cyan-500/10 transition-all duration-500">
-                            <div className="flex items-center justify-between gap-4 mb-6">
+                    <motion.div className="space-y-16" variants={containerVariants} initial="hidden" animate="visible">
+                        <motion.section variants={itemVariants} className="border-y border-slate-200 dark:border-slate-700 py-5">
+                            <div className="grid gap-5 md:grid-cols-[180px_1fr] md:items-center">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3">
-                                        <span className="text-3xl filter drop-shadow-md">⚡</span> {t('afk.reaction_game.title')}
-                                    </h2>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('afk.reaction_game.subtitle')}</p>
+                                    <p className="text-xs uppercase tracking-[0.22em] text-primary font-bold">{t('afk.afk_snapshot.label')}</p>
+                                    <h2 className="text-lg font-bold text-dark dark:text-white mt-1">{t('afk.afk_snapshot.title')}</h2>
                                 </div>
-                                <div className="text-right text-xs text-gray-500 dark:text-gray-400">
-                                    {bestReactionTime !== null ? <p>{t('afk.reaction_game.best')}: <span className="font-bold text-dark dark:text-white">{bestReactionTime} ms</span></p> : <p>{t('afk.reaction_game.best')}: belum ada</p>}
+                                <div className="grid sm:grid-cols-3 sm:divide-x divide-slate-200 dark:divide-slate-700">
+                                    {currentMoments.map((moment) => (
+                                        <div key={moment.key} className="flex items-center gap-3 py-2 sm:px-5 first:sm:pl-0 last:sm:pr-0 min-w-0">
+                                            <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-primary" aria-hidden="true">
+                                                <i className={`fas ${moment.icon} text-sm`} />
+                                            </span>
+                                            <div className="min-w-0">
+                                                <p className="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400">{moment.label}</p>
+                                                <p className="text-sm font-bold text-dark dark:text-white truncate">{moment.description}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.section>
+
+                        <motion.section ref={musicSectionRef} variants={itemVariants} className="border-t border-slate-200 dark:border-slate-700 pt-8">
+                            <div className="flex items-start gap-4 mb-7">
+                                <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-green-500/10 text-green-600 dark:text-green-400" aria-hidden="true">
+                                    <i className="fab fa-spotify text-xl" />
+                                </span>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.spotify')}</h2>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-2xl">{t('afk.music_note')}</p>
+                                </div>
+                            </div>
+
+                            {shouldLoadMusic ? (
+                                <Suspense fallback={<div className="h-56 rounded-xl bg-slate-200/70 dark:bg-slate-800 animate-pulse" />}>
+                                    <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+                                        <div>
+                                            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">{t('afk.now_playing')}</h3>
+                                            <SpotifyNowPlaying />
+                                        </div>
+                                        <SpotifyTopTracks />
+                                    </div>
+                                </Suspense>
+                            ) : (
+                                <div className="h-56 rounded-xl bg-slate-200/70 dark:bg-slate-800 animate-pulse" />
+                            )}
+                        </motion.section>
+
+                        <motion.section ref={cinemaSectionRef} variants={itemVariants} className="border-t border-slate-200 dark:border-slate-700 pt-8">
+                            <div className="flex items-start gap-4 mb-8">
+                                <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400" aria-hidden="true">
+                                    <i className="fas fa-film text-lg" />
+                                </span>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.cinema_log')}</h2>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-2xl">{t('afk.cinema_note')}</p>
+                                </div>
+                            </div>
+
+                            {loadingMovies ? (
+                                <div className="grid gap-6 md:grid-cols-2">
+                                    {[0, 1].map((item) => <div key={item} className="h-72 rounded-xl bg-slate-200/70 dark:bg-slate-800 animate-pulse" />)}
+                                </div>
+                            ) : moviesByYear.length === 0 ? (
+                                <div className="text-sm text-gray-500 dark:text-gray-400 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl px-5 py-8 text-center">
+                                    {t('afk.no_movies')}
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="space-y-10">
+                                        {visibleMovieGroups.map(([year, yearMovies]) => {
+                                            const favorite = yearMovies.find((movie) => movie.isFavorite);
+                                            const otherMovies = yearMovies.filter((movie) => !movie.isFavorite);
+
+                                            return (
+                                                <div key={year}>
+                                                    <div className="flex items-baseline gap-3 mb-4">
+                                                        <h3 className="text-3xl font-black text-dark dark:text-white">{year}</h3>
+                                                        <span className="text-xs text-gray-500 dark:text-gray-400">{yearMovies.length} {t('afk.films')}</span>
+                                                    </div>
+                                                    <div className={`grid gap-4 ${favorite ? 'lg:grid-cols-[1.35fr_1fr]' : ''}`}>
+                                                        {favorite && (
+                                                            <a href={`https://www.themoviedb.org/movie/${favorite.id}`} target="_blank" rel="noreferrer" className="relative aspect-video overflow-hidden rounded-xl group bg-slate-200 dark:bg-slate-800">
+                                                                {(favorite.backdrop_path || favorite.poster_path) && (
+                                                                    <img
+                                                                        src={`https://image.tmdb.org/t/p/w780${favorite.backdrop_path || favorite.poster_path}`}
+                                                                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                                        loading="lazy"
+                                                                        alt={favorite.title}
+                                                                    />
+                                                                )}
+                                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                                                                <div className="absolute inset-x-0 bottom-0 p-4">
+                                                                    <div className="flex items-center gap-2 text-xs font-bold text-amber-300 mb-1">
+                                                                        <i className="fas fa-star" aria-hidden="true" />
+                                                                        <span>{t('afk.best_year')} · {getMovieRating(favorite)}</span>
+                                                                    </div>
+                                                                    <h4 className="text-lg font-black text-white line-clamp-1">{favorite.title}</h4>
+                                                                </div>
+                                                            </a>
+                                                        )}
+
+                                                        {otherMovies.length > 0 && (
+                                                            <div className={`grid grid-cols-3 gap-3 ${favorite ? '' : 'sm:grid-cols-4 lg:grid-cols-6'}`}>
+                                                                {otherMovies.map((movie) => (
+                                                                    <a key={movie.id} href={`https://www.themoviedb.org/movie/${movie.id}`} target="_blank" rel="noreferrer" className="relative aspect-[2/3] overflow-hidden rounded-lg group bg-slate-200 dark:bg-slate-800">
+                                                                        {movie.poster_path && (
+                                                                            <img
+                                                                                src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                                                                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                                                loading="lazy"
+                                                                                alt={movie.title}
+                                                                            />
+                                                                        )}
+                                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity" />
+                                                                        <div className="absolute inset-x-0 bottom-0 p-2 text-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                                                                            <p className="text-[11px] leading-tight font-bold text-white line-clamp-2">{movie.title}</p>
+                                                                            <p className="text-[10px] text-amber-300 mt-1"><i className="fas fa-star mr-1" aria-hidden="true" />{getMovieRating(movie)}</p>
+                                                                        </div>
+                                                                    </a>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {moviesByYear.length > 2 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowMovieArchive((current) => !current)}
+                                            className="mt-8 inline-flex items-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2.5 text-sm font-bold text-dark dark:text-white hover:border-primary hover:text-primary transition-colors"
+                                            aria-expanded={showMovieArchive}
+                                        >
+                                            <i className={`fas ${showMovieArchive ? 'fa-chevron-up' : 'fa-box-archive'}`} aria-hidden="true" />
+                                            {showMovieArchive ? t('afk.hide_archive') : t('afk.show_archive', { count: moviesByYear.length - 2 })}
+                                        </button>
+                                    )}
+                                </>
+                            )}
+                        </motion.section>
+
+                        <motion.section variants={itemVariants} className="border-y border-slate-200 dark:border-slate-700 py-5">
+                            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                <div className="relative h-12 w-12 flex-none self-start">
+                                    <img src={statusInfo.avatar} alt="Discord avatar" className="h-12 w-12 rounded-full object-cover bg-slate-200 dark:bg-slate-800" />
+                                    <span className={`absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-gray-50 dark:border-dark ${statusInfo.color}`} />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 font-bold">{t('afk.status_check')}</p>
+                                    <p className="font-bold text-dark dark:text-white truncate">{statusInfo.text}</p>
+                                    {statusInfo.gameDetails && (
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{statusInfo.gameDetails.details || statusInfo.gameDetails.state}</p>
+                                    )}
+                                </div>
+                                <div className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400 sm:ml-auto">
+                                    <i className="fab fa-discord text-indigo-500 text-base" aria-hidden="true" />
+                                    <span>{statusInfo.isOnline ? t('afk.currently_live') : t('afk.chilling')}</span>
+                                </div>
+                            </div>
+                        </motion.section>
+
+                        <motion.section ref={reactionSectionRef} variants={itemVariants} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 p-5 md:p-7 shadow-sm">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-6">
+                                <div className="flex items-start gap-4">
+                                    <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400" aria-hidden="true">
+                                        <i className="fas fa-bolt" />
+                                    </span>
+                                    <div>
+                                        <p className="text-xs uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-400 font-bold mb-1">{t('afk.playful_break')}</p>
+                                        <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.reaction_game.title')}</h2>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('afk.reaction_game.subtitle')}</p>
+                                    </div>
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400 sm:text-right">
+                                    <p>{t('afk.reaction_game.best')}: <span className="font-bold text-dark dark:text-white">{bestReactionTime !== null ? `${bestReactionTime} ms` : t('afk.no_score')}</span></p>
                                     {reactionTime !== null && <p className="mt-1">{t('afk.reaction_game.last')}: <span className="font-bold text-dark dark:text-white">{reactionTime} ms</span></p>}
                                 </div>
                             </div>
 
-                            <div className="flex flex-col items-center gap-4">
-                                <button
-                                    onClick={handleReactionClick}
-                                    className={`w-full max-w-md min-h-[150px] rounded-[2rem] border-2 font-black text-xl md:text-2xl transition-all duration-200 ${
-                                        reactionPhase === 'go'
-                                            ? 'bg-green-500 border-green-400 text-white shadow-2xl shadow-green-500/30'
-                                            : reactionPhase === 'waiting'
-                                                ? 'bg-red-500 border-red-400 text-white shadow-2xl shadow-red-500/30'
-                                                : 'bg-slate-900 dark:bg-slate-700 border-slate-600 text-white hover:scale-[1.01]'
-                                    }`}
-                                >
-                                    {reactionPhase === 'idle' && t('afk.reaction_game.start_btn')}
-                                    {reactionPhase === 'waiting' && t('afk.reaction_game.waiting_btn')}
-                                    {reactionPhase === 'go' && t('afk.reaction_game.go_btn')}
-                                    {reactionPhase === 'result' && t('afk.reaction_game.retry_btn')}
-                                </button>
-
-                                <AnimatePresence mode="wait">
-                                    <motion.p
-                                        key={reactionMessage}
-                                        initial={{ opacity: 0, y: 6 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -6 }}
-                                        className="text-sm text-gray-600 dark:text-gray-300 text-center max-w-xl"
+                            <div className="grid gap-7 md:grid-cols-[1.1fr_0.9fr] md:items-start">
+                                <div className="flex flex-col items-center gap-4">
+                                    <button
+                                        type="button"
+                                        onClick={handleReactionClick}
+                                        className={`w-full min-h-[120px] rounded-xl border-2 px-4 font-black text-lg md:text-xl transition-colors duration-200 ${
+                                            reactionPhase === 'go'
+                                                ? 'bg-green-500 border-green-400 text-white'
+                                                : reactionPhase === 'waiting'
+                                                    ? 'bg-red-500 border-red-400 text-white'
+                                                    : 'bg-slate-900 dark:bg-slate-700 border-slate-700 dark:border-slate-600 text-white hover:bg-slate-800'
+                                        }`}
                                     >
-                                        {reactionMessage}
-                                    </motion.p>
-                                </AnimatePresence>
+                                        {reactionPhase === 'idle' && t('afk.reaction_game.start_btn')}
+                                        {reactionPhase === 'waiting' && t('afk.reaction_game.waiting_btn')}
+                                        {reactionPhase === 'go' && t('afk.reaction_game.go_btn')}
+                                        {reactionPhase === 'result' && t('afk.reaction_game.retry_btn')}
+                                    </button>
 
-                                <AnimatePresence>
-                                    {reactionSaved && (
-                                        <motion.p
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.95 }}
-                                            className="text-xs font-bold text-green-600 dark:text-green-400"
-                                        >
-                                            Skor berhasil disimpan.
+                                    <AnimatePresence mode="wait">
+                                        <motion.p key={reactionMessage} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="min-h-5 text-sm text-gray-600 dark:text-gray-300 text-center">
+                                            {reactionMessage}
                                         </motion.p>
-                                    )}
-                                </AnimatePresence>
+                                    </AnimatePresence>
 
-                                <div className="flex items-center gap-3">
-                                    <button onClick={startReactionGame} className="px-5 py-2.5 rounded-full bg-primary text-white font-bold hover:shadow-lg transition-all">{t('afk.reaction_game.restart_btn')}</button>
-                                    <button onClick={() => { if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current); setReactionPhase('idle'); setReactionTime(null); setReactionMessage(t('afk.reaction_game.message_ready')); }} className="px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-dark dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">{t('afk.reaction_game.reset_btn')}</button>
-                                </div>
+                                    <AnimatePresence>
+                                        {reactionSaved && (
+                                            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-xs font-bold text-green-600 dark:text-green-400">
+                                                {t('afk.reaction_game.message_saved')}
+                                            </motion.p>
+                                        )}
+                                    </AnimatePresence>
 
-                                <div className="w-full max-w-xl mt-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-700/40 px-4 py-3 text-center">
-                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">{t('afk.reaction_game.status')}</p>
-                                        <p className="mt-1 text-sm font-bold text-dark dark:text-white">
-                                            {reactionPhase === 'go' ? t('afk.reaction_game.status_go') : reactionPhase === 'waiting' ? t('afk.reaction_game.status_wait') : reactionPhase === 'result' ? t('afk.reaction_game.status_result') : t('afk.reaction_game.status_ready')}
-                                        </p>
-                                    </div>
-                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-700/40 px-4 py-3 text-center">
-                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">{t('afk.reaction_game.best')}</p>
-                                        <p className="mt-1 text-sm font-bold text-dark dark:text-white">{bestReactionTime !== null ? `${bestReactionTime} ms` : '-'}</p>
-                                    </div>
-                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-700/40 px-4 py-3 text-center">
-                                        <p className="text-[10px] uppercase tracking-wider text-gray-500">{t('afk.reaction_game.last')}</p>
-                                        <p className="mt-1 text-sm font-bold text-dark dark:text-white">{reactionTime !== null ? `${reactionTime} ms` : '-'}</p>
+                                    <div className="flex flex-wrap justify-center gap-3">
+                                        <button type="button" onClick={startReactionGame} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition-colors">
+                                            <i className="fas fa-rotate-right" aria-hidden="true" />{t('afk.reaction_game.restart_btn')}
+                                        </button>
+                                        <button type="button" onClick={() => { if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current); setReactionPhase('idle'); setReactionTime(null); setReactionMessage(t('afk.reaction_game.message_ready')); }} className="inline-flex items-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2.5 text-sm font-bold text-dark dark:text-white hover:border-primary hover:text-primary transition-colors">
+                                            <i className="fas fa-eraser" aria-hidden="true" />{t('afk.reaction_game.reset_btn')}
+                                        </button>
                                     </div>
                                 </div>
 
-                                <div className="w-full max-w-xl mt-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-700/30 px-4 py-4">
-                                    <div className="flex items-center justify-between gap-3 mb-3">
-                                        <p className="text-xs uppercase tracking-[0.25em] text-gray-500 font-bold">{t('afk.reaction_game.leaderboard.title')}</p>
-                                    </div>
+                                <div className="md:border-l md:border-slate-200 md:dark:border-slate-700 md:pl-7">
+                                    <p className="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 font-bold mb-3">{t('afk.reaction_game.leaderboard.title')}</p>
                                     {reactionHistory.length === 0 ? (
-                                        <p className="text-sm text-gray-500 italic">{t('afk.reaction_game.leaderboard.empty')}</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 italic">{t('afk.reaction_game.leaderboard.empty')}</p>
                                     ) : (
                                         <div className="space-y-2">
                                             {reactionHistory.map((entry, index) => (
-                                                <motion.div
-                                                    key={`${entry.id || entry.date || entry.score}-${index}`}
-                                                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    transition={{ duration: 0.25, delay: index * 0.04 }}
-                                                    className={`flex items-center justify-between rounded-xl px-3 py-2 border shadow-sm ${
-                                                        index === 0
-                                                            ? 'bg-amber-50/90 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30'
-                                                            : index === 1
-                                                                ? 'bg-slate-100/80 dark:bg-slate-700/50 border-slate-300 dark:border-slate-500/40'
-                                                                : index === 2
-                                                                    ? 'bg-orange-50/90 dark:bg-orange-500/10 border-orange-200 dark:border-orange-500/30'
-                                                                    : 'bg-white/70 dark:bg-slate-800/60 border-slate-100 dark:border-slate-700'
-                                                    }`}
-                                                >
+                                                <motion.div key={`${entry.id || entry.date || entry.score}-${index}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: index * 0.03 }} className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2">
                                                     <div className="flex items-center gap-3 min-w-0">
-                                                        <span className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-black ${
-                                                            index === 0
-                                                                ? 'bg-amber-400 text-black'
-                                                                : index === 1
-                                                                    ? 'bg-slate-400 text-white'
-                                                                    : index === 2
-                                                                        ? 'bg-orange-400 text-black'
-                                                                        : 'bg-primary/10 text-primary'
-                                                        }`}>
+                                                        <span className={`flex h-8 w-8 flex-none items-center justify-center rounded-full text-xs font-black ${index === 0 ? 'bg-amber-400 text-black' : 'bg-slate-100 dark:bg-slate-700 text-dark dark:text-white'}`}>
                                                             {entry.initials || 'RR'}
                                                         </span>
-                                                        <div className="min-w-0">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-sm font-bold text-dark dark:text-white">#{index + 1}</span>
-                                                                {index < 3 && (
-                                                                    <span className="text-[10px] font-black uppercase tracking-wider text-primary">
-                                                                        {index === 0 ? t('afk.reaction_game.leaderboard.gold') : index === 1 ? t('afk.reaction_game.leaderboard.silver') : t('afk.reaction_game.leaderboard.bronze')}
-                                                                    </span>
-                                                                )}
-                                                                {index === 0 && (
-                                                                    <span className="inline-flex items-center justify-center rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-black text-amber-500 dark:text-amber-300">
-                                                                        <i className="fas fa-crown mr-1"></i> {t('afk.reaction_game.leaderboard.champion')}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                            <p className="text-[11px] text-gray-500 dark:text-gray-400 truncate">{t('afk.reaction_game.leaderboard.desc')}</p>
-                                                        </div>
+                                                        <span className="text-sm font-bold text-dark dark:text-white">#{index + 1}</span>
+                                                        {index === 0 && <i className="fas fa-crown text-amber-500 text-xs" aria-label={t('afk.reaction_game.leaderboard.champion')} />}
                                                     </div>
-                                                    <motion.span
-                                                        key={entry.score}
-                                                        initial={{ scale: 0.95 }}
-                                                        animate={{ scale: [1, 1.06, 1] }}
-                                                        transition={{ duration: 0.35 }}
-                                                        className="text-sm font-mono text-primary font-bold"
-                                                    >
-                                                        {entry.score} ms
-                                                    </motion.span>
+                                                    <span className="text-sm font-mono text-primary font-bold">{entry.score} ms</span>
                                                 </motion.div>
                                             ))}
                                         </div>
@@ -601,167 +777,46 @@ const AfkPage = () => {
                             </div>
                         </motion.section>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-                            <motion.section variants={itemVariants} className="bg-white/65 dark:bg-slate-800/55 backdrop-blur-md border border-white/30 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 h-full shadow-xl hover:shadow-blue-500/10 transition-all duration-500 flex flex-col">
-                                <div className="flex items-center gap-5 mb-8">
-                                    <div className="relative">
-                                        <motion.div className={`absolute -inset-1 rounded-full blur opacity-40 ${statusInfo.isOnline ? 'bg-green-500' : 'bg-gray-500'}`} animate={{ opacity: [0.4, 0.7, 0.4] }} transition={{ duration: 2, repeat: Infinity }}></motion.div>
-                                        <img src={statusInfo.avatar || 'https://cdn-icons-png.flaticon.com/512/847/847969.png'} alt="Avatar" className="relative w-16 h-16 rounded-full border-2 border-white dark:border-slate-800 object-cover bg-gray-200" />
-                                        <div className={`absolute bottom-0 right-0 w-5 h-5 border-4 border-white dark:border-slate-800 rounded-full ${statusInfo.color} z-10`}></div>
-                                    </div>
-                                    <div>
-                                        <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.status_check')}</h2>
-                                        <p className={`text-sm font-bold mt-0.5 ${statusInfo.isOnline ? 'text-green-600 dark:text-green-400' : 'text-gray-500'}`}>{statusInfo.text}</p>
-                                    </div>
+                        <motion.section ref={watchlistSectionRef} variants={itemVariants} className="border-t border-slate-200 dark:border-slate-700 pt-8">
+                            <div className="flex items-start gap-4 mb-7">
+                                <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400" aria-hidden="true">
+                                    <i className="fas fa-bookmark" />
+                                </span>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.want_to_watch')}</h2>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-2xl">{t('afk.watchlist_note')}</p>
                                 </div>
-
-                                <div className="mb-10">
-                                    <AnimatePresence mode="wait">
-                                        {statusInfo.gameDetails ? (
-                                            <motion.div key="playing" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/5 shadow-2xl group w-full">
-                                                <div className="absolute inset-0 bg-cover bg-center opacity-30 dark:opacity-40 blur-md scale-110 group-hover:scale-100 transition-transform duration-700" style={{ backgroundImage: statusInfo.gameDetails.assets?.large_image ? `url(https://cdn.discordapp.com/app-assets/${statusInfo.gameDetails.application_id}/${statusInfo.gameDetails.assets.large_image}.png)` : 'none' }}></div>
-                                                <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent dark:from-slate-900/90 dark:via-slate-900/50 dark:to-transparent"></div>
-                                                <div className="relative z-10 p-6 flex items-center gap-5">
-                                                    {statusInfo.gameDetails.assets?.large_image ? (
-                                                        <img src={`https://cdn.discordapp.com/app-assets/${statusInfo.gameDetails.application_id}/${statusInfo.gameDetails.assets.large_image}.png`} alt="Game Asset" className="w-24 h-24 rounded-xl shadow-lg object-cover bg-gray-800" />
-                                                    ) : (
-                                                        <div className="w-24 h-24 rounded-xl bg-blue-500 flex items-center justify-center text-4xl shadow-lg">🎮</div>
-                                                    )}
-                                                    <div>
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
-                                                            <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Now Playing</span>
-                                                        </div>
-                                                        <h3 className="text-2xl font-black text-dark dark:text-white leading-tight">{statusInfo.gameDetails.name}</h3>
-                                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300 line-clamp-1">{statusInfo.gameDetails.details}</p>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{statusInfo.gameDetails.state}</p>
-                                                    </div>
-                                                </div>
-                                            </motion.div>
-                                        ) : (
-                                            <div className="text-center text-gray-400 py-8 w-full bg-gray-50/50 dark:bg-slate-700/30 rounded-2xl border border-dashed border-gray-300 dark:border-slate-600">
-                                                <div className="text-3xl mb-2 grayscale opacity-50">💤</div>
-                                                <p className="text-xs font-medium">{t('afk.chilling')}</p>
-                                            </div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-
-                            </motion.section>
-
-                            <motion.section variants={itemVariants} className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-md border border-white/25 dark:border-slate-700/50 rounded-[2.5rem] p-5 md:p-7 shadow-lg hover:shadow-yellow-500/10 transition-all duration-500 flex flex-col h-[540px] lg:h-[560px]">
-                                <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3 mb-6 flex-shrink-0">
-                                    <span className="text-3xl filter drop-shadow-md">🍿</span> {t('afk.cinema_log')}
-                                </h2>
-                                {loadingMovies ? (<div className="animate-pulse h-full bg-gray-200 dark:bg-slate-700 rounded-xl"></div>) : (
-                                    <div className="space-y-10 flex-1 overflow-y-auto scrollbar-hide pr-2 min-h-0">
-                                        {moviesByYear.map(([year, yearMovies]) => {
-                                            const fav = yearMovies.find(m => m.isFavorite);
-                                            const others = yearMovies.filter(m => !m.isFavorite);
-                                            return (
-                                                <div key={year} className="relative">
-                                                    <div className="sticky top-0 z-10 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm py-2 mb-4 border-b border-gray-100 dark:border-slate-700/50">
-                                                        <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">{year}</h3>
-                                                    </div>
-                                                    {fav && (
-                                                        <a href={`https://www.themoviedb.org/movie/${fav.id}`} target="_blank" rel="noreferrer" className="block mb-6 relative rounded-2xl overflow-hidden aspect-video group cursor-pointer shadow-lg border border-yellow-500/20">
-                                                            <img src={`https://image.tmdb.org/t/p/w500${fav.backdrop_path}`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={fav.title} />
-                                                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 group-hover:opacity-70 transition-opacity"></div>
-                                                            <div className="absolute bottom-0 left-0 p-5 w-full">
-                                                                <div className="flex items-center gap-2 mb-2">
-                                                                    <span className="bg-yellow-500 text-black text-[10px] font-black px-2 py-0.5 rounded shadow-lg shadow-yellow-500/20 uppercase tracking-wide">{t('afk.best_year')}</span>
-                                                                    <span className="text-yellow-400 text-xs font-bold">⭐ {fav.myRating || fav.vote_average.toFixed(1)}</span>
-                                                                </div>
-                                                                <h4 className="text-white font-black text-xl leading-tight line-clamp-1 group-hover:text-yellow-300 transition-colors">{fav.title}</h4>
-                                                            </div>
-                                                        </a>
-                                                    )}
-                                                    <div className="grid grid-cols-3 gap-4">
-                                                        {others.map(m => (
-                                                            <a key={m.id} href={`https://www.themoviedb.org/movie/${m.id}`} target="_blank" rel="noreferrer" className="relative aspect-[2/3] rounded-xl overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                                                                <img src={`https://image.tmdb.org/t/p/w300${m.poster_path}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" alt={m.title} />
-                                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-center">
-                                                                    <span className="text-white text-[11px] font-bold line-clamp-2 leading-tight">{m.title}</span>
-                                                                    <span className="text-yellow-400 text-[10px] font-bold mt-1">⭐ {m.myRating || m.vote_average.toFixed(1)}</span>
-                                                                </div>
-                                                            </a>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )
-                                        })}
-                                        <div className="h-4"></div>
-                                    </div>
-                                )}
-                            </motion.section>
-                        </div>
-
-                        <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-fuchsia-500/10 transition-all duration-500">
-                            <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3 mb-5">
-                                <span className="text-3xl filter drop-shadow-md">📌</span> {t('afk.want_to_watch')}
-                            </h2>
+                            </div>
 
                             {loadingWatchlist ? (
-                                <div className="animate-pulse h-32 bg-gray-200 dark:bg-slate-700 rounded-xl"></div>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    {[0, 1].map((item) => <div key={item} className="h-36 rounded-xl bg-slate-200/70 dark:bg-slate-800 animate-pulse" />)}
+                                </div>
                             ) : watchlist.length === 0 ? (
-                                <div className="text-sm text-gray-500 dark:text-gray-400 rounded-xl border border-dashed border-gray-300 dark:border-slate-600 px-4 py-6 text-center">
+                                <div className="text-sm text-gray-500 dark:text-gray-400 rounded-xl border border-dashed border-gray-300 dark:border-slate-700 px-5 py-8 text-center">
                                     {t('afk.no_watchlist')}
                                 </div>
                             ) : (
-                                <div className="space-y-4">
+                                <div className="grid gap-4 md:grid-cols-2">
                                     {watchlist.map((movie, index) => (
-                                        <a
-                                            key={movie.watchId || movie.id}
-                                            href={`https://www.themoviedb.org/movie/${movie.id}`}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="group flex gap-4 p-3 rounded-2xl bg-white/70 dark:bg-slate-700/40 border border-gray-200 dark:border-slate-600/70 hover:border-primary/40 transition"
-                                        >
-                                            <img
-                                                src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-                                                className="w-20 h-28 rounded-lg object-cover shadow-sm"
-                                                loading="lazy"
-                                                alt={movie.title}
-                                            />
-                                            <div className="min-w-0">
-                                                <p className="text-xs uppercase tracking-wider text-primary font-bold mb-1">
-                                                    #{index + 1} Watchlist
-                                                </p>
-                                                <h4 className="text-base md:text-lg font-extrabold text-dark dark:text-white line-clamp-1 group-hover:text-primary transition-colors">
-                                                    {movie.title}
-                                                </h4>
+                                        <a key={movie.watchId || movie.id} href={`https://www.themoviedb.org/movie/${movie.id}`} target="_blank" rel="noreferrer" className="group flex gap-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-3 hover:border-primary/50 transition-colors">
+                                            {movie.poster_path && (
+                                                <img src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`} className="w-20 h-28 rounded-lg object-cover" loading="lazy" alt={movie.title} />
+                                            )}
+                                            <div className="min-w-0 py-1">
+                                                <p className="text-xs uppercase tracking-wider text-primary font-bold mb-1">#{index + 1}</p>
+                                                <h4 className="text-base md:text-lg font-extrabold text-dark dark:text-white line-clamp-1 group-hover:text-primary transition-colors">{movie.title}</h4>
                                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                    ⭐ {movie.vote_average?.toFixed?.(1) ?? '-'}
-                                                    {movie.release_date ? ` • ${movie.release_date.split('-')[0]}` : ''}
+                                                    <i className="fas fa-star text-amber-500 mr-1" aria-hidden="true" />{getMovieRating(movie)}
+                                                    {movie.release_date ? ` · ${movie.release_date.split('-')[0]}` : ''}
                                                 </p>
-                                                {movie.note && (
-                                                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">{movie.note}</p>
-                                                )}
+                                                {movie.note && <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">{movie.note}</p>}
                                             </div>
                                         </a>
                                     ))}
                                 </div>
                             )}
                         </motion.section>
-
-                        <motion.section variants={itemVariants} className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-green-500/10 transition-all duration-500">
-                            <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3 mb-8">
-                                <span className="text-3xl filter drop-shadow-md">🎵</span> {t('afk.spotify')}
-                            </h2>
-                            
-                            <div className="space-y-12">
-                                <div>
-                                    <h3 className="text-lg font-bold text-dark dark:text-white mb-4">{t('afk.now_playing')}</h3>
-                                    <SpotifyNowPlaying />
-                                </div>
-                                
-                                <div>
-                                    <SpotifyTopTracks />
-                                </div>
-                            </div>
-                        </motion.section>
-
                     </motion.div>
                 </div>
             </div>

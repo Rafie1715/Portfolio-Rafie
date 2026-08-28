@@ -76,6 +76,8 @@ const Chatbot = () => {
   return (
     <>
       <motion.button
+        type="button"
+        aria-label={isOpen ? 'Close Rafie Assistant' : 'Open Rafie Assistant'}
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 z-50 p-4 bg-primary text-white rounded-full shadow-lg hover:shadow-xl hover:shadow-primary/50 transition-all"
         whileHover={{ scale: 1.1 }}

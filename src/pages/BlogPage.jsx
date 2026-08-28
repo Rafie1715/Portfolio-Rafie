@@ -1,183 +1,237 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useMemo, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
-import { Search, Filter } from 'lucide-react';
+import {
+  ArrowUpRight,
+  BookOpenText,
+  CalendarDays,
+  Clock3,
+  Search,
+  X,
+} from 'lucide-react';
 import BlogCard from '../components/BlogCard';
+import SEO from '../components/SEO';
 import PageTransition from '../components/PageTransition';
 import { blogs } from '../data/blogs';
+import {
+  getBlogLanguage,
+  getBlogReadingMinutes,
+  getBlogSearchText,
+  getLocalizedBlogValue,
+  sortBlogsByDate,
+} from '../utils/blog';
+
+const categoryIds = ['all', 'case-study', 'android', 'web', 'learning'];
 
 const BlogPage = () => {
   const { t, i18n } = useTranslation();
-  const currentLang = i18n.language;
-  
+  const shouldReduceMotion = useReducedMotion();
+  const language = getBlogLanguage(i18n);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [filteredBlogs, setFilteredBlogs] = useState(blogs);
 
-  // Get unique categories
-  const categories = ['all', ...new Set(blogs.map(blog => blog.category.en))];
+  const sortedBlogs = useMemo(() => sortBlogsByDate(blogs), []);
+  const featuredBlog = sortedBlogs.find((blog) => blog.featured) || sortedBlogs[0];
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const showFeatured = !normalizedQuery && selectedCategory === 'all';
 
-  useEffect(() => {
-    let result = blogs;
+  const filteredBlogs = useMemo(() => sortedBlogs.filter((blog) => {
+    const matchesCategory = selectedCategory === 'all' || blog.category === selectedCategory;
+    const matchesSearch = !normalizedQuery || getBlogSearchText(blog, language).includes(normalizedQuery);
+    return matchesCategory && matchesSearch;
+  }), [language, normalizedQuery, selectedCategory, sortedBlogs]);
 
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      result = result.filter(blog => blog.category.en === selectedCategory);
-    }
+  const gridBlogs = showFeatured
+    ? filteredBlogs.filter((blog) => blog.id !== featuredBlog.id)
+    : filteredBlogs;
 
-    // Filter by search query
-    if (searchQuery) {
-      result = result.filter(blog => {
-        const title = blog.title[currentLang].toLowerCase();
-        const excerpt = blog.excerpt[currentLang].toLowerCase();
-        const tags = blog.tags.join(' ').toLowerCase();
-        const query = searchQuery.toLowerCase();
-        
-        return title.includes(query) || excerpt.includes(query) || tags.includes(query);
-      });
-    }
+  const featuredTitle = getLocalizedBlogValue(featuredBlog.title, language);
+  const featuredExcerpt = getLocalizedBlogValue(featuredBlog.excerpt, language);
+  const featuredDate = new Date(featuredBlog.publishedAt).toLocaleDateString(
+    language === 'id' ? 'id-ID' : 'en-US',
+    { year: 'numeric', month: 'long', day: 'numeric' },
+  );
+  const featuredReadingMinutes = getBlogReadingMinutes(featuredBlog, language);
 
-    setFilteredBlogs(result);
-  }, [searchQuery, selectedCategory, currentLang]);
-
-  const pageTitle = currentLang === 'id' ? 'Blog' : 'Blog';
-  const pageDescription = currentLang === 'id' 
-    ? 'Artikel dan tulisan tentang web development, performance optimization, dan teknologi terkini'
-    : 'Articles and writings about web development, performance optimization, and latest technologies';
-  const blogTitlePrefix = t('pages.blog.title_prefix');
-  const blogTitleHighlight = t('pages.blog.title_highlight');
-  const blogSubtitle = t('pages.blog.subtitle');
+  const revealProps = shouldReduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 18 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, margin: '-80px' },
+        transition: { duration: 0.45, ease: 'easeOut' },
+      };
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>{pageTitle} - Rafie Portfolio</title>
-        <meta name="description" content={pageDescription} />
-        <meta property="og:title" content={`${pageTitle} - Rafie Portfolio`} />
-        <meta property="og:description" content={pageDescription} />
-        <meta property="og:type" content="website" />
-        <link rel="canonical" href={`${window.location.origin}/blog`} />
-      </Helmet>
+      <SEO
+        title={t('pages.blog.seo_title')}
+        description={t('pages.blog.seo_desc')}
+        url="https://rafierb.me/blog"
+        image={`https://rafierb.me${featuredBlog.image}`}
+      />
 
-      <div className="bg-white dark:bg-dark min-h-screen pt-20 md:pt-24 pb-12 md:pb-20 transition-colors duration-300 relative overflow-hidden">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white dark:from-dark dark:via-transparent dark:to-dark" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 blur-[120px] rounded-full" />
-        </div>
+      <main className="relative min-h-screen overflow-hidden bg-white pt-20 text-dark transition-colors duration-300 dark:bg-dark dark:text-white md:pt-24">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#8080800d_1px,transparent_1px),linear-gradient(to_bottom,#8080800d_1px,transparent_1px)] bg-[size:24px_24px]"
+          aria-hidden="true"
+        />
 
-        <div className="container mx-auto px-4 max-w-6xl relative z-10 mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-12 md:mb-20"
-          >
-            <motion.div
-              animate={{ y: [0, -15, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="inline-block relative"
-            >
-              <div className="p-4 md:p-5 rounded-2xl md:rounded-3xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-xl relative z-10">
-                <i className="fas fa-book-open text-3xl md:text-5xl text-dark dark:text-white bg-clip-text bg-gradient-to-r from-primary to-secondary"></i>
-              </div>
-              <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full transform scale-150 z-0 animate-pulse" />
-            </motion.div>
-
-            <h1 className="mt-6 md:mt-8 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-dark dark:text-white mb-4 md:mb-6 tracking-tight px-4">
-              {blogTitlePrefix} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">{blogTitleHighlight}</span>
+        <header className="relative z-10 border-b border-gray-200 py-14 dark:border-slate-700 md:py-20">
+          <motion.div {...revealProps} className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <p className="inline-flex items-center gap-2 text-sm font-bold uppercase text-primary">
+              <BookOpenText className="h-4 w-4" aria-hidden="true" />
+              {t('pages.blog.eyebrow')}
+            </p>
+            <h1 className="mt-4 max-w-4xl text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
+              {t('pages.blog.title_prefix')}{' '}
+              <span className="text-primary">{t('pages.blog.title_highlight')}</span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed px-4">
-              {blogSubtitle}
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-gray-600 dark:text-gray-300 md:text-lg">
+              {t('pages.blog.subtitle')}
             </p>
           </motion.div>
+        </header>
 
-          {/* Filters */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-8 space-y-4"
-          >
-            {/* Search Bar */}
-            <div className="relative max-w-xl mx-auto">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={currentLang === 'id' ? 'Cari artikel...' : 'Search articles...'}
-                className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
-              />
-            </div>
+        {showFeatured && (
+          <section className="relative z-10 mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16 lg:px-8" aria-labelledby="featured-article-title">
+            <motion.p {...revealProps} className="text-sm font-bold uppercase text-primary">
+              {t('pages.blog.featured_eyebrow')}
+            </motion.p>
 
-            {/* Category Filter */}
-            <div className="flex items-center justify-center gap-2 flex-wrap">
-              <Filter className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    selectedCategory === category
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700'
-                  }`}
-                >
-                  {category === 'all' 
-                    ? (currentLang === 'id' ? 'Semua' : 'All')
-                    : category}
-                </button>
-              ))}
-            </div>
-          </motion.div>
+            <motion.article {...revealProps} className="mt-5 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+              <Link
+                to={`/blog/${featuredBlog.slug}`}
+                className="group grid lg:grid-cols-[1.2fr_0.8fr]"
+                aria-label={`${t('pages.blog.read_article')}: ${featuredTitle}`}
+              >
+                <div className="min-h-64 overflow-hidden bg-gray-100 lg:min-h-[420px] dark:bg-slate-800">
+                  <img
+                    src={featuredBlog.image}
+                    alt={featuredTitle}
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
 
-          {/* Blog Grid */}
-          {filteredBlogs.length > 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              {filteredBlogs.map((blog) => (
-                <BlogCard key={blog.id} blog={blog} />
-              ))}
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-center py-20"
-            >
-              <p className="text-xl text-gray-500 dark:text-gray-400">
-                {currentLang === 'id' 
-                  ? '📭 Tidak ada artikel yang ditemukan'
-                  : '📭 No articles found'}
+                <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase">
+                    <span className="rounded bg-primary px-2.5 py-1 text-white">
+                      {t('pages.blog.featured_badge')}
+                    </span>
+                    <span className="text-primary">
+                      {t(`pages.blog.categories.${featuredBlog.category}`)}
+                    </span>
+                  </div>
+
+                  <h2 id="featured-article-title" className="mt-4 text-2xl font-black leading-tight transition-colors group-hover:text-primary sm:text-3xl lg:text-4xl">
+                    {featuredTitle}
+                  </h2>
+                  <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300 sm:text-base">
+                    {featuredExcerpt}
+                  </p>
+
+                  <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <span className="inline-flex items-center gap-1.5">
+                      <CalendarDays className="h-4 w-4" aria-hidden="true" />
+                      {featuredDate}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <Clock3 className="h-4 w-4" aria-hidden="true" />
+                      {t('pages.blog.read_time', { count: featuredReadingMinutes })}
+                    </span>
+                  </div>
+
+                  <span className="mt-7 inline-flex items-center gap-2 self-start font-bold text-primary">
+                    {t('pages.blog.read_article')}
+                    <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+                  </span>
+                </div>
+              </Link>
+            </motion.article>
+          </section>
+        )}
+
+        <section className="relative z-10 border-t border-gray-200 bg-gray-50/80 py-14 dark:border-slate-700 dark:bg-slate-900/40 md:py-20" aria-labelledby="blog-archive-title">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <motion.div {...revealProps} className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-sm font-bold uppercase text-primary">{t('pages.blog.recent_eyebrow')}</p>
+                <h2 id="blog-archive-title" className="mt-2 text-3xl font-black sm:text-4xl">
+                  {t('pages.blog.recent_title')}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300 sm:text-base">
+                  {t('pages.blog.recent_subtitle')}
+                </p>
+              </div>
+              <p className="text-sm font-bold text-gray-500 dark:text-gray-400" aria-live="polite">
+                {t('pages.blog.article_count', { count: filteredBlogs.length })}
               </p>
-              <p className="text-gray-400 dark:text-gray-500 mt-2">
-                {currentLang === 'id' 
-                  ? 'Coba kata kunci atau kategori lain'
-                  : 'Try different keywords or categories'}
-              </p>
             </motion.div>
-          )}
 
-          {/* Blog Count */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-center mt-8 text-gray-500 dark:text-gray-400"
-          >
-            {currentLang === 'id' 
-              ? `Menampilkan ${filteredBlogs.length} dari ${blogs.length} artikel`
-              : `Showing ${filteredBlogs.length} of ${blogs.length} articles`}
-          </motion.div>
-        </div>
-      </div>
+            <motion.div {...revealProps} className="mt-8">
+              <label htmlFor="blog-search" className="sr-only">{t('pages.blog.search_label')}</label>
+              <div className="relative max-w-2xl">
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                <input
+                  id="blog-search"
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder={t('pages.blog.search_placeholder')}
+                  className="w-full rounded-lg border border-gray-300 bg-white py-3.5 pl-12 pr-12 text-gray-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-dark focus:outline-none focus:ring-2 focus:ring-primary dark:hover:bg-slate-800 dark:hover:text-white"
+                    aria-label={t('pages.blog.clear_search')}
+                  >
+                    <X className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+
+              <div className="-mx-4 mt-5 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+                <div className="flex min-w-max gap-2 sm:min-w-0 sm:flex-wrap" role="group" aria-label={t('pages.blog.filter_label')}>
+                  {categoryIds.map((categoryId) => {
+                    const isActive = selectedCategory === categoryId;
+                    return (
+                      <button
+                        key={categoryId}
+                        type="button"
+                        onClick={() => setSelectedCategory(categoryId)}
+                        aria-pressed={isActive}
+                        className={`rounded-lg border px-4 py-2 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-dark ${
+                          isActive
+                            ? 'border-primary bg-primary text-white'
+                            : 'border-gray-300 bg-white text-gray-600 hover:border-primary/50 hover:text-primary dark:border-slate-700 dark:bg-slate-900 dark:text-gray-300'
+                        }`}
+                      >
+                        {t(`pages.blog.categories.${categoryId}`)}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+
+            {gridBlogs.length > 0 ? (
+              <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {gridBlogs.map((blog) => <BlogCard key={blog.id} blog={blog} />)}
+              </div>
+            ) : (
+              <div className="py-20 text-center" role="status">
+                <BookOpenText className="mx-auto h-9 w-9 text-gray-400" aria-hidden="true" />
+                <h3 className="mt-4 text-xl font-black">{t('pages.blog.empty_title')}</h3>
+                <p className="mt-2 text-gray-500 dark:text-gray-400">{t('pages.blog.empty_desc')}</p>
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
     </PageTransition>
   );
 };

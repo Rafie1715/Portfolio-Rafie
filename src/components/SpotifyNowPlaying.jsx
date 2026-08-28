@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 export default function SpotifyNowPlaying() {
+  const { t } = useTranslation();
   const [nowPlaying, setNowPlaying] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +16,7 @@ export default function SpotifyNowPlaying() {
         const data = await response.json();
 
         if (data.error || !data.item) {
-          setError('Not playing anything right now');
+          setError('not_playing');
           setNowPlaying(null);
           return;
         }
@@ -29,7 +31,7 @@ export default function SpotifyNowPlaying() {
         });
         setError(null);
       } catch (err) {
-        setError('Unable to fetch Spotify data');
+        setError('unavailable');
         console.error('Spotify error:', err);
       } finally {
         setLoading(false);
@@ -44,8 +46,8 @@ export default function SpotifyNowPlaying() {
 
   if (loading) {
     return (
-      <div className="w-full max-w-sm mx-auto p-4">
-        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 animate-pulse border border-green-100 dark:border-green-800">
+      <div className="w-full">
+        <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 animate-pulse border border-green-100 dark:border-green-800">
           <div className="h-4 bg-green-200 rounded w-1/2 mb-2" />
           <div className="h-3 bg-green-100 rounded w-3/4" />
         </div>
@@ -55,9 +57,9 @@ export default function SpotifyNowPlaying() {
 
   if (error) {
     return (
-      <div className="w-full max-w-sm mx-auto p-4">
-        <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-gray-200 dark:border-slate-700">
-          <p className="text-slate-600 dark:text-gray-400 text-sm text-center">{error}</p>
+      <div className="w-full">
+        <div className="bg-white dark:bg-slate-800/50 rounded-xl p-4 border border-gray-200 dark:border-slate-700">
+          <p className="text-slate-600 dark:text-gray-400 text-sm text-center">{t(`afk.spotify_status.${error}`)}</p>
         </div>
       </div>
     );
@@ -72,7 +74,7 @@ export default function SpotifyNowPlaying() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full max-w-sm mx-auto"
+      className="w-full"
     >
       <a
         href={nowPlaying.url}
@@ -80,7 +82,7 @@ export default function SpotifyNowPlaying() {
         rel="noopener noreferrer"
         className="block"
       >
-        <div className="bg-green-50 dark:bg-green-900/30 hover:dark:bg-green-800/30 hover:bg-green-100 backdrop-blur border border-green-100 dark:border-green-700 rounded-lg p-4 transition-all duration-300 group cursor-pointer">
+        <div className="bg-green-50 dark:bg-green-900/30 hover:dark:bg-green-800/30 hover:bg-green-100 border border-green-100 dark:border-green-700 rounded-xl p-4 transition-colors duration-300 group cursor-pointer">
           <div className="flex items-center gap-3">
             {nowPlaying.image && (
               <div className="relative w-12 h-12 flex-shrink-0">
@@ -102,7 +104,8 @@ export default function SpotifyNowPlaying() {
             )}
             <div className="flex-1 min-w-0">
               <p className="text-xs text-green-600 font-semibold uppercase tracking-wide">
-                {nowPlaying.isPlaying ? '♫ Now Playing' : 'Last Played'}
+                <i className={`fas ${nowPlaying.isPlaying ? 'fa-volume-high' : 'fa-clock-rotate-left'} mr-1.5`} aria-hidden="true" />
+                {nowPlaying.isPlaying ? t('afk.spotify_status.now_playing') : t('afk.spotify_status.last_played')}
               </p>
               <p className="text-sm font-semibold text-slate-900 dark:text-white truncate group-hover:text-green-700 transition-colors">
                 {nowPlaying.name}

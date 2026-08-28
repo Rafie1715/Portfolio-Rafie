@@ -32,9 +32,39 @@ const resources = {
             },
             about: {
                 title: "About Me",
+                eyebrow: "Mobile, Front-End & AI Developer",
+                headline: "I turn product ideas into practical Android and web experiences.",
+                summary: "I am a recent Informatics graduate from UPN Veteran Jakarta with a 3.89/4.00 GPA, focused on Android, front-end, and AI-integrated development.",
+                summary_secondary: "My work combines Kotlin, React.js, machine learning, Clean Architecture, and MVVM to build products that are useful, maintainable, and grounded in real user needs.",
+                location: "North Jakarta, Indonesia",
+                availability: "Open to internships and entry-level roles",
+                view_projects: "View Projects",
+                contact: "Contact Me",
+                snapshot: {
+                    graduate: "Informatics graduate",
+                    gpa: "GPA / 4.00",
+                    mandiri: "Mandiri project score",
+                    ml_accuracy: "Thesis model accuracy",
+                    bangkit_hours: "Bangkit learning hours"
+                },
+                education: {
+                    title: "Education",
+                    subtitle: "Academic foundation behind my engineering work.",
+                    degree: "Bachelor of Informatics",
+                    note: "Focused on software engineering, Android development, web products, and applied machine learning.",
+                    period: "Aug 2022 - Jul 2026"
+                },
+                profile_lab: {
+                    title: "Profile Lab",
+                    subtitle: "A playful, interactive take on my developer profile, kept separate from the main recruiter-focused story.",
+                    show_profile: "Open Profile Card",
+                    hide_profile: "Close Profile Card",
+                    show_3d: "Open 3D Preview",
+                    hide_3d: "Close 3D Preview"
+                },
                 download_cv: "Download CV",
                 hello: "Hello, I'm",
-                desc1: "I'm a final-year <1>Informatics student</1> at UPN “Veteran” Jakarta with a strong interest in <3>Front-End and Mobile Development</3>.",
+                desc1: "I'm a recent <1>Informatics graduate</1> from UPN “Veteran” Jakarta with a strong interest in <3>Front-End and Mobile Development</3>.",
                 desc2: "Skilled in building responsive apps using <1>JavaScript</1>, <3>React</3>, and <5>Kotlin</5>. Highly motivated to enhance technical skills through internship opportunities to create impactful digital solutions.",
                 card_label: "Profile Card",
                 card_note: "Classic Card is shown by default for a cleaner reading flow.",
@@ -44,19 +74,18 @@ const resources = {
                 card_loading_3d: "Loading interactive 3D preview...",
                 edu_title: "Education",
                 uni_name: "Universitas Pembangunan Nasional \"Veteran\" Jakarta",
-                uni_major: "Informatics (2022 - Present)",
+                uni_major: "Informatics (2022 - 2026)",
                 hs_name: "SMA Negeri 13 Jakarta",
                 hs_major: "Science (2019 - 2022)"
             },
             hero: {
                 greeting: "Hi there, I'm",
-                tagline: "Final-year Informatics student at UPN Veteran Jakarta building responsive web and mobile products with a focus on clean UI and practical UX.",
+                tagline: "Recent Informatics graduate building practical mobile and web products with React and Kotlin.",
+                typewriter_prefix: "I build",
                 role_phrases: [
-                    "Final-year Informatics student specializing in Front‑End & Mobile (React, Kotlin).",
-                    "Built production Android apps using MVVM, Coroutines, and Retrofit.",
-                    "Seeking internship or entry-level roles — available to contribute immediately.",
-                    "Thesis: Sleep quality classification app with 92.06% accuracy using Random Forest.",
-                    "Experienced in end-to-end projects integrating Android, Firebase, and ML."
+                    "practical mobile applications.",
+                    "responsive web experiences.",
+                    "products with React and Kotlin."
                 ],
                 view_work: "About Me",
                 view_projects: "View Projects",
@@ -68,7 +97,7 @@ const resources = {
                 },
                 quick_facts: {
                     location: "Jakarta, Indonesia",
-                    availability: "Open to Internship",
+                    availability: "Open to Opportunities",
                     focus: "Mobile and Web",
                     stack: "React, Kotlin, Firebase"
                 }
@@ -84,20 +113,35 @@ const resources = {
                 in: "in"
             },
             experience: {
-                title: "Experience",
-                docs: "Documentation"
+                eyebrow: "Applied Experience",
+                title: "Selected Experience & Programs",
+                subtitle: "Roles and structured programs where I shipped software, led technical learning, and supported other students with measurable outcomes.",
+                docs: "Documentation",
+                view_docs: "View documentation",
+                photo_count: "{{count}} photos",
+                open_docs: "Open documentation for {{title}}",
+                gallery_label: "Documentation gallery for {{title}}",
+                photo_alt: "{{title}} documentation, photo {{current}} of {{total}}",
+                close_gallery: "Close gallery",
+                previous_photo: "Previous photo",
+                next_photo: "Next photo"
             },
             skills: {
+                eyebrow: "Core Capabilities",
                 title: "Technical Skills",
-                description: "My digital toolbox, grouped by the kind of work I use each skill for.",
+                description: "A recruiter-friendly view of the technologies I use across Android, web, AI, backend, and delivery workflows.",
                 categories: {
                     frontend: {
                         title: "Frontend Engineering",
                         desc: "Building responsive interfaces, polished interactions, and production-ready React pages."
                     },
                     mobile: {
-                        title: "Mobile Development",
-                        desc: "Creating Android and cross-platform app experiences with practical user flows."
+                        title: "Mobile Android",
+                        desc: "Building native Android applications with modern UI, structured state, and reliable API integration."
+                    },
+                    ai: {
+                        title: "AI & Machine Learning",
+                        desc: "Training practical models and integrating generative AI into development and product workflows."
                     },
                     backend: {
                         title: "Backend & Data",
@@ -110,34 +154,64 @@ const resources = {
                 }
             },
             certifications: {
-                title: "Certifications",
+                eyebrow: "Training & Credentials",
+                title: "Selected Certifications",
+                subtitle: "CV highlights and relevant earlier technical credentials are shown first. The complete archive remains available without an auto-playing carousel.",
                 issued: "Issued",
-                verify: "Verify Credential"
+                verify: "Verify Credential",
+                view_all: "View all {{count}} credentials",
+                show_selected: "Show selected only",
+                preview: "Preview {{title}} certificate",
+                close_preview: "Close certificate preview",
+                general: "General"
             },
             projects: {
                 title: "Featured Projects",
-                subtitle: "Open Source Repositories",
-                subtitle_desc: "Latest code contributions directly from GitHub",
+                featured_eyebrow: "Selected Work",
+                featured_title: "Featured Case Studies",
+                featured_desc: "Five projects selected for their product scope, technical ownership, and measurable outcomes.",
+                archive_eyebrow: "More Work",
+                archive_title: "Project Archive",
+                archive_desc: "Experiments, course projects, design work, and smaller builds grouped for quick scanning.",
+                search_results: "Browse Projects",
+                results_title: "Project Results",
+                project_count: "{{count}} projects match your current search and filter.",
+                subtitle: "Recent GitHub Repositories",
+                subtitle_desc: "A small, lazily loaded view of recent public code activity.",
+                github_eyebrow: "Code Activity",
                 view_details: "View Details",
+                case_study: "View Case Study",
                 live_site: "View Live Site",
                 design: "View Design",
                 prototype: "Try Prototype",
                 source_code: "Source Code",
+                conceptual_cover: "Conceptual cover",
                 no_projects: "No projects found.",
                 loading: "Loading...",
-                search_placeholder: "Search projects by name, tech, or keyword...",
+                search_placeholder: "Search name, technology, or keyword",
+                clear_search: "Clear project search",
+                filter_label: "Filter projects by domain",
+                show_all: "Show all {{count}} projects",
+                show_less: "Show fewer projects",
+                view_github: "View GitHub Profile",
+                open_repository: "Open repository",
+                no_repo_description: "No repository description provided.",
+                github_error: "Recent repositories could not be loaded right now.",
+                github_empty: "No public repositories were returned.",
                 filter: {
                     all: "All",
                     mobile: "Mobile",
                     web: "Web",
+                    ai: "AI & Data",
                     python: "Python",
                     java: "Java",
                     ui: "UI/UX",
                     flutter: "Flutter",
-                    game: "Game"
+                    game: "Game",
+                    other: "Other"
                 },
                 seo_title: "Projects | Rafie Rojagat",
-                seo_desc: "A showcase of my software engineering projects."
+                seo_desc: "Selected Android, web, and AI case studies by Rafie Rojagat, including project roles, technical decisions, and measurable outcomes."
             },
             projectDetail: {
                 category_label: "Project",
@@ -148,6 +222,7 @@ const resources = {
                     role: "Role",
                     team: "Team",
                     result: "Result",
+                    scope: "Scope",
                     tech_link: "Tech & Link",
                     team_fallback: "Solo or team project"
                 },
@@ -158,40 +233,119 @@ const resources = {
                 solution: "The Solution",
                 learned: "What I Learned",
                 gallery: "Project Gallery",
+                conceptual_cover: "This is a conceptual cover created for portfolio presentation, not a final product screenshot.",
                 click_close: "Click outside or press Esc to close"
             },
             workspace: {
-                title_prefix: "My",
-                title_highlight: "Workspace",
-                subtitle: "The hardware, gadgets, and software that power my productivity.",
-                updated: "Updated",
-                view_product: "View Product",
-                filter_all: "All",
-                open_preview: "Open preview",
-                activity_title_prefix: "Development",
-                activity_title_highlight: "Activity",
-                activity_desc: "Track my coding journey - consistent contributions, active projects, and commitment to continuous growth."
+                seo_title: "Workspace & Development Tools | Rafie Rojagat",
+                seo_desc: "The hardware, development tools, and practical workflow Rafie Rojagat uses to design, build, test, and ship Android and web products.",
+                eyebrow: "Core Setup",
+                title_prefix: "Tools behind",
+                title_highlight: "the work.",
+                subtitle: "A practical look at the hardware and software I use to move from an idea to a tested Android or web product.",
+                updated: "Last updated: August 2026",
+                workflow: {
+                    eyebrow: "Working Method",
+                    title: "A simple loop from idea to delivery",
+                    subtitle: "The tools matter most when they support a clear, repeatable way of working.",
+                    plan: {
+                        title: "Plan & Prototype",
+                        desc: "Clarify requirements, research the problem, and shape interface flows before implementation."
+                    },
+                    build: {
+                        title: "Build & Integrate",
+                        desc: "Implement Android or web features, connect data, and keep architecture maintainable."
+                    },
+                    validate: {
+                        title: "Test & Deliver",
+                        desc: "Validate APIs and real-device behavior, review changes, then prepare a reliable release."
+                    }
+                },
+                stack: {
+                    eyebrow: "Current Stack",
+                    title: "Hardware and tools",
+                    subtitle: "A focused setup selected for product work, not a complete inventory of every app I have tried.",
+                    count: "{{count}} items",
+                    filter_label: "Filter workspace items by category"
+                },
+                groups: {
+                    all: "All",
+                    hardware: "Hardware",
+                    development: "Development",
+                    design_productivity: "Design & Productivity",
+                    testing_delivery: "Testing & Delivery"
+                },
+                view_details: "View details",
+                open_details: "Open details for {{title}}",
+                close_preview: "Close workspace details",
+                purpose: "How I use it",
+                official_site: "Official site",
+                product_page: "Product page",
+                github_profile: "GitHub profile"
             },
             pages: {
                 projects: {
                     title_prefix: "My",
                     title_highlight: "Projects",
-                    subtitle: "A collection of web and mobile applications I've built, showcasing my skills in React, Kotlin, Python, and more."
+                    subtitle: "Selected Android, web, and AI work presented through the problems, decisions, and outcomes behind each build."
                 },
                 about: {
                     title_prefix: "About",
-                    title_highlight: "Me",
-                    subtitle: "Discover my journey as a developer, my skills, experience, and the passion I bring to every project."
+                    title_highlight: "Rafie",
+                    subtitle: "Recent Informatics graduate building Android, front-end, and AI-integrated products with an emphasis on practical outcomes."
                 },
                 blog: {
-                    title_prefix: "My",
-                    title_highlight: "Blog",
-                    subtitle: "Sharing experiences and learnings in IT Stuff."
+                    seo_title: "Engineering Notes & Case Studies | Rafie Rojagat",
+                    seo_desc: "Android, web, machine learning, and teaching case studies by Rafie Rojagat Bachri.",
+                    eyebrow: "Writing & Case Studies",
+                    title_prefix: "Engineering",
+                    title_highlight: "Notes.",
+                    subtitle: "Practical notes on building Android, web, and AI-integrated products, plus lessons from teaching technical topics.",
+                    featured_eyebrow: "Featured Case Study",
+                    featured_badge: "Featured",
+                    recent_eyebrow: "Explore the Archive",
+                    recent_title: "Recent writing",
+                    recent_subtitle: "Case studies, implementation notes, and CodeVox teaching sessions.",
+                    search_label: "Search articles",
+                    search_placeholder: "Search articles...",
+                    clear_search: "Clear search",
+                    filter_label: "Filter articles by topic",
+                    categories: {
+                        all: "All",
+                        "case-study": "Case Studies",
+                        android: "Android",
+                        web: "Web",
+                        learning: "Learning"
+                    },
+                    article_count_one: "{{count}} article",
+                    article_count_other: "{{count}} articles",
+                    read_time_one: "{{count}} min read",
+                    read_time_other: "{{count}} min read",
+                    read_article: "Read article",
+                    empty_title: "No matching articles",
+                    empty_desc: "Try another keyword or topic.",
+                    back: "Back to Blog",
+                    published: "Published",
+                    updated: "Updated",
+                    share: "Share article",
+                    copied: "Link copied",
+                    impact_eyebrow: "Selected Impact",
+                    role: "Role",
+                    team: "Team",
+                    result: "Result",
+                    scope: "Scope",
+                    video_eyebrow: "Session Recording",
+                    play_video: "Play video",
+                    video_note: "The YouTube player loads only after you choose to play it.",
+                    open_project: "View project details",
+                    related_eyebrow: "Keep Reading",
+                    related_title: "Related articles"
                 },
                 contact: {
-                    title_prefix: "Get in",
-                    title_highlight: "Touch",
-                    subtitle: "Have a project in mind? Let's connect and create something amazing together."
+                    eyebrow: "Open to Opportunities",
+                    title_prefix: "Let's build",
+                    title_highlight: "something useful.",
+                    subtitle: "I'm open to Android, front-end, and AI-integrated software opportunities. Tell me what you're hiring or building for."
                 }
             },
             afk: {
@@ -200,11 +354,36 @@ const resources = {
                 intro_line1: "This page captures my rhythm outside coding, from what I listen to, to what I play and watch.",
                 intro_line2: "For me, AFK moments often become a source of ideas when I get back to building.",
                 afk_snapshot: {
-                    title: "Small things outside coding",
-                    label: "AFK Snapshot",
+                    title: "A quick snapshot",
+                    label: "Currently",
                     musik: { label: "Music", desc: "Chill / Focus Playlist" },
                     game: { label: "Game", desc: "Steam + Mini Game" },
                     film: { label: "Film", desc: "Recommendations & Watchlist" }
+                },
+                music_note: "The playlist I reach for when I need to reset, focus, or find a rhythm before building again.",
+                cinema_note: "A compact diary of stories that stayed with me, rather than a complete watch history.",
+                watchlist_note: "A short queue of films I want to make time for next.",
+                playful_break: "Playful break",
+                currently_live: "Live from Discord",
+                films: "films",
+                no_movies: "No cinema picks are available right now.",
+                no_score: "No score yet",
+                show_archive: "Show {{count}} more years",
+                hide_archive: "Hide archive",
+                open_spotify: "Open in Spotify",
+                close_player: "Close player",
+                spotify_ranges: {
+                    four_weeks: "4 weeks",
+                    six_months: "6 months",
+                    all_time: "All time"
+                },
+                play_track: "Play",
+                spotify_status: {
+                    now_playing: "Now playing",
+                    last_played: "Last played",
+                    not_playing: "Nothing is playing right now.",
+                    unavailable: "Spotify data is unavailable right now.",
+                    no_tracks: "No tracks found."
                 },
                 reaction_game: {
                     title: "Reaction Time",
@@ -262,23 +441,48 @@ const resources = {
             },
             contact: {
                 seo_title: "Contact | Rafie Rojagat",
-                seo_desc: "Get in touch with me.",
+                seo_desc: "Contact Rafie Rojagat for Android, front-end, or AI-integrated software opportunities, internships, and collaborations.",
                 title: "Get In Touch",
-                subtitle: "Have a project in mind? I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.",
-                info_title: "Contact Info",
+                subtitle: "Have a project in mind? I'm open to discussing software roles, collaborations, and practical products.",
+                availability_label: "Current availability",
+                availability: "Open to entry-level roles, internships, and collaborations",
+                info_title: "Contact details",
                 location: "Location",
-                follow_me: "Follow me on:",
+                response_time_label: "Response time",
+                response_time: "Typically within 1-2 business days",
+                copy_email: "Copy email address",
+                email_copied: "Email address copied",
+                download_cv: "Download CV",
+                profiles: "Other profiles",
+                open_profile: "Open",
                 form: {
+                    eyebrow: "Start a conversation",
+                    title: "Tell me about the opportunity",
+                    subtitle: "Share the role, project, or problem you have in mind. A little context helps me respond with something useful.",
                     name_label: "Name",
                     name_placeholder: "Enter your full name",
                     email_label: "Email",
                     email_placeholder: "Enter your email address",
+                    topic_label: "Topic",
+                    topic_placeholder: "Choose the reason for reaching out",
+                    topics: {
+                        hiring: "Hiring / full-time role",
+                        internship: "Internship opportunity",
+                        collaboration: "Project collaboration",
+                        freelance: "Freelance project",
+                        other: "Other"
+                    },
                     message_label: "Message",
-                    message_placeholder: "Please write your message or inquiry here...",
+                    message_placeholder: "Briefly describe the role, project, timeline, or next step...",
+                    message_help: "Please include at least 20 characters. Avoid sharing sensitive information.",
                     send_btn: "Send Message",
                     sending: "Sending...",
-                    success: "Message sent successfully!",
-                    error: "Failed to send. Try again."
+                    success: "Message sent. Thank you. I'll get back to you soon.",
+                    error: "The message could not be sent. Please try again or use email instead.",
+                    timeout: "The request took too long. Check your connection and try again.",
+                    rate_limit: "Too many messages were submitted. Please wait a moment before trying again.",
+                    validation_error: "Please review the highlighted fields and try again.",
+                    privacy_prefix: "Your details are used only to respond. Submissions are processed by"
                 }
             }
         }
@@ -312,9 +516,39 @@ const resources = {
             },
             about: {
                 title: "Tentang Saya",
+                eyebrow: "Developer Mobile, Front-End & AI",
+                headline: "Saya mengubah ide produk menjadi pengalaman Android dan web yang praktis.",
+                summary: "Saya lulusan baru Informatika UPN Veteran Jakarta dengan IPK 3,89/4,00 yang berfokus pada pengembangan Android, front-end, dan integrasi AI.",
+                summary_secondary: "Saya memadukan Kotlin, React.js, machine learning, Clean Architecture, dan MVVM untuk membangun produk yang berguna, mudah dirawat, dan sesuai kebutuhan pengguna.",
+                location: "Jakarta Utara, Indonesia",
+                availability: "Terbuka untuk magang dan posisi entry-level",
+                view_projects: "Lihat Proyek",
+                contact: "Hubungi Saya",
+                snapshot: {
+                    graduate: "Lulusan Informatika",
+                    gpa: "IPK / 4,00",
+                    mandiri: "Nilai proyek Mandiri",
+                    ml_accuracy: "Akurasi model skripsi",
+                    bangkit_hours: "Jam belajar Bangkit"
+                },
+                education: {
+                    title: "Pendidikan",
+                    subtitle: "Fondasi akademik di balik karya engineering saya.",
+                    degree: "Sarjana Informatika",
+                    note: "Berfokus pada software engineering, pengembangan Android, produk web, dan machine learning terapan.",
+                    period: "Agu 2022 - Jul 2026"
+                },
+                profile_lab: {
+                    title: "Profile Lab",
+                    subtitle: "Versi interaktif yang lebih playful dari profil developer saya, terpisah dari alur utama yang berfokus pada rekruter.",
+                    show_profile: "Buka Kartu Profil",
+                    hide_profile: "Tutup Kartu Profil",
+                    show_3d: "Buka Pratinjau 3D",
+                    hide_3d: "Tutup Pratinjau 3D"
+                },
                 download_cv: "Unduh CV",
                 hello: "Halo, saya",
-                desc1: "Saya mahasiswa tingkat akhir <1>Informatika</1> di UPN “Veteran” Jakarta dengan ketertarikan kuat pada <3>Pengembangan Front-End dan Mobile</3>.",
+                desc1: "Saya lulusan baru <1>Informatika</1> UPN “Veteran” Jakarta dengan ketertarikan kuat pada <3>Pengembangan Front-End dan Mobile</3>.",
                 desc2: "Terampil membangun aplikasi responsif menggunakan <1>JavaScript</1>, <3>React</3>, dan <5>Kotlin</5>. Sangat termotivasi untuk meningkatkan keterampilan teknis melalui kesempatan magang guna menciptakan solusi digital yang berdampak.",
                 card_label: "Kartu Profil",
                 card_note: "Classic Card ditampilkan secara default agar alur baca lebih rapi.",
@@ -324,19 +558,18 @@ const resources = {
                 card_loading_3d: "Memuat pratinjau 3D interaktif...",
                 edu_title: "Pendidikan",
                 uni_name: "Universitas Pembangunan Nasional \"Veteran\" Jakarta",
-                uni_major: "Informatika (2022 - Sekarang)",
+                uni_major: "Informatika (2022 - 2026)",
                 hs_name: "SMA Negeri 13 Jakarta",
                 hs_major: "IPA (2019 - 2022)"
             },
             hero: {
                 greeting: "Halo, saya",
-                tagline: "Mahasiswa tingkat akhir Informatika di UPN Veteran Jakarta yang membangun produk web dan mobile responsif dengan fokus pada UI yang rapi dan UX yang praktis.",
+                tagline: "Lulusan baru Informatika yang membangun produk mobile dan web praktis dengan React dan Kotlin.",
+                typewriter_prefix: "Saya membangun",
                 role_phrases: [
-                    "Mahasiswa tingkat akhir Informatika, fokus Front‑End & Mobile (React, Kotlin).",
-                    "Mengembangkan aplikasi Android produksi dengan MVVM, Coroutines, dan Retrofit.",
-                    "Mencari posisi magang atau entry-level — siap berkontribusi segera.",
-                    "Skripsi: Aplikasi klasifikasi kualitas tidur dengan akurasi 92.06% menggunakan Random Forest.",
-                    "Berpengalaman membangun proyek end-to-end: Android, Firebase, dan integrasi ML."
+                    "aplikasi mobile yang praktis.",
+                    "pengalaman web yang responsif.",
+                    "produk dengan React dan Kotlin."
                 ],
                 view_work: "Tentang Saya",
                 view_projects: "Lihat Proyek",
@@ -348,7 +581,7 @@ const resources = {
                 },
                 quick_facts: {
                     location: "Jakarta, Indonesia",
-                    availability: "Terbuka untuk magang",
+                    availability: "Terbuka untuk peluang kerja",
                     focus: "Mobile dan Web",
                     stack: "React, Kotlin, Firebase"
                 }
@@ -364,20 +597,35 @@ const resources = {
                 in: "di"
             },
             experience: {
-                title: "Pengalaman",
-                docs: "Dokumentasi"
+                eyebrow: "Pengalaman Terapan",
+                title: "Pengalaman & Program Pilihan",
+                subtitle: "Peran dan program terstruktur ketika saya mengembangkan software, memimpin pembelajaran teknis, dan mendampingi mahasiswa dengan hasil yang terukur.",
+                docs: "Dokumentasi",
+                view_docs: "Lihat dokumentasi",
+                photo_count: "{{count}} foto",
+                open_docs: "Buka dokumentasi {{title}}",
+                gallery_label: "Galeri dokumentasi {{title}}",
+                photo_alt: "Dokumentasi {{title}}, foto {{current}} dari {{total}}",
+                close_gallery: "Tutup galeri",
+                previous_photo: "Foto sebelumnya",
+                next_photo: "Foto berikutnya"
             },
             skills: {
+                eyebrow: "Kompetensi Utama",
                 title: "Keahlian Teknis",
-                description: "Alat kerja digital saya, dikelompokkan berdasarkan jenis pekerjaan yang saya bangun.",
+                description: "Ringkasan teknologi yang mudah dipindai rekruter, mencakup Android, web, AI, backend, dan workflow pengembangan.",
                 categories: {
                     frontend: {
                         title: "Frontend Engineering",
                         desc: "Membangun antarmuka responsif, interaksi rapi, dan halaman React yang siap produksi."
                     },
                     mobile: {
-                        title: "Mobile Development",
-                        desc: "Membuat pengalaman aplikasi Android dan lintas platform dengan alur pengguna yang praktis."
+                        title: "Mobile Android",
+                        desc: "Membangun aplikasi Android native dengan UI modern, state terstruktur, dan integrasi API yang andal."
+                    },
+                    ai: {
+                        title: "AI & Machine Learning",
+                        desc: "Melatih model praktis serta mengintegrasikan generative AI ke dalam workflow pengembangan dan produk."
                     },
                     backend: {
                         title: "Backend & Data",
@@ -390,34 +638,64 @@ const resources = {
                 }
             },
             certifications: {
-                title: "Sertifikasi",
+                eyebrow: "Pelatihan & Kredensial",
+                title: "Sertifikasi Pilihan",
+                subtitle: "Sorotan dari CV dan kredensial teknis lama yang relevan ditampilkan lebih dulu. Arsip lengkap tetap tersedia tanpa carousel otomatis.",
                 issued: "Diterbitkan",
-                verify: "Verifikasi Sertifikat"
+                verify: "Verifikasi Sertifikat",
+                view_all: "Lihat semua {{count}} kredensial",
+                show_selected: "Tampilkan pilihan saja",
+                preview: "Pratinjau sertifikat {{title}}",
+                close_preview: "Tutup pratinjau sertifikat",
+                general: "Umum"
             },
             projects: {
                 title: "Proyek Unggulan",
-                subtitle: "Repositori Open Source",
-                subtitle_desc: "Kontribusi kode terbaru langsung dari GitHub",
+                featured_eyebrow: "Karya Pilihan",
+                featured_title: "Studi Kasus Unggulan",
+                featured_desc: "Lima proyek pilihan berdasarkan cakupan produk, tanggung jawab teknis, dan hasil yang terukur.",
+                archive_eyebrow: "Karya Lainnya",
+                archive_title: "Arsip Proyek",
+                archive_desc: "Eksperimen, proyek kuliah, karya desain, dan proyek kecil yang dikelompokkan agar mudah dipindai.",
+                search_results: "Jelajahi Proyek",
+                results_title: "Hasil Proyek",
+                project_count: "{{count}} proyek sesuai dengan pencarian dan filter saat ini.",
+                subtitle: "Repositori GitHub Terbaru",
+                subtitle_desc: "Ringkasan kecil aktivitas kode publik yang hanya dimuat saat dibutuhkan.",
+                github_eyebrow: "Aktivitas Kode",
                 view_details: "Lihat Detail",
+                case_study: "Lihat Studi Kasus",
                 live_site: "Lihat Situs",
                 design: "Lihat Desain",
                 prototype: "Coba Prototipe",
                 source_code: "Kode Sumber",
+                conceptual_cover: "Cover konseptual",
                 no_projects: "Tidak ada proyek ditemukan.",
                 loading: "Memuat...",
-                search_placeholder: "Cari proyek berdasarkan nama, teknologi, atau kata kunci...",
+                search_placeholder: "Cari nama, teknologi, atau kata kunci",
+                clear_search: "Hapus pencarian proyek",
+                filter_label: "Filter proyek berdasarkan bidang",
+                show_all: "Tampilkan semua {{count}} proyek",
+                show_less: "Tampilkan lebih sedikit",
+                view_github: "Lihat Profil GitHub",
+                open_repository: "Buka repositori",
+                no_repo_description: "Belum ada deskripsi repositori.",
+                github_error: "Repositori terbaru belum dapat dimuat saat ini.",
+                github_empty: "Tidak ada repositori publik yang ditemukan.",
                 filter: {
                     all: "Semua",
                     mobile: "Aplikasi Mobile",
                     web: "Aplikasi Web",
+                    ai: "AI & Data",
                     python: "Python",
                     java: "Java",
                     ui: "UI/UX",
                     flutter: "Flutter",
-                    game: "Game"
+                    game: "Game",
+                    other: "Lainnya"
                 },
                 seo_title: "Proyek | Rafie Rojagat",
-                seo_desc: "Pameran proyek rekayasa perangkat lunak saya."
+                seo_desc: "Studi kasus Android, web, dan AI pilihan Rafie Rojagat, termasuk peran, keputusan teknis, dan hasil terukur."
             },
             projectDetail: {
                 category_label: "Proyek",
@@ -428,6 +706,7 @@ const resources = {
                     role: "Peran",
                     team: "Tim",
                     result: "Hasil",
+                    scope: "Cakupan",
                     tech_link: "Tech & Link",
                     team_fallback: "Proyek mandiri atau tim"
                 },
@@ -438,40 +717,119 @@ const resources = {
                 solution: "Solusi",
                 learned: "Pelajaran yang Didapat",
                 gallery: "Galeri Proyek",
+                conceptual_cover: "Ini adalah cover konseptual untuk presentasi portofolio, bukan screenshot final produk.",
                 click_close: "Klik di luar atau tekan Esc untuk menutup"
             },
             workspace: {
-                title_prefix: "Ruang",
-                title_highlight: "Kerja Saya",
-                subtitle: "Perangkat keras, gadget, dan perangkat lunak yang mendukung produktivitas saya.",
-                updated: "Diperbarui",
-                view_product: "Lihat Produk",
-                filter_all: "Semua",
-                open_preview: "Buka pratinjau",
-                activity_title_prefix: "Aktivitas",
-                activity_title_highlight: "Development",
-                activity_desc: "Pantau perjalanan coding saya - kontribusi konsisten, proyek aktif, dan komitmen terhadap pertumbuhan berkelanjutan."
+                seo_title: "Workspace & Tools Pengembangan | Rafie Rojagat",
+                seo_desc: "Perangkat, tools pengembangan, dan workflow praktis yang digunakan Rafie Rojagat untuk merancang, membangun, menguji, dan merilis produk Android serta web.",
+                eyebrow: "Setup Utama",
+                title_prefix: "Tools di balik",
+                title_highlight: "setiap karya.",
+                subtitle: "Gambaran praktis tentang perangkat dan software yang saya gunakan untuk mengubah ide menjadi produk Android atau web yang telah diuji.",
+                updated: "Terakhir diperbarui: Agustus 2026",
+                workflow: {
+                    eyebrow: "Cara Kerja",
+                    title: "Alur sederhana dari ide hingga rilis",
+                    subtitle: "Tools paling berguna ketika mendukung cara kerja yang jelas dan dapat diulang.",
+                    plan: {
+                        title: "Rencana & Prototipe",
+                        desc: "Memperjelas requirement, meriset masalah, dan menyusun alur antarmuka sebelum implementasi."
+                    },
+                    build: {
+                        title: "Bangun & Integrasikan",
+                        desc: "Mengimplementasikan fitur Android atau web, menghubungkan data, dan menjaga arsitektur tetap terawat."
+                    },
+                    validate: {
+                        title: "Uji & Rilis",
+                        desc: "Memvalidasi API dan perilaku perangkat nyata, meninjau perubahan, lalu menyiapkan rilis yang andal."
+                    }
+                },
+                stack: {
+                    eyebrow: "Stack Saat Ini",
+                    title: "Perangkat dan tools",
+                    subtitle: "Setup terfokus untuk pekerjaan produk, bukan daftar lengkap setiap aplikasi yang pernah saya coba.",
+                    count: "{{count}} item",
+                    filter_label: "Filter item workspace berdasarkan kategori"
+                },
+                groups: {
+                    all: "Semua",
+                    hardware: "Perangkat",
+                    development: "Pengembangan",
+                    design_productivity: "Desain & Produktivitas",
+                    testing_delivery: "Pengujian & Delivery"
+                },
+                view_details: "Lihat detail",
+                open_details: "Buka detail {{title}}",
+                close_preview: "Tutup detail workspace",
+                purpose: "Cara saya menggunakannya",
+                official_site: "Situs resmi",
+                product_page: "Halaman produk",
+                github_profile: "Profil GitHub"
             },
             pages: {
                 projects: {
                     title_prefix: "Proyek",
                     title_highlight: "Saya",
-                    subtitle: "Kumpulan aplikasi web dan mobile yang telah saya bangun, menampilkan keahlian saya dalam React, Kotlin, Python, dan banyak lagi."
+                    subtitle: "Karya Android, web, dan AI pilihan yang menjelaskan masalah, keputusan, serta hasil di balik proses pembuatannya."
                 },
                 about: {
                     title_prefix: "Tentang",
-                    title_highlight: "Saya",
-                    subtitle: "Temukan perjalanan saya sebagai developer, keahlian, pengalaman, dan passion yang saya bawa ke setiap proyek."
+                    title_highlight: "Rafie",
+                    subtitle: "Lulusan baru Informatika yang membangun produk Android, front-end, dan terintegrasi AI dengan fokus pada hasil praktis."
                 },
                 blog: {
-                    title_prefix: "Blog",
-                    title_highlight: "Saya",
-                    subtitle: "Berbagi pengalaman dan pembelajaran di dunia IT."
+                    seo_title: "Catatan Engineering & Studi Kasus | Rafie Rojagat",
+                    seo_desc: "Studi kasus Android, web, machine learning, dan pengalaman mengajar oleh Rafie Rojagat Bachri.",
+                    eyebrow: "Tulisan & Studi Kasus",
+                    title_prefix: "Catatan",
+                    title_highlight: "Engineering.",
+                    subtitle: "Catatan praktis tentang membangun produk Android, web, dan terintegrasi AI, beserta pembelajaran saat mengajar topik teknis.",
+                    featured_eyebrow: "Studi Kasus Pilihan",
+                    featured_badge: "Pilihan",
+                    recent_eyebrow: "Jelajahi Arsip",
+                    recent_title: "Tulisan terbaru",
+                    recent_subtitle: "Studi kasus, catatan implementasi, dan sesi belajar CodeVox.",
+                    search_label: "Cari artikel",
+                    search_placeholder: "Cari artikel...",
+                    clear_search: "Hapus pencarian",
+                    filter_label: "Filter artikel berdasarkan topik",
+                    categories: {
+                        all: "Semua",
+                        "case-study": "Studi Kasus",
+                        android: "Android",
+                        web: "Web",
+                        learning: "Pembelajaran"
+                    },
+                    article_count_one: "{{count}} artikel",
+                    article_count_other: "{{count}} artikel",
+                    read_time_one: "{{count}} menit baca",
+                    read_time_other: "{{count}} menit baca",
+                    read_article: "Baca artikel",
+                    empty_title: "Artikel tidak ditemukan",
+                    empty_desc: "Coba kata kunci atau topik lain.",
+                    back: "Kembali ke Blog",
+                    published: "Terbit",
+                    updated: "Diperbarui",
+                    share: "Bagikan artikel",
+                    copied: "Tautan disalin",
+                    impact_eyebrow: "Dampak Pilihan",
+                    role: "Peran",
+                    team: "Tim",
+                    result: "Hasil",
+                    scope: "Cakupan",
+                    video_eyebrow: "Rekaman Sesi",
+                    play_video: "Putar video",
+                    video_note: "Pemutar YouTube baru dimuat setelah Anda memilih untuk memutarnya.",
+                    open_project: "Lihat detail proyek",
+                    related_eyebrow: "Lanjut Membaca",
+                    related_title: "Artikel terkait"
                 },
                 contact: {
-                    title_prefix: "Hubungi",
-                    title_highlight: "Saya",
-                    subtitle: "Punya ide proyek? Mari terhubung dan ciptakan sesuatu yang luar biasa bersama."
+                    eyebrow: "Terbuka untuk Peluang",
+                    title_prefix: "Mari membangun",
+                    title_highlight: "sesuatu yang berguna.",
+                    subtitle: "Saya terbuka untuk peluang Android, front-end, dan software terintegrasi AI. Ceritakan posisi atau produk yang sedang Anda kembangkan."
                 }
             },
             afk: {
@@ -480,11 +838,36 @@ const resources = {
                 intro_line1: "Halaman ini berisi ritme saya di luar coding, dari musik yang sedang diputar sampai game dan film yang lagi saya nikmati.",
                 intro_line2: "Buat saya, momen AFK ini justru sering jadi sumber ide saat balik ngoding.",
                 afk_snapshot: {
-                    title: "Hal kecil di luar coding",
-                    label: "Ringkasan AFK",
+                    title: "Sekilas aktivitas saya",
+                    label: "Saat Ini",
                     musik: { label: "Musik", desc: "Playlist santai / fokus" },
                     game: { label: "Game", desc: "Steam + game kecil" },
                     film: { label: "Film", desc: "Rekomendasi & watchlist" }
+                },
+                music_note: "Playlist yang biasa saya putar untuk beristirahat, fokus, atau mencari ritme sebelum kembali berkarya.",
+                cinema_note: "Catatan ringkas tentang cerita yang membekas bagi saya, bukan seluruh riwayat tontonan.",
+                watchlist_note: "Antrean singkat film yang ingin saya luangkan waktu untuk tonton berikutnya.",
+                playful_break: "Jeda bermain",
+                currently_live: "Live dari Discord",
+                films: "film",
+                no_movies: "Belum ada pilihan film yang dapat ditampilkan saat ini.",
+                no_score: "Belum ada skor",
+                show_archive: "Tampilkan {{count}} tahun lainnya",
+                hide_archive: "Tutup arsip",
+                open_spotify: "Buka di Spotify",
+                close_player: "Tutup pemutar",
+                spotify_ranges: {
+                    four_weeks: "4 minggu",
+                    six_months: "6 bulan",
+                    all_time: "Semua waktu"
+                },
+                play_track: "Putar",
+                spotify_status: {
+                    now_playing: "Sedang diputar",
+                    last_played: "Terakhir diputar",
+                    not_playing: "Tidak ada lagu yang sedang diputar.",
+                    unavailable: "Data Spotify belum dapat dimuat saat ini.",
+                    no_tracks: "Belum ada lagu yang ditemukan."
                 },
                 reaction_game: {
                     title: "Waktu Reaksi",
@@ -542,23 +925,48 @@ const resources = {
             },
             contact: {
                 seo_title: "Kontak | Rafie Rojagat",
-                seo_desc: "Hubungi saya.",
+                seo_desc: "Hubungi Rafie Rojagat untuk peluang software Android, front-end, integrasi AI, magang, dan kolaborasi.",
                 title: "Hubungi Saya",
-                subtitle: "Punya ide proyek? Saya selalu terbuka untuk mendiskusikan proyek baru, ide kreatif, atau peluang untuk menjadi bagian dari visi Anda.",
-                info_title: "Info Kontak",
+                subtitle: "Saya terbuka untuk mendiskusikan posisi software, kolaborasi, dan produk praktis.",
+                availability_label: "Ketersediaan saat ini",
+                availability: "Terbuka untuk posisi entry-level, magang, dan kolaborasi",
+                info_title: "Detail kontak",
                 location: "Lokasi",
-                follow_me: "Ikuti saya di:",
+                response_time_label: "Waktu respons",
+                response_time: "Biasanya dalam 1-2 hari kerja",
+                copy_email: "Salin alamat email",
+                email_copied: "Alamat email tersalin",
+                download_cv: "Unduh CV",
+                profiles: "Profil lainnya",
+                open_profile: "Buka",
                 form: {
+                    eyebrow: "Mulai percakapan",
+                    title: "Ceritakan peluangnya",
+                    subtitle: "Bagikan posisi, proyek, atau masalah yang ingin dibahas. Sedikit konteks akan membantu saya memberi respons yang relevan.",
                     name_label: "Nama",
                     name_placeholder: "Masukkan nama lengkap Anda",
                     email_label: "Email",
                     email_placeholder: "Masukkan alamat email Anda",
+                    topic_label: "Topik",
+                    topic_placeholder: "Pilih alasan menghubungi",
+                    topics: {
+                        hiring: "Rekrutmen / posisi penuh waktu",
+                        internship: "Peluang magang",
+                        collaboration: "Kolaborasi proyek",
+                        freelance: "Proyek freelance",
+                        other: "Lainnya"
+                    },
                     message_label: "Pesan",
-                    message_placeholder: "Tulis pesan atau pertanyaan Anda di sini...",
+                    message_placeholder: "Jelaskan singkat posisi, proyek, linimasa, atau langkah berikutnya...",
+                    message_help: "Gunakan minimal 20 karakter. Hindari membagikan informasi sensitif.",
                     send_btn: "Kirim Pesan",
                     sending: "Mengirim...",
-                    success: "Pesan berhasil dikirim!",
-                    error: "Gagal mengirim. Coba lagi."
+                    success: "Pesan berhasil dikirim. Terima kasih, saya akan segera membalas.",
+                    error: "Pesan belum dapat dikirim. Silakan coba lagi atau gunakan email.",
+                    timeout: "Permintaan terlalu lama. Periksa koneksi Anda lalu coba kembali.",
+                    rate_limit: "Terlalu banyak pesan dikirim. Tunggu sebentar sebelum mencoba kembali.",
+                    validation_error: "Periksa kolom yang ditandai lalu coba kembali.",
+                    privacy_prefix: "Detail Anda hanya digunakan untuk membalas. Pengiriman diproses oleh"
                 }
             }
         }

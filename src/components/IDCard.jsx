@@ -170,20 +170,20 @@ const IDCard = () => {
                         <div className="w-full h-[0.5px] sm:h-[1px] bg-gray-300 my-1.5 sm:my-2"></div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1.5 sm:gap-y-3 gap-x-1">
                             <div className="flex flex-col sm:block">
-                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider">ID Number</span>
-                                <span className="font-mono text-[10px] sm:text-sm font-semibold text-gray-800 leading-tight"> 2210511043</span>
+                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider">Focus</span>
+                                <span className="text-[10px] sm:text-sm font-semibold text-gray-800 leading-tight"> Mobile &amp; Web</span>
                             </div>
                             <div className="flex flex-col sm:block">
                                 <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider">Major</span>
                                 <span className="text-[10px] sm:text-sm font-semibold text-gray-800 leading-tight truncate"> Informatics</span>
                             </div>
                             <div className="flex flex-col sm:block">
-                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider">Class Of</span>
-                                <span className="text-[10px] sm:text-sm font-semibold text-gray-800 leading-tight"> 2022</span>
+                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider">Graduated</span>
+                                <span className="text-[10px] sm:text-sm font-semibold text-gray-800 leading-tight"> 2026</span>
                             </div>
                             <div className="flex flex-col sm:block">
-                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider sm:mb-1">Status</span>
-                                <span className="text-[8px] sm:text-xs font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-sm border border-green-200 inline-block self-start"> ACTIVE</span>
+                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider sm:mb-1">Availability</span>
+                                <span className="text-[7px] sm:text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-sm border border-green-200 inline-block self-start whitespace-nowrap"> OPEN TO WORK</span>
                             </div>
                         </div>
                     </div>

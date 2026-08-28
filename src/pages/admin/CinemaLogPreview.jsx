@@ -45,7 +45,7 @@ const CinemaLogPreview = () => {
         <SEO
           title="Cinema Log Preview | Rafie Rojagat"
           description="Preview of the Cinema Log layout used on the AFK page."
-          url="https://rafie-dev.netlify.app/admin/cinema-log-preview"
+          url="https://rafierb.me/admin/cinema-log-preview"
         />
 
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">

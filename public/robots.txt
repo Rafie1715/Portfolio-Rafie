@@ -13,4 +13,4 @@ User-agent: Bingbot
 Allow: /
 
 # Sitemap location
-Sitemap: https://rafie-dev.netlify.app/sitemap.xml
+Sitemap: https://rafierb.me/sitemap.xml

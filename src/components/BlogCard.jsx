@@ -1,148 +1,93 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Calendar, Clock, Tag, ArrowRight } from 'lucide-react';
+import { ArrowUpRight, CalendarDays, Clock3 } from 'lucide-react';
+import {
+  getBlogLanguage,
+  getBlogReadingMinutes,
+  getLocalizedBlogValue,
+} from '../utils/blog';
 
 const BlogCard = ({ blog }) => {
-  const { i18n } = useTranslation();
-  const currentLang = i18n.language;
+  const { t, i18n } = useTranslation();
+  const shouldReduceMotion = useReducedMotion();
+  const language = getBlogLanguage(i18n);
+  const title = getLocalizedBlogValue(blog.title, language);
+  const excerpt = getLocalizedBlogValue(blog.excerpt, language);
+  const readingMinutes = getBlogReadingMinutes(blog, language);
+  const formattedDate = new Date(blog.publishedAt).toLocaleDateString(
+    language === 'id' ? 'id-ID' : 'en-US',
+    { year: 'numeric', month: 'short', day: 'numeric' },
+  );
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString(currentLang === 'id' ? 'id-ID' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+  const revealProps = shouldReduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 16 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, margin: '-80px' },
+        transition: { duration: 0.4, ease: 'easeOut' },
+      };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.9 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className="group"
-    >
-      <Link to={`/blog/${blog.slug}`}>
-        <motion.div 
-          className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg dark:shadow-gray-900/50 h-full flex flex-col border border-gray-200 dark:border-gray-700"
-          whileHover={{
-            boxShadow: "0 20px 40px rgba(59, 130, 246, 0.3), inset 0 0 1px rgba(59, 130, 246, 0.1)"
-          }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600">
-            {blog.image && (
-              <motion.img
-                src={blog.image}
-                alt={blog.title[currentLang]}
-                className="w-full h-full object-cover"
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.4 }}
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-            )}
-            <motion.div 
-              className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"
-              initial={{ opacity: 0.5 }}
-              whileHover={{ opacity: 0.3 }}
-              transition={{ duration: 0.3 }}
-            />
-            
-            <motion.div 
-              className="absolute top-4 left-4"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <span className="px-3 py-1 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-xs font-semibold rounded-full text-gray-800 dark:text-gray-200">
-                {blog.category[currentLang]}
-              </span>
-            </motion.div>
+    <motion.article {...revealProps} className="h-full">
+      <Link
+        to={`/blog/${blog.slug}`}
+        aria-label={`${t('pages.blog.read_article')}: ${title}`}
+        className="group flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-colors hover:border-primary/40 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary/60"
+      >
+        <div className="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-slate-800">
+          <img
+            src={blog.image}
+            alt={title}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="flex flex-1 flex-col p-5 sm:p-6">
+          <p className="text-xs font-bold uppercase text-primary">
+            {t(`pages.blog.categories.${blog.category}`)}
+          </p>
+
+          <h2 className="mt-2 text-xl font-black leading-snug text-dark transition-colors group-hover:text-primary dark:text-white sm:text-2xl">
+            {title}
+          </h2>
+
+          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300 sm:text-base">
+            {excerpt}
+          </p>
+
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium text-gray-500 dark:text-gray-400 sm:text-sm">
+            <span className="inline-flex items-center gap-1.5">
+              <CalendarDays className="h-4 w-4" aria-hidden="true" />
+              {formattedDate}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Clock3 className="h-4 w-4" aria-hidden="true" />
+              {t('pages.blog.read_time', { count: readingMinutes })}
+            </span>
           </div>
 
-          <div className="p-6 flex-1 flex flex-col">
-            <motion.div 
-              className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-            >
-              <div className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                <span>{formatDate(blog.publishedAt)}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                <span>{blog.readTime}</span>
-              </div>
-            </motion.div>
-
-            <motion.h3 
-              className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              {blog.title[currentLang]}
-            </motion.h3>
-
-            <motion.p 
-              className="text-gray-600 dark:text-gray-300 mb-4 flex-1 line-clamp-3"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.25 }}
-            >
-              {blog.excerpt[currentLang]}
-            </motion.p>
-
-            <motion.div 
-              className="flex flex-wrap gap-2 mb-4"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              {blog.tags.slice(0, 3).map((tag, index) => (
-                <motion.span
-                  key={index}
-                  className="flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs text-gray-700 dark:text-gray-300 rounded"
-                  whileHover={{ scale: 1.05, backgroundColor: "rgb(59, 130, 246)" }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Tag className="w-3 h-3" />
-                  {tag}
-                </motion.span>
-              ))}
-            </motion.div>
-
-            <motion.div 
-              className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.35 }}
-            >
-              <span>{currentLang === 'id' ? 'Baca Selengkapnya' : 'Read More'}</span>
-              <motion.div
-                whileHover={{ x: 8 }}
-                transition={{ duration: 0.2 }}
+          <div className="mt-5 flex flex-wrap gap-2" aria-label="Article tags">
+            {blog.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="rounded border border-gray-200 bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-300"
               >
-                <ArrowRight className="w-5 h-5" />
-              </motion.div>
-            </motion.div>
+                {tag}
+              </span>
+            ))}
           </div>
-        </motion.div>
+
+          <span className="mt-6 inline-flex items-center gap-2 self-start text-sm font-bold text-primary">
+            {t('pages.blog.read_article')}
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+          </span>
+        </div>
       </Link>
-    </motion.div>
+    </motion.article>
   );
 };
 

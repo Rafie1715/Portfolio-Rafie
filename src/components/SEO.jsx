@@ -7,8 +7,8 @@ const SEO = ({
   url, 
   image,
   type = 'website',
-  author = 'Rafie Rojagat',
-  keywords = 'Portfolio, Software Engineer, Mobile Developer, Web Developer, React, Flutter, Rafie Rojagat',
+  author = 'Rafie Rojagat Bachri',
+  keywords = 'Portfolio, Software Engineer, Android Developer, Front-End Developer, React, Kotlin, Rafie Rojagat Bachri',
   published,
   modified,
   noindex = false
@@ -16,7 +16,7 @@ const SEO = ({
   const { i18n } = useTranslation();
   const currentLang = i18n.language || 'en';
   
-  const baseUrl = 'https://rafie-dev.netlify.app';
+  const baseUrl = 'https://rafierb.me';
   
   const safeText = (text) => {
     if (!text) return "";
@@ -50,16 +50,16 @@ const SEO = ({
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
-    "name": "Rafie Rojagat",
+    "name": "Rafie Rojagat Bachri",
     "url": baseUrl,
     "jobTitle": "Software Engineer",
-    "description": "Informatics Student specializing in Mobile & Web Development",
+    "description": "Recent Informatics graduate specializing in Android, Front-End, and AI-integrated development",
     "image": `${baseUrl}/images/profile.webp`,
     "sameAs": [
       "https://github.com/rafierojagat",
       "https://www.linkedin.com/in/rafierojagat"
     ],
-    "knowsAbout": ["React", "Flutter", "Mobile Development", "Web Development", "Python", "JavaScript"],
+    "knowsAbout": ["Kotlin", "Android Development", "React.js", "Front-End Development", "Machine Learning", "Generative AI"],
     "alumniOf": {
       "@type": "EducationalOrganization",
       "name": "UPN Veteran Jakarta"
@@ -72,10 +72,10 @@ const SEO = ({
     "@type": "WebSite",
     "name": "Rafie Rojagat Portfolio",
     "url": baseUrl,
-    "description": "Portfolio of Rafie Rojagat, Software Engineer specializing in Mobile & Web Development",
+    "description": "Portfolio of Rafie Rojagat Bachri, a software engineer focused on Android, front-end, and AI-integrated development",
     "author": {
       "@type": "Person",
-      "name": "Rafie Rojagat"
+      "name": "Rafie Rojagat Bachri"
     },
     "inLanguage": ["en", "id"]
   };

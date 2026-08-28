@@ -1,11 +1,47 @@
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import VisitorCounter from './VisitorCounter';
 import { useTranslation } from 'react-i18next';
+
+const VisitorCounter = lazy(() => import('./VisitorCounter'));
 
 const Footer = () => {
   const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
+  const visitorSlotRef = useRef(null);
+  const [showVisitorCounter, setShowVisitorCounter] = useState(false);
+
+  useEffect(() => {
+    const element = visitorSlotRef.current;
+    if (!element) return undefined;
+
+    let observer;
+
+    const observeCounter = () => {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setShowVisitorCounter(true);
+            observer.disconnect();
+          }
+        },
+        { rootMargin: '160px' },
+      );
+
+      observer.observe(element);
+    };
+
+    if (window.scrollY > 0) {
+      observeCounter();
+    } else {
+      window.addEventListener('scroll', observeCounter, { passive: true, once: true });
+    }
+
+    return () => {
+      window.removeEventListener('scroll', observeCounter);
+      observer?.disconnect();
+    };
+  }, []);
 
   const socialLinks = [
     { icon: "fab fa-github", url: "https://github.com/Rafie1715", color: "hover:text-gray-900 dark:hover:text-white" },
@@ -66,8 +102,12 @@ const Footer = () => {
                 <p className="text-gray-500 dark:text-gray-400 text-sm text-center md:text-left leading-relaxed max-w-xs">
                     {t('footer.description')}
                 </p>
-                <div className="pt-2">
-                    <VisitorCounter />
+                <div ref={visitorSlotRef} className="pt-2 min-h-6">
+                    {showVisitorCounter && (
+                      <Suspense fallback={null}>
+                        <VisitorCounter />
+                      </Suspense>
+                    )}
                 </div>
             </motion.div>
 

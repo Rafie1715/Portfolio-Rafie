@@ -1,236 +1,123 @@
+import { createElement } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import {
+  BriefcaseBusiness,
+  Download,
+  FolderKanban,
+  GraduationCap,
+  MapPin,
+  Send,
+} from 'lucide-react';
 import cvFile from '/assets/CV Rafie Rojagat Bachri.pdf';
-import IDCard from './IDCard';
-import { useTranslation, Trans } from 'react-i18next';
-import { Building2, Box } from 'lucide-react';
-import { Suspense, lazy, useState } from 'react';
-
-const ThreeIDCard = lazy(() => import('./ThreeIDCard'));
 
 const About = () => {
   const { t } = useTranslation();
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 50, damping: 20 }
-    },
-  };
+  const proofPoints = [
+    { value: '2026', label: t('about.snapshot.graduate'), icon: GraduationCap },
+    { value: '3.89', label: t('about.snapshot.gpa'), icon: GraduationCap },
+    { value: '88.71/100', label: t('about.snapshot.mandiri'), icon: BriefcaseBusiness },
+    { value: '92.06%', label: t('about.snapshot.ml_accuracy'), icon: FolderKanban },
+    { value: '900+', label: t('about.snapshot.bangkit_hours'), icon: BriefcaseBusiness },
+  ];
 
   return (
-    <section id="about" className="py-24 bg-white dark:bg-dark overflow-hidden relative">
-      <div className="absolute top-20 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
-      <div className="absolute bottom-20 right-0 w-96 h-96 bg-secondary/5 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
-
-      <div className="container mx-auto px-4">
-
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-dark dark:text-white">
-            {t('about.title')}
-          </h2>
+    <section id="about" className="py-14 md:py-16 bg-white dark:bg-dark relative overflow-hidden">
+      <div className="container mx-auto max-w-6xl px-4">
+        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
           <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: 80 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-1.5 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full mt-3"
-          ></motion.div>
-        </motion.div>
-
-        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-20">
-
-          <motion.div
-            className="lg:w-5/12 w-full flex flex-col items-center order-1 sticky top-24 z-10"
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            className="mx-auto w-full max-w-sm"
           >
-            <div className="mb-4 w-full max-w-[460px]">
-              <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 text-center">
-                {t('about.card_label')}
-              </p>
-              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-3 rounded-xl shadow-lg border border-slate-200 dark:border-slate-600">
-                <p className="text-sm text-center text-slate-600 dark:text-slate-300 mb-2">
-                  {t('about.card_note')}
-                </p>
-              <button
-                onClick={() => setIsPreviewOpen((prev) => !prev)}
-                className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isPreviewOpen
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600'
-                }`}
-              >
-                <Box size={16} />
-                {isPreviewOpen ? t('about.card_hide_3d') : t('about.card_show_3d')}
-              </button>
+            <div className="aspect-[4/5] overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              <img
+                src="/images/profile.webp"
+                alt="Rafie Rojagat Bachri"
+                className="h-full w-full object-cover"
+                decoding="async"
+              />
             </div>
-              {isPreviewOpen && (
-                <p className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
-                  {t('about.card_preview_hint')}
-                </p>
-              )}
-            </div>
-
-            <div className="py-6 w-full flex justify-center">
-              <IDCard />
-            </div>
-
-            {isPreviewOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 12 }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
-                className="w-full"
-              >
-                <Suspense
-                  fallback={
-                    <div className="w-full max-w-[520px] mx-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 text-center text-sm text-slate-500 dark:text-slate-400">
-                      {t('about.card_loading_3d')}
-                    </div>
-                  }
-                >
-                  <ThreeIDCard />
-                </Suspense>
-              </motion.div>
-            )}
           </motion.div>
 
           <motion.div
-            className="lg:w-7/12 order-2"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.08, ease: 'easeOut' }}
           >
-            <div className="mb-12">
-              <motion.h3 variants={itemVariants} className="text-2xl font-bold text-dark dark:text-white mb-4">
-                {t('about.hello')} <span className="text-primary inline-block">Rafie! 👋</span>
-              </motion.h3>
+            <p className="text-xs font-bold uppercase text-primary mb-3">
+              {t('about.eyebrow')}
+            </p>
+            <h2 className="text-3xl md:text-4xl font-black text-dark dark:text-white max-w-3xl leading-tight">
+              {t('about.headline')}
+            </h2>
+            <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-300 max-w-3xl">
+              {t('about.summary')}
+            </p>
+            <p className="mt-3 text-sm md:text-base leading-relaxed text-gray-500 dark:text-gray-400 max-w-3xl">
+              {t('about.summary_secondary')}
+            </p>
 
-              <motion.p variants={itemVariants} className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                <Trans i18nKey="about.desc1">
-                  I'm a final-year <span className="font-semibold text-primary">Informatics student</span> at UPN “Veteran” Jakarta with a strong interest in <span className="font-semibold text-dark dark:text-white">Front-End and Mobile Development</span>.
-                </Trans>
-                <br /><br />
-                <Trans i18nKey="about.desc2">
-                  Skilled in building responsive apps using <span className="text-yellow-600 dark:text-yellow-400 font-medium">JavaScript</span>, <span className="text-blue-500 font-medium">React</span>, and <span className="text-blue-600 font-medium">Kotlin</span>. Highly motivated to enhance technical skills through internship opportunities to create impactful digital solutions.
-                </Trans>
-              </motion.p>
-
-              <motion.div variants={itemVariants}>
-                <a
-                  href={cvFile}
-                  download="CV_Rafie_Rojagat_Bachri.pdf"
-                  className="inline-flex items-center px-8 py-3 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all transform hover:-translate-y-1 group"
-                >
-                  <i className="fas fa-download mr-2 group-hover:animate-bounce"></i> {t('about.download_cv')}
-                </a>
-              </motion.div>
+            <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-gray-600 dark:text-gray-300">
+              <span className="inline-flex items-center gap-2">
+                <MapPin size={17} className="text-primary" aria-hidden="true" />
+                {t('about.location')}
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <BriefcaseBusiness size={17} className="text-primary" aria-hidden="true" />
+                {t('about.availability')}
+              </span>
             </div>
 
-            <div className="relative pl-4 md:pl-0">
-              <motion.div variants={itemVariants} className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                  <i className="fas fa-graduation-cap text-xl"></i>
-                </div>
-                <h3 className="text-2xl font-bold text-dark dark:text-white">{t('about.edu_title')}</h3>
-              </motion.div>
-
-              <div className="absolute left-8 md:left-9 top-16 bottom-10 w-[2px] bg-gray-200 dark:bg-slate-700"></div>
-
-              <div className="space-y-8 relative">
-
-                <motion.div
-                  variants={itemVariants}
-                  className="relative pl-12 md:pl-16"
-                >
-                  <div className="absolute left-[13px] md:left-[33px] top-6 w-4 h-4 rounded-full bg-primary border-4 border-white dark:border-dark z-10 shadow-sm"></div>
-
-                  <div className="bg-white/80 dark:bg-darkLight/50 backdrop-blur-sm p-5 rounded-2xl border border-primary/20 dark:border-primary/20 shadow-lg hover:shadow-primary/10 transition-all duration-300 group hover:-translate-y-1">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-white p-2 rounded-xl shadow-sm w-14 h-14 flex items-center justify-center flex-shrink-0 border border-gray-100">
-                        <img 
-                          src="/images/upnvj_logo.webp" 
-                          alt="UPN Logo" 
-                          className="w-full h-full object-contain"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            const fallback = e.target.parentElement?.querySelector('[data-upn-icon]');
-                            if (fallback) fallback.style.display = 'flex';
-                          }}
-                        />
-                        <Building2 data-upn-icon className="w-7 h-7 text-blue-600 hidden" strokeWidth={1.5} />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-bold text-dark dark:text-white group-hover:text-primary transition-colors">
-                          {t('about.uni_name')}
-                        </h4>
-                        <p className="text-primary font-medium text-sm mt-1">{t('about.uni_major')}</p>
-                        <div className="mt-3 flex items-center gap-2">
-                          <span className="text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-700/50 px-3 py-1 rounded-full border border-gray-200 dark:border-slate-600">
-                            GPA: 3.89 / 4.00 ⭐
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  variants={itemVariants}
-                  className="relative pl-12 md:pl-16"
-                >
-                  <div className="absolute left-[13px] md:left-[33px] top-6 w-4 h-4 rounded-full bg-gray-300 dark:bg-slate-600 border-4 border-white dark:border-dark z-10"></div>
-
-                  <div className="bg-white/60 dark:bg-darkLight/30 backdrop-blur-sm p-5 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-white p-2 rounded-xl shadow-sm w-12 h-12 flex items-center justify-center flex-shrink-0 border border-gray-100 grayscale group-hover:grayscale-0 transition-all duration-300">
-                        <img 
-                          src="/images/sman13-logo.webp" 
-                          alt="SMA Logo" 
-                          className="w-full h-full object-contain"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            const fallback = e.target.parentElement?.querySelector('[data-sma-icon]');
-                            if (fallback) fallback.style.display = 'flex';
-                          }}
-                        />
-                        <Building2 data-sma-icon className="w-6 h-6 text-gray-500 hidden" strokeWidth={1.5} />
-                      </div>
-                      <div>
-                        <h4 className="text-base font-bold text-dark dark:text-white group-hover:text-primary transition-colors">
-                          {t('about.hs_name')}
-                        </h4>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">{t('about.hs_major')}</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                to="/projects"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-bold text-white hover:bg-blue-700 transition-colors"
+              >
+                <FolderKanban size={17} aria-hidden="true" />
+                {t('about.view_projects')}
+              </Link>
+              <a
+                href={cvFile}
+                download="CV_Rafie_Rojagat_Bachri.pdf"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary/40 px-5 py-3 text-sm font-bold text-primary hover:bg-primary/5 transition-colors"
+              >
+                <Download size={17} aria-hidden="true" />
+                {t('about.download_cv')}
+              </a>
+              <Link
+                to="/contact"
+                className="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-bold text-dark dark:text-white hover:text-primary transition-colors"
+              >
+                <Send size={17} aria-hidden="true" />
+                {t('about.contact')}
+              </Link>
             </div>
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.4 }}
+          className="mt-12 border-y border-slate-200 dark:border-slate-700 py-5"
+        >
+          <div className="grid grid-cols-2 gap-y-5 sm:grid-cols-3 lg:grid-cols-5 lg:divide-x divide-slate-200 dark:divide-slate-700">
+            {proofPoints.map((proofPoint) => (
+              <div key={proofPoint.label} className="px-3 lg:px-5 first:lg:pl-0 last:lg:pr-0">
+                <div className="flex items-center gap-2 text-primary mb-1">
+                  {createElement(proofPoint.icon, { size: 15, 'aria-hidden': true })}
+                  <span className="text-xl font-black text-dark dark:text-white">{proofPoint.value}</span>
+                </div>
+                <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">{proofPoint.label}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

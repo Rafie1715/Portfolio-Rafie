@@ -11,6 +11,39 @@ import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import Loading from '../components/Loading';
 
+const enrichCmsProject = (project) => {
+  const title = typeof project?.title === 'object'
+    ? project.title.en || project.title.id || ''
+    : project?.title || '';
+  const normalizedTitle = String(title).toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const isRestUp = normalizedTitle.includes('restup') || normalizedTitle.includes('sleepqualitymonitoring');
+
+  if (!isRestUp || project.impactDetails) return project;
+
+  return {
+    ...project,
+    year: project.year || '2026',
+    impactDetails: {
+      role: {
+        en: 'Thesis Researcher and ML Developer',
+        id: 'Peneliti Skripsi dan ML Developer',
+      },
+      team: {
+        en: 'Independent thesis project',
+        id: 'Proyek skripsi mandiri',
+      },
+      result: {
+        en: '92.06% Random Forest accuracy',
+        id: 'Akurasi Random Forest 92,06%',
+      },
+      scope: {
+        en: 'Sleep quality monitoring and prediction',
+        id: 'Pemantauan dan prediksi kualitas tidur',
+      },
+    },
+  };
+};
+
 const ProjectDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -31,7 +64,7 @@ const ProjectDetail = () => {
       const foundLocal = localProjects.find((p) => p.id === id);
       
       if (foundLocal) {
-        setProject(foundLocal);
+        setProject(enrichCmsProject(foundLocal));
         setLoading(false);
         return;
       }
@@ -49,7 +82,7 @@ const ProjectDetail = () => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setProject({ id: docSnap.id, ...docSnap.data() });
+          setProject(enrichCmsProject({ id: docSnap.id, ...docSnap.data() }));
         } else {
           navigate('/not-found');
         }
@@ -115,6 +148,11 @@ const ProjectDetail = () => {
   const techStack = Array.isArray(project.techStack) ? project.techStack : [];
   const techNames = techStack.map((tech) => tech?.name).filter(Boolean);
   const techKeywords = techNames.join(', ');
+  const impactDetails = project.impactDetails || {};
+  const structuredRole = getData(impactDetails.role);
+  const structuredTeam = getData(impactDetails.team);
+  const structuredResult = getData(impactDetails.result);
+  const structuredScope = getData(impactDetails.scope);
   const impactSummary = getData(project.impact);
   const impactParts = typeof impactSummary === 'string'
     ? impactSummary.split(/[•|]/).map((part) => part.trim()).filter(Boolean)
@@ -136,22 +174,22 @@ const ProjectDetail = () => {
   const selectedImpactCards = [
     {
       label: t('projectDetail.impact.role'),
-      value: impactParts[0] || `${project.category || 'Software'} Project`,
+      value: structuredRole || impactParts[0] || `${project.category || 'Software'} Project`,
       icon: 'fas fa-user-tie',
     },
     {
       label: t('projectDetail.impact.team'),
-      value: teamText || (/solo/i.test(impactParts[0] || '') ? 'Solo project' : t('projectDetail.impact.team_fallback')),
+      value: structuredTeam || teamText || (/solo/i.test(impactParts[0] || '') ? 'Solo project' : t('projectDetail.impact.team_fallback')),
       icon: 'fas fa-users',
     },
     {
       label: t('projectDetail.impact.result'),
-      value: resultText || firstFeature,
+      value: structuredResult || resultText || firstFeature,
       icon: 'fas fa-chart-line',
     },
     {
       label: t('projectDetail.impact.tech_link'),
-      value: [techNames.slice(0, 3).join(', '), availableLinks.join(' + ')].filter(Boolean).join(' / '),
+      value: [structuredScope, techNames.slice(0, 3).join(', '), availableLinks.join(' + ')].filter(Boolean).join(' / '),
       icon: 'fas fa-link',
     },
   ].filter((item) => item.value);
@@ -180,13 +218,13 @@ const ProjectDetail = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="bg-white dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300"
+        className="bg-white dark:bg-dark min-h-screen overflow-x-hidden pt-24 pb-20 transition-colors duration-300"
       >
 
         <SEO
           title={`${title} | Rafie Rojagat Portfolio`}
           description={shortDesc}
-          url={`https://rafie-dev.netlify.app/project/${project.id}`}
+          url={`https://rafierb.me/project/${project.id}`}
           image={project.image}
           type="article"
           keywords={`${title}, ${project.category}, Software Project, ${techKeywords}, Portfolio Project`}
@@ -275,28 +313,13 @@ const ProjectDetail = () => {
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            className="rounded-2xl overflow-hidden shadow-2xl mb-12 border border-gray-100 dark:border-slate-800 bg-gray-100 dark:bg-slate-900"
-          >
-            <img
-              src={project.image}
-              alt={title}
-              className="w-full h-auto object-cover"
-              sizes="100vw"
-              wrapperClassName="w-full"
-            />
-          </motion.div>
-
           {selectedImpactCards.length > 0 && (
             <motion.section
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               variants={fadeInBottom}
-              className="mb-12 rounded-2xl border border-blue-100 dark:border-blue-900/40 bg-blue-50/70 dark:bg-blue-950/20 p-5 md:p-6"
+              className="mb-8 border-y border-blue-100 dark:border-blue-900/40 py-5 md:py-6"
             >
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5">
                 <div>
@@ -314,11 +337,8 @@ const ProjectDetail = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {selectedImpactCards.map((item) => (
-                  <div
-                    key={item.label}
-                    className="rounded-xl border border-white/80 dark:border-slate-700 bg-white/85 dark:bg-slate-900/70 p-4 shadow-sm"
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 flex items-center justify-center mb-3">
+                  <div key={item.label} className="border-l-2 border-blue-200 dark:border-blue-800 pl-4 py-1">
+                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 flex items-center justify-center mb-3">
                       <i className={item.icon}></i>
                     </div>
                     <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
@@ -332,6 +352,27 @@ const ProjectDetail = () => {
               </div>
             </motion.section>
           )}
+
+          <motion.figure
+            initial={{ opacity: 0, scale: 0.98, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: "easeOut", delay: 0.15 }}
+            className="rounded-lg overflow-hidden shadow-xl mb-12 border border-gray-100 dark:border-slate-800 bg-gray-100 dark:bg-slate-900"
+          >
+            <img
+              src={project.image}
+              alt={title}
+              decoding="async"
+              fetchPriority="high"
+              className="w-full h-auto object-cover"
+              sizes="(min-width: 1024px) 896px, 100vw"
+            />
+            {project.conceptualCover && (
+              <figcaption className="border-t border-gray-200 bg-white px-4 py-3 text-sm text-gray-500 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-400">
+                {t('projectDetail.conceptual_cover')}
+              </figcaption>
+            )}
+          </motion.figure>
 
           <motion.div
             initial="hidden"
