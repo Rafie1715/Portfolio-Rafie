@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import { projects } from '../data/projects';
@@ -8,6 +9,8 @@ import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { motion, useReducedMotion } from 'framer-motion';
+
+const HomePersonalPanel = lazy(() => import('../components/HomePersonalPanel'));
 
 const HomePage = () => {
   const { t, i18n } = useTranslation();
@@ -148,24 +151,9 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="px-4 container mx-auto mb-12">
-          <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-slate-800 dark:to-slate-800/80 p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-5" data-aos="fade-up">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-2">{t('home.afk_teaser.eyebrow')}</p>
-              <h3 className="text-xl md:text-2xl font-bold text-dark dark:text-white mb-2">{t('home.afk_teaser.title')}</h3>
-              <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
-                {t('home.afk_teaser.desc')}
-              </p>
-            </div>
-
-            <Link
-              to="/afk"
-              className="inline-flex items-center justify-center whitespace-nowrap px-6 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
-            >
-              {t('home.afk_teaser.cta')}
-            </Link>
-          </div>
-        </section>
+        <Suspense fallback={<div className="container mx-auto min-h-[520px] px-4 py-14 md:py-20" aria-hidden="true" />}>
+          <HomePersonalPanel />
+        </Suspense>
       </div>
     </PageTransition>
   );

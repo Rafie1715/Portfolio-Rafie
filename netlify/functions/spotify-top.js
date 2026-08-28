@@ -1,3 +1,5 @@
+/* global process */
+
 export const handler = async (event) => {
   const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
   const timeRange = event.queryStringParameters?.time_range || 'short_term';
@@ -75,6 +77,7 @@ export const handler = async (event) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'public, max-age=300, s-maxage=900, stale-while-revalidate=86400',
       },
       body: JSON.stringify(data),
     };

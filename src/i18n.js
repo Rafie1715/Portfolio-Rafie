@@ -28,6 +28,22 @@ const resources = {
                     title: "A glimpse beyond the code",
                     desc: "See what I listen to, play, and watch. It is where I recharge and often find new ideas.",
                     cta: "Open /afk"
+                },
+                beyond: {
+                    eyebrow: "Beyond the Code",
+                    title: "A little life beyond the commit history",
+                    subtitle: "A quick look at what is in rotation and where I am building from.",
+                    view_afk: "Explore my /afk side",
+                    music_label: "Current Rotation",
+                    music_period: "Favorites from the last six months",
+                    refresh: "Refresh Spotify tracks",
+                    refreshing: "Refreshing Spotify tracks",
+                    loaded: "Spotify tracks are ready",
+                    open_spotify: "Open on Spotify",
+                    location_label: "Based in",
+                    location: "Jakarta, Indonesia",
+                    availability: "Open to remote and Jakarta-based opportunities",
+                    contact: "Start a conversation"
                 }
             },
             about: {
@@ -512,6 +528,22 @@ const resources = {
                     title: "Sekilas tentang sisi saya di luar coding",
                     desc: "Lihat apa yang saya dengar, mainkan, dan tonton. Di sana saya mengisi ulang energi dan sering menemukan ide baru.",
                     cta: "Buka /afk"
+                },
+                beyond: {
+                    eyebrow: "Di Luar Coding",
+                    title: "Sedikit cerita di luar riwayat commit",
+                    subtitle: "Sekilas tentang musik yang sedang sering diputar dan tempat saya berkarya.",
+                    view_afk: "Jelajahi sisi /afk saya",
+                    music_label: "Sedang Sering Diputar",
+                    music_period: "Favorit dalam enam bulan terakhir",
+                    refresh: "Perbarui lagu dari Spotify",
+                    refreshing: "Memperbarui lagu dari Spotify",
+                    loaded: "Lagu Spotify sudah siap",
+                    open_spotify: "Buka di Spotify",
+                    location_label: "Berdomisili di",
+                    location: "Jakarta, Indonesia",
+                    availability: "Terbuka untuk peluang remote dan berbasis di Jakarta",
+                    contact: "Mulai percakapan"
                 }
             },
             about: {
