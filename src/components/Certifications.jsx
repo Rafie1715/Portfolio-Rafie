@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Award, ExternalLink, Grid2X2, Image as ImageIcon, ListFilter, X } from "lucide-react";
+import { Award, ExternalLink, Grid2X2, ListFilter, X } from "lucide-react";
 import { collection, getDocs } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
 import { certifications } from "../data/certifications";
@@ -145,13 +145,13 @@ const Certifications = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.3, delay: Math.min(index * 0.03, 0.18) }}
-                className="flex flex-row overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900 sm:min-h-[260px] sm:flex-col"
+                className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900 sm:min-h-[260px]"
               >
                 {certification.img ? (
                   <button
                     type="button"
                     onClick={() => setSelectedImage({ src: certification.img, alt: getText(certification.alt) || title })}
-                    className="group relative block w-24 flex-none overflow-hidden bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary dark:bg-slate-800 sm:w-full"
+                    className="group relative block aspect-[4/3] w-full flex-none cursor-zoom-in overflow-hidden bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary dark:bg-slate-800 sm:aspect-[16/8]"
                     aria-label={t("certifications.preview", { title })}
                   >
                     <img
@@ -159,14 +159,11 @@ const Certifications = () => {
                       alt=""
                       loading="lazy"
                       decoding="async"
-                      className="h-full min-h-40 w-full object-cover transition duration-300 group-hover:scale-[1.02] sm:aspect-[16/8] sm:min-h-0"
+                      className="h-full w-full object-contain p-3 transition duration-300 group-hover:scale-[1.015] sm:p-4"
                     />
-                    <span className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-md bg-black/70 text-white opacity-90 transition group-hover:bg-black">
-                      <ImageIcon className="h-4 w-4" aria-hidden="true" />
-                    </span>
                   </button>
                 ) : (
-                  <div className="flex w-24 flex-none items-center justify-center bg-gray-100 dark:bg-slate-800 sm:aspect-[16/8] sm:w-full">
+                  <div className="flex aspect-[4/3] w-full flex-none items-center justify-center bg-gray-100 dark:bg-slate-800 sm:aspect-[16/8]">
                     <Award className="h-9 w-9 text-primary sm:h-12 sm:w-12" aria-hidden="true" />
                   </div>
                 )}

@@ -56,13 +56,13 @@ const groupVisualClasses = {
 const ItemVisual = ({ item, modal = false }) => {
   if (item.image) {
     return (
-      <div className={`relative overflow-hidden bg-gray-100 dark:bg-slate-800 ${modal ? 'aspect-[16/10] rounded-lg' : 'h-full min-h-44 sm:aspect-[16/10] sm:min-h-0'}`}>
+      <div className={`relative w-full overflow-hidden bg-gray-100 dark:bg-slate-800 ${modal ? 'aspect-[16/10] rounded-lg' : 'aspect-[4/3] sm:aspect-[16/10]'}`}>
         <img
           src={item.image}
           alt={item.title}
           loading={modal ? 'eager' : 'lazy'}
           decoding="async"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain p-3 sm:p-4"
         />
       </div>
     );
@@ -71,7 +71,7 @@ const ItemVisual = ({ item, modal = false }) => {
   const renderIcon = itemIconRenderers[item.icon] || itemIconRenderers.fallback;
 
   return (
-    <div className={`relative flex h-full min-h-44 items-center justify-center overflow-hidden sm:aspect-[16/10] sm:min-h-0 ${groupVisualClasses[item.group]}`}>
+    <div className={`relative flex w-full items-center justify-center overflow-hidden ${modal ? 'aspect-[16/10] rounded-lg' : 'aspect-[4/3] sm:aspect-[16/10]'} ${groupVisualClasses[item.group]}`}>
       <div className="absolute inset-0 bg-[linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] bg-[size:28px_28px] opacity-[0.05]" />
       <span className={`relative flex items-center justify-center rounded-lg border border-current/15 bg-white/70 shadow-sm dark:bg-slate-900/50 ${modal ? 'h-24 w-24' : 'h-16 w-16 sm:h-20 sm:w-20'}`}>
         {renderIcon({ className: modal ? 'h-12 w-12' : 'h-8 w-8 sm:h-10 sm:w-10', 'aria-hidden': true })}
@@ -314,7 +314,7 @@ const WorkspacePage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={shouldReduceMotion ? undefined : { opacity: 0, y: -8 }}
                   transition={{ duration: 0.24 }}
-                  className="grid min-h-60 grid-cols-[7.5rem_minmax(0,1fr)] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900 sm:flex sm:h-full sm:flex-col"
+                  className="flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900"
                 >
                   <ItemVisual item={item} />
 
