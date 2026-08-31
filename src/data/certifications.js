@@ -285,11 +285,12 @@ export const certifications = [
   },
   {
     id: 23,
+    img: "/images/cert-coursera-AI-Professional.webp",
     alt: "Google AI Professional Certificate",
     title: "Google AI Professional Certificate",
     issuer: "Google",
     date: "August 2026",
-    link: "",
+    link: "https://www.coursera.org/account/accomplishments/professional-cert/DRSPVKPPYRW7",
     category: "Artificial Intelligence",
     featured: true,
     summary: {
