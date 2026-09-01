@@ -8,7 +8,7 @@ import {
   getLocalizedBlogValue,
 } from '../utils/blog';
 
-const BlogCard = ({ blog }) => {
+const BlogCard = ({ blog, animateLayout = false }) => {
   const { t, i18n } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
   const language = getBlogLanguage(i18n);
@@ -22,6 +22,18 @@ const BlogCard = ({ blog }) => {
 
   const revealProps = shouldReduceMotion
     ? {}
+    : animateLayout
+      ? {
+          layout: true,
+          initial: { opacity: 0, y: 12 },
+          animate: { opacity: 1, y: 0 },
+          exit: { opacity: 0, y: -8 },
+          transition: {
+            duration: 0.24,
+            ease: 'easeOut',
+            layout: { duration: 0.28, ease: 'easeOut' },
+          },
+        }
     : {
         initial: { opacity: 0, y: 16 },
         whileInView: { opacity: 1, y: 0 },
@@ -42,7 +54,7 @@ const BlogCard = ({ blog }) => {
             alt={title}
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.025]"
           />
         </div>
 

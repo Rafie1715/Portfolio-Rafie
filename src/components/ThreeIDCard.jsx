@@ -1,594 +1,424 @@
 import * as THREE from 'three';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
-import { Environment, Lightformer, useGLTF } from '@react-three/drei';
-import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
-import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 
-extend({ MeshLineGeometry, MeshLineMaterial });
+const FRAME_INTERVAL = 1000 / 30;
+const TEXTURE_WIDTH = 900;
+const TEXTURE_HEIGHT = 1320;
 
-const TAG_MODEL_URL =
-  'https://assets.vercel.com/image/upload/contentful/image/e5382hct74si/5huRVDzcoDwnbgrKUo1Lzs/53b6dd7d6b4ffcdbd338fa60265949e1/tag.glb';
+const drawRoundedRect = (context, x, y, width, height, radius) => {
+  context.beginPath();
+  context.moveTo(x + radius, y);
+  context.lineTo(x + width - radius, y);
+  context.quadraticCurveTo(x + width, y, x + width, y + radius);
+  context.lineTo(x + width, y + height - radius);
+  context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  context.lineTo(x + radius, y + height);
+  context.quadraticCurveTo(x, y + height, x, y + height - radius);
+  context.lineTo(x, y + radius);
+  context.quadraticCurveTo(x, y, x + radius, y);
+  context.closePath();
+};
 
-useGLTF.preload(TAG_MODEL_URL);
+const drawImageCover = (context, image, x, y, width, height) => {
+  const scale = Math.max(width / image.width, height / image.height);
+  const sourceWidth = width / scale;
+  const sourceHeight = height / scale;
+  const sourceX = (image.width - sourceWidth) / 2;
+  const sourceY = Math.max(0, (image.height - sourceHeight) * 0.28);
 
-function Band({ maxSpeed = 50, minSpeed = 10 }) {
-  const band = useRef(null);
-  const fixed = useRef(null);
-  const j1 = useRef(null);
-  const j2 = useRef(null);
-  const j3 = useRef(null);
-  const card = useRef(null);
-
-  const vec = new THREE.Vector3();
-  const ang = new THREE.Vector3();
-  const rot = new THREE.Vector3();
-  const dir = new THREE.Vector3();
-
-  const segmentProps = {
-    type: 'dynamic',
-    canSleep: true,
-    colliders: false,
-    angularDamping: 2,
-    linearDamping: 2
-  };
-  const CARD_BASE_SIZE = 1024;
-  const CARD_SUPERSAMPLE = 4;
-  const CARD_TEXTURE_SIZE = CARD_BASE_SIZE * CARD_SUPERSAMPLE;
-
-  const { nodes, materials } = useGLTF(TAG_MODEL_URL);
-  
-  const [profileImage, setProfileImage] = useState(null);
-
-  useEffect(() => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => setProfileImage(img);
-    img.src = '/images/profile.webp';
-  }, []);
-  
-  const idCardTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = CARD_TEXTURE_SIZE;
-    canvas.height = CARD_TEXTURE_SIZE;
-    const context = canvas.getContext('2d');
-
-    if (!context) {
-      return null;
-    }
-
-    context.imageSmoothingEnabled = true;
-    context.imageSmoothingQuality = 'high';
-
-    // Keep 1024-based drawing coordinates while rendering at 4x resolution.
-    context.setTransform(CARD_SUPERSAMPLE, 0, 0, -CARD_SUPERSAMPLE, 0, canvas.height);
-
-    // White background
-    context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, CARD_BASE_SIZE, CARD_BASE_SIZE);
-
-    // Header with gradient
-    const headerGradient = context.createLinearGradient(0, 0, CARD_BASE_SIZE, 0);
-    headerGradient.addColorStop(0, '#004d40');
-    headerGradient.addColorStop(1, '#00695c');
-    context.fillStyle = headerGradient;
-    context.fillRect(0, 0, CARD_BASE_SIZE, 100);
-
-    // Heritage circle logo
-    context.fillStyle = '#ffffff';
-    context.beginPath();
-    context.arc(60, 50, 28, 0, Math.PI * 2);
-    context.fill();
-    context.fillStyle = '#facc15';
-    context.beginPath();
-    context.arc(60, 50, 16, 0, Math.PI * 2);
-    context.fill();
-
-    // Header text - smaller
-    context.fillStyle = '#ffffff';
-    context.font = 'bold 24px Arial';
-    context.fillText('UPN VETERAN JAKARTA', 110, 45);
-    context.font = '600 11px Arial';
-    context.fillText('Fac. Computer Science', 110, 60);
-    context.font = 'bold 13px Arial';
-    context.fillText('STUDENT', 880, 52);
-
-    // Photo frame with actual photo
-    if (profileImage) {
-      // Save current context
-      context.save();
-      
-      // Create clipping path for rounded rect
-      const photoX = 50;
-      const photoY = 140;
-      const photoW = 220;
-      const photoH = 280;
-      const radius = 8;
-      
-      context.beginPath();
-      context.moveTo(photoX + radius, photoY);
-      context.lineTo(photoX + photoW - radius, photoY);
-      context.quadraticCurveTo(photoX + photoW, photoY, photoX + photoW, photoY + radius);
-      context.lineTo(photoX + photoW, photoY + photoH - radius);
-      context.quadraticCurveTo(photoX + photoW, photoY + photoH, photoX + photoW - radius, photoY + photoH);
-      context.lineTo(photoX + radius, photoY + photoH);
-      context.quadraticCurveTo(photoX, photoY + photoH, photoX, photoY + photoH - radius);
-      context.lineTo(photoX, photoY + radius);
-      context.quadraticCurveTo(photoX, photoY, photoX + radius, photoY);
-      context.closePath();
-      context.clip();
-      
-      // Draw image to cover the photo area
-      context.drawImage(profileImage, photoX, photoY, photoW, photoH);
-      
-      // Restore context
-      context.restore();
-      
-      // Draw border
-      context.strokeStyle = '#bdbdbd';
-      context.lineWidth = 3;
-      context.strokeRect(photoX, photoY, photoW, photoH);
-    } else {
-      // Fallback: just border if image not loaded yet
-      context.strokeStyle = '#bdbdbd';
-      context.lineWidth = 3;
-      context.strokeRect(50, 140, 220, 280);
-      context.fillStyle = '#f0f0f0';
-      context.fillRect(53, 143, 214, 274);
-    }
-
-    // DATA section - RIGHT side, more compact
-    const dataX = 300;
-    let dataY = 150;
-
-    // NAME - smaller font
-    context.fillStyle = '#6b7280';
-    context.font = 'bold 14px Arial';
-    context.fillText('NAME', dataX, dataY);
-    context.fillStyle = '#111827';
-    context.font = 'bold 20px Arial';
-    dataY += 28;
-    context.fillText('RAFIE ROJAGAT', dataX, dataY);
-    dataY += 24;
-    context.fillText('BACHRI', dataX, dataY);
-
-    // FOCUS
-    dataY += 45;
-    context.fillStyle = '#6b7280';
-    context.font = 'bold 14px Arial';
-    context.fillText('FOCUS', dataX, dataY);
-    context.fillStyle = '#111827';
-    context.font = 'bold 19px Arial';
-    dataY += 28;
-    context.fillText('Mobile & Web', dataX, dataY);
-
-    // MAJOR
-    dataY += 45;
-    context.fillStyle = '#6b7280';
-    context.font = 'bold 14px Arial';
-    context.fillText('MAJOR', dataX, dataY);
-    context.fillStyle = '#111827';
-    context.font = 'bold 19px Arial';
-    dataY += 28;
-    context.fillText('Informatics', dataX, dataY);
-
-    // GRADUATED
-    dataY += 45;
-    context.fillStyle = '#6b7280';
-    context.font = 'bold 14px Arial';
-    context.fillText('GRADUATED', dataX, dataY);
-    context.fillStyle = '#111827';
-    context.font = 'bold 19px Arial';
-    dataY += 28;
-    context.fillText('2026', dataX, dataY);
-
-    // AVAILABILITY
-    dataY += 45;
-    context.fillStyle = '#6b7280';
-    context.font = 'bold 14px Arial';
-    context.fillText('AVAILABILITY', dataX, dataY);
-    dataY += 8;
-    context.fillStyle = '#dcfce7';
-    context.fillRect(dataX, dataY, 170, 32);
-    context.fillStyle = '#166534';
-    context.font = 'bold 16px Arial';
-    dataY += 23;
-    context.fillText('OPEN TO WORK', dataX + 12, dataY);
-
-    // Chip gold at bottom
-    const chipGradient = context.createLinearGradient(0, 0, 90, 0);
-    chipGradient.addColorStop(0, '#fde68a');
-    chipGradient.addColorStop(1, '#f59e0b');
-    context.fillStyle = chipGradient;
-    context.fillRect(70, 460, 85, 60);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.generateMipmaps = false;
-    texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-    texture.anisotropy = 32;
-    texture.needsUpdate = true;
-    texture.colorSpace = THREE.SRGBColorSpace;
-    return texture;
-  }, [CARD_BASE_SIZE, CARD_SUPERSAMPLE, CARD_TEXTURE_SIZE, profileImage]);
-
-  const lanyardTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 128;
-
-    const context = canvas.getContext('2d');
-    if (!context) {
-      return null;
-    }
-
-    context.imageSmoothingEnabled = true;
-    context.imageSmoothingQuality = 'high';
-
-    context.fillStyle = '#0f766e';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    context.fillStyle = 'rgba(255,255,255,0.08)';
-    for (let i = 0; i < canvas.width; i += 24) {
-      context.fillRect(i, 0, 8, canvas.height);
-    }
-
-    for (let x = 20; x < canvas.width; x += 220) {
-      context.beginPath();
-      context.fillStyle = '#facc15';
-      context.arc(x + 20, 64, 16, 0, Math.PI * 2);
-      context.fill();
-
-      context.beginPath();
-      context.fillStyle = '#166534';
-      context.arc(x + 20, 64, 9, 0, Math.PI * 2);
-      context.fill();
-
-      context.fillStyle = '#ffffff';
-      context.font = 'bold 36px Arial';
-      context.textBaseline = 'middle';
-      context.fillText('UPNVJ', x + 48, 64);
-    }
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(-5.5, 1);
-    texture.needsUpdate = true;
-    return texture;
-  }, []);
-
-  const backCardTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = CARD_TEXTURE_SIZE;
-    canvas.height = CARD_TEXTURE_SIZE;
-    const context = canvas.getContext('2d');
-
-    if (!context) {
-      return null;
-    }
-
-    context.imageSmoothingEnabled = true;
-    context.imageSmoothingQuality = 'high';
-
-    // Keep 1024-based drawing coordinates while rendering at 4x resolution.
-    context.setTransform(CARD_SUPERSAMPLE, 0, 0, -CARD_SUPERSAMPLE, 0, canvas.height);
-
-    // White background
-    context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, CARD_BASE_SIZE, CARD_BASE_SIZE);
-
-    // Header with gradient (matching front)
-    const headerGradient = context.createLinearGradient(0, 0, CARD_BASE_SIZE, 0);
-    headerGradient.addColorStop(0, '#004d40');
-    headerGradient.addColorStop(1, '#00695c');
-    context.fillStyle = headerGradient;
-    context.fillRect(0, 0, CARD_BASE_SIZE, 100);
-
-    // Main content area
-    let yPos = 160;
-
-    // GitHub Section
-    context.fillStyle = '#111827';
-    context.font = 'bold 24px Arial';
-    context.textAlign = 'left';
-    context.fillText('GitHub', 80, yPos);
-    
-    context.fillStyle = '#6b7280';
-    context.font = '20px Arial';
-    yPos += 35;
-    context.fillText('@Rafie1715', 80, yPos);
-    
-    yPos += 30;
-    context.fillStyle = '#111827';
-    context.font = '18px Arial';
-    context.fillText('github.com/Rafie1715', 80, yPos);
-
-    // Divider line
-    yPos += 50;
-    context.strokeStyle = '#e5e7eb';
-    context.lineWidth = 2;
-    context.beginPath();
-    context.moveTo(80, yPos);
-    context.lineTo(CARD_BASE_SIZE - 80, yPos);
-    context.stroke();
-
-    // LinkedIn QR placeholder (decorative pattern)
-    yPos += 60;
-    context.fillStyle = '#111827';
-    context.font = 'bold 24px Arial';
-    context.fillText('LinkedIn', 80, yPos);
-    
-    // QR code placeholder - simple grid pattern
-    const qrX = CARD_BASE_SIZE - 220;
-    const qrY = yPos - 30;
-    const qrSize = 140;
-    context.fillStyle = '#111827';
-    context.fillRect(qrX, qrY, qrSize, qrSize);
-    
-    context.fillStyle = '#ffffff';
-    for (let i = 0; i < 7; i++) {
-      for (let j = 0; j < 7; j++) {
-        if ((i + j) % 2 === 0) {
-          context.fillRect(qrX + i * 20 + 10, qrY + j * 20 + 10, 18, 18);
-        }
-      }
-    }
-
-    yPos += 35;
-    context.fillStyle = '#6b7280';
-    context.font = '18px Arial';
-    context.fillText('linkedin.com/in/rafie-rojagat', 80, yPos);
-
-    // Divider line
-    yPos += 50;
-    context.strokeStyle = '#e5e7eb';
-    context.lineWidth = 2;
-    context.beginPath();
-    context.moveTo(80, yPos);
-    context.lineTo(CARD_BASE_SIZE - 80, yPos);
-    context.stroke();
-
-    // Contact Section
-    yPos += 60;
-    context.fillStyle = '#111827';
-    context.font = 'bold 24px Arial';
-    context.fillText('Contact', 80, yPos);
-    
-    yPos += 40;
-    context.fillStyle = '#6b7280';
-    context.font = '20px Arial';
-    context.fillText('✉ rojagatrafie@gmail.com', 80, yPos);
-    
-    yPos += 35;
-    context.fillText('🌐 rafierb.me', 80, yPos);
-
-    // Divider line
-    yPos += 50;
-    context.strokeStyle = '#e5e7eb';
-    context.lineWidth = 2;
-    context.beginPath();
-    context.moveTo(80, yPos);
-    context.lineTo(CARD_BASE_SIZE - 80, yPos);
-    context.stroke();
-
-    // Footer section with social media
-    yPos = CARD_BASE_SIZE - 160;
-    context.fillStyle = '#111827';
-    context.font = 'bold 20px Arial';
-    context.textAlign = 'left';
-    context.fillText('Social Media', 80, yPos);
-    
-    yPos += 35;
-    context.fillStyle = '#6b7280';
-    context.font = '18px Arial';
-    context.fillText('Instagram: @rafierb', 80, yPos);
-
-    // Bottom stripe with gold accent
-    const bottomGradient = context.createLinearGradient(0, CARD_BASE_SIZE - 80, CARD_BASE_SIZE, CARD_BASE_SIZE - 80);
-    bottomGradient.addColorStop(0, '#004d40');
-    bottomGradient.addColorStop(1, '#facc15');
-    context.fillStyle = bottomGradient;
-    context.fillRect(0, CARD_BASE_SIZE - 80, CARD_BASE_SIZE, 80);
-
-    context.fillStyle = '#ffffff';
-    context.font = 'bold 18px Arial';
-    context.textAlign = 'center';
-    context.fillText('Android | Front-End | AI', CARD_BASE_SIZE / 2, CARD_BASE_SIZE - 42);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.generateMipmaps = false;
-    texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-    texture.anisotropy = 32;
-    texture.needsUpdate = true;
-    texture.colorSpace = THREE.SRGBColorSpace;
-    return texture;
-  }, [CARD_BASE_SIZE, CARD_SUPERSAMPLE, CARD_TEXTURE_SIZE]);
-  
-  const { width, height } = useThree((state) => state.size);
-
-  const [curve] = useState(
-    () =>
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3()
-      ])
+  context.drawImage(
+    image,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
+    x,
+    y,
+    width,
+    height,
   );
+};
 
-  const [dragged, drag] = useState(false);
-  const [hovered, hover] = useState(false);
+const createBadgeTexture = (profileImage) => {
+  const canvas = document.createElement('canvas');
+  canvas.width = TEXTURE_WIDTH;
+  canvas.height = TEXTURE_HEIGHT;
+  const context = canvas.getContext('2d');
 
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
-  useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.45, 0]]);
+  if (!context) return null;
+
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = 'high';
+  context.fillStyle = '#f8fafc';
+  context.fillRect(0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+
+  context.fillStyle = '#047857';
+  context.fillRect(0, 0, TEXTURE_WIDTH, 215);
+
+  context.fillStyle = '#ffffff';
+  context.beginPath();
+  context.arc(95, 92, 52, 0, Math.PI * 2);
+  context.fill();
+  context.fillStyle = '#facc15';
+  context.beginPath();
+  context.arc(95, 92, 29, 0, Math.PI * 2);
+  context.fill();
+  context.fillStyle = '#166534';
+  context.beginPath();
+  context.arc(95, 92, 16, 0, Math.PI * 2);
+  context.fill();
+
+  context.textAlign = 'left';
+  context.fillStyle = '#ffffff';
+  context.font = '700 34px Arial';
+  context.fillText('UPN VETERAN JAKARTA', 175, 88);
+  context.fillStyle = '#d1fae5';
+  context.font = '700 19px Arial';
+  context.fillText('FACULTY OF COMPUTER SCIENCE', 175, 126);
+  context.font = '700 18px Arial';
+  context.fillText('PROFILE ID', 690, 174);
+
+  const photoX = 225;
+  const photoY = 270;
+  const photoWidth = 450;
+  const photoHeight = 390;
+  drawRoundedRect(context, photoX, photoY, photoWidth, photoHeight, 24);
+  context.save();
+  context.clip();
+  if (profileImage) {
+    drawImageCover(context, profileImage, photoX, photoY, photoWidth, photoHeight);
+  } else {
+    context.fillStyle = '#e2e8f0';
+    context.fillRect(photoX, photoY, photoWidth, photoHeight);
+  }
+  context.restore();
+  context.strokeStyle = '#cbd5e1';
+  context.lineWidth = 5;
+  drawRoundedRect(context, photoX, photoY, photoWidth, photoHeight, 24);
+  context.stroke();
+
+  context.textAlign = 'center';
+  context.fillStyle = '#64748b';
+  context.font = '700 18px Arial';
+  context.fillText('DEVELOPER PROFILE', TEXTURE_WIDTH / 2, 725);
+  context.fillStyle = '#0f172a';
+  context.font = '700 42px Arial';
+  context.fillText('RAFIE ROJAGAT BACHRI', TEXTURE_WIDTH / 2, 780);
+  context.fillStyle = '#047857';
+  context.font = '700 25px Arial';
+  context.fillText('INFORMATICS GRADUATE', TEXTURE_WIDTH / 2, 825);
+
+  context.strokeStyle = '#e2e8f0';
+  context.lineWidth = 3;
+  context.beginPath();
+  context.moveTo(90, 885);
+  context.lineTo(810, 885);
+  context.stroke();
+
+  context.fillStyle = '#64748b';
+  context.font = '700 17px Arial';
+  context.fillText('FOCUS', 260, 945);
+  context.fillText('GRADUATION', 640, 945);
+  context.fillStyle = '#0f172a';
+  context.font = '700 27px Arial';
+  context.fillText('MOBILE & WEB', 260, 990);
+  context.fillText('2026', 640, 990);
+
+  context.fillStyle = '#dcfce7';
+  drawRoundedRect(context, 275, 1040, 350, 72, 16);
+  context.fill();
+  context.fillStyle = '#166534';
+  context.font = '700 23px Arial';
+  context.fillText('OPEN TO WORK', TEXTURE_WIDTH / 2, 1087);
+
+  context.fillStyle = '#0f172a';
+  context.fillRect(0, 1195, TEXTURE_WIDTH, 125);
+  context.fillStyle = '#cbd5e1';
+  context.font = '700 19px Arial';
+  context.fillText('ANDROID  /  FRONT-END  /  AI', TEXTURE_WIDTH / 2, 1268);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 8;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.needsUpdate = true;
+  return texture;
+};
+
+const createCardGeometry = () => {
+  const width = 2.35;
+  const height = 3.45;
+  const radius = 0.14;
+  const halfWidth = width / 2;
+  const halfHeight = height / 2;
+  const shape = new THREE.Shape();
+
+  shape.moveTo(-halfWidth + radius, -halfHeight);
+  shape.lineTo(halfWidth - radius, -halfHeight);
+  shape.quadraticCurveTo(halfWidth, -halfHeight, halfWidth, -halfHeight + radius);
+  shape.lineTo(halfWidth, halfHeight - radius);
+  shape.quadraticCurveTo(halfWidth, halfHeight, halfWidth - radius, halfHeight);
+  shape.lineTo(-halfWidth + radius, halfHeight);
+  shape.quadraticCurveTo(-halfWidth, halfHeight, -halfWidth, halfHeight - radius);
+  shape.lineTo(-halfWidth, -halfHeight + radius);
+  shape.quadraticCurveTo(-halfWidth, -halfHeight, -halfWidth + radius, -halfHeight);
+
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: 0.1,
+    bevelEnabled: true,
+    bevelSegments: 3,
+    bevelSize: 0.035,
+    bevelThickness: 0.035,
+    curveSegments: 10,
+    steps: 1,
+  });
+  geometry.center();
+  geometry.computeVertexNormals();
+  return geometry;
+};
+
+const stepRotationSpring = (rotation, velocity, axis, target, stiffness, damping, delta, limit) => {
+  velocity[axis] += (target - rotation[axis]) * stiffness * delta;
+  velocity[axis] *= Math.exp(-damping * delta);
+  rotation[axis] = THREE.MathUtils.clamp(
+    rotation[axis] + velocity[axis] * delta,
+    -limit,
+    limit,
+  );
+};
+
+const AnimationDriver = ({ active }) => {
+  const invalidate = useThree((state) => state.invalidate);
 
   useEffect(() => {
-    if (hovered) {
-      document.body.style.cursor = dragged ? 'grabbing' : 'grab';
-      return () => {
-        document.body.style.cursor = 'auto';
-      };
-    }
-    return undefined;
-  }, [hovered, dragged]);
+    invalidate();
+    if (!active) return undefined;
+
+    let animationFrame;
+    let previousFrame = 0;
+    const requestFrame = (timestamp) => {
+      if (timestamp - previousFrame >= FRAME_INTERVAL) {
+        previousFrame = timestamp;
+        invalidate();
+      }
+      animationFrame = window.requestAnimationFrame(requestFrame);
+    };
+
+    animationFrame = window.requestAnimationFrame(requestFrame);
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [active, invalidate]);
+
+  return null;
+};
+
+const BadgeModel = ({ active, reducedMotion }) => {
+  const pivot = useRef(null);
+  const angularVelocity = useRef(new THREE.Vector3());
+  const [hovered, setHovered] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+  const geometry = useMemo(() => createCardGeometry(), []);
+  const texture = useMemo(() => createBadgeTexture(profileImage), [profileImage]);
+
+  useEffect(() => {
+    const image = new Image();
+    let cancelled = false;
+    image.onload = () => {
+      if (!cancelled) setProfileImage(image);
+    };
+    image.src = '/images/profile.webp';
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  useEffect(() => () => texture?.dispose(), [texture]);
+
+  useEffect(() => {
+    document.body.style.cursor = dragging ? 'grabbing' : hovered ? 'grab' : '';
+    return () => {
+      document.body.style.cursor = '';
+    };
+  }, [dragging, hovered]);
+
+  const finishDrag = (event) => {
+    event?.stopPropagation();
+    event?.target.releasePointerCapture?.(event.pointerId);
+    angularVelocity.current.multiplyScalar(1.18);
+    setDragging(false);
+  };
 
   useFrame((state, delta) => {
-    if (dragged) {
-      vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
-      dir.copy(vec).sub(state.camera.position).normalize();
-      vec.add(dir.multiplyScalar(state.camera.position.length()));
+    if (!pivot.current || !active || reducedMotion) return;
 
-      [card, j1, j2, j3, fixed].forEach((ref) => ref.current?.wakeUp());
+    const elapsed = state.clock.getElapsedTime();
+    const frameDelta = Math.min(delta, 1 / 30);
+    const targetX = dragging
+      ? state.pointer.y * -0.22
+      : hovered
+        ? state.pointer.y * -0.055
+        : Math.sin(elapsed * 0.55) * 0.015;
+    const targetY = dragging
+      ? state.pointer.x * 0.52
+      : hovered
+        ? state.pointer.x * 0.12
+        : Math.sin(elapsed * 0.42) * 0.055;
+    const targetZ = dragging
+      ? state.pointer.x * -0.16
+      : Math.sin(elapsed * 0.7) * 0.018;
+    const stiffness = dragging ? 52 : 18;
+    const damping = dragging ? 10 : 5.2;
 
-      card.current?.setNextKinematicTranslation({
-        x: vec.x - dragged.x,
-        y: vec.y - dragged.y,
-        z: vec.z - dragged.z
-      });
-    }
-
-    if (fixed.current && band.current && card.current && j1.current && j2.current && j3.current) {
-      [j1, j2].forEach((ref) => {
-        if (!ref.current.lerped) {
-          ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
-        }
-
-        const clampedDistance = Math.max(
-          0.1,
-          Math.min(1, ref.current.lerped.distanceTo(ref.current.translation()))
-        );
-
-        ref.current.lerped.lerp(
-          ref.current.translation(),
-          delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
-        );
-      });
-
-      curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
-      curve.points[3].copy(fixed.current.translation());      
-      band.current.geometry.setPoints(curve.getPoints(32));
-
-      ang.copy(card.current.angvel());
-      rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
-    }
+    stepRotationSpring(
+      pivot.current.rotation,
+      angularVelocity.current,
+      'x',
+      targetX,
+      stiffness,
+      damping,
+      frameDelta,
+      0.28,
+    );
+    stepRotationSpring(
+      pivot.current.rotation,
+      angularVelocity.current,
+      'y',
+      targetY,
+      stiffness,
+      damping,
+      frameDelta,
+      0.62,
+    );
+    stepRotationSpring(
+      pivot.current.rotation,
+      angularVelocity.current,
+      'z',
+      targetZ,
+      stiffness,
+      damping,
+      frameDelta,
+      0.22,
+    );
   });
 
-  curve.curveType = 'chordal';
-
   return (
-    <>
-      <group position={[0, 4, 0]}>
-        <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-
-        <RigidBody ref={j1} position={[0.5, 0, 0]} {...segmentProps}>
-          <BallCollider args={[0.1]} />
-        </RigidBody>
-
-        <RigidBody ref={j2} position={[1, 0, 0]} {...segmentProps}>
-          <BallCollider args={[0.1]} />
-        </RigidBody>
-
-        <RigidBody ref={j3} position={[1.5, 0, 0]} {...segmentProps}>
-          <BallCollider args={[0.1]} />
-        </RigidBody>
-
-        <RigidBody
-          ref={card}
-          position={[2, 0, 0]}
-          {...segmentProps}
-          type={dragged ? 'kinematicPosition' : 'dynamic'}
-        >
-          <CuboidCollider args={[0.8, 1.125, 0.01]} />
-
-          <group
-            scale={2.25}
-            position={[0, -1.2, -0.05]}
-            onPointerOver={() => hover(true)}
-            onPointerOut={() => hover(false)}
-            onPointerUp={(event) => {
-              event.target.releasePointerCapture(event.pointerId);
-              drag(false);
-            }}
-            onPointerDown={(event) => {
-              event.target.setPointerCapture(event.pointerId);
-              drag(new THREE.Vector3().copy(event.point).sub(vec.copy(card.current.translation())));
-            }}
-          >
-            {/* Front side of card */}
-            <mesh geometry={nodes.card.geometry} position={[0, 0, 0.001]}>
-              <meshPhysicalMaterial
-                map={idCardTexture ?? materials.base.map}
-                map-anisotropy={32}
-                clearcoat={1}
-                clearcoatRoughness={0.15}
-                roughness={0.3}
-                metalness={0.5}
-                side={THREE.FrontSide}
-              />
-            </mesh>
-            
-            {/* Back side of card */}
-            <mesh geometry={nodes.card.geometry} position={[0, 0, -0.001]} rotation={[0, Math.PI, 0]}>
-              <meshPhysicalMaterial
-                map={backCardTexture ?? materials.base.map}
-                map-anisotropy={32}
-                clearcoat={1}
-                clearcoatRoughness={0.15}
-                roughness={0.3}
-                metalness={0.5}
-                side={THREE.FrontSide}
-              />
-            </mesh>
-
-            <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
-            <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
-          </group>
-        </RigidBody>
-      </group>
-
-      <mesh ref={band}>
-        <meshLineGeometry />
-        <meshLineMaterial
-          color="#0f766e"
-          resolution={[width, height]}
-          useMap
-          map={lanyardTexture}
-          repeat={[-5.5, 1]}
-          lineWidth={0.9}        
-          transparent={true}     
-          depthWrite={false}   
-          depthTest={true}
-        />
+    <group>
+      <mesh position={[0, 2.58, 0]}>
+        <boxGeometry args={[0.18, 2.25, 0.06]} />
+        <meshStandardMaterial color="#047857" roughness={0.68} />
       </mesh>
-    </>
+      <mesh position={[0.045, 2.58, 0.036]}>
+        <boxGeometry args={[0.025, 2.25, 0.012]} />
+        <meshBasicMaterial color="#facc15" />
+      </mesh>
+      <mesh position={[0, 3.73, 0]}>
+        <sphereGeometry args={[0.12, 20, 20]} />
+        <meshStandardMaterial color="#94a3b8" metalness={0.75} roughness={0.25} />
+      </mesh>
+
+      <group ref={pivot} position={[0, 1.43, 0]}>
+        <mesh position={[0, -0.04, 0]}>
+          <boxGeometry args={[0.46, 0.28, 0.16]} />
+          <meshStandardMaterial color="#64748b" metalness={0.72} roughness={0.28} />
+        </mesh>
+        <mesh position={[0, -0.22, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.17, 0.045, 12, 28]} />
+          <meshStandardMaterial color="#475569" metalness={0.78} roughness={0.25} />
+        </mesh>
+
+        <group
+          position={[0, -1.94, 0]}
+          onPointerOver={(event) => {
+            event.stopPropagation();
+            setHovered(true);
+          }}
+          onPointerOut={() => {
+            if (!dragging) setHovered(false);
+          }}
+          onPointerDown={(event) => {
+            if (reducedMotion) return;
+            event.stopPropagation();
+            event.target.setPointerCapture?.(event.pointerId);
+            setHovered(true);
+            setDragging(true);
+          }}
+          onPointerUp={finishDrag}
+          onPointerCancel={finishDrag}
+          onLostPointerCapture={() => setDragging(false)}
+        >
+          <mesh geometry={geometry}>
+            <meshPhysicalMaterial
+              color="#f8fafc"
+              clearcoat={0.7}
+              clearcoatRoughness={0.22}
+              metalness={0.08}
+              roughness={0.48}
+            />
+          </mesh>
+          <mesh position={[0, 0, 0.091]}>
+            <planeGeometry args={[2.25, 3.35]} />
+            <meshBasicMaterial map={texture} toneMapped={false} />
+          </mesh>
+        </group>
+      </group>
+    </group>
   );
-}
+};
+
+const useReducedMotion = () => {
+  const [reducedMotion, setReducedMotion] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ));
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleChange = (event) => setReducedMotion(event.matches);
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  return reducedMotion;
+};
 
 export default function ThreeIDCard() {
+  const containerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (!containerRef.current) return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.05 },
+    );
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const active = isVisible && !reducedMotion;
+
   return (
-    <div className="w-full max-w-[520px] rounded-3xl border border-slate-200 dark:border-slate-700 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 shadow-xl overflow-hidden">
-      <div className="w-full h-[440px] md:h-[500px]">
-      <Canvas gl={{ antialias: true, powerPreference: 'high-performance' }} dpr={[1, 2]} camera={{ position: [0, 0, 12], fov: 26 }}>
-        <ambientLight intensity={Math.PI} />
-
-        <Physics debug={false} interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
-          <Band />
-        </Physics>
-
-        <Environment blur={0.75}>
-          <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
-          <Lightformer intensity={3} color="white" position={[-1, -1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
-          <Lightformer intensity={3} color="white" position={[1, 1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
-          <Lightformer intensity={10} color="white" position={[-10, 0, 14]} rotation={[0, Math.PI / 2, Math.PI / 3]} scale={[100, 10, 1]} />
-        </Environment>
-      </Canvas>
+    <div
+      ref={containerRef}
+      className="w-full max-w-[520px] overflow-hidden rounded-lg border border-slate-200 bg-slate-100 shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-900"
+    >
+      <div className="h-[440px] w-full md:h-[500px]" aria-label="Interactive 3D preview of Rafie's profile ID card">
+        <Canvas
+          frameloop="demand"
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 0.65, 9.5], fov: 36, near: 0.1, far: 30 }}
+          gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+          style={{ touchAction: 'pan-y' }}
+        >
+          <ambientLight intensity={1.9} />
+          <directionalLight position={[4, 6, 8]} intensity={2.4} color="#ffffff" />
+          <directionalLight position={[-4, 1, 5]} intensity={1.1} color="#a7f3d0" />
+          <BadgeModel active={active} reducedMotion={reducedMotion} />
+          <AnimationDriver active={active} />
+        </Canvas>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import { createElement } from 'react';
-import { motion } from 'framer-motion';
+import { createElement, useEffect, useRef, useState } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -12,15 +12,54 @@ import {
 } from 'lucide-react';
 import cvFile from '/assets/CV Rafie Rojagat Bachri.pdf';
 
+const MetricValue = ({ target, decimals = 0, suffix = '', isStatic = false, reduceMotion }) => {
+  const valueRef = useRef(null);
+  const isInView = useInView(valueRef, { once: true, margin: '-40px' });
+  const [displayValue, setDisplayValue] = useState(isStatic || reduceMotion ? target : 0);
+
+  useEffect(() => {
+    if (isStatic || reduceMotion || !isInView) return undefined;
+
+    const duration = 900;
+    const startedAt = performance.now();
+    let animationFrame;
+
+    const updateValue = (timestamp) => {
+      const progress = Math.min((timestamp - startedAt) / duration, 1);
+      const easedProgress = 1 - ((1 - progress) ** 3);
+      setDisplayValue(target * easedProgress);
+
+      if (progress < 1) {
+        animationFrame = window.requestAnimationFrame(updateValue);
+      }
+    };
+
+    animationFrame = window.requestAnimationFrame(updateValue);
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [decimals, isInView, isStatic, reduceMotion, target]);
+
+  const currentValue = isStatic || reduceMotion ? target : displayValue;
+  const formattedValue = isStatic
+    ? String(target)
+    : Number(currentValue).toFixed(decimals);
+
+  return (
+    <span ref={valueRef} data-metric-value className="tabular-nums">
+      {formattedValue}{suffix}
+    </span>
+  );
+};
+
 const About = () => {
   const { t } = useTranslation();
+  const shouldReduceMotion = useReducedMotion();
 
   const proofPoints = [
-    { value: '2026', label: t('about.snapshot.graduate'), icon: GraduationCap },
-    { value: '3.89', label: t('about.snapshot.gpa'), icon: GraduationCap },
-    { value: '88.71/100', label: t('about.snapshot.mandiri'), icon: BriefcaseBusiness },
-    { value: '92.06%', label: t('about.snapshot.ml_accuracy'), icon: FolderKanban },
-    { value: '900+', label: t('about.snapshot.bangkit_hours'), icon: BriefcaseBusiness },
+    { target: 2026, isStatic: true, label: t('about.snapshot.graduate'), icon: GraduationCap },
+    { target: 3.89, decimals: 2, label: t('about.snapshot.gpa'), icon: GraduationCap },
+    { target: 88.71, decimals: 2, suffix: '/100', label: t('about.snapshot.mandiri'), icon: BriefcaseBusiness },
+    { target: 92.06, decimals: 2, suffix: '%', label: t('about.snapshot.ml_accuracy'), icon: FolderKanban },
+    { target: 900, suffix: '+', label: t('about.snapshot.bangkit_hours'), icon: BriefcaseBusiness },
   ];
 
   return (
@@ -28,7 +67,7 @@ const About = () => {
       <div className="container mx-auto max-w-6xl px-4">
         <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: 'easeOut' }}
             className="mx-auto w-full max-w-sm"
@@ -44,7 +83,7 @@ const About = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.08, ease: 'easeOut' }}
           >
@@ -100,7 +139,7 @@ const About = () => {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.4 }}
@@ -111,7 +150,9 @@ const About = () => {
               <div key={proofPoint.label} className="px-3 lg:px-5 first:lg:pl-0 last:lg:pr-0">
                 <div className="flex items-center gap-2 text-primary mb-1">
                   {createElement(proofPoint.icon, { size: 15, 'aria-hidden': true })}
-                  <span className="text-xl font-black text-dark dark:text-white">{proofPoint.value}</span>
+                  <span className="text-xl font-black text-dark dark:text-white">
+                    <MetricValue {...proofPoint} reduceMotion={shouldReduceMotion} />
+                  </span>
                 </div>
                 <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">{proofPoint.label}</p>
               </div>

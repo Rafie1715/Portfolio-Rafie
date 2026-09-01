@@ -39,25 +39,21 @@ const CinemaLogPreview = lazy(() => import('./pages/admin/CinemaLogPreview'));
 
 function App() {
   const location = useLocation();
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [hasEngaged, setHasEngaged] = useState(false);
+  const [shouldLoadChatbot, setShouldLoadChatbot] = useState(false);
   
   usePageTracking();
 
   useEffect(() => {
-    const desktopQuery = window.matchMedia('(min-width: 768px)');
-    const updateViewport = () => setIsDesktop(desktopQuery.matches);
     const revealChatbot = () => {
-      if (window.scrollY > 320) setHasEngaged(true);
+      if (window.scrollY > 160) setShouldLoadChatbot(true);
     };
+    const idleTimer = window.setTimeout(() => setShouldLoadChatbot(true), 3000);
 
-    updateViewport();
     revealChatbot();
-    desktopQuery.addEventListener('change', updateViewport);
     window.addEventListener('scroll', revealChatbot, { passive: true });
 
     return () => {
-      desktopQuery.removeEventListener('change', updateViewport);
+      window.clearTimeout(idleTimer);
       window.removeEventListener('scroll', revealChatbot);
     };
   }, []);
@@ -174,7 +170,7 @@ function App() {
 
         {!isAdminRoute && <Footer />}
 
-        {!isAdminRoute && isDesktop && hasEngaged && (
+        {!isAdminRoute && shouldLoadChatbot && (
           <Suspense fallback={null}>
             <Chatbot />
           </Suspense>

@@ -6,7 +6,9 @@ import {
   BriefcaseBusiness,
   Headphones,
   MapPin,
+  Play,
   RefreshCw,
+  X,
 } from 'lucide-react';
 import { currentRotationFallback } from '../data/currentRotation';
 
@@ -28,6 +30,7 @@ const HomePersonalPanel = () => {
   const hasRequestedTracks = useRef(false);
   const [tracks, setTracks] = useState(currentRotationFallback);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState(null);
 
   const refreshTracks = useCallback(async (signal) => {
     setIsRefreshing(true);
@@ -176,22 +179,79 @@ const HomePersonalPanel = () => {
 
           <div className="mt-auto divide-y divide-slate-800 border-y border-slate-800">
             {tracks.map((track, index) => (
-              <a
+              <div
                 key={`${track.id}-details`}
-                href={track.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group grid grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-3 py-3 transition-colors hover:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-300/50"
+                className="grid grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-3 py-3"
               >
                 <span className="text-xs font-semibold text-slate-500">0{index + 1}</span>
                 <span className="min-w-0">
                   <span className="block truncate text-sm font-semibold">{track.title}</span>
                   <span className="block truncate text-xs text-slate-400">{track.artist}</span>
                 </span>
-                <ArrowUpRight className="h-4 w-4 text-slate-500 transition-colors group-hover:text-emerald-300" aria-hidden="true" />
-              </a>
+                <span className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedTrack(track)}
+                    aria-pressed={selectedTrack?.id === track.id}
+                    aria-label={t('home.beyond.play_track', { title: track.title })}
+                    title={t('home.beyond.play_track', { title: track.title })}
+                    className={`flex h-9 w-9 items-center justify-center rounded-md border transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-300/50 ${
+                      selectedTrack?.id === track.id
+                        ? 'border-emerald-400 bg-emerald-400 text-slate-950'
+                        : 'border-slate-700 text-slate-300 hover:border-emerald-400 hover:text-emerald-300'
+                    }`}
+                  >
+                    <Play className="h-4 w-4 fill-current" aria-hidden="true" />
+                  </button>
+                  <a
+                    href={track.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-9 w-9 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-900 hover:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300/50"
+                    aria-label={`${t('home.beyond.open_spotify')}: ${track.title}`}
+                    title={t('home.beyond.open_spotify')}
+                  >
+                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                </span>
+              </div>
             ))}
           </div>
+
+          {selectedTrack && (
+            <div className="mt-5 border-t border-slate-800 pt-5">
+              <div className="mb-3 flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">
+                    {t('home.beyond.player_ready')}
+                  </p>
+                  <p className="mt-1 truncate text-sm font-semibold text-white">
+                    {selectedTrack.title} <span className="font-normal text-slate-400">- {selectedTrack.artist}</span>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedTrack(null)}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-300/50"
+                  aria-label={t('home.beyond.close_player')}
+                  title={t('home.beyond.close_player')}
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+              <iframe
+                key={selectedTrack.id}
+                title={`${t('home.beyond.player_title')}: ${selectedTrack.title}`}
+                src={`https://open.spotify.com/embed/track/${encodeURIComponent(selectedTrack.id)}?utm_source=generator&theme=0`}
+                width="100%"
+                height="152"
+                loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                allowFullScreen
+                className="block w-full rounded-md border-0 bg-slate-900"
+              />
+            </div>
+          )}
 
           <p className="sr-only" aria-live="polite">
             {isRefreshing ? t('home.beyond.refreshing') : t('home.beyond.loaded')}

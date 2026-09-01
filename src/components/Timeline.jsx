@@ -1,5 +1,11 @@
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+} from "framer-motion";
 import {
   BriefcaseBusiness,
   ChevronLeft,
@@ -23,6 +29,16 @@ const Timeline = () => {
   const reduceMotion = useReducedMotion();
   const language = i18n.resolvedLanguage?.startsWith("id") ? "id" : "en";
   const [gallery, setGallery] = useState(null);
+  const timelineRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start 75%", "end 35%"],
+  });
+  const timelineProgress = useSpring(scrollYProgress, {
+    stiffness: 130,
+    damping: 28,
+    mass: 0.2,
+  });
 
   const localize = (value) => {
     if (!value) return "";
@@ -67,11 +83,19 @@ const Timeline = () => {
   };
 
   return (
-    <div className="relative mx-auto max-w-5xl px-4 sm:px-6">
+    <div ref={timelineRef} className="relative mx-auto max-w-5xl px-4 sm:px-6">
       <div
         aria-hidden="true"
-        className="absolute bottom-8 left-[35px] top-8 w-px bg-gray-200 dark:bg-slate-700 sm:left-[43px]"
-      />
+        className="absolute bottom-8 left-[35px] top-8 w-px overflow-hidden bg-gray-200 dark:bg-slate-700 sm:left-[43px]"
+      >
+        {!reduceMotion && (
+          <motion.span
+            data-timeline-progress
+            className="absolute inset-0 origin-top bg-primary"
+            style={{ scaleY: timelineProgress }}
+          />
+        )}
+      </div>
 
       <div className="space-y-6">
         {experiences.map((experience, index) => {
@@ -87,7 +111,13 @@ const Timeline = () => {
               transition={{ duration: 0.35, delay: index * 0.05 }}
               className="relative flex items-start gap-4 sm:gap-6"
             >
-              <div className="relative z-10 flex h-12 w-12 flex-none items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:h-14 sm:w-14">
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0.7, scale: 0.88 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.7 }}
+                transition={{ duration: 0.28, delay: index * 0.04, ease: "easeOut" }}
+                className="relative z-10 flex h-12 w-12 flex-none items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:h-14 sm:w-14"
+              >
                 {experience.logo ? (
                   <img
                     src={experience.logo}
@@ -99,7 +129,7 @@ const Timeline = () => {
                 ) : (
                   <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
                 )}
-              </div>
+              </motion.div>
 
               <div className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-6">
                 <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-7">

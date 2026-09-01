@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -164,7 +165,15 @@ const ProjectActions = ({ project, title, compact = false, t }) => {
   );
 };
 
-const ProjectCard = ({ project, language, t, featured = false, lead = false }) => {
+const ProjectCard = ({
+  project,
+  language,
+  t,
+  featured = false,
+  lead = false,
+  animateLayout = false,
+  reduceMotion = false,
+}) => {
   const title = getLocalized(project.title, language);
   const shortDesc = getLocalized(project.shortDesc, language);
   const impactDetails = project.impactDetails || {};
@@ -174,9 +183,23 @@ const ProjectCard = ({ project, language, t, featured = false, lead = false }) =
   const impactFallback = getLocalized(project.impact, language);
   const techStack = Array.isArray(project.techStack) ? project.techStack.slice(0, featured ? 5 : 3) : [];
   const domain = getProjectDomain(project);
+  const animationProps = animateLayout && !reduceMotion
+    ? {
+        layout: true,
+        initial: { opacity: 0, y: 12 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -8 },
+        transition: {
+          duration: 0.24,
+          ease: 'easeOut',
+          layout: { duration: 0.28, ease: 'easeOut' },
+        },
+      }
+    : {};
 
   return (
-    <article
+    <motion.article
+      {...animationProps}
       className={`group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg dark:border-slate-700 dark:bg-darkLight ${lead ? 'lg:col-span-2 lg:grid lg:h-[32rem] lg:grid-cols-[1.25fr_1fr]' : 'flex h-full flex-col'}`}
     >
       <Link
@@ -267,7 +290,7 @@ const ProjectCard = ({ project, language, t, featured = false, lead = false }) =
 
         <ProjectActions project={project} title={title} compact={!featured} t={t} />
       </div>
-    </article>
+    </motion.article>
   );
 };
 
@@ -281,6 +304,7 @@ const Projects = () => {
   const [shouldLoadGithub, setShouldLoadGithub] = useState(false);
   const githubSectionRef = useRef(null);
   const { t, i18n } = useTranslation();
+  const shouldReduceMotion = useReducedMotion();
   const currentLang = i18n.language || 'en';
 
   useEffect(() => {
@@ -516,43 +540,72 @@ const Projects = () => {
           </div>
 
           <div className="mb-8 flex gap-2 overflow-x-auto pb-2" role="group" aria-label={t('projects.filter_label')}>
-            {filters.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  setFilter(item.id);
-                  setShowAllArchive(false);
-                }}
-                aria-pressed={filter === item.id}
-                className={`min-h-10 shrink-0 rounded-lg border px-4 py-2 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${
-                  filter === item.id
-                    ? 'border-primary bg-primary text-white'
-                    : 'border-gray-200 bg-white text-gray-600 hover:border-primary hover:text-primary dark:border-slate-700 dark:bg-slate-800 dark:text-gray-300'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+            {filters.map((item) => {
+              const isActive = filter === item.id;
+
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setFilter(item.id);
+                    setShowAllArchive(false);
+                  }}
+                  aria-pressed={isActive}
+                  className={`relative isolate min-h-10 shrink-0 overflow-hidden rounded-lg border px-4 py-2 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${
+                    isActive
+                      ? 'border-primary text-white'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-primary hover:text-primary dark:border-slate-700 dark:bg-slate-800 dark:text-gray-300'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId={shouldReduceMotion ? undefined : 'projects-active-filter'}
+                      className="absolute inset-0 bg-primary"
+                      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span className="relative z-10">{item.label}</span>
+                </button>
+              );
+            })}
           </div>
 
-          {displayedProjects.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {displayedProjects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  language={currentLang}
-                  t={t}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="border-y border-gray-200 py-16 text-center dark:border-slate-700">
-              <Search className="mx-auto mb-3 text-gray-300 dark:text-slate-600" size={34} aria-hidden="true" />
-              <p className="font-medium text-gray-600 dark:text-gray-300">{t('projects.no_projects')}</p>
-            </div>
-          )}
+          <AnimatePresence mode="wait" initial={false}>
+            {displayedProjects.length > 0 ? (
+              <motion.div
+                key="project-grid"
+                layout={!shouldReduceMotion}
+                className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+              >
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {displayedProjects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      language={currentLang}
+                      t={t}
+                      animateLayout
+                      reduceMotion={shouldReduceMotion}
+                    />
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="project-empty"
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={shouldReduceMotion ? undefined : { opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="border-y border-gray-200 py-16 text-center dark:border-slate-700"
+              >
+                <Search className="mx-auto mb-3 text-gray-300 dark:text-slate-600" size={34} aria-hidden="true" />
+                <p className="font-medium text-gray-600 dark:text-gray-300">{t('projects.no_projects')}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {!isBrowsing && archiveProjects.length > ARCHIVE_PREVIEW_COUNT && (
             <div className="mt-8 text-center">

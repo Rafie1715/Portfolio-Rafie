@@ -28,11 +28,11 @@ export const experiences = [
     date: { en: "Feb 2025 - Jan 2026", id: "Feb 2025 - Jan 2026" },
     description: {
       en: [
-        "Led a two-person mentoring team to teach front-end and back-end development to 26 students through capstone projects.",
+        "Led a two-person mentoring team to teach front-end development to 26 students through capstone projects.",
         "Spoke about web development at Multimedia Vibes Project for more than 30 students at SMA PKP Jakarta Islamic School.",
       ],
       id: [
-        "Memimpin tim mentoring beranggotakan dua orang untuk mengajar front-end dan back-end kepada 26 mahasiswa hingga proyek capstone.",
+        "Memimpin tim mentoring beranggotakan dua orang untuk mengajar front-end kepada 26 mahasiswa hingga proyek capstone.",
         "Menjadi pembicara materi web development dalam Multimedia Vibes Project untuk lebih dari 30 siswa SMA PKP Jakarta Islamic School.",
       ],
     },

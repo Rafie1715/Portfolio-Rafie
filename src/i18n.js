@@ -40,6 +40,10 @@ const resources = {
                     refreshing: "Refreshing Spotify tracks",
                     loaded: "Spotify tracks are ready",
                     open_spotify: "Open on Spotify",
+                    play_track: "Play {{title}}",
+                    player_ready: "Ready to play",
+                    player_title: "Spotify player",
+                    close_player: "Close player",
                     location_label: "Based in",
                     location: "Jakarta, Indonesia",
                     availability: "Open to remote and Jakarta-based opportunities",
@@ -71,12 +75,12 @@ const resources = {
                     period: "Aug 2022 - Jul 2026"
                 },
                 profile_lab: {
-                    title: "Profile Lab",
-                    subtitle: "A playful, interactive take on my developer profile, kept separate from the main recruiter-focused story.",
+                    title: "Developer ID",
+                    subtitle: "A concise profile badge with an optional, lightweight 3D preview.",
                     show_profile: "Open Profile Card",
                     hide_profile: "Close Profile Card",
-                    show_3d: "Open 3D Preview",
-                    hide_3d: "Close 3D Preview"
+                    show_3d: "View 3D Badge",
+                    hide_3d: "Hide 3D Badge"
                 },
                 download_cv: "Download CV",
                 hello: "Hello, I'm",
@@ -455,6 +459,53 @@ const resources = {
                 spotify: "My Spotify",
                 now_playing: "Now Playing"
             },
+            chatbot: {
+                title: "Rafie Assistant",
+                status: "Portfolio guide",
+                open: "Open Rafie Assistant",
+                close: "Close Rafie Assistant",
+                reset: "Start a new conversation",
+                welcome: "Hi, I'm Rafie's portfolio assistant. Ask me about his projects, experience, skills, or availability.",
+                quick_ask: "Quick ask",
+                input_label: "Message Rafie's portfolio assistant",
+                placeholder: "Ask about Rafie's work...",
+                send: "Send message",
+                loading: "Thinking...",
+                retry: "Try again",
+                privacy: "AI answers may be imperfect. Messages are processed by Google Gemini; do not share sensitive information.",
+                suggestions: {
+                    experience: {
+                        label: "Experience",
+                        prompt: "What is Rafie's professional and program experience?"
+                    },
+                    impact: {
+                        label: "Project impact",
+                        prompt: "Which Rafie projects have the strongest measurable impact?"
+                    },
+                    stack: {
+                        label: "Tech stack",
+                        prompt: "What technologies and engineering skills does Rafie use?"
+                    },
+                    availability: {
+                        label: "Availability",
+                        prompt: "Is Rafie available for hiring, internships, or collaboration?"
+                    }
+                },
+                actions: {
+                    projects: "View projects",
+                    about: "View experience",
+                    workspace: "View stack",
+                    contact: "Contact Rafie",
+                    cv: "Download CV"
+                },
+                errors: {
+                    generic: "I couldn't reach the assistant just now. Please try again.",
+                    timeout: "The response took too long. Please check your connection and try again.",
+                    rate_limit: "You've sent several messages quickly. Please wait a minute and try again.",
+                    invalid: "That message could not be processed. Shorten it and try again.",
+                    unavailable: "The assistant is temporarily unavailable. You can still use the Contact page."
+                }
+            },
             contact: {
                 seo_title: "Contact | Rafie Rojagat",
                 seo_desc: "Contact Rafie Rojagat for Android, front-end, or AI-integrated software opportunities, internships, and collaborations.",
@@ -493,6 +544,7 @@ const resources = {
                     message_help: "Please include at least 20 characters. Avoid sharing sensitive information.",
                     send_btn: "Send Message",
                     sending: "Sending...",
+                    sent: "Sent",
                     success: "Message sent. Thank you. I'll get back to you soon.",
                     error: "The message could not be sent. Please try again or use email instead.",
                     timeout: "The request took too long. Check your connection and try again.",
@@ -540,6 +592,10 @@ const resources = {
                     refreshing: "Memperbarui lagu dari Spotify",
                     loaded: "Lagu Spotify sudah siap",
                     open_spotify: "Buka di Spotify",
+                    play_track: "Putar {{title}}",
+                    player_ready: "Siap diputar",
+                    player_title: "Pemutar Spotify",
+                    close_player: "Tutup pemutar",
                     location_label: "Berdomisili di",
                     location: "Jakarta, Indonesia",
                     availability: "Terbuka untuk peluang remote dan berbasis di Jakarta",
@@ -571,12 +627,12 @@ const resources = {
                     period: "Agu 2022 - Jul 2026"
                 },
                 profile_lab: {
-                    title: "Profile Lab",
-                    subtitle: "Versi interaktif yang lebih playful dari profil developer saya, terpisah dari alur utama yang berfokus pada rekruter.",
+                    title: "ID Developer",
+                    subtitle: "Badge profil ringkas dengan pratinjau 3D ringan yang dapat dibuka bila diperlukan.",
                     show_profile: "Buka Kartu Profil",
                     hide_profile: "Tutup Kartu Profil",
-                    show_3d: "Buka Pratinjau 3D",
-                    hide_3d: "Tutup Pratinjau 3D"
+                    show_3d: "Lihat Badge 3D",
+                    hide_3d: "Tutup Badge 3D"
                 },
                 download_cv: "Unduh CV",
                 hello: "Halo, saya",
@@ -955,6 +1011,53 @@ const resources = {
                 spotify: "Spotify Saya",
                 now_playing: "Sedang Diputar"
             },
+            chatbot: {
+                title: "Asisten Rafie",
+                status: "Panduan portofolio",
+                open: "Buka Asisten Rafie",
+                close: "Tutup Asisten Rafie",
+                reset: "Mulai percakapan baru",
+                welcome: "Halo, saya asisten portofolio Rafie. Tanyakan proyek, pengalaman, keahlian, atau ketersediaannya.",
+                quick_ask: "Pertanyaan cepat",
+                input_label: "Kirim pesan ke asisten portofolio Rafie",
+                placeholder: "Tanyakan karya Rafie...",
+                send: "Kirim pesan",
+                loading: "Sedang berpikir...",
+                retry: "Coba lagi",
+                privacy: "Jawaban AI mungkin tidak selalu sempurna. Pesan diproses oleh Google Gemini; jangan bagikan informasi sensitif.",
+                suggestions: {
+                    experience: {
+                        label: "Pengalaman",
+                        prompt: "Bagaimana pengalaman profesional dan program yang pernah diikuti Rafie?"
+                    },
+                    impact: {
+                        label: "Dampak proyek",
+                        prompt: "Proyek Rafie mana yang memiliki dampak terukur paling kuat?"
+                    },
+                    stack: {
+                        label: "Tech stack",
+                        prompt: "Teknologi dan kemampuan engineering apa yang digunakan Rafie?"
+                    },
+                    availability: {
+                        label: "Ketersediaan",
+                        prompt: "Apakah Rafie tersedia untuk rekrutmen, magang, atau kolaborasi?"
+                    }
+                },
+                actions: {
+                    projects: "Lihat proyek",
+                    about: "Lihat pengalaman",
+                    workspace: "Lihat stack",
+                    contact: "Hubungi Rafie",
+                    cv: "Unduh CV"
+                },
+                errors: {
+                    generic: "Asisten belum dapat dihubungi saat ini. Silakan coba lagi.",
+                    timeout: "Respons terlalu lama. Periksa koneksi Anda lalu coba kembali.",
+                    rate_limit: "Anda mengirim beberapa pesan terlalu cepat. Tunggu satu menit lalu coba kembali.",
+                    invalid: "Pesan tersebut belum dapat diproses. Persingkat pesan lalu coba lagi.",
+                    unavailable: "Asisten sedang tidak tersedia. Anda tetap dapat menggunakan halaman Kontak."
+                }
+            },
             contact: {
                 seo_title: "Kontak | Rafie Rojagat",
                 seo_desc: "Hubungi Rafie Rojagat untuk peluang software Android, front-end, integrasi AI, magang, dan kolaborasi.",
@@ -993,6 +1096,7 @@ const resources = {
                     message_help: "Gunakan minimal 20 karakter. Hindari membagikan informasi sensitif.",
                     send_btn: "Kirim Pesan",
                     sending: "Mengirim...",
+                    sent: "Terkirim",
                     success: "Pesan berhasil dikirim. Terima kasih, saya akan segera membalas.",
                     error: "Pesan belum dapat dikirim. Silakan coba lagi atau gunakan email.",
                     timeout: "Permintaan terlalu lama. Periksa koneksi Anda lalu coba kembali.",

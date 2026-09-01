@@ -1,83 +1,162 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
+import {
+  buildPortfolioSystemInstruction,
+  getSuggestedActionIds,
+} from "./_shared/portfolio-context.js";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const MAX_BODY_LENGTH = 16_000;
+const MAX_MESSAGE_LENGTH = 600;
+const MAX_HISTORY_ITEMS = 8;
+const MAX_HISTORY_TEXT_LENGTH = 800;
+const GEMINI_TIMEOUT_MS = 12_000;
 
-const SYSTEM_PROMPT = `
-You are an AI Assistant for Rafie Rojagat Bachri's Portfolio Website. Help visitors (especially recruiters & tech leads) understand Rafie's expertise and impact.
+const responseHeaders = {
+  "Cache-Control": "no-store",
+  "Content-Type": "application/json; charset=utf-8",
+  "X-Content-Type-Options": "nosniff",
+};
 
-RAFIE'S PROFILE:
-Identity: Final-year Informatics Student (UPN Veteran Jakarta, GPA 3.89) & 2024 Bangkit Academy Graduate (Mobile Development). 3+ years hands-on development experience.
+const jsonResponse = (status, payload, headers = {}) => new Response(
+  JSON.stringify(payload),
+  {
+    status,
+    headers: { ...responseHeaders, ...headers },
+  },
+);
 
-Core Expertise:
-- Mobile: Kotlin, Flutter, Firebase, TensorFlow Lite
-- Web: React, Tailwind, Node.js, MySQL
-- Full-stack with focus on clean code & UX
+const invalidInput = (message) => jsonResponse(400, {
+  error: { code: "invalid_input", message },
+});
 
-Experience:
-1. Head of Web Development at KSM Multimedia - Led frontend teaching, mentored 15+ students
-2. IT Staff at HMIF UPNVJ - Managed CodeVox bootcamp & tech community
-3. Freelance Projects - Shipped multiple production apps
+const sanitizeHistory = (history) => {
+  if (history === undefined) return [];
+  if (!Array.isArray(history)) return null;
 
-Key Projects:
-1. Planetku (Mobile): AI waste classifier. Role: Mobile Dev Lead (6-person team)
-2. CinemaZone (Mobile): Movie booking app. Solo Developer, real-time Firebase integration
-3. Computer Crafter (Web): PC simulator. Full-stack, complex compatibility logic
-4. This Portfolio Site: React + Vite, admin dashboard, multilingual, Firebase CMS
+  const sanitized = [];
 
-Tech Stack: JavaScript/TypeScript, Kotlin, Dart, PHP | React/Flutter/Tailwind | Firebase/Node/MySQL | VS Code, Android Studio, Figma
+  for (const entry of history.slice(-MAX_HISTORY_ITEMS)) {
+    if (!entry || !["user", "model"].includes(entry.role) || typeof entry.text !== "string") {
+      return null;
+    }
 
-Soft Skills: Team leadership, bilingual communication, problem-solving, collaborative mindset
+    const text = entry.text.trim();
+    if (!text || text.length > MAX_HISTORY_TEXT_LENGTH) return null;
+    if (entry.role === "model" && sanitized.length === 0) continue;
+    if (sanitized.at(-1)?.role === entry.role) continue;
 
-Availability: Open to freelance, internships, full-time roles. Interested in mobile/React roles & mentorship. Based in Jakarta, open to remote.
+    sanitized.push({ role: entry.role, parts: [{ text }] });
+  }
 
-Contact: rojagatrafie@gmail.com | linkedin.com/in/rafie-rojagat | github.com/Rafie1715
+  // A chat history must contain complete user-model turns. The current user
+  // message is sent separately below.
+  if (sanitized.at(-1)?.role === "user") sanitized.pop();
 
-GUIDELINES:
-- Respond in user's language (English or Indonesian)
-- SHORT answers only (1-2 sentences, max 3 if needed)
-- NO markdown formatting - plain text only
-- Use occasional emojis to be friendly
-- Emphasize impact/metrics: "Led X people", "Built feature Y", "Shipped to Z users"
-- Suggest visiting /projects or /contact naturally when relevant
-`;
+  return sanitized;
+};
 
-export const handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+export default async (request) => {
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: responseHeaders });
+  }
+
+  if (request.method !== "POST") {
+    return jsonResponse(405, {
+      error: { code: "method_not_allowed", message: "Method not allowed." },
+    }, { Allow: "POST" });
+  }
+
+  const declaredLength = Number(request.headers.get("content-length") || 0);
+  if (declaredLength > MAX_BODY_LENGTH) {
+    return jsonResponse(413, {
+      error: { code: "payload_too_large", message: "Request body is too large." },
+    });
+  }
+
+  let payload;
+  try {
+    const rawBody = await request.text();
+    if (!rawBody || rawBody.length > MAX_BODY_LENGTH) {
+      return invalidInput("A JSON request body is required.");
+    }
+    payload = JSON.parse(rawBody);
+  } catch {
+    return invalidInput("The request body must be valid JSON.");
+  }
+
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return invalidInput("The request body must be a JSON object.");
+  }
+
+  const message = typeof payload.message === "string" ? payload.message.trim() : "";
+  if (!message || message.length > MAX_MESSAGE_LENGTH) {
+    return invalidInput(`Message must contain between 1 and ${MAX_MESSAGE_LENGTH} characters.`);
+  }
+
+  const history = sanitizeHistory(payload.history);
+  if (history === null) {
+    return invalidInput("Chat history contains an invalid entry.");
+  }
+
+  const locale = payload.locale === "id" ? "id" : "en";
+  if (!process.env.GEMINI_API_KEY) {
+    return jsonResponse(503, {
+      error: { code: "service_unavailable", message: "The assistant is not configured." },
+    });
   }
 
   try {
-    const { message, history } = JSON.parse(event.body);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-    const chat = model.startChat({
-      history: [
-        {
-          role: "user",
-          parts: [{ text: SYSTEM_PROMPT }],
-        },
-        {
-          role: "model",
-          parts: [{ text: "Understood. I am ready to assist visitors with information about Rafie." }],
-        },
-        ...history,
-      ],
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const chat = ai.chats.create({
+      model: "gemini-2.5-flash",
+      history,
+      config: {
+        systemInstruction: buildPortfolioSystemInstruction(locale),
+        temperature: 0.2,
+        maxOutputTokens: 320,
+        thinkingConfig: { thinkingBudget: 0 },
+        httpOptions: { timeout: GEMINI_TIMEOUT_MS },
+      },
     });
 
-    const result = await chat.sendMessage(message);
-    const response = await result.response;
-    const text = response.text();
+    const result = await chat.sendMessage({ message });
+    const reply = result.text?.trim();
 
-    return {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reply: text }),
-    };
+    if (!reply) {
+      return jsonResponse(502, {
+        error: { code: "empty_response", message: "The assistant returned an empty response." },
+      });
+    }
+
+    return jsonResponse(200, {
+      reply,
+      actions: getSuggestedActionIds(message),
+    });
   } catch (error) {
-    console.error("Gemini Error:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "AI sedang istirahat. Coba lagi nanti." }),
-    };
+    const timedOut = error?.name === "AbortError"
+      || error?.name === "RequestTimeoutError"
+      || /timed?\s*out|timeout/i.test(error?.message || "");
+
+    console.error("Gemini request failed", {
+      name: error?.name || "Error",
+      message: error?.message || "Unknown provider error",
+    });
+
+    return jsonResponse(timedOut ? 504 : 502, {
+      error: {
+        code: timedOut ? "timeout" : "provider_error",
+        message: timedOut
+          ? "The assistant took too long to respond."
+          : "The assistant is temporarily unavailable.",
+      },
+    });
   }
+};
+
+export const config = {
+  path: "/api/chat",
+  rateLimit: {
+    windowLimit: 12,
+    windowSize: 60,
+    aggregateBy: ["ip", "domain"],
+  },
 };

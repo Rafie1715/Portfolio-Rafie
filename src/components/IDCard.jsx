@@ -1,205 +1,67 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { GraduationCap, Building2 } from 'lucide-react';
+import { BadgeCheck, MapPin } from 'lucide-react';
 
-const IDCard = () => {
-    const [rotation, setRotation] = useState({ x: 0, y: 0 });
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleMouseMove = (e) => {
-        if (!isHovered) return;
-        const card = e.currentTarget;
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * 10;
-        const rotateY = ((x - centerX) / centerX) * 10;
-        setRotation({ x: -rotateX, y: rotateY });
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovered(false);
-        setRotation({ x: 0, y: 0 });
-    };
-
-    return (
-        <div className="w-full max-w-[360px] sm:max-w-[420px] mx-auto"
-            style={{ perspective: '1200px', perspectiveOrigin: 'center top' }}>
-            
-            {/* Lanyard - Modern Sleek Design */}
-            <motion.div 
-                className="relative mx-auto w-10 h-28 mb-4"
-                animate={{ 
-                    scaleY: isHovered ? [1, 1.05, 1] : 1,
-                }}
-                transition={{ 
-                    duration: 1.5,
-                    repeat: isHovered ? Infinity : 0,
-                    ease: "easeInOut"
-                }}
-            >
-                {/* Lanyard Ribbon - Sleek Metal Bar */}
-                <div className="absolute left-1/2 -translate-x-1/2 w-2.5 h-24 bg-gradient-to-b from-slate-300 via-slate-400 to-slate-500 rounded-full shadow-lg">
-                    {/* Metallic shine */}
-                    <div className="absolute left-0.5 top-2 w-1 h-16 bg-white/40 rounded-full blur-sm"></div>
-                    {/* Subtle texture */}
-                    <div className="absolute inset-0 opacity-20" style={{
-                        backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.5) 1px, rgba(255,255,255,0.5) 2px)',
-                    }}></div>
-                </div>
-
-                {/* Top Hook - Minimalist */}
-                <div className="absolute left-1/2 -translate-x-1/2 top-0 w-5 h-5 rounded-full bg-gradient-to-br from-slate-300 to-slate-500 shadow-md border border-slate-400">
-                    {/* Highlight */}
-                    <div className="absolute top-1 left-1.5 w-1.5 h-1.5 bg-white/50 rounded-full blur-[0.5px]"></div>
-                </div>
-
-                {/* Bottom Clip - Minimal */}
-                <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-4 h-5 bg-gradient-to-br from-slate-300 to-slate-500 rounded-t shadow-md border-t border-l border-r border-slate-400">
-                    {/* Clip detail */}
-                    <div className="absolute inset-1 rounded-t border-t border-white/30"></div>
-                </div>
-            </motion.div>
-
-            {/* ID Card with 3D Transform */}
-            <motion.div
-                onMouseMove={handleMouseMove}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={handleMouseLeave}
-                animate={{
-                    rotateX: rotation.x,
-                    rotateY: rotation.y,
-                    rotateZ: isHovered ? [0, -1, 1, 0] : 0,
-                }}
-                transition={{
-                    rotateX: { type: "spring", stiffness: 300, damping: 30 },
-                    rotateY: { type: "spring", stiffness: 300, damping: 30 },
-                    rotateZ: { duration: 3, repeat: isHovered ? Infinity : 0, ease: "easeInOut" }
-                }}
-                style={{
-                    transformStyle: 'preserve-3d',
-                    transformOrigin: 'center top',
-                }}
-                className="relative"
-            >
-            <div className="relative aspect-[1.586/1] rounded-xl sm:rounded-2xl bg-white dark:bg-slate-200 overflow-hidden shadow-2xl border border-gray-300 dark:border-gray-500 group select-none"
-                style={{
-                    boxShadow: isHovered 
-                        ? '0 30px 60px -12px rgba(0, 0, 0, 0.35), 0 18px 36px -18px rgba(0, 0, 0, 0.25)'
-                        : '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-                    transition: 'box-shadow 0.3s ease-out'
-                }}
-            >
-
-                <div className="absolute inset-0 opacity-10 pointer-events-none"
-                    style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #000 0.5px, transparent 0.5px)', backgroundSize: '8px 8px' }}>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-blue-100/50 pointer-events-none"></div>
-
-                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-300 shadow-inner border-2 border-gray-300 dark:border-gray-400 z-50">
-                    <div className="absolute inset-0.5 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 shadow-md"></div>
-                    <div className="absolute inset-1 rounded-full border border-gray-500/30"></div>
-                    {/* Reinforcement ring */}
-                    <div className="absolute -inset-1 rounded-full border-2 border-gray-400 dark:border-gray-500 opacity-40"></div>
-                </div>
-
-                <div className="absolute top-0 left-0 right-0 py-1.5 sm:h-14 bg-gradient-to-r from-[#004d40] to-[#00695c] flex flex-col sm:flex-row items-center px-3 sm:px-5 justify-between z-10">
-                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-0">
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center p-0.5">
-                            <img 
-                                src="/images/upnvj_logo.webp" 
-                                alt="UPN" 
-                                loading="lazy" 
-                                className="w-full h-full object-contain" 
-                                onError={(e) => {
-                                    e.target.style.display = 'none';
-                                    const fallback = e.target.parentElement?.querySelector('[data-upn-fallback]');
-                                    if (fallback) fallback.style.display = 'flex';
-                                }} 
-                            />
-                            <GraduationCap data-upn-fallback className="w-5 h-5 text-indigo-600 hidden" strokeWidth={1.5} />
-                        </div>
-                        <div className="leading-none sm:leading-tight text-white text-center sm:text-left">
-                            <h1 className="font-bold text-[10px] sm:text-sm tracking-wide">UPN VETERAN JAKARTA</h1>
-                            <p className="text-[7px] sm:text-[8px] opacity-80 uppercase tracking-wider">Faculty of Computer Science</p>
-                        </div>
-                    </div>
-                    <div className="text-white font-mono font-bold text-xs sm:text-lg tracking-widest opacity-80 sm:block hidden">
-                        STUDENT
-                    </div>
-                </div>
-
-                <div className="absolute top-11 sm:top-16 bottom-0 left-0 right-0 p-3 sm:p-5 flex gap-3 sm:gap-5">
-                    <div className="flex flex-col gap-1.5 sm:gap-2 w-24 sm:w-32 shrink-0">
-                        <div className="relative w-full aspect-[3/4] rounded-md sm:rounded-lg overflow-hidden border-[1.5px] sm:border-2 border-gray-200 shadow-inner bg-gray-100">
-                            <img
-                                src="/images/profile.webp"
-                                alt="Profile"
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                    e.target.style.display = 'none';
-                                    const fallback = e.target.parentElement?.querySelector('[data-fallback]');
-                                    if (fallback) fallback.style.display = 'flex';
-                                }}
-                            />
-                            {/* Fallback - Show avatar if image fails to load */}
-                            <div data-fallback className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500 via-blue-400 to-cyan-400 text-white font-bold text-3xl sm:text-4xl" style={{ display: 'none' }}>
-                                RR
-                            </div>
-                            <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-cyan-500/10 mix-blend-overlay"></div>
-                        </div>
-                        <div className="w-8 h-6 sm:w-10 sm:h-8 rounded-sm sm:rounded bg-gradient-to-br from-yellow-200 to-yellow-500 border border-yellow-600 shadow-sm mx-auto opacity-80 flex items-center justify-center">
-                            <div className="w-5 h-4 sm:w-6 sm:h-5 border border-yellow-700/30 rounded-[1px] sm:rounded-[2px] grid grid-cols-2 gap-[1px]">
-                                <div className="border border-yellow-700/30"></div><div className="border border-yellow-700/30"></div>
-                                <div className="border border-yellow-700/30"></div><div className="border border-yellow-700/30"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex-1 flex flex-col justify-center relative z-20 pt-1 sm:pt-0">
-
-                        <div className="mb-0.5 sm:mb-1">
-                            <span className="block text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider">Name</span>
-                            <h2 className="text-sm sm:text-lg font-bold text-gray-900 leading-tight uppercase font-sans line-clamp-2">
-                                Rafie Rojagat Bachri
-                            </h2>
-                        </div>
-
-                        <div className="w-full h-[0.5px] sm:h-[1px] bg-gray-300 my-1.5 sm:my-2"></div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1.5 sm:gap-y-3 gap-x-1">
-                            <div className="flex flex-col sm:block">
-                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider">Focus</span>
-                                <span className="text-[10px] sm:text-sm font-semibold text-gray-800 leading-tight"> Mobile &amp; Web</span>
-                            </div>
-                            <div className="flex flex-col sm:block">
-                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider">Major</span>
-                                <span className="text-[10px] sm:text-sm font-semibold text-gray-800 leading-tight truncate"> Informatics</span>
-                            </div>
-                            <div className="flex flex-col sm:block">
-                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider">Graduated</span>
-                                <span className="text-[10px] sm:text-sm font-semibold text-gray-800 leading-tight"> 2026</span>
-                            </div>
-                            <div className="flex flex-col sm:block">
-                                <span className="text-[7px] sm:text-[9px] text-gray-500 uppercase font-bold tracking-wider sm:mb-1">Availability</span>
-                                <span className="text-[7px] sm:text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-sm border border-green-200 inline-block self-start whitespace-nowrap"> OPEN TO WORK</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none mix-blend-soft-light z-30"
-                    style={{ transform: 'translateZ(20px)' }}>
-                </div>
-                <div className="absolute right-[-15px] bottom-[-15px] opacity-[0.05] pointer-events-none rotate-[-15deg]">
-                    <i className="fas fa-university text-7xl sm:text-9xl text-black"></i>
-                </div>
-
-            </div>
-            </motion.div>
+const IDCard = () => (
+  <article className="mx-auto w-full max-w-[320px] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-100">
+    <header className="flex h-24 items-center justify-between bg-emerald-800 px-5 text-white">
+      <div className="flex items-center gap-3">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white p-1.5">
+          <img
+            src="/images/upnvj_logo.webp"
+            alt="UPN Veteran Jakarta"
+            loading="lazy"
+            className="h-full w-full object-contain"
+          />
+        </span>
+        <div>
+          <p className="text-sm font-bold leading-tight">UPN Veteran Jakarta</p>
+          <p className="mt-1 text-[10px] font-semibold uppercase text-emerald-100">Faculty of Computer Science</p>
         </div>
-    );
-};
+      </div>
+      <span className="text-[10px] font-bold uppercase text-emerald-100">Profile ID</span>
+    </header>
+
+    <div className="px-6 pb-6 pt-5 text-slate-900">
+      <div className="mx-auto h-36 w-36 overflow-hidden rounded-md border-4 border-white bg-slate-100 shadow-md ring-1 ring-slate-200">
+        <img
+          src="/images/profile.webp"
+          alt="Rafie Rojagat Bachri"
+          className="h-full w-full object-cover object-[center_34%]"
+        />
+      </div>
+
+      <div className="mt-5 text-center">
+        <p className="text-[10px] font-bold uppercase text-slate-500">Developer Profile</p>
+        <h3 className="mt-1 text-xl font-bold leading-tight">Rafie Rojagat Bachri</h3>
+        <p className="mt-1 text-sm font-semibold text-emerald-700">Informatics Graduate</p>
+      </div>
+
+      <dl className="mt-5 grid grid-cols-2 border-y border-slate-200 py-4 text-center">
+        <div className="border-r border-slate-200 px-2">
+          <dt className="text-[10px] font-bold uppercase text-slate-500">Focus</dt>
+          <dd className="mt-1 text-sm font-bold">Mobile &amp; Web</dd>
+        </div>
+        <div className="px-2">
+          <dt className="text-[10px] font-bold uppercase text-slate-500">Graduation</dt>
+          <dd className="mt-1 text-sm font-bold">2026</dd>
+        </div>
+      </dl>
+
+      <div className="mt-5 flex items-center justify-between gap-3">
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600">
+          <MapPin size={14} aria-hidden="true" />
+          Jakarta
+        </span>
+        <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-1.5 text-[10px] font-bold uppercase text-emerald-700 ring-1 ring-inset ring-emerald-200">
+          <BadgeCheck size={14} aria-hidden="true" />
+          Open to work
+        </span>
+      </div>
+    </div>
+
+    <footer className="bg-slate-900 px-6 py-3 text-center text-[10px] font-bold uppercase text-slate-300">
+      Android <span className="px-2 text-emerald-400">/</span> Front-End <span className="px-2 text-emerald-400">/</span> AI
+    </footer>
+  </article>
+);
 
 export default IDCard;

@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -30,6 +30,17 @@ const BlogPage = () => {
   const language = getBlogLanguage(i18n);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const archiveSectionRef = useRef(null);
+
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategory(categoryId);
+    window.requestAnimationFrame(() => {
+      archiveSectionRef.current?.scrollIntoView({
+        behavior: shouldReduceMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    });
+  };
 
   const sortedBlogs = useMemo(() => sortBlogsByDate(blogs), []);
   const featuredBlog = sortedBlogs.find((blog) => blog.featured) || sortedBlogs[0];
@@ -111,7 +122,7 @@ const BlogPage = () => {
                     src={featuredBlog.image}
                     alt={featuredTitle}
                     decoding="async"
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-700 motion-safe:group-hover:scale-[1.02]"
                   />
                 </div>
 
@@ -153,7 +164,11 @@ const BlogPage = () => {
           </section>
         )}
 
-        <section className="relative z-10 border-t border-gray-200 bg-gray-50/80 py-14 dark:border-slate-700 dark:bg-slate-900/40 md:py-20" aria-labelledby="blog-archive-title">
+        <section
+          ref={archiveSectionRef}
+          className="relative z-10 scroll-mt-16 border-t border-gray-200 bg-gray-50/80 py-14 dark:border-slate-700 dark:bg-slate-900/40 md:scroll-mt-20 md:py-20"
+          aria-labelledby="blog-archive-title"
+        >
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <motion.div {...revealProps} className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
               <div className="max-w-2xl">
@@ -202,15 +217,23 @@ const BlogPage = () => {
                       <button
                         key={categoryId}
                         type="button"
-                        onClick={() => setSelectedCategory(categoryId)}
+                        onClick={() => handleCategoryChange(categoryId)}
                         aria-pressed={isActive}
-                        className={`rounded-lg border px-4 py-2 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-dark ${
+                        className={`relative isolate overflow-hidden rounded-lg border px-4 py-2 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-dark ${
                           isActive
-                            ? 'border-primary bg-primary text-white'
+                            ? 'border-primary text-white'
                             : 'border-gray-300 bg-white text-gray-600 hover:border-primary/50 hover:text-primary dark:border-slate-700 dark:bg-slate-900 dark:text-gray-300'
                         }`}
                       >
-                        {t(`pages.blog.categories.${categoryId}`)}
+                        {isActive && (
+                          <motion.span
+                            layoutId={shouldReduceMotion ? undefined : 'blog-active-category'}
+                            className="absolute inset-0 bg-primary"
+                            transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                            aria-hidden="true"
+                          />
+                        )}
+                        <span className="relative z-10">{t(`pages.blog.categories.${categoryId}`)}</span>
                       </button>
                     );
                   })}
@@ -218,17 +241,35 @@ const BlogPage = () => {
               </div>
             </motion.div>
 
-            {gridBlogs.length > 0 ? (
-              <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {gridBlogs.map((blog) => <BlogCard key={blog.id} blog={blog} />)}
-              </div>
-            ) : (
-              <div className="py-20 text-center" role="status">
-                <BookOpenText className="mx-auto h-9 w-9 text-gray-400" aria-hidden="true" />
-                <h3 className="mt-4 text-xl font-black">{t('pages.blog.empty_title')}</h3>
-                <p className="mt-2 text-gray-500 dark:text-gray-400">{t('pages.blog.empty_desc')}</p>
-              </div>
-            )}
+            <AnimatePresence mode="wait" initial={false}>
+              {gridBlogs.length > 0 ? (
+                <motion.div
+                  key="blog-grid"
+                  layout={!shouldReduceMotion}
+                  className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3"
+                >
+                  <AnimatePresence mode="popLayout" initial={false}>
+                    {gridBlogs.map((blog) => (
+                      <BlogCard key={blog.id} blog={blog} animateLayout />
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="blog-empty"
+                  initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={shouldReduceMotion ? undefined : { opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="py-20 text-center"
+                  role="status"
+                >
+                  <BookOpenText className="mx-auto h-9 w-9 text-gray-400" aria-hidden="true" />
+                  <h3 className="mt-4 text-xl font-black">{t('pages.blog.empty_title')}</h3>
+                  <p className="mt-2 text-gray-500 dark:text-gray-400">{t('pages.blog.empty_desc')}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </section>
       </main>

@@ -1,8 +1,49 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+
+const HeroProductScene = lazy(() => import('./HeroProductScene'));
+
+const canUseWebGL = () => {
+  try {
+    if (!window.WebGLRenderingContext) return false;
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    const supported = Boolean(context);
+    context?.getExtension('WEBGL_lose_context')?.loseContext();
+    return supported;
+  } catch {
+    return false;
+  }
+};
+
+const HeroProductPoster = () => (
+  <div
+    data-hero-product-poster
+    className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
+    aria-hidden="true"
+  >
+    <div className="absolute -bottom-20 -right-12 hidden h-56 w-28 rotate-6 overflow-hidden rounded-[1.65rem] border-[5px] border-slate-400/60 bg-slate-950 opacity-[0.16] shadow-xl dark:border-slate-500 dark:opacity-20 sm:bottom-12 sm:right-3 sm:block sm:h-80 sm:w-40 sm:opacity-20 dark:sm:opacity-30 md:right-[5%] md:bottom-auto md:top-[24%]">
+      <div
+        className="h-full w-full bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/images/project-restup.jpg')",
+          backgroundPosition: '50% 0%',
+          backgroundSize: '300% 200%',
+        }}
+      />
+    </div>
+    <img
+      src="/images/project-portfolio.webp"
+      alt=""
+      loading="lazy"
+      decoding="async"
+      className="absolute left-[3%] top-[28%] hidden w-60 -rotate-3 border-[5px] border-slate-300/70 opacity-20 shadow-lg dark:border-slate-600 dark:opacity-25 lg:block"
+    />
+  </div>
+);
 
 const TypewriterLine = ({ phrases, prefix, accessibleText, reduceMotion, active }) => {
   const safePhrases = Array.isArray(phrases) && phrases.length > 0 ? phrases : [''];
@@ -60,6 +101,8 @@ const Hero = () => {
   const shouldReduceMotion = useReducedMotion();
   const heroRef = useRef(null);
   const [isHeroVisible, setIsHeroVisible] = useState(true);
+  const [sceneRequested, setSceneRequested] = useState(false);
+  const [webglSupported, setWebglSupported] = useState(true);
   const gridX = useSpring(useMotionValue(0), { stiffness: 90, damping: 24 });
   const gridY = useSpring(useMotionValue(0), { stiffness: 90, damping: 24 });
 
@@ -75,6 +118,28 @@ const Hero = () => {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (shouldReduceMotion || sceneRequested) return undefined;
+
+    const requestScene = () => {
+      setWebglSupported(canUseWebGL());
+      setSceneRequested(true);
+    };
+
+    let idleId;
+    let timeoutId;
+    if ('requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(requestScene, { timeout: 2400 });
+    } else {
+      timeoutId = window.setTimeout(requestScene, 1200);
+    }
+
+    return () => {
+      if (idleId) window.cancelIdleCallback(idleId);
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+  }, [sceneRequested, shouldReduceMotion]);
+
   const quickFacts = [
     { icon: 'fas fa-map-marker-alt', text: t('hero.quick_facts.location') },
     { icon: 'fas fa-briefcase', text: t('hero.quick_facts.availability') },
@@ -82,6 +147,8 @@ const Hero = () => {
     { icon: 'fas fa-code', text: t('hero.quick_facts.stack') },
   ];
   const rolePhrases = t('hero.role_phrases', { returnObjects: true });
+  const showProductScene = sceneRequested && webglSupported && !shouldReduceMotion;
+  const showProductPoster = Boolean(shouldReduceMotion) || (sceneRequested && !webglSupported);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -150,12 +217,20 @@ const Hero = () => {
           className="absolute -inset-4 bg-[linear-gradient(to_right,#64748b14_1px,transparent_1px),linear-gradient(to_bottom,#64748b14_1px,transparent_1px)] bg-[size:32px_32px] will-change-transform"
         />
         <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-950/20"></div>
-        <div aria-hidden="true" className={`hero-blueprint-sweep hidden md:block ${isHeroVisible ? 'is-active' : ''}`}>
-          <span className="hero-blueprint-node left-[18%]" />
-          <span className="hero-blueprint-node left-[48%]" />
-          <span className="hero-blueprint-node left-[79%]" />
-        </div>
       </div>
+
+      {showProductScene && (
+        <div
+          className="absolute inset-0 z-10 opacity-[0.24] transition-opacity duration-500 dark:opacity-30 sm:opacity-60 dark:sm:opacity-60 md:opacity-75"
+          aria-hidden="true"
+        >
+          <Suspense fallback={null}>
+            <HeroProductScene active={isHeroVisible} eventSource={heroRef} />
+          </Suspense>
+        </div>
+      )}
+
+      {showProductPoster && <HeroProductPoster />}
 
       <motion.div
         className="z-20 text-center max-w-5xl mx-auto flex flex-col items-center justify-center h-full w-full"

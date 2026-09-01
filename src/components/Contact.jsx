@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
   AlertCircle,
@@ -11,6 +11,7 @@ import {
   Github,
   Instagram,
   Linkedin,
+  LoaderCircle,
   Mail,
   MapPin,
   Send,
@@ -54,6 +55,11 @@ const Contact = () => {
 
   const isSubmitting = submission.status === 'loading';
   const hasFeedback = !['idle', 'loading'].includes(submission.status);
+  const submitButtonState = isSubmitting
+    ? 'loading'
+    : submission.status === 'success'
+      ? 'success'
+      : 'idle';
 
   useEffect(() => {
     if (hasFeedback) {
@@ -75,6 +81,15 @@ const Contact = () => {
       delete next[field];
       return next;
     });
+  };
+
+  const handleFieldChange = (field) => {
+    clearFieldError(field);
+    setSubmission((current) => (
+      ['idle', 'loading'].includes(current.status)
+        ? current
+        : { status: 'idle', message: '' }
+    ));
   };
 
   const handleCopyEmail = async () => {
@@ -171,10 +186,15 @@ const Contact = () => {
   const inputClass = 'min-h-12 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-dark outline-none transition-colors placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:placeholder:text-gray-500';
 
   const fieldError = (field) => fieldErrors[field] && (
-    <p id={`${field}-error`} className="mt-2 flex items-center gap-1.5 text-sm font-medium text-red-600 dark:text-red-400">
+    <motion.p
+      id={`${field}-error`}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mt-2 flex items-center gap-1.5 text-sm font-medium text-red-600 dark:text-red-400"
+    >
       <AlertCircle className="h-4 w-4 flex-none" aria-hidden="true" />
       {fieldErrors[field]}
-    </p>
+    </motion.p>
   );
 
   return (
@@ -203,7 +223,7 @@ const Contact = () => {
             <input type="hidden" name="_subject" value="New portfolio contact" />
 
             <div className="grid gap-5 sm:grid-cols-2">
-              <div>
+              <div className="transition-transform duration-200 focus-within:-translate-y-0.5 motion-reduce:transform-none">
                 <label htmlFor="name" className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200">
                   {t('contact.form.name_label')} <span className="text-red-600" aria-hidden="true">*</span>
                 </label>
@@ -217,14 +237,14 @@ const Contact = () => {
                   required
                   aria-invalid={Boolean(fieldErrors.name)}
                   aria-describedby={fieldErrors.name ? 'name-error' : undefined}
-                  onChange={() => clearFieldError('name')}
+                  onChange={() => handleFieldChange('name')}
                   className={inputClass}
                   placeholder={t('contact.form.name_placeholder')}
                 />
                 {fieldError('name')}
               </div>
 
-              <div>
+              <div className="transition-transform duration-200 focus-within:-translate-y-0.5 motion-reduce:transform-none">
                 <label htmlFor="email" className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200">
                   {t('contact.form.email_label')} <span className="text-red-600" aria-hidden="true">*</span>
                 </label>
@@ -237,7 +257,7 @@ const Contact = () => {
                   required
                   aria-invalid={Boolean(fieldErrors.email)}
                   aria-describedby={fieldErrors.email ? 'email-error' : undefined}
-                  onChange={() => clearFieldError('email')}
+                  onChange={() => handleFieldChange('email')}
                   className={inputClass}
                   placeholder={t('contact.form.email_placeholder')}
                 />
@@ -245,7 +265,7 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="mt-5">
+            <div className="mt-5 transition-transform duration-200 focus-within:-translate-y-0.5 motion-reduce:transform-none">
               <label htmlFor="topic" className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200">
                 {t('contact.form.topic_label')} <span className="text-red-600" aria-hidden="true">*</span>
               </label>
@@ -256,7 +276,7 @@ const Contact = () => {
                 required
                 aria-invalid={Boolean(fieldErrors.topic)}
                 aria-describedby={fieldErrors.topic ? 'topic-error' : undefined}
-                onChange={() => clearFieldError('topic')}
+                onChange={() => handleFieldChange('topic')}
                 className={inputClass}
               >
                 <option value="" disabled>{t('contact.form.topic_placeholder')}</option>
@@ -269,7 +289,7 @@ const Contact = () => {
               {fieldError('topic')}
             </div>
 
-            <div className="mt-5">
+            <div className="mt-5 transition-transform duration-200 focus-within:-translate-y-0.5 motion-reduce:transform-none">
               <div className="mb-2 flex items-end justify-between gap-4">
                 <label htmlFor="message" className="block text-sm font-bold text-gray-700 dark:text-gray-200">
                   {t('contact.form.message_label')} <span className="text-red-600" aria-hidden="true">*</span>
@@ -289,7 +309,7 @@ const Contact = () => {
                 aria-describedby={fieldErrors.message ? 'message-error' : 'message-help'}
                 onChange={(event) => {
                   setMessageLength(event.target.value.length);
-                  clearFieldError('message');
+                  handleFieldChange('message');
                 }}
                 className={`${inputClass} resize-y`}
                 placeholder={t('contact.form.message_placeholder')}
@@ -302,34 +322,61 @@ const Contact = () => {
               )}
             </div>
 
-            {hasFeedback && (
-              <div
-                ref={feedbackRef}
-                tabIndex="-1"
-                role={submission.status === 'success' ? 'status' : 'alert'}
-                aria-live={submission.status === 'success' ? 'polite' : 'assertive'}
-                className={`mt-6 flex items-start gap-3 rounded-lg border px-4 py-3 text-sm font-semibold outline-none focus:ring-2 ${
-                  submission.status === 'success'
-                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800 focus:ring-emerald-300 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
-                    : 'border-red-200 bg-red-50 text-red-800 focus:ring-red-300 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300'
-                }`}
-              >
-                {submission.status === 'success'
-                  ? <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
-                  : <AlertCircle className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />}
-                <span>{submission.message}</span>
-              </div>
-            )}
+            <AnimatePresence mode="wait" initial={false}>
+              {hasFeedback && (
+                <motion.div
+                  key={submission.status}
+                  ref={feedbackRef}
+                  tabIndex="-1"
+                  role={submission.status === 'success' ? 'status' : 'alert'}
+                  aria-live={submission.status === 'success' ? 'polite' : 'assertive'}
+                  initial={shouldReduceMotion ? false : { opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={shouldReduceMotion ? undefined : { opacity: 0, y: -6 }}
+                  transition={{ duration: 0.22, ease: 'easeOut' }}
+                  className={`mt-6 flex items-start gap-3 rounded-lg border px-4 py-3 text-sm font-semibold outline-none focus:ring-2 ${
+                    submission.status === 'success'
+                      ? 'border-emerald-200 bg-emerald-50 text-emerald-800 focus:ring-emerald-300 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
+                      : 'border-red-200 bg-red-50 text-red-800 focus:ring-red-300 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300'
+                  }`}
+                >
+                  {submission.status === 'success'
+                    ? <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
+                    : <AlertCircle className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />}
+                  <span>{submission.message}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div className="mt-7 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <button
+              <motion.button
                 type="submit"
                 disabled={isSubmitting}
+                whileTap={shouldReduceMotion || isSubmitting ? undefined : { scale: 0.98 }}
                 className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-65 dark:focus:ring-offset-slate-900 sm:w-auto"
               >
-                <Send className={`h-4 w-4 ${isSubmitting && !shouldReduceMotion ? 'animate-pulse' : ''}`} aria-hidden="true" />
-                {isSubmitting ? t('contact.form.sending') : t('contact.form.send_btn')}
-              </button>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={submitButtonState}
+                    initial={shouldReduceMotion ? false : { opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={shouldReduceMotion ? undefined : { opacity: 0, y: -5 }}
+                    transition={{ duration: 0.16 }}
+                    className="inline-flex items-center justify-center gap-2"
+                  >
+                    {submitButtonState === 'loading' && (
+                      <LoaderCircle className={`h-4 w-4 ${shouldReduceMotion ? '' : 'animate-spin'}`} aria-hidden="true" />
+                    )}
+                    {submitButtonState === 'success' && <Check className="h-4 w-4" aria-hidden="true" />}
+                    {submitButtonState === 'idle' && <Send className="h-4 w-4" aria-hidden="true" />}
+                    {submitButtonState === 'loading'
+                      ? t('contact.form.sending')
+                      : submitButtonState === 'success'
+                        ? t('contact.form.sent')
+                        : t('contact.form.send_btn')}
+                  </motion.span>
+                </AnimatePresence>
+              </motion.button>
 
               <p className="flex max-w-sm items-start gap-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
                 <ShieldCheck className="mt-0.5 h-4 w-4 flex-none" aria-hidden="true" />
@@ -387,7 +434,19 @@ const Contact = () => {
                     aria-label={copied ? t('contact.email_copied') : t('contact.copy_email')}
                     title={copied ? t('contact.email_copied') : t('contact.copy_email')}
                   >
-                    {copied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.span
+                        key={copied ? 'copied' : 'copy'}
+                        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.75 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.75 }}
+                        transition={{ duration: 0.16 }}
+                      >
+                        {copied
+                          ? <Check className="h-4 w-4" aria-hidden="true" />
+                          : <Copy className="h-4 w-4" aria-hidden="true" />}
+                      </motion.span>
+                    </AnimatePresence>
                   </button>
                   <span className="sr-only" role="status" aria-live="polite">
                     {copied ? t('contact.email_copied') : ''}
