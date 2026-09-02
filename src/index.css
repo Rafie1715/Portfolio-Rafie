@@ -133,3 +133,105 @@
     transform: rotate(-7deg) translate3d(0, 38px, 0);
   }
 }
+
+.living-tech-node {
+  animation: living-tech-slide-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--tech-enter-delay);
+}
+
+.living-tech-mark {
+  position: relative;
+}
+
+.living-tech-mark.is-selected::after {
+  position: absolute;
+  inset: -4px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  content: "";
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.living-tech-detail {
+  animation: living-tech-detail-slide 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.living-tech-route {
+  overflow: hidden;
+}
+
+.living-tech-route::after {
+  position: absolute;
+  display: block;
+  background: rgb(37 99 235);
+  content: "";
+  animation-delay: var(--tech-route-delay, 0s);
+  animation-play-state: paused;
+}
+
+.living-tech-route-horizontal::after {
+  top: 0;
+  left: -52px;
+  width: 52px;
+  height: 1px;
+  animation-name: living-tech-signal-horizontal;
+  animation-duration: 4.8s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.living-tech-route-vertical::after {
+  top: -34px;
+  left: 0;
+  width: 1px;
+  height: 34px;
+  animation-name: living-tech-signal-vertical;
+  animation-duration: 5.4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.living-tech-stage.is-active .living-tech-route::after {
+  animation-play-state: running;
+}
+
+@keyframes living-tech-slide-in {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--tech-slide-origin, -20px), 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes living-tech-detail-slide {
+  from {
+    opacity: 0;
+    transform: translate3d(12px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes living-tech-signal-horizontal {
+  from {
+    left: -52px;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes living-tech-signal-vertical {
+  from {
+    top: -34px;
+  }
+  to {
+    top: 100%;
+  }
+}

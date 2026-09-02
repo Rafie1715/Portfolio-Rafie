@@ -36,7 +36,7 @@ const HeroProductPoster = () => (
       />
     </div>
     <img
-      src="/images/project-portfolio.webp"
+      src="/images/project-computercrafter.webp"
       alt=""
       loading="lazy"
       decoding="async"
@@ -96,15 +96,19 @@ const TypewriterLine = ({ phrases, prefix, accessibleText, reduceMotion, active 
   );
 };
 
-const Hero = () => {
+const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
   const { t, i18n } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
   const heroRef = useRef(null);
   const [isHeroVisible, setIsHeroVisible] = useState(true);
+  const [isDocumentVisible, setIsDocumentVisible] = useState(
+    () => typeof document === 'undefined' || document.visibilityState === 'visible',
+  );
   const [sceneRequested, setSceneRequested] = useState(false);
   const [webglSupported, setWebglSupported] = useState(true);
   const gridX = useSpring(useMotionValue(0), { stiffness: 90, damping: 24 });
   const gridY = useSpring(useMotionValue(0), { stiffness: 90, damping: 24 });
+  const lensKey = `home.recruiter_lens.modes.${recruiterLens}`;
 
   useEffect(() => {
     const element = heroRef.current;
@@ -116,6 +120,14 @@ const Hero = () => {
     );
     observer.observe(element);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsDocumentVisible(document.visibilityState === 'visible');
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   useEffect(() => {
@@ -143,10 +155,11 @@ const Hero = () => {
   const quickFacts = [
     { icon: 'fas fa-map-marker-alt', text: t('hero.quick_facts.location') },
     { icon: 'fas fa-briefcase', text: t('hero.quick_facts.availability') },
-    { icon: 'fas fa-layer-group', text: t('hero.quick_facts.focus') },
-    { icon: 'fas fa-code', text: t('hero.quick_facts.stack') },
+    { icon: 'fas fa-layer-group', text: t(`${lensKey}.focus`) },
+    { icon: 'fas fa-code', text: t(`${lensKey}.stack`) },
   ];
-  const rolePhrases = t('hero.role_phrases', { returnObjects: true });
+  const rolePhrases = t(`${lensKey}.hero_phrases`, { returnObjects: true });
+  const accessibleTagline = t(`${lensKey}.tagline`);
   const showProductScene = sceneRequested && webglSupported && !shouldReduceMotion;
   const showProductPoster = Boolean(shouldReduceMotion) || (sceneRequested && !webglSupported);
 
@@ -221,11 +234,17 @@ const Hero = () => {
 
       {showProductScene && (
         <div
-          className="absolute inset-0 z-10 opacity-[0.24] transition-opacity duration-500 dark:opacity-30 sm:opacity-60 dark:sm:opacity-60 md:opacity-75"
+          className="absolute inset-0 z-10 opacity-[0.28] transition-opacity duration-500 dark:opacity-30 sm:opacity-60 dark:sm:opacity-60 md:opacity-75"
+          data-active-lens={recruiterLens}
           aria-hidden="true"
         >
           <Suspense fallback={null}>
-            <HeroProductScene active={isHeroVisible} eventSource={heroRef} />
+            <HeroProductScene
+              active={isHeroVisible && isDocumentVisible}
+              activeLens={recruiterLens}
+              eventSource={heroRef}
+              onSelectLens={onRecruiterLensChange}
+            />
           </Suspense>
         </div>
       )}
@@ -252,10 +271,10 @@ const Hero = () => {
 
         <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-6 mt-2 md:mt-3 font-normal max-w-3xl mx-auto leading-relaxed px-4 min-h-[3.25rem] sm:min-h-[2rem]">
           <TypewriterLine
-            key={i18n.resolvedLanguage}
+            key={`${i18n.resolvedLanguage}-${recruiterLens}`}
             phrases={rolePhrases}
             prefix={t('hero.typewriter_prefix')}
-            accessibleText={t('hero.tagline')}
+            accessibleText={accessibleTagline}
             reduceMotion={shouldReduceMotion}
             active={isHeroVisible}
           />
@@ -330,6 +349,8 @@ const Hero = () => {
             <FaInstagram />
           </a>
         </motion.div>
+
+        <div className="h-16 sm:hidden" aria-hidden="true" />
       </motion.div>
     </section>
   );

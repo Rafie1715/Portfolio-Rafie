@@ -51,6 +51,28 @@ export const projects = [
       en: "This project strengthened my ability to connect machine learning evaluation with product decisions and to translate technical output into clear, actionable feedback for users.",
       id: "Proyek ini memperkuat kemampuan saya menghubungkan evaluasi machine learning dengan keputusan produk serta menerjemahkan keluaran teknis menjadi umpan balik yang jelas dan dapat ditindaklanjuti pengguna."
     },
+    decisionReplay: {
+      constraint: {
+        en: "As an independent thesis project, the Android flow had to combine activity tracking, self-assessment, Firebase data, and model output while keeping the result understandable.",
+        id: "Sebagai proyek skripsi mandiri, alur Android perlu menggabungkan pelacakan aktivitas, penilaian mandiri, data Firebase, dan keluaran model sambil menjaga hasil tetap mudah dipahami."
+      },
+      options: {
+        en: "Make the prediction the entire experience, or treat it as one layer inside a guided tracking, statistics, and education flow.",
+        id: "Menjadikan prediksi sebagai keseluruhan pengalaman, atau menempatkannya sebagai satu lapisan dalam alur pelacakan, statistik, dan edukasi terpandu."
+      },
+      decision: {
+        en: "Use Kotlin and Firebase for the product flow, evaluate Random Forest with Scikit-Learn, and present classification alongside weekly context and educational content.",
+        id: "Menggunakan Kotlin dan Firebase untuk alur produk, mengevaluasi Random Forest dengan Scikit-Learn, lalu menyajikan klasifikasi bersama konteks mingguan dan konten edukasi."
+      },
+      tradeoff: {
+        en: "A guided and explainable result flow was prioritized over exposing a more technical prediction pipeline to users.",
+        id: "Alur hasil yang terpandu dan mudah dijelaskan diprioritaskan dibanding menampilkan pipeline prediksi yang lebih teknis kepada pengguna."
+      },
+      evidence: {
+        en: "The final Random Forest model reached 92.06% classification accuracy and was integrated with tracking, assessment, statistics, and education features.",
+        id: "Model Random Forest akhir mencapai akurasi klasifikasi 92,06% dan terintegrasi dengan fitur pelacakan, penilaian, statistik, serta edukasi."
+      }
+    },
     features: {
       en: [
         "Sleep activity tracking",
@@ -127,6 +149,28 @@ export const projects = [
       en: "This project strengthened my understanding of production-oriented Android architecture, API state handling, and paginated mobile experiences.",
       id: "Proyek ini memperkuat pemahaman saya tentang arsitektur Android yang berorientasi produksi, penanganan state API, dan pengalaman mobile terpaginasikan."
     },
+    decisionReplay: {
+      constraint: {
+        en: "The internship scope required three Android screens and three REST endpoints while keeping loading, empty, failure, and appended-page states predictable.",
+        id: "Cakupan internship membutuhkan tiga layar Android dan tiga REST endpoint dengan loading, empty, failure, serta state penambahan halaman yang tetap konsisten."
+      },
+      options: {
+        en: "Manage page counters and list mutation manually, or adopt Paging 3 as the source of truth for pagination and loading states.",
+        id: "Mengelola penghitung halaman dan mutasi daftar secara manual, atau menggunakan Paging 3 sebagai sumber utama untuk paginasi dan loading state."
+      },
+      decision: {
+        en: "Structure the app with MVVM, use Retrofit for REST access, Coroutines for asynchronous work, and Paging 3 for endless scrolling.",
+        id: "Menyusun aplikasi dengan MVVM, menggunakan Retrofit untuk akses REST, Coroutines untuk proses asinkron, dan Paging 3 untuk endless scrolling."
+      },
+      tradeoff: {
+        en: "The architecture required more setup than direct network calls, but produced clearer responsibilities and more reliable state handling.",
+        id: "Arsitektur membutuhkan setup lebih banyak daripada pemanggilan jaringan langsung, tetapi menghasilkan pembagian tanggung jawab dan penanganan state yang lebih andal."
+      },
+      evidence: {
+        en: "All three screens and REST integrations were delivered, receiving an Excellent predicate with a score of 88.71/100.",
+        id: "Ketiga layar dan integrasi REST selesai dikembangkan serta memperoleh predikat Excellent dengan nilai 88,71/100."
+      }
+    },
     features: {
       en: [
         "Three primary news screens",
@@ -201,6 +245,28 @@ export const projects = [
     lessonLearned: {
       en: "I learned how to integrate TFLite with Android efficiently and mastered Kotlin Coroutines for background tasks. It also taught me the importance of cross-functional collaboration between ML and Mobile teams.",
       id: "Saya belajar cara mengintegrasikan TFLite dengan Android secara efisien dan menguasai Kotlin Coroutines untuk tugas latar belakang. Ini juga mengajarkan saya pentingnya kolaborasi lintas fungsi antara tim ML dan Mobile."
+    },
+    decisionReplay: {
+      constraint: {
+        en: "The initial classifier was too large and slow for a comfortable camera flow, and integration had to be coordinated across a six-member cross-functional team.",
+        id: "Classifier awal terlalu besar dan lambat untuk alur kamera yang nyaman, sementara integrasinya perlu dikoordinasikan dalam tim lintas fungsi beranggotakan enam orang."
+      },
+      options: {
+        en: "Run classification through a remote service, or optimize a TensorFlow Lite model for direct use inside the Android application.",
+        id: "Menjalankan klasifikasi melalui layanan remote, atau mengoptimalkan model TensorFlow Lite agar dapat digunakan langsung di aplikasi Android."
+      },
+      decision: {
+        en: "Optimize the TensorFlow Lite model for mobile and move image analysis off the main interface thread with Kotlin Coroutines.",
+        id: "Mengoptimalkan model TensorFlow Lite untuk mobile dan memindahkan analisis gambar dari thread antarmuka utama menggunakan Kotlin Coroutines."
+      },
+      tradeoff: {
+        en: "The team accepted additional model optimization work to keep the camera experience responsive and classification available on the device.",
+        id: "Tim menerima pekerjaan optimasi model tambahan agar pengalaman kamera tetap responsif dan klasifikasi tersedia pada perangkat."
+      },
+      evidence: {
+        en: "The delivered classifier covered more than five waste classes and reached 90% accuracy within the Android product flow.",
+        id: "Classifier yang dikembangkan mencakup lebih dari lima kelas sampah dan mencapai akurasi 90% dalam alur produk Android."
+      }
     },
     features: {
       en: [

@@ -48,6 +48,175 @@ const resources = {
                     location: "Jakarta, Indonesia",
                     availability: "Open to remote and Jakarta-based opportunities",
                     contact: "Start a conversation"
+                },
+                recruiter_lens: {
+                    eyebrow: "Recruiter Lens",
+                    control_label: "Choose a portfolio focus",
+                    copy_link: "Copy a shareable link to this focus",
+                    link_copied: "Focused portfolio link copied",
+                    copy_error: "The focused portfolio link could not be copied",
+                    project_proof: "Evidence",
+                    highlighting_technology: "Highlighting work built with {{technology}}",
+                    clear_technology: "Clear technology highlight",
+                    related_project: "Uses {{technology}}",
+                    living_stack: {
+                        eyebrow: "Living Tech Stack",
+                        title: "Tools connected to shipped work",
+                        summary: "Choose a technology to see its role and highlight the projects where I applied it.",
+                        control_label: "Choose a technology to explore",
+                        active_label: "Selected technology",
+                        used_in: "Used in"
+                    },
+                    technologies: {
+                        kotlin: {
+                            role: "Primary language for native Android development",
+                            usage: "RestUP, Mandiri News, and Planetku"
+                        },
+                        android_studio: {
+                            role: "Development environment for Android delivery",
+                            usage: "RestUP, Mandiri News, and Planetku"
+                        },
+                        firebase: {
+                            role: "Authentication and product data services",
+                            usage: "RestUP, Planetku, and this portfolio"
+                        },
+                        gradle: {
+                            role: "Android build and dependency workflow",
+                            usage: "RestUP, Mandiri News, and Planetku"
+                        },
+                        tensorflow: {
+                            role: "On-device machine learning integration",
+                            usage: "Planetku waste classification"
+                        },
+                        react: {
+                            role: "Component-driven front-end development",
+                            usage: "Personal Portfolio and Personal Notes"
+                        },
+                        javascript: {
+                            role: "Interactive browser and application logic",
+                            usage: "Computer Crafter, Personal Portfolio, and Personal Notes"
+                        },
+                        vite: {
+                            role: "Fast front-end development and production builds",
+                            usage: "Personal Portfolio and Personal Notes"
+                        },
+                        tailwind: {
+                            role: "Responsive design system implementation",
+                            usage: "Personal Portfolio"
+                        },
+                        php: {
+                            role: "Server-side compatibility and catalog logic",
+                            usage: "Computer Crafter"
+                        },
+                        mysql: {
+                            role: "Relational component catalog and specifications",
+                            usage: "Computer Crafter"
+                        },
+                        python: {
+                            role: "Machine learning experimentation and analysis",
+                            usage: "RestUP and Deepseek Sentiment Analysis"
+                        },
+                        scikit_learn: {
+                            role: "Classical model training and evaluation",
+                            usage: "RestUP and Deepseek Sentiment Analysis"
+                        },
+                        pandas: {
+                            role: "Dataset preparation and analytical workflows",
+                            usage: "Deepseek Sentiment Analysis"
+                        }
+                    },
+                    options: {
+                        overview: "Overview",
+                        android: "Android",
+                        frontend: "Front-End",
+                        ai: "AI / ML"
+                    },
+                    modes: {
+                        overview: {
+                            title: "A focused view of how I build",
+                            summary: "Scan the complete profile or choose a role to surface the most relevant projects, stack, and outcomes.",
+                            tagline: "Recent Informatics graduate building practical Android, front-end, and AI-integrated products.",
+                            focus: "Android, Front-End & AI",
+                            stack: "Kotlin, React, Firebase",
+                            hero_phrases: [
+                                "practical Android products.",
+                                "responsive web experiences.",
+                                "useful AI-integrated features."
+                            ],
+                            work_title: "Selected Work",
+                            work_summary: "Three projects that show product ownership, technical range, and measurable outcomes.",
+                            seo_title: "Rafie Rojagat | Software Engineer Portfolio",
+                            seo_desc: "Portfolio of Rafie Rojagat Bachri, an Informatics graduate building Android, front-end, and AI-integrated products with Kotlin and React.",
+                            proof: [
+                                { label: "Education", value: "Informatics graduate, GPA 3.89/4.00" },
+                                { label: "Delivery", value: "Independent and 6-member team projects" },
+                                { label: "Availability", value: "Open to internships and entry-level roles" }
+                            ]
+                        },
+                        android: {
+                            title: "Android product engineering",
+                            summary: "Native Android work centered on reliable architecture, asynchronous data, and product-ready mobile flows.",
+                            tagline: "Android-focused developer building reliable Kotlin products with structured data and state.",
+                            focus: "Native Android",
+                            stack: "Kotlin, MVVM, Coroutines",
+                            hero_phrases: [
+                                "native Kotlin applications.",
+                                "reliable MVVM data flows.",
+                                "responsive Android features."
+                            ],
+                            work_title: "Selected Android Work",
+                            work_summary: "Android projects covering REST pagination, Firebase workflows, and on-device machine learning.",
+                            seo_title: "Rafie Rojagat | Android Developer Portfolio",
+                            seo_desc: "Android developer portfolio featuring Kotlin, MVVM, Coroutines, Retrofit, Firebase, and on-device machine learning projects.",
+                            proof: [
+                                { label: "Core stack", value: "Kotlin, MVVM, Retrofit, Coroutines" },
+                                { label: "Delivery proof", value: "Three detailed Android case studies" },
+                                { label: "Strongest result", value: "Mandiri project score 88.71/100" }
+                            ]
+                        },
+                        frontend: {
+                            title: "Front-end and web product development",
+                            summary: "Responsive interfaces backed by practical state, accessibility, performance, and data integration decisions.",
+                            tagline: "Front-end developer building responsive React products and practical full-stack web experiences.",
+                            focus: "Front-End & Web",
+                            stack: "React, Vite, Tailwind",
+                            hero_phrases: [
+                                "responsive React interfaces.",
+                                "accessible web interactions.",
+                                "maintainable front-end systems."
+                            ],
+                            work_title: "Selected Front-End Work",
+                            work_summary: "Web projects spanning React applications, compatibility logic, responsive UI, and live delivery.",
+                            seo_title: "Rafie Rojagat | Front-End Developer Portfolio",
+                            seo_desc: "Front-end developer portfolio featuring React, Vite, Tailwind CSS, responsive interfaces, and practical web products.",
+                            proof: [
+                                { label: "Core stack", value: "React, JavaScript, Vite, Tailwind CSS" },
+                                { label: "Product range", value: "Responsive UI and full-stack web logic" },
+                                { label: "Delivery proof", value: "Three focused web case studies" }
+                            ]
+                        },
+                        ai: {
+                            title: "Applied AI and machine learning",
+                            summary: "Model evaluation connected to understandable mobile and product experiences, not isolated notebook results.",
+                            tagline: "Applied AI developer connecting evaluated models with practical product experiences.",
+                            focus: "Applied AI & ML",
+                            stack: "Scikit-Learn, TFLite, OpenCV",
+                            hero_phrases: [
+                                "evaluated machine learning models.",
+                                "on-device AI features.",
+                                "AI outputs users can understand."
+                            ],
+                            work_title: "Selected AI & ML Work",
+                            work_summary: "Applied ML projects covering health classification, on-device vision, and sentiment analysis.",
+                            seo_title: "Rafie Rojagat | Applied AI Developer Portfolio",
+                            seo_desc: "Applied AI portfolio featuring Scikit-Learn, TensorFlow Lite, OpenCV, model evaluation, and AI-integrated products.",
+                            proof: [
+                                { label: "Model evaluation", value: "92.06% sleep classification accuracy" },
+                                { label: "On-device AI", value: "90% waste classification accuracy" },
+                                { label: "NLP project", value: "87.67% sentiment model accuracy" }
+                            ]
+                        }
+                    }
                 }
             },
             about: {
@@ -245,6 +414,21 @@ const resources = {
                     scope: "Scope",
                     tech_link: "Tech & Link",
                     team_fallback: "Solo or team project"
+                },
+                decision_replay: {
+                    eyebrow: "Engineering Reasoning",
+                    title: "Decision Replay",
+                    desc: "Step through the constraints, alternatives, decisions, and evidence behind the finished product.",
+                    controls: "Explore engineering decision steps",
+                    step_count: "Step {{current}} of {{total}}",
+                    steps: {
+                        problem: "Problem",
+                        constraint: "Constraints",
+                        options: "Options considered",
+                        decision: "Decision",
+                        tradeoff: "Trade-off",
+                        evidence: "Evidence"
+                    }
                 },
                 overview: "Project Overview",
                 features: "Key Features",
@@ -600,6 +784,175 @@ const resources = {
                     location: "Jakarta, Indonesia",
                     availability: "Terbuka untuk peluang remote dan berbasis di Jakarta",
                     contact: "Mulai percakapan"
+                },
+                recruiter_lens: {
+                    eyebrow: "Sudut Pandang Rekruter",
+                    control_label: "Pilih fokus portofolio",
+                    copy_link: "Salin tautan yang dapat dibagikan untuk fokus ini",
+                    link_copied: "Tautan portofolio terfokus berhasil disalin",
+                    copy_error: "Tautan portofolio terfokus tidak dapat disalin",
+                    project_proof: "Bukti",
+                    highlighting_technology: "Menyorot karya yang dibuat dengan {{technology}}",
+                    clear_technology: "Hapus sorotan teknologi",
+                    related_project: "Menggunakan {{technology}}",
+                    living_stack: {
+                        eyebrow: "Tech Stack Interaktif",
+                        title: "Teknologi yang terhubung dengan karya nyata",
+                        summary: "Pilih teknologi untuk melihat perannya dan menyorot proyek tempat saya menerapkannya.",
+                        control_label: "Pilih teknologi untuk dijelajahi",
+                        active_label: "Teknologi terpilih",
+                        used_in: "Digunakan pada"
+                    },
+                    technologies: {
+                        kotlin: {
+                            role: "Bahasa utama untuk pengembangan Android native",
+                            usage: "RestUP, Mandiri News, dan Planetku"
+                        },
+                        android_studio: {
+                            role: "Lingkungan pengembangan untuk produk Android",
+                            usage: "RestUP, Mandiri News, dan Planetku"
+                        },
+                        firebase: {
+                            role: "Layanan autentikasi dan data produk",
+                            usage: "RestUP, Planetku, dan portfolio ini"
+                        },
+                        gradle: {
+                            role: "Alur build dan dependensi Android",
+                            usage: "RestUP, Mandiri News, dan Planetku"
+                        },
+                        tensorflow: {
+                            role: "Integrasi machine learning pada perangkat",
+                            usage: "Klasifikasi sampah Planetku"
+                        },
+                        react: {
+                            role: "Pengembangan front-end berbasis komponen",
+                            usage: "Personal Portfolio dan Personal Notes"
+                        },
+                        javascript: {
+                            role: "Logika interaktif untuk browser dan aplikasi",
+                            usage: "Computer Crafter, Personal Portfolio, dan Personal Notes"
+                        },
+                        vite: {
+                            role: "Pengembangan front-end dan build produksi cepat",
+                            usage: "Personal Portfolio dan Personal Notes"
+                        },
+                        tailwind: {
+                            role: "Implementasi sistem desain responsif",
+                            usage: "Personal Portfolio"
+                        },
+                        php: {
+                            role: "Logika kompatibilitas dan katalog pada server",
+                            usage: "Computer Crafter"
+                        },
+                        mysql: {
+                            role: "Katalog komponen dan spesifikasi relasional",
+                            usage: "Computer Crafter"
+                        },
+                        python: {
+                            role: "Eksperimen dan analisis machine learning",
+                            usage: "RestUP dan Analisis Sentimen Deepseek"
+                        },
+                        scikit_learn: {
+                            role: "Pelatihan dan evaluasi model klasik",
+                            usage: "RestUP dan Analisis Sentimen Deepseek"
+                        },
+                        pandas: {
+                            role: "Persiapan dataset dan alur analitik",
+                            usage: "Analisis Sentimen Deepseek"
+                        }
+                    },
+                    options: {
+                        overview: "Ringkasan",
+                        android: "Android",
+                        frontend: "Front-End",
+                        ai: "AI / ML"
+                    },
+                    modes: {
+                        overview: {
+                            title: "Cara terfokus untuk melihat karya saya",
+                            summary: "Lihat profil lengkap atau pilih role untuk menampilkan proyek, stack, dan hasil yang paling relevan.",
+                            tagline: "Lulusan Informatika yang membangun produk Android, front-end, dan integrasi AI yang praktis.",
+                            focus: "Android, Front-End & AI",
+                            stack: "Kotlin, React, Firebase",
+                            hero_phrases: [
+                                "produk Android yang praktis.",
+                                "pengalaman web yang responsif.",
+                                "fitur terintegrasi AI yang berguna."
+                            ],
+                            work_title: "Karya Pilihan",
+                            work_summary: "Tiga proyek yang menunjukkan kepemilikan produk, rentang teknis, dan hasil terukur.",
+                            seo_title: "Rafie Rojagat | Portofolio Software Engineer",
+                            seo_desc: "Portofolio Rafie Rojagat Bachri, lulusan Informatika yang membangun produk Android, front-end, dan integrasi AI dengan Kotlin dan React.",
+                            proof: [
+                                { label: "Pendidikan", value: "Lulusan Informatika, IPK 3,89/4,00" },
+                                { label: "Pengembangan", value: "Proyek mandiri dan tim beranggotakan 6 orang" },
+                                { label: "Ketersediaan", value: "Terbuka untuk magang dan posisi entry-level" }
+                            ]
+                        },
+                        android: {
+                            title: "Pengembangan produk Android",
+                            summary: "Karya Android native yang berfokus pada arsitektur andal, data asinkron, dan alur mobile siap produk.",
+                            tagline: "Developer Android yang membangun produk Kotlin andal dengan data dan state terstruktur.",
+                            focus: "Android Native",
+                            stack: "Kotlin, MVVM, Coroutines",
+                            hero_phrases: [
+                                "aplikasi native dengan Kotlin.",
+                                "alur data MVVM yang andal.",
+                                "fitur Android yang responsif."
+                            ],
+                            work_title: "Karya Android Pilihan",
+                            work_summary: "Proyek Android yang mencakup paginasi REST, alur Firebase, dan machine learning pada perangkat.",
+                            seo_title: "Rafie Rojagat | Portofolio Developer Android",
+                            seo_desc: "Portofolio developer Android dengan Kotlin, MVVM, Coroutines, Retrofit, Firebase, dan machine learning pada perangkat.",
+                            proof: [
+                                { label: "Stack utama", value: "Kotlin, MVVM, Retrofit, Coroutines" },
+                                { label: "Bukti pengembangan", value: "Tiga studi kasus Android terperinci" },
+                                { label: "Hasil terkuat", value: "Nilai proyek Mandiri 88,71/100" }
+                            ]
+                        },
+                        frontend: {
+                            title: "Pengembangan produk front-end dan web",
+                            summary: "Antarmuka responsif yang didukung keputusan state, aksesibilitas, performa, dan integrasi data yang praktis.",
+                            tagline: "Developer front-end yang membangun produk React responsif dan pengalaman web full-stack praktis.",
+                            focus: "Front-End & Web",
+                            stack: "React, Vite, Tailwind",
+                            hero_phrases: [
+                                "antarmuka React yang responsif.",
+                                "interaksi web yang aksesibel.",
+                                "sistem front-end yang terawat."
+                            ],
+                            work_title: "Karya Front-End Pilihan",
+                            work_summary: "Proyek web yang mencakup aplikasi React, logika kompatibilitas, UI responsif, dan deployment nyata.",
+                            seo_title: "Rafie Rojagat | Portofolio Developer Front-End",
+                            seo_desc: "Portofolio developer front-end dengan React, Vite, Tailwind CSS, antarmuka responsif, dan produk web praktis.",
+                            proof: [
+                                { label: "Stack utama", value: "React, JavaScript, Vite, Tailwind CSS" },
+                                { label: "Rentang produk", value: "UI responsif dan logika web full-stack" },
+                                { label: "Bukti pengembangan", value: "Tiga studi kasus web terfokus" }
+                            ]
+                        },
+                        ai: {
+                            title: "AI dan machine learning terapan",
+                            summary: "Evaluasi model yang dihubungkan ke pengalaman mobile dan produk yang mudah dipahami, bukan sekadar hasil notebook.",
+                            tagline: "Developer AI terapan yang menghubungkan model teruji dengan pengalaman produk praktis.",
+                            focus: "AI & ML Terapan",
+                            stack: "Scikit-Learn, TFLite, OpenCV",
+                            hero_phrases: [
+                                "model machine learning teruji.",
+                                "fitur AI pada perangkat.",
+                                "keluaran AI yang mudah dipahami."
+                            ],
+                            work_title: "Karya AI & ML Pilihan",
+                            work_summary: "Proyek ML terapan untuk klasifikasi kesehatan, visi pada perangkat, dan analisis sentimen.",
+                            seo_title: "Rafie Rojagat | Portofolio Developer AI Terapan",
+                            seo_desc: "Portofolio AI terapan dengan Scikit-Learn, TensorFlow Lite, OpenCV, evaluasi model, dan produk terintegrasi AI.",
+                            proof: [
+                                { label: "Evaluasi model", value: "Akurasi klasifikasi tidur 92,06%" },
+                                { label: "AI pada perangkat", value: "Akurasi klasifikasi sampah 90%" },
+                                { label: "Proyek NLP", value: "Akurasi model sentimen 87,67%" }
+                            ]
+                        }
+                    }
                 }
             },
             about: {
@@ -797,6 +1150,21 @@ const resources = {
                     scope: "Cakupan",
                     tech_link: "Tech & Link",
                     team_fallback: "Proyek mandiri atau tim"
+                },
+                decision_replay: {
+                    eyebrow: "Pertimbangan Engineering",
+                    title: "Jejak Keputusan",
+                    desc: "Telusuri constraint, alternatif, keputusan, dan bukti di balik produk yang selesai dikembangkan.",
+                    controls: "Jelajahi langkah keputusan engineering",
+                    step_count: "Langkah {{current}} dari {{total}}",
+                    steps: {
+                        problem: "Masalah",
+                        constraint: "Constraint",
+                        options: "Alternatif",
+                        decision: "Keputusan",
+                        tradeoff: "Trade-off",
+                        evidence: "Bukti"
+                    }
                 },
                 overview: "Ringkasan Proyek",
                 features: "Fitur Utama",

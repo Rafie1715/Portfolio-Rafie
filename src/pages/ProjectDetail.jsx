@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { projects as localProjects } from '../data/projects';
 import { useFirebaseInit } from '../hooks/useFirebaseInit';
 import { doc, getDoc } from 'firebase/firestore';
-import SpotlightCard from '../components/SpotlightCard';
+import DecisionReplay from '../components/DecisionReplay';
 import SEO from '../components/SEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import LikeButton from '../components/LikeButton';
@@ -193,6 +193,18 @@ const ProjectDetail = () => {
       icon: 'fas fa-link',
     },
   ].filter((item) => item.value);
+  const replay = project.decisionReplay || {};
+  const decisionReplaySteps = [
+    { key: 'problem', value: challenges },
+    { key: 'constraint', value: getData(replay.constraint) },
+    { key: 'options', value: getData(replay.options) },
+    { key: 'decision', value: getData(replay.decision) || solution },
+    { key: 'tradeoff', value: getData(replay.tradeoff) },
+    {
+      key: 'evidence',
+      value: getData(replay.evidence) || structuredResult || resultText || impactSummary,
+    },
+  ].filter((step) => step.value);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -396,9 +408,9 @@ const ProjectDetail = () => {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
+          <DecisionReplay key={project.id} steps={decisionReplaySteps} />
 
-            <div className="lg:col-span-2 space-y-10">
+          <div className="mb-16 max-w-3xl space-y-10">
               <motion.section
                 initial="hidden"
                 whileInView="visible"
@@ -435,47 +447,6 @@ const ProjectDetail = () => {
                   </ul>
                 </motion.section>
               )}
-            </div>
-
-            <div className="space-y-8">
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-              >
-                <SpotlightCard className="p-6 bg-red-50/50 dark:bg-red-900/10 border-red-100 dark:border-red-900/30 h-auto">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
-                      <i className="fas fa-fire text-xl"></i>
-                    </div>
-                    <h3 className="font-bold text-dark dark:text-white text-lg">{t('projectDetail.challenge')}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {challenges}
-                  </p>
-                </SpotlightCard>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 }}
-              >
-                <SpotlightCard className="p-6 bg-blue-50/50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900/30 h-auto">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-500">
-                      <i className="fas fa-lightbulb text-xl"></i>
-                    </div>
-                    <h3 className="font-bold text-dark dark:text-white text-lg">{t('projectDetail.solution')}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {solution}
-                  </p>
-                </SpotlightCard>
-              </motion.div>
-            </div>
           </div>
 
           {lessonLearned && (
