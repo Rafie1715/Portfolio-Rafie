@@ -106,6 +106,9 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
   );
   const [sceneRequested, setSceneRequested] = useState(false);
   const [webglSupported, setWebglSupported] = useState(true);
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches,
+  );
   const gridX = useSpring(useMotionValue(0), { stiffness: 90, damping: 24 });
   const gridY = useSpring(useMotionValue(0), { stiffness: 90, damping: 24 });
   const lensKey = `home.recruiter_lens.modes.${recruiterLens}`;
@@ -131,7 +134,14 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
   }, []);
 
   useEffect(() => {
-    if (shouldReduceMotion || sceneRequested) return undefined;
+    const mediaQuery = window.matchMedia('(max-width: 639px)');
+    const handleViewportChange = (event) => setIsMobileViewport(event.matches);
+    mediaQuery.addEventListener('change', handleViewportChange);
+    return () => mediaQuery.removeEventListener('change', handleViewportChange);
+  }, []);
+
+  useEffect(() => {
+    if (shouldReduceMotion || sceneRequested || isMobileViewport) return undefined;
 
     const requestScene = () => {
       setWebglSupported(canUseWebGL());
@@ -150,7 +160,7 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
       if (idleId) window.cancelIdleCallback(idleId);
       if (timeoutId) window.clearTimeout(timeoutId);
     };
-  }, [sceneRequested, shouldReduceMotion]);
+  }, [isMobileViewport, sceneRequested, shouldReduceMotion]);
 
   const quickFacts = [
     { icon: 'fas fa-map-marker-alt', text: t('hero.quick_facts.location') },
@@ -160,8 +170,9 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
   ];
   const rolePhrases = t(`${lensKey}.hero_phrases`, { returnObjects: true });
   const accessibleTagline = t(`${lensKey}.tagline`);
-  const showProductScene = sceneRequested && webglSupported && !shouldReduceMotion;
-  const showProductPoster = Boolean(shouldReduceMotion) || (sceneRequested && !webglSupported);
+  const showProductScene = !isMobileViewport && sceneRequested && webglSupported && !shouldReduceMotion;
+  const showProductPoster = !isMobileViewport
+    && (Boolean(shouldReduceMotion) || (sceneRequested && !webglSupported));
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -330,7 +341,7 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
           </motion.div>
         </motion.div>
 
-        <motion.p variants={itemVariants} className="mt-4 text-sm md:text-base text-gray-500 dark:text-gray-400 px-4 text-center">
+        <motion.p variants={itemVariants} className="mt-4 px-4 text-center text-sm text-gray-500 dark:text-gray-400 md:text-base">
           {t('hero.afk_cta.prefix')}{' '}
           <Link to="/afk" className="font-semibold text-blue-600 dark:text-blue-400 hover:underline underline-offset-4">
             {t('hero.afk_cta.link')}
@@ -338,7 +349,7 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
           .
         </motion.p>
 
-        <motion.div variants={itemVariants} className="mt-8 md:mt-12 flex gap-5 md:gap-6 text-2xl md:text-3xl text-gray-400">
+        <motion.div variants={itemVariants} className="mt-8 flex gap-5 text-2xl text-gray-400 md:mt-12 md:gap-6 md:text-3xl">
           <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="p-2 hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="GitHub">
             <FaGithub />
           </a>
@@ -350,7 +361,6 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
           </a>
         </motion.div>
 
-        <div className="h-16 sm:hidden" aria-hidden="true" />
       </motion.div>
     </section>
   );
