@@ -13,7 +13,7 @@ import {
 import { currentRotationFallback } from '../data/currentRotation';
 
 const normalizeTracks = (items) => items
-  .slice(0, 3)
+  .slice(0, 5)
   .map((track, index) => ({
     id: track.id,
     title: track.name,
@@ -52,7 +52,7 @@ const HomePersonalPanel = () => {
       const data = await response.json();
       const nextTracks = Array.isArray(data.items) ? normalizeTracks(data.items) : [];
 
-      if (nextTracks.length !== 3) {
+      if (nextTracks.length !== 5) {
         throw new Error('Spotify returned incomplete track data');
       }
 
@@ -152,14 +152,14 @@ const HomePersonalPanel = () => {
             </button>
           </div>
 
-          <div className="mb-7 flex items-center">
+          <div className="mb-7 flex w-full items-center">
             {tracks.map((track, index) => (
               <a
                 key={track.id}
                 href={track.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`relative block h-24 w-24 overflow-hidden rounded-md border-2 border-slate-950 shadow-lg transition-transform duration-200 hover:-translate-y-1 focus:z-10 focus:outline-none focus:ring-2 focus:ring-emerald-300 sm:h-28 sm:w-28 ${index > 0 ? '-ml-5' : ''}`}
+                className={`relative block aspect-square w-[calc((100%+3rem)/5)] max-w-28 overflow-hidden rounded-md border-2 border-slate-950 shadow-lg transition-transform duration-200 hover:-translate-y-1 focus:z-10 focus:outline-none focus:ring-2 focus:ring-emerald-300 ${index > 0 ? '-ml-3' : ''}`}
                 aria-label={`${t('home.beyond.open_spotify')}: ${track.title}`}
                 title={`${track.title} - ${track.artist}`}
                 style={{ zIndex: tracks.length - index }}

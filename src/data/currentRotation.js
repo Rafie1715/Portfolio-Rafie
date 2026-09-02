@@ -23,4 +23,20 @@ export const currentRotationFallback = [
     image: '/images/music/everything-u-are.jpg',
     url: 'https://open.spotify.com/track/5WOSNVChcadlsCRiqXE45K',
   },
+  {
+    id: '3lyNwsohK73iKsGWHLFtMp',
+    title: 'Satu Hari Lagi',
+    artist: 'Hindia',
+    album: 'Lagipula Hidup Akan Berakhir',
+    image: '/images/music/satu-hari-lagi.jpg',
+    url: 'https://open.spotify.com/track/3lyNwsohK73iKsGWHLFtMp',
+  },
+  {
+    id: '3Li1q9Z1AyDQbpadhERTPU',
+    title: 'Gugatan Rakyat Semesta',
+    artist: '.Feast',
+    album: 'Abdi Lara Insani',
+    image: '/images/music/gugatan-rakyat-semesta.jpg',
+    url: 'https://open.spotify.com/track/3Li1q9Z1AyDQbpadhERTPU',
+  },
 ];
