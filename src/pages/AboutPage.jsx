@@ -88,7 +88,7 @@ const AboutPage = () => {
         <About />
         <Skills />
 
-        <section className="bg-white py-16 dark:bg-dark sm:py-20">
+        <section id="experience" className="scroll-mt-24 bg-white py-16 dark:bg-dark sm:py-20">
           <div className="container mx-auto mb-10 max-w-5xl px-4 sm:px-6">
             <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
               <BriefcaseBusiness className="h-5 w-5" aria-hidden="true" />

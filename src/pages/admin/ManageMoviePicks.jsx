@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
-import { useToast } from "../../components/ToastProvider";
+import { useToast } from "../../hooks/useToast";
 
 const defaultFormState = {
   movieId: "",
@@ -39,7 +39,7 @@ const ManageMoviePicks = () => {
   const listTitle = isWatchlist ? "Watchlist Items" : "Existing Picks";
   const itemLabel = isWatchlist ? "item" : "pick";
 
-  const fetchPicks = async ({ silent = false } = {}) => {
+  const fetchPicks = useCallback(async ({ silent = false } = {}) => {
     if (!dbFirestore) return;
 
     try {
@@ -82,11 +82,11 @@ const ManageMoviePicks = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [collectionName, dbFirestore, isWatchlist, showToast]);
 
   useEffect(() => {
     fetchPicks({ silent: true });
-  }, [dbFirestore, collectionName]);
+  }, [fetchPicks]);
 
   const publishedCount = useMemo(
     () => picks.filter((item) => item.isPublished !== false).length,

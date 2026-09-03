@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
@@ -113,6 +113,18 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
   const gridY = useSpring(useMotionValue(0), { stiffness: 90, damping: 24 });
   const lensKey = `home.recruiter_lens.modes.${recruiterLens}`;
 
+  const requestProductScene = useCallback(() => {
+    if (shouldReduceMotion || sceneRequested || isMobileViewport) return;
+
+    const connection = navigator.connection;
+    const constrainedConnection = connection?.saveData
+      || ['slow-2g', '2g'].includes(connection?.effectiveType);
+    if (constrainedConnection) return;
+
+    setWebglSupported(canUseWebGL());
+    setSceneRequested(true);
+  }, [isMobileViewport, sceneRequested, shouldReduceMotion]);
+
   useEffect(() => {
     const element = heroRef.current;
     if (!element) return undefined;
@@ -143,24 +155,20 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
   useEffect(() => {
     if (shouldReduceMotion || sceneRequested || isMobileViewport) return undefined;
 
-    const requestScene = () => {
-      setWebglSupported(canUseWebGL());
-      setSceneRequested(true);
-    };
-
     let idleId;
-    let timeoutId;
-    if ('requestIdleCallback' in window) {
-      idleId = window.requestIdleCallback(requestScene, { timeout: 2400 });
-    } else {
-      timeoutId = window.setTimeout(requestScene, 1200);
-    }
+    const timeoutId = window.setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        idleId = window.requestIdleCallback(requestProductScene, { timeout: 1800 });
+      } else {
+        requestProductScene();
+      }
+    }, 5000);
 
     return () => {
+      window.clearTimeout(timeoutId);
       if (idleId) window.cancelIdleCallback(idleId);
-      if (timeoutId) window.clearTimeout(timeoutId);
     };
-  }, [isMobileViewport, sceneRequested, shouldReduceMotion]);
+  }, [isMobileViewport, requestProductScene, sceneRequested, shouldReduceMotion]);
 
   const quickFacts = [
     { icon: 'fas fa-map-marker-alt', text: t('hero.quick_facts.location') },
@@ -171,8 +179,7 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
   const rolePhrases = t(`${lensKey}.hero_phrases`, { returnObjects: true });
   const accessibleTagline = t(`${lensKey}.tagline`);
   const showProductScene = !isMobileViewport && sceneRequested && webglSupported && !shouldReduceMotion;
-  const showProductPoster = !isMobileViewport
-    && (Boolean(shouldReduceMotion) || (sceneRequested && !webglSupported));
+  const showProductPoster = !isMobileViewport && !showProductScene;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -216,6 +223,8 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
   const handlePointerMove = (event) => {
     if (shouldReduceMotion || event.pointerType === 'touch' || window.innerWidth < 768) return;
 
+    requestProductScene();
+
     const bounds = event.currentTarget.getBoundingClientRect();
     gridX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 10);
     gridY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 10);
@@ -231,6 +240,7 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
       ref={heroRef}
       id="home"
       onPointerMove={handlePointerMove}
+      onFocusCapture={requestProductScene}
       onPointerLeave={resetGridPosition}
       className="relative md:min-h-[calc(100svh-140px)] flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-24 pb-8 sm:pb-12 md:pb-14 overflow-hidden transition-colors duration-300"
     >
@@ -249,7 +259,7 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
           data-active-lens={recruiterLens}
           aria-hidden="true"
         >
-          <Suspense fallback={null}>
+          <Suspense fallback={<HeroProductPoster />}>
             <HeroProductScene
               active={isHeroVisible && isDocumentVisible}
               activeLens={recruiterLens}
@@ -268,9 +278,9 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
         initial="hidden"
         animate="visible"
       >
-        <motion.h2 variants={itemVariants} className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-gray-500 dark:text-gray-400 mb-2 md:mb-3 px-2">
+        <motion.p variants={itemVariants} className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-gray-500 dark:text-gray-400 mb-2 md:mb-3 px-2">
           {t('hero.greeting')}
-        </motion.h2>
+        </motion.p>
 
         <div className="overflow-hidden mb-3 md:mb-2 px-2 pb-2">
           <motion.h1 variants={nameVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight leading-tight break-words">

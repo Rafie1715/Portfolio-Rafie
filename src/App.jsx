@@ -44,6 +44,30 @@ function App() {
   usePageTracking();
 
   useEffect(() => {
+    const targetId = decodeURIComponent(location.hash.replace(/^#/, ''));
+    if (!targetId) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      return undefined;
+    }
+
+    let timeoutId;
+    let attempts = 0;
+    const scrollToTarget = () => {
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ block: 'start', behavior: 'auto' });
+        return;
+      }
+
+      attempts += 1;
+      if (attempts < 20) timeoutId = window.setTimeout(scrollToTarget, 75);
+    };
+
+    scrollToTarget();
+    return () => window.clearTimeout(timeoutId);
+  }, [location.hash, location.pathname]);
+
+  useEffect(() => {
     const revealChatbot = () => {
       if (window.scrollY > 160) setShouldLoadChatbot(true);
     };

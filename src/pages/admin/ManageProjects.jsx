@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { collection, getDocs, deleteDoc, doc, addDoc, writeBatch } from "firebase/firestore";
 import { projects as localProjects } from "../../data/projects";
-import { useToast } from "../../components/ToastProvider";
+import { useToast } from "../../hooks/useToast";
 
 const ManageProjects = () => {
   const [cmsProjects, setCmsProjects] = useState([]);
@@ -29,7 +29,7 @@ const ManageProjects = () => {
     return Number.isNaN(parsed) ? 0 : parsed;
   };
 
-  const fetchProjects = async ({ silent = false } = {}) => {
+  const fetchProjects = useCallback(async ({ silent = false } = {}) => {
     if (!dbFirestore) return; // Wait for Firebase to load
 
     try {
@@ -55,11 +55,11 @@ const ManageProjects = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dbFirestore, showToast]);
 
   useEffect(() => {
     fetchProjects({ silent: true });
-  }, [dbFirestore]);
+  }, [fetchProjects]);
 
   const allProjects = useMemo(() => {
     const normalizedLocal = localProjects.map((project) => ({

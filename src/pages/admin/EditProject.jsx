@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { useToast } from "../../components/ToastProvider";
+import { useToast } from "../../hooks/useToast";
 
 const EditProject = () => {
   const navigate = useNavigate();
@@ -413,8 +413,10 @@ const EditProject = () => {
   }, [hasUnsavedChanges]);
 
   useEffect(() => {
+    const timers = debounceTimers.current;
+
     return () => {
-      Object.values(debounceTimers.current).forEach((timerId) => clearTimeout(timerId));
+      Object.values(timers).forEach((timerId) => clearTimeout(timerId));
     };
   }, []);
 

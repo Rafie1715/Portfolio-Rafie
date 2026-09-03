@@ -1,4 +1,4 @@
-export const handler = async (event) => {
+export const handler = async () => {
   const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
 
   if (!refreshToken) {

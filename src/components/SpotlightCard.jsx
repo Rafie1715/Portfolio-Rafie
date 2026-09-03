@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 const SpotlightCard = ({ children, className = "" }) => {
   const divRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e) => {
@@ -17,12 +16,10 @@ const SpotlightCard = ({ children, className = "" }) => {
   };
 
   const handleFocus = () => {
-    setOpacity(1);
     setIsHovered(true);
   };
 
   const handleBlur = () => {
-    setOpacity(0);
     setIsHovered(false);
   };
 

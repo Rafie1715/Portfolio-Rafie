@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
-import { useToast } from "../../components/ToastProvider";
+import { useToast } from "../../hooks/useToast";
 import { certifications as localCertifications } from "../../data/certifications";
 import {
   bulkUpdateCertifications,
@@ -10,6 +10,21 @@ import {
   reorderCertifications,
   updateCertification,
 } from "../../utils/certificationAdminApi";
+
+const getText = (value) => {
+  if (!value) return "";
+  if (typeof value === "object") return value.en || value.id || "";
+  return String(value);
+};
+
+const getOrder = (cert) => {
+  if (typeof cert?.order === "number") return cert.order;
+  if (typeof cert?.order === "string" && cert.order.trim() !== "") {
+    const parsed = Number(cert.order);
+    if (!Number.isNaN(parsed)) return parsed;
+  }
+  return Number.MAX_SAFE_INTEGER;
+};
 
 const ManageCertifications = () => {
   const { dbFirestore, auth } = useFirebaseInit("all");
@@ -25,22 +40,7 @@ const ManageCertifications = () => {
   const [selectedCertificationIds, setSelectedCertificationIds] = useState([]);
   const [bulkPublishing, setBulkPublishing] = useState(false);
 
-  const getText = (value) => {
-    if (!value) return "";
-    if (typeof value === "object") return value.en || value.id || "";
-    return String(value);
-  };
-
-  const getOrder = (cert) => {
-    if (typeof cert?.order === "number") return cert.order;
-    if (typeof cert?.order === "string" && cert.order.trim() !== "") {
-      const parsed = Number(cert.order);
-      if (!Number.isNaN(parsed)) return parsed;
-    }
-    return Number.MAX_SAFE_INTEGER;
-  };
-
-  const fetchCertifications = async ({ silent = false } = {}) => {
+  const fetchCertifications = useCallback(async ({ silent = false } = {}) => {
     if (!dbFirestore) return;
 
     try {
@@ -75,11 +75,11 @@ const ManageCertifications = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dbFirestore, showToast]);
 
   useEffect(() => {
     fetchCertifications({ silent: true });
-  }, [dbFirestore]);
+  }, [fetchCertifications]);
 
   useEffect(() => {
     setSelectedCertificationIds((prev) => prev.filter((id) => certifications.some((item) => item.id === id)));

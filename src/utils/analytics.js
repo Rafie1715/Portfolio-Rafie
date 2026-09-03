@@ -44,10 +44,10 @@ export const trackFormSubmission = (formName, success = true) => {
 
 // Track external link clicks
 export const trackExternalLink = (platform, url) => {
-  trackEvent('External Links', 'click', platform, 1);
+  trackEvent('External Links', 'click', `${platform}:${url}`, 1);
 };
 
 // Track project views
 export const trackProjectView = (projectId, projectName) => {
-  trackEvent('Projects', 'view', projectId, 1);
+  trackEvent('Projects', 'view', projectName || projectId, 1);
 };

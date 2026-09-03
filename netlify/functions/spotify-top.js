@@ -1,5 +1,3 @@
-/* global process */
-
 export const handler = async (event) => {
   const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
   const timeRange = event.queryStringParameters?.time_range || 'short_term';

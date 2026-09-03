@@ -1,9 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 const ThreeDCard = ({ children, className = "" }) => {
   const ref = useRef(null);
-  const [hover, setHover] = useState(false);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -29,7 +28,6 @@ const ThreeDCard = ({ children, className = "" }) => {
   };
 
   const handleMouseLeave = () => {
-    setHover(false);
     x.set(0);
     y.set(0);
   };
@@ -38,7 +36,6 @@ const ThreeDCard = ({ children, className = "" }) => {
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setHover(true)}
       onMouseLeave={handleMouseLeave}
       style={{
         rotateX,

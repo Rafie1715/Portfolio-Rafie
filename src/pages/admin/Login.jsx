@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +7,8 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
-  const [firebaseReady, setFirebaseReady] = useState(false);
   const navigate = useNavigate();
-  const { auth } = useFirebaseInit('auth');
-
-  useEffect(() => {
-    if (auth) setFirebaseReady(true);
-  }, [auth]);
+  const { auth, loading } = useFirebaseInit('auth');
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -51,8 +46,12 @@ const Login = () => {
         
         {error && <span className="text-red-500 text-sm block mb-2">Wrong email or password!</span>}
         
-        <button type="submit" className="w-full bg-primary text-white py-2 rounded font-bold hover:bg-secondary transition">
-          Login
+        <button
+          type="submit"
+          disabled={!auth || loading}
+          className="w-full bg-primary text-white py-2 rounded font-bold hover:bg-secondary transition disabled:cursor-wait disabled:opacity-60"
+        >
+          {loading ? "Preparing login..." : "Login"}
         </button>
       </form>
     </div>

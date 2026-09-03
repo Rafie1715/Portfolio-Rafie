@@ -8,7 +8,7 @@ const ProjectsPage = () => {
 
   return (
     <PageTransition>
-      <div className="bg-gray-50 dark:bg-dark min-h-screen pt-20 pb-12 md:pb-20 transition-colors duration-300 relative overflow-hidden">
+      <main className="bg-gray-50 dark:bg-dark min-h-screen pt-20 pb-12 md:pb-20 transition-colors duration-300 relative overflow-hidden">
         <SEO
           title={t('projects.seo_title')}
           description={t('projects.seo_desc')}
@@ -34,7 +34,7 @@ const ProjectsPage = () => {
         </header>
 
         <Projects />
-      </div>
+      </main>
     </PageTransition>
   );
 };

@@ -44,10 +44,10 @@ const Footer = () => {
   }, []);
 
   const socialLinks = [
-    { icon: "fab fa-github", url: "https://github.com/Rafie1715", color: "hover:text-gray-900 dark:hover:text-white" },
-    { icon: "fab fa-linkedin", url: "https://linkedin.com/in/rafie-rojagat", color: "hover:text-[#0077b5]" },
-    { icon: "fab fa-instagram", url: "https://instagram.com/rafie_rb", color: "hover:text-[#E4405F]" },
-    { icon: "fas fa-envelope", url: "mailto:rojagatrafie@gmail.com", color: "hover:text-red-500" },
+    { label: "GitHub", icon: "fab fa-github", url: "https://github.com/Rafie1715", color: "hover:text-gray-900 dark:hover:text-white", external: true },
+    { label: "LinkedIn", icon: "fab fa-linkedin", url: "https://linkedin.com/in/rafie-rojagat", color: "hover:text-[#0077b5]", external: true },
+    { label: "Instagram", icon: "fab fa-instagram", url: "https://instagram.com/rafie_rb", color: "hover:text-[#E4405F]", external: true },
+    { label: "Email", icon: "fas fa-envelope", url: "mailto:rojagatrafie@gmail.com", color: "hover:text-red-500", external: false },
   ];
 
   const footerLinks = [
@@ -130,16 +130,18 @@ const Footer = () => {
             <motion.div variants={itemVariants} className="flex flex-col items-center md:items-end space-y-4">
                 <h3 className="font-bold text-dark dark:text-white">{t('footer.connect')}</h3>
                 <div className="flex gap-4">
-                    {socialLinks.map((social, idx) => (
+                    {socialLinks.map((social) => (
                         <motion.a 
-                            key={idx}
+                            key={social.label}
                             href={social.url}
-                            target="_blank" 
-                            rel="noreferrer"
+                            target={social.external ? "_blank" : undefined}
+                            rel={social.external ? "noreferrer" : undefined}
+                            aria-label={social.label}
+                            title={social.label}
                             whileHover={{ y: -3, scale: 1.1 }}
                             className={`w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-gray-400 transition-colors shadow-sm ${social.color}`}
                         >
-                            <i className={`${social.icon} text-lg`}></i>
+                            <i className={`${social.icon} text-lg`} aria-hidden="true"></i>
                         </motion.a>
                     ))}
                 </div>

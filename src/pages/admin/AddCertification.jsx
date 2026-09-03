@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
-import { useToast } from "../../components/ToastProvider";
+import { useToast } from "../../hooks/useToast";
 import { createCertification } from "../../utils/certificationAdminApi";
 
 const AddCertification = () => {
@@ -270,8 +270,10 @@ const AddCertification = () => {
   };
 
   useEffect(() => {
+    const timers = debounceTimers.current;
+
     return () => {
-      Object.values(debounceTimers.current).forEach((timerId) => clearTimeout(timerId));
+      Object.values(timers).forEach((timerId) => clearTimeout(timerId));
       if (imagePreview) {
         URL.revokeObjectURL(imagePreview);
       }

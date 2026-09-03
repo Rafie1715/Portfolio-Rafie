@@ -3,63 +3,218 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://rafierb.me/</loc>
-    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/"/>
   </url>
 
   <url>
     <loc>https://rafierb.me/about</loc>
-    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/about"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/about?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/about"/>
   </url>
 
   <url>
     <loc>https://rafierb.me/projects</loc>
-    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/projects"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/projects?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/projects"/>
   </url>
 
   <url>
     <loc>https://rafierb.me/workspace</loc>
-    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/workspace"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/workspace?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/workspace"/>
   </url>
 
   <url>
     <loc>https://rafierb.me/contact</loc>
-    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/contact"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/contact?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/contact"/>
   </url>
 
   <url>
     <loc>https://rafierb.me/afk</loc>
-    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/afk"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/afk?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/afk"/>
   </url>
 
   <url>
     <loc>https://rafierb.me/blog</loc>
-    <lastmod>2026-08-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/blog"/>
     <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/blog?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/blog"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/OD60ttuTSwZW62TRJFm6</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/OD60ttuTSwZW62TRJFm6"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/OD60ttuTSwZW62TRJFm6?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/OD60ttuTSwZW62TRJFm6"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/mandiri-news</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/mandiri-news"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/mandiri-news?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/mandiri-news"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/planetku</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/planetku"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/planetku?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/planetku"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/cinemazone</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/cinemazone"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/cinemazone?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/cinemazone"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/computer-crafter</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/computer-crafter"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/computer-crafter?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/computer-crafter"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/lamimin</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/lamimin"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/lamimin?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/lamimin"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/library-system</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/library-system"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/library-system?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/library-system"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/tools-launcher</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/tools-launcher"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/tools-launcher?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/tools-launcher"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/mangosteen-detect</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/mangosteen-detect"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/mangosteen-detect?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/mangosteen-detect"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/temp-converter</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/temp-converter"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/temp-converter?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/temp-converter"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/sdgs-web</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/sdgs-web"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/sdgs-web?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/sdgs-web"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/block-breaker</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/block-breaker"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/block-breaker?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/block-breaker"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/quick-quiz</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/quick-quiz"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/quick-quiz?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/quick-quiz"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/personal-notes</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/personal-notes"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/personal-notes?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/personal-notes"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/sentimen-deepseek</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/sentimen-deepseek"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/sentimen-deepseek?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/sentimen-deepseek"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/green-sort-unity</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/green-sort-unity"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/green-sort-unity?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/green-sort-unity"/>
+  </url>
+
+  <url>
+    <loc>https://rafierb.me/project/portfolio-website</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/project/portfolio-website"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/project/portfolio-website?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/project/portfolio-website"/>
   </url>
 
   <url>
@@ -67,20 +222,29 @@
     <lastmod>2026-08-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/blog/restup-random-forest-android"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/blog/restup-random-forest-android?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/blog/restup-random-forest-android"/>
   </url>
 
   <url>
     <loc>https://rafierb.me/blog/mandiri-news-paging-android</loc>
     <lastmod>2026-08-28</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/blog/mandiri-news-paging-android"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/blog/mandiri-news-paging-android?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/blog/mandiri-news-paging-android"/>
   </url>
 
   <url>
     <loc>https://rafierb.me/blog/planetku-on-device-waste-classification</loc>
     <lastmod>2026-08-28</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/blog/planetku-on-device-waste-classification"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/blog/planetku-on-device-waste-classification?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/blog/planetku-on-device-waste-classification"/>
   </url>
 
   <url>
@@ -88,6 +252,9 @@
     <lastmod>2026-01-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/blog/pengalaman-mengajar-codevox-hima"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/blog/pengalaman-mengajar-codevox-hima?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/blog/pengalaman-mengajar-codevox-hima"/>
   </url>
 
   <url>
@@ -95,6 +262,9 @@
     <lastmod>2026-01-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/blog/codevox-dasar-git-github"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/blog/codevox-dasar-git-github?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/blog/codevox-dasar-git-github"/>
   </url>
 
   <url>
@@ -102,6 +272,9 @@
     <lastmod>2026-01-25</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/blog/codevox-pengenalan-android-kotlin"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/blog/codevox-pengenalan-android-kotlin?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/blog/codevox-pengenalan-android-kotlin"/>
   </url>
 
   <url>
@@ -109,6 +282,9 @@
     <lastmod>2026-01-30</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/blog/codevox-android-input-navigation-lifecycle"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/blog/codevox-android-input-navigation-lifecycle?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/blog/codevox-android-input-navigation-lifecycle"/>
   </url>
 
   <url>
@@ -116,26 +292,8 @@
     <lastmod>2026-02-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://rafierb.me/project/unshelf</loc>
-    <lastmod>2026-08-27</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://rafierb.me/project/smarteye</loc>
-    <lastmod>2026-08-27</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://rafierb.me/project/filmophile</loc>
-    <lastmod>2026-08-27</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rafierb.me/blog/codevox-machine-learning-dasar"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://rafierb.me/blog/codevox-machine-learning-dasar?lang=id"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rafierb.me/blog/codevox-machine-learning-dasar"/>
   </url>
 </urlset>

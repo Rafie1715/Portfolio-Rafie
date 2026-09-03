@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 
 export default function SpotifyPlayer() {
-  const [deviceId, setDeviceId] = useState(null);
   const [isReady, setIsReady] = useState(false);
-  const [isPaused, setIsPaused] = useState(true);
   const tokenRef = useRef(null);
+  const deviceIdRef = useRef(null);
 
   useEffect(() => {
     let player;
+    let initializePlayer;
 
     const loadToken = async () => {
       try {
@@ -25,15 +25,7 @@ export default function SpotifyPlayer() {
       const token = await loadToken();
       if (!token) return;
 
-      const existing = window.Spotify;
-      if (!existing) {
-        const script = document.createElement('script');
-        script.src = 'https://sdk.scdn.co/spotify-player.js';
-        script.async = true;
-        document.body.appendChild(script);
-      }
-
-      window.onSpotifyWebPlaybackSDKReady = () => {
+      initializePlayer = () => {
         const accessToken = tokenRef.current;
         player = new window.Spotify.Player({
           name: 'Rafie Web Player',
@@ -41,14 +33,9 @@ export default function SpotifyPlayer() {
         });
 
         player.addListener('ready', ({ device_id }) => {
-          setDeviceId(device_id);
+          deviceIdRef.current = device_id;
           setIsReady(true);
           console.log('Spotify Player ready with device id', device_id);
-        });
-
-        player.addListener('player_state_changed', (state) => {
-          if (!state) return;
-          setIsPaused(state.paused);
         });
 
         player.connect();
@@ -62,17 +49,18 @@ export default function SpotifyPlayer() {
             const access_token = authJson.access_token;
 
             // transfer playback to our device
-            if (!deviceId) {
+            if (!deviceIdRef.current) {
               // wait until deviceId ready
               let attempts = 0;
-              while (!deviceId && attempts < 10) {
-                // eslint-disable-next-line no-await-in-loop
+              while (!deviceIdRef.current && attempts < 10) {
                 await new Promise((r) => setTimeout(r, 300));
                 attempts += 1;
               }
             }
 
-            await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+            if (!deviceIdRef.current) return false;
+
+            await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceIdRef.current}`, {
               method: 'PUT',
               headers: { Authorization: `Bearer ${access_token}`, 'Content-Type': 'application/json' },
               body: JSON.stringify({ uris: [spotifyUri] }),
@@ -85,6 +73,18 @@ export default function SpotifyPlayer() {
           }
         };
       };
+
+      if (window.Spotify) {
+        initializePlayer();
+      } else {
+        window.onSpotifyWebPlaybackSDKReady = initializePlayer;
+        if (!document.querySelector('script[src="https://sdk.scdn.co/spotify-player.js"]')) {
+          const script = document.createElement('script');
+          script.src = 'https://sdk.scdn.co/spotify-player.js';
+          script.async = true;
+          document.body.appendChild(script);
+        }
+      }
     };
 
     setupPlayer();
@@ -93,8 +93,11 @@ export default function SpotifyPlayer() {
       if (player) player.disconnect();
       // cleanup global
       if (window.spotifyPlayerPlay) delete window.spotifyPlayerPlay;
+      if (window.onSpotifyWebPlaybackSDKReady === initializePlayer) {
+        delete window.onSpotifyWebPlaybackSDKReady;
+      }
     };
-  }, [deviceId]);
+  }, []);
 
   if (!isReady) return null;
 
@@ -109,7 +112,6 @@ export default function SpotifyPlayer() {
                 const res = await fetch('/.netlify/functions/spotify-auth');
                 const { access_token } = await res.json();
                 await fetch('https://api.spotify.com/v1/me/player/pause', { method: 'PUT', headers: { Authorization: `Bearer ${access_token}` } });
-                setIsPaused(true);
               } catch (err) {
                 console.error(err);
               }

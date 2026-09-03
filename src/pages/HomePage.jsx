@@ -1,7 +1,8 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { X } from 'lucide-react';
 import Hero from '../components/Hero';
+import HomeAboutSnapshot from '../components/HomeAboutSnapshot';
 import RecruiterLens from '../components/RecruiterLens';
 import { projects } from '../data/projects';
 import { blogs } from '../data/blogs';
@@ -14,6 +15,41 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { trackEvent } from '../utils/analytics';
 
 const HomePersonalPanel = lazy(() => import('../components/HomePersonalPanel'));
+
+const DeferredPersonalPanel = () => {
+  const targetRef = useRef(null);
+  const [shouldRender, setShouldRender] = useState(
+    () => typeof window === 'undefined' || !('IntersectionObserver' in window),
+  );
+
+  useEffect(() => {
+    const target = targetRef.current;
+    if (!target || shouldRender) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldRender(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '600px 0px' },
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [shouldRender]);
+
+  return (
+    <div ref={targetRef} className="min-h-[520px]">
+      {shouldRender && (
+        <Suspense fallback={<div className="container mx-auto min-h-[520px] px-4 py-14 md:py-20" aria-hidden="true" />}>
+          <HomePersonalPanel />
+        </Suspense>
+      )}
+    </div>
+  );
+};
 
 const FEATURED_PROJECTS_BY_LENS = {
   overview: ['OD60ttuTSwZW62TRJFm6', 'mandiri-news', 'planetku'],
@@ -84,7 +120,7 @@ const HomePage = () => {
 
   return (
     <PageTransition>
-      <div className="bg-white dark:bg-dark min-h-screen">
+      <main className="bg-white dark:bg-dark min-h-screen">
         <SEO
           title={t(`${lensKey}.seo_title`)}
           description={t(`${lensKey}.seo_desc`)}
@@ -218,15 +254,17 @@ const HomePage = () => {
           </div>
         </section>
 
+        <HomeAboutSnapshot />
+
         <section className="py-20 px-4 container mx-auto bg-gray-50 dark:bg-darkLight my-12 rounded-2xl">
-          <div className="text-center mb-12" data-aos="fade-up">
+          <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-dark dark:text-white mb-4">{t('home.latest_blog')}</h2>
             <p className="text-gray-600 dark:text-gray-400">{t('home.blog_glimpse')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {featuredBlogs.map((blog, index) => (
-              <BlogCard key={blog.id} blog={blog} data-aos="fade-up" data-aos-delay={index * 100} />
+            {featuredBlogs.map((blog) => (
+              <BlogCard key={blog.id} blog={blog} />
             ))}
           </div>
 
@@ -237,10 +275,8 @@ const HomePage = () => {
           </div>
         </section>
 
-        <Suspense fallback={<div className="container mx-auto min-h-[520px] px-4 py-14 md:py-20" aria-hidden="true" />}>
-          <HomePersonalPanel />
-        </Suspense>
-      </div>
+        <DeferredPersonalPanel />
+      </main>
     </PageTransition>
   );
 };

@@ -49,6 +49,18 @@ const resources = {
                     availability: "Open to remote and Jakarta-based opportunities",
                     contact: "Start a conversation"
                 },
+                about_snapshot: {
+                    eyebrow: "About Snapshot",
+                    title: "The developer behind the products",
+                    summary: "I am a recent Informatics graduate from UPN Veteran Jakarta who enjoys turning ambiguous ideas into practical Android, web, and AI-integrated products. I care about clear architecture, useful interfaces, and decisions grounded in real user needs.",
+                    photo_alt: "Portrait of Rafie Rojagat Bachri",
+                    cta: "View Full Experience",
+                    metrics: [
+                        { value: "3.89 / 4.00", label: "Informatics GPA" },
+                        { value: "900+", label: "Bangkit learning hours" },
+                        { value: "88.71 / 100", label: "Mandiri project score" }
+                    ]
+                },
                 recruiter_lens: {
                     eyebrow: "Recruiter Lens",
                     control_label: "Choose a portfolio focus",
@@ -784,6 +796,18 @@ const resources = {
                     location: "Jakarta, Indonesia",
                     availability: "Terbuka untuk peluang remote dan berbasis di Jakarta",
                     contact: "Mulai percakapan"
+                },
+                about_snapshot: {
+                    eyebrow: "Sekilas Tentang Saya",
+                    title: "Pengembang di balik setiap produk",
+                    summary: "Saya adalah lulusan baru Informatika UPN Veteran Jakarta yang senang mengubah ide yang masih abstrak menjadi produk Android, web, dan terintegrasi AI yang praktis. Saya mengutamakan arsitektur yang jelas, antarmuka yang berguna, serta keputusan yang berangkat dari kebutuhan pengguna.",
+                    photo_alt: "Potret Rafie Rojagat Bachri",
+                    cta: "Lihat Pengalaman Lengkap",
+                    metrics: [
+                        { value: "3,89 / 4,00", label: "IPK Informatika" },
+                        { value: "900+", label: "Jam belajar Bangkit" },
+                        { value: "88,71 / 100", label: "Nilai proyek Mandiri" }
+                    ]
                 },
                 recruiter_lens: {
                     eyebrow: "Sudut Pandang Rekruter",

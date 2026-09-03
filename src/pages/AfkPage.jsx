@@ -490,7 +490,7 @@ const AfkPage = () => {
 
     return (
         <PageTransition>
-            <div className="bg-gray-50 dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300 relative overflow-hidden">
+            <main className="bg-gray-50 dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300 relative overflow-hidden">
                 <SEO title="AFK | Rafie Rojagat" description={t('afk.seo_desc')} url="https://rafierb.me/afk" />
 
                 <div className="absolute inset-x-0 top-0 h-[500px] overflow-hidden pointer-events-none z-0" aria-hidden="true">
@@ -819,7 +819,7 @@ const AfkPage = () => {
                         </motion.section>
                     </motion.div>
                 </div>
-            </div>
+            </main>
         </PageTransition>
     );
 };

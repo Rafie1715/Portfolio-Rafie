@@ -226,7 +226,7 @@ const ProjectDetail = () => {
 
   return (
     <PageTransition>
-      <motion.div
+      <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -237,7 +237,7 @@ const ProjectDetail = () => {
           title={`${title} | Rafie Rojagat Portfolio`}
           description={shortDesc}
           url={`https://rafierb.me/project/${project.id}`}
-          image={project.image}
+          image={`https://rafierb.me${project.image}`}
           type="article"
           keywords={`${title}, ${project.category}, Software Project, ${techKeywords}, Portfolio Project`}
           published={project.createdAt}
@@ -541,7 +541,7 @@ const ProjectDetail = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </motion.main>
     </PageTransition>
   );
 };

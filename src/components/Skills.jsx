@@ -53,7 +53,7 @@ const Skills = () => {
   ];
 
   return (
-    <section id="skills" className="bg-gray-50 py-16 dark:bg-slate-950 sm:py-20">
+    <section id="skills" className="scroll-mt-24 bg-gray-50 py-16 dark:bg-slate-950 sm:py-20">
       <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 16 }}
