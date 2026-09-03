@@ -28,8 +28,8 @@ export default defineConfig([
   },
   {
     files: [
-      'netlify/functions/gemini.js',
-      'netlify/functions/_shared/**/*.js',
+      'netlify/functions/**/*.js',
+      'scripts/**/*.mjs',
       'tests/**/*.js',
     ],
     languageOptions: {
