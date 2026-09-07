@@ -1,6 +1,7 @@
 export const experiences = [
   {
     id: 1,
+    logo: "/images/mandiri-logo.webp",
     icon: "mobile",
     title: { en: "Mobile Apps Developer", id: "Mobile Apps Developer" },
     org: "Bank Mandiri x Rakamin Academy",
@@ -18,6 +19,10 @@ export const experiences = [
         "Meraih predikat Excellent dengan nilai rata-rata 88,71/100.",
       ],
     },
+    docs: [
+    "/images/mandiri-project-1.webp",
+    "/images/mandiri-project-2.webp",
+    ],
   },
   {
     id: 2,

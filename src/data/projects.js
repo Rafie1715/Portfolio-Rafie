@@ -192,7 +192,10 @@ export const projects = [
       { name: "Coroutines", icon: "devicon-kotlin-plain" },
       { name: "Paging 3", icon: "fas fa-layer-group" }
     ],
-    gallery: []
+    gallery: [
+      "/images/mandiri-project-1.webp",
+      "/images/mandiri-project-2.webp",
+    ],
   },
   {
     id: "planetku",
