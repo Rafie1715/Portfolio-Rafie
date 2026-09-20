@@ -11,7 +11,7 @@ const parseAdminEmails = () => {
 
 export const isAdminUser = async (user) => {
   if (!user) return false;
-  const { claims } = await user.getIdTokenResult();
+  const { claims } = await user.getIdTokenResult(true);
   return allowsAdmin({ claims, email: user.email, emailVerified: user.emailVerified }, parseAdminEmails());
 };
 

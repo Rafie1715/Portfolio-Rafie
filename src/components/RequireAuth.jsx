@@ -42,6 +42,11 @@ const RequireAuth = ({ children }) => {
           <p className="text-gray-600 dark:text-gray-300 mb-3">
             Your account is authenticated but not authorized to access the admin area.
           </p>
+          {currentUser.email && (
+            <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+              Signed in as <strong>{currentUser.email}</strong>{currentUser.emailVerified ? '' : ' (email not verified)'}.
+            </p>
+          )}
           {adminEmails.length > 0 && (
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Ask the site owner to add your email to <code>VITE_ADMIN_EMAILS</code>.
