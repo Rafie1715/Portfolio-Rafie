@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 .env
+.env.*
+!.env.example
+!.env.*.example
 
 # Editor directories and files
 .vscode/*
@@ -26,3 +29,9 @@ dist-ssr
 
 # Local Netlify folder
 .netlify
+
+# Build-time public content snapshot
+.generated/
+
+# Local browser review screenshots and reports
+/review-artifacts/

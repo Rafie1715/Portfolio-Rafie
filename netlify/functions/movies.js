@@ -1,5 +1,5 @@
 export const handler = async (event) => {
-  const API_KEY = process.env.VITE_TMDB_API_KEY;
+  const API_KEY = (process.env.TMDB_API_KEY || process.env.VITE_TMDB_API_KEY);
 
   if (!API_KEY) {
     console.error("❌ Missing TMDB API Key");

@@ -235,3 +235,21 @@
     top: 100%;
   }
 }
+
+html { scroll-padding-top: 6rem; }
+:focus-visible { outline: 2px solid #2563eb; outline-offset: 4px; }
+
+/* Accessible accent text on dark surfaces. */
+@layer components {
+  .dark .text-primary { @apply text-blue-400; }
+}
+
+/* Connected hero network; move all junctions together and pause offscreen. */
+@keyframes hero-node-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(6px, -10px); }
+}
+.hero-node-drift { animation: hero-node-drift 24s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-node-drift { animation: none; }
+}

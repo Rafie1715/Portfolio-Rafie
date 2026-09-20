@@ -1,3 +1,4 @@
+import Icon from '../../components/Icon';
 import { useState, useEffect, useRef } from "react";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -42,6 +43,7 @@ const EditProject = () => {
     githubLink: "",
     imageFile: null,
     currentImage: "",
+    isPublished: true,
   });
 
   const CLOUD_NAME = "djchoocal";
@@ -114,6 +116,7 @@ const EditProject = () => {
           githubLink: data.github || "",
           imageFile: null,
           currentImage: data.image || "",
+          isPublished: data.isPublished === true,
         });
 
         setLocalizedFormData({
@@ -350,6 +353,7 @@ const EditProject = () => {
         live: formData.liveLink || null,
         github: formData.githubLink || null,
         updatedAt: new Date(),
+        isPublished: formData.isPublished,
       });
 
       setSuccess("Project updated successfully!");
@@ -438,7 +442,7 @@ const EditProject = () => {
             onClick={handleCancel}
             className="w-10 h-10 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition flex items-center justify-center"
           >
-            <i className="fas fa-arrow-left"></i>
+            <Icon className="fas fa-arrow-left"></Icon>
           </button>
           <div>
             <p className="text-sm uppercase tracking-wider text-primary font-semibold">Update Content</p>
@@ -453,22 +457,23 @@ const EditProject = () => {
 
         {error && (
           <div className="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-start gap-3">
-            <i className="fas fa-circle-exclamation text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"></i>
+            <Icon className="fas fa-circle-exclamation text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"></Icon>
             <p className="text-red-700 dark:text-red-300">{error}</p>
           </div>
         )}
 
         {success && (
           <div className="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 flex items-start gap-3">
-            <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5"></i>
+            <Icon className="fas fa-check-circle text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5"></Icon>
             <p className="text-emerald-700 dark:text-emerald-300">{success}</p>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <label className="flex items-center gap-3 rounded-lg border p-4"><input type="checkbox" checked={formData.isPublished} onChange={event => { setFormData(current => ({ ...current, isPublished: event.target.checked })); setHasUnsavedChanges(true); }} />Publish this project</label>
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
-              <i className="fas fa-pen-nib text-primary"></i> Project Basics
+              <Icon className="fas fa-pen-nib text-primary"></Icon> Project Basics
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -538,7 +543,7 @@ const EditProject = () => {
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
-              <i className="fas fa-lightbulb text-primary"></i> Challenge & Solution
+              <Icon className="fas fa-lightbulb text-primary"></Icon> Challenge & Solution
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -570,7 +575,7 @@ const EditProject = () => {
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-2 flex items-center gap-2">
-              <i className="fas fa-language text-primary"></i> Indonesian Content
+              <Icon className="fas fa-language text-primary"></Icon> Indonesian Content
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
               Fill the Indonesian version here. Leave blank to reuse the English content.
@@ -581,7 +586,7 @@ const EditProject = () => {
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Title (ID)</label>
                 {translatingFields.title && (
                   <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
-                    <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                    <Icon className="fas fa-spinner fa-spin mr-1"></Icon> Translating...
                   </span>
                 )}
                 <input
@@ -597,7 +602,7 @@ const EditProject = () => {
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Short Description (ID)</label>
                 {translatingFields.shortDesc && (
                   <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
-                    <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                    <Icon className="fas fa-spinner fa-spin mr-1"></Icon> Translating...
                   </span>
                 )}
                 <textarea
@@ -614,7 +619,7 @@ const EditProject = () => {
               <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Full Description (ID)</label>
               {translatingFields.fullDesc && (
                 <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
-                  <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                  <Icon className="fas fa-spinner fa-spin mr-1"></Icon> Translating...
                 </span>
               )}
               <textarea
@@ -631,7 +636,7 @@ const EditProject = () => {
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Challenge (ID)</label>
                 {translatingFields.challenges && (
                   <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
-                    <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                    <Icon className="fas fa-spinner fa-spin mr-1"></Icon> Translating...
                   </span>
                 )}
                 <textarea
@@ -647,7 +652,7 @@ const EditProject = () => {
                 <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Solution (ID)</label>
                 {translatingFields.solution && (
                   <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
-                    <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                    <Icon className="fas fa-spinner fa-spin mr-1"></Icon> Translating...
                   </span>
                 )}
                 <textarea
@@ -666,7 +671,7 @@ const EditProject = () => {
               </label>
               {translatingFields.features && (
                 <span className="text-xs text-amber-600 dark:text-amber-400 mb-2 block">
-                  <i className="fas fa-spinner fa-spin mr-1"></i> Translating...
+                  <Icon className="fas fa-spinner fa-spin mr-1"></Icon> Translating...
                 </span>
               )}
               <textarea
@@ -681,7 +686,7 @@ const EditProject = () => {
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
-              <i className="fas fa-wrench text-primary"></i> Tech Stack & Features
+              <Icon className="fas fa-wrench text-primary"></Icon> Tech Stack & Features
             </h2>
 
             <div className="mb-6">
@@ -722,7 +727,7 @@ const EditProject = () => {
                         onClick={() => removeTechItem(idx)}
                         className="hover:text-red-600 transition"
                       >
-                        <i className="fas fa-times text-xs"></i>
+                        <Icon className="fas fa-times text-xs"></Icon>
                       </button>
                     </div>
                   ))}
@@ -747,7 +752,7 @@ const EditProject = () => {
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
-              <i className="fas fa-image text-primary"></i> Thumbnail & Links
+              <Icon className="fas fa-image text-primary"></Icon> Thumbnail & Links
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -761,7 +766,7 @@ const EditProject = () => {
                     <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
                   ) : (
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <i className="fas fa-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
+                      <Icon className="fas fa-cloud-arrow-up text-3xl text-gray-400 mb-2"></Icon>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Click to upload</p>
                     </div>
                   )}
@@ -817,12 +822,12 @@ const EditProject = () => {
             >
               {loading ? (
                 <>
-                  <i className="fas fa-spinner animate-spin"></i>
+                  <Icon className="fas fa-spinner animate-spin"></Icon>
                   Saving... {uploadProgress > 0 ? `${uploadProgress}%` : ""}
                 </>
               ) : (
                 <>
-                  <i className="fas fa-floppy-disk"></i>
+                  <Icon className="fas fa-floppy-disk"></Icon>
                   Save Changes
                 </>
               )}

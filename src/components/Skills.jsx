@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import { motion, useReducedMotion } from "framer-motion";
 import {
   BrainCircuit,
@@ -96,7 +97,7 @@ const Skills = () => {
                       key={`${category.key}-${skill.name}`}
                       className="flex min-h-10 items-center gap-3 border-b border-gray-100 py-2 last:border-0 dark:border-slate-800"
                     >
-                      <i className={`${skill.icon} w-5 text-center text-lg`} aria-hidden="true" />
+                      <Icon className={`${skill.icon} w-5 text-center text-lg`} aria-hidden="true" />
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{skill.name}</span>
                     </div>
                   );

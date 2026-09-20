@@ -7,24 +7,34 @@ import { getAdminEmails, isAdminUser } from "../utils/adminAccess";
 const RequireAuth = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { auth } = useFirebaseInit('auth');
+  const [allowed, setAllowed] = useState(false);
+  const { auth, loading: initializing } = useFirebaseInit('auth');
   const adminEmails = getAdminEmails();
 
   useEffect(() => {
     if (!auth) return; // Wait for Firebase to load
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    let active = true;
+    let request = 0;
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      const currentRequest = ++request;
+      setLoading(true);
+      let authorized = false;
+      try { authorized = await isAdminUser(user); } catch { /* Fail closed. */ }
+      if (!active || currentRequest !== request) return;
       setCurrentUser(user);
+      setAllowed(authorized);
       setLoading(false);
     });
-    return () => unsubscribe();
+    return () => { active = false; unsubscribe(); };
   }, [auth]);
 
+  if (!initializing && !auth) return <div role="alert" className="p-12">Unable to check access. Please reload and try again.</div>;
   if (loading) return <div className="text-center mt-20">Checking access...</div>;
 
   if (!currentUser) return <Navigate to="/login" />;
 
-  if (!isAdminUser(currentUser)) {
+  if (!allowed) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-dark text-dark dark:text-white flex items-center justify-center px-4">
         <div className="max-w-lg w-full rounded-2xl border border-red-200 dark:border-red-900/40 bg-white dark:bg-slate-800 p-6 shadow-lg">

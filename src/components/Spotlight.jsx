@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -114,7 +115,7 @@ const Spotlight = () => {
             className="relative w-full max-w-lg bg-white dark:bg-darkLight rounded-xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-700"
           >
             <div className="flex items-center px-4 py-4 border-b border-gray-100 dark:border-slate-700">
-              <i className="fas fa-search text-gray-400 text-lg mr-3"></i>
+              <Icon className="fas fa-search text-gray-400 text-lg mr-3"></Icon>
               <input
                 type="text"
                 placeholder="Type a command (e.g., workspace)..."
@@ -143,7 +144,7 @@ const Spotlight = () => {
                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
                     }`}
                   >
-                    <i aria-hidden="true" className={`${action.icon} w-6 text-center mr-3 ${index === selectedIndex ? 'text-white' : 'text-gray-400'}`}></i>
+                    <Icon aria-hidden="true" className={`${action.icon} w-6 text-center mr-3 ${index === selectedIndex ? 'text-white' : 'text-gray-400'}`}></Icon>
                     <span className="flex-1 font-medium">{action.title}</span>
                     {index === selectedIndex && (
                         <span className="text-xs opacity-70">Enter</span>

@@ -1,50 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Award, ExternalLink, Grid2X2, ListFilter, X } from "lucide-react";
-import { collection, getDocs } from "firebase/firestore";
+import { motion, useReducedMotion } from "framer-motion";
+import { Award, ExternalLink, Grid2X2, ListFilter } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { certifications } from "../data/certifications";
-import { useFirebaseInit } from "../hooks/useFirebaseInit";
 
-const normalizeTitle = (value) => {
-  const title = typeof value === "object" ? value?.en || value?.id || "" : value || "";
-  const normalized = String(title).trim().toLowerCase();
-
-  if (normalized.includes("programming assistant") || normalized.includes("asisten program")) {
-    return "bnsp-programming-assistant";
-  }
-
-  return normalized;
-};
-
-const mergeCertifications = (cmsItems) => {
-  const merged = new Map();
-  const localItems = certifications.map((item) => ({ ...item, id: `local-${item.id}`, source: "local" }));
-
-  [...localItems, ...cmsItems].forEach((item) => {
-    const key = normalizeTitle(item.title) || String(item.id);
-    const current = merged.get(key);
-    const preserveFeaturedCopy = Boolean(current?.featured);
-    merged.set(key, current ? {
-      ...current,
-      ...item,
-      title: preserveFeaturedCopy ? current.title : item.title,
-      date: preserveFeaturedCopy ? current.date : item.date,
-      img: item.img || current.img,
-      link: item.link || current.link,
-      featured: Boolean(current.featured || item.featured),
-      summary: item.summary || current.summary,
-    } : item);
-  });
-
-  return Array.from(merged.values());
-};
+import ImageDialog from './ImageDialog';
+import ProjectCatalogStatus from './ProjectCatalogStatus';
 
 const Certifications = () => {
   const { t, i18n } = useTranslation();
   const reduceMotion = useReducedMotion();
-  const { dbFirestore } = useFirebaseInit("dbFirestore");
-  const [certItems, setCertItems] = useState(() => mergeCertifications([]));
+  const [certItems, setCertItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const language = i18n.resolvedLanguage?.startsWith("id") ? "id" : "en";
@@ -58,45 +26,23 @@ const Certifications = () => {
   };
 
   useEffect(() => {
-    if (!dbFirestore) return undefined;
-    let cancelled = false;
-
-    const fetchCertifications = async () => {
+    const controller = new AbortController();
+    let active = true;
+    const timer = setTimeout(() => controller.abort(), 10000);
+    const load = async () => {
+      setLoading(true); setError(false);
       try {
-        const snapshot = await getDocs(collection(dbFirestore, "certifications"));
-        const cmsItems = snapshot.docs
-          .map((entry) => ({ id: `cms-${entry.id}`, ...entry.data(), source: "cms" }))
-          .filter((item) => item.isPublished !== false)
-          .sort((a, b) => {
-            const leftOrder = typeof a.order === "number" ? a.order : Number.MAX_SAFE_INTEGER;
-            const rightOrder = typeof b.order === "number" ? b.order : Number.MAX_SAFE_INTEGER;
-            return leftOrder - rightOrder;
-          });
-
-        if (!cancelled) setCertItems(mergeCertifications(cmsItems));
-      } catch (error) {
-        console.error("Error fetching certifications from CMS:", error);
-      }
+        const response = await fetch('/.netlify/functions/public-certifications', { signal: controller.signal, cache: 'no-store' });
+        if (!response.ok) throw new Error('Certificates unavailable');
+        const data = await response.json();
+        if (!Array.isArray(data.certifications)) throw new Error('Invalid certificates');
+        if (active) setCertItems(data.certifications);
+      } catch { if (active) { setCertItems([]); setError(true); } }
+      finally { clearTimeout(timer); if (active) setLoading(false); }
     };
-
-    fetchCertifications();
-    return () => {
-      cancelled = true;
-    };
-  }, [dbFirestore]);
-
-  useEffect(() => {
-    if (!selectedImage) return undefined;
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") setSelectedImage(null);
-    };
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selectedImage]);
+    load();
+    return () => { active = false; clearTimeout(timer); controller.abort(); };
+  }, [attempt]);
 
   const featuredItems = useMemo(() => certItems.filter((item) => item.featured), [certItems]);
   const visibleItems = showAll || featuredItems.length === 0 ? certItems : featuredItems;
@@ -133,6 +79,7 @@ const Certifications = () => {
           )}
         </motion.div>
 
+        <ProjectCatalogStatus loading={loading} error={error} retry={() => setAttempt(value => value + 1)} loadingKey="common.certificates_loading" errorKey="common.certificates_error" />
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {visibleItems.map((certification, index) => {
             const title = getText(certification.title);
@@ -199,32 +146,7 @@ const Certifications = () => {
         </div>
       </div>
 
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label={selectedImage.alt}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4"
-            onClick={() => setSelectedImage(null)}
-          >
-            <div className="relative flex h-full w-full max-w-6xl items-center justify-center" onClick={(event) => event.stopPropagation()}>
-              <img src={selectedImage.src} alt={selectedImage.alt} className="max-h-[88vh] max-w-full rounded-lg object-contain" />
-              <button
-                type="button"
-                onClick={() => setSelectedImage(null)}
-                aria-label={t("certifications.close_preview")}
-                className="absolute right-0 top-0 flex h-11 w-11 items-center justify-center rounded-md bg-black/70 text-white hover:bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              >
-                <X className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ImageDialog image={selectedImage} onClose={() => setSelectedImage(null)} />
     </section>
   );
 };

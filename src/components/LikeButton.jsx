@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import { useEffect, useState } from "react";
 import { useFirebaseInit } from "../hooks/useFirebaseInit";
 import { ref, onValue, runTransaction } from "firebase/database";
@@ -11,7 +12,7 @@ const LikeButton = ({ projectId }) => {
 
   useEffect(() => {
     if (!db) return; // Wait for Firebase to load
-    
+
     const likesRef = ref(db, `project_likes/${projectId}`);
     const unsubscribe = onValue(likesRef, (snapshot) => {
       setLikes(snapshot.val() || 0);
@@ -29,13 +30,13 @@ const LikeButton = ({ projectId }) => {
 
   const handleLike = () => {
     if (!db) return; // Safety check
-    
+
     const likesRef = ref(db, `project_likes/${projectId}`);
     const likedProjects = JSON.parse(localStorage.getItem("liked_projects") || "[]");
 
     if (isLiked) {
         const updatedStorage = likedProjects.filter(id => id !== projectId);
-        localStorage.setItem("liked_projects", JSON.stringify(updatedStorage));        
+        localStorage.setItem("liked_projects", JSON.stringify(updatedStorage));
         runTransaction(likesRef, (currentLikes) => {
             return (currentLikes || 0) > 0 ? (currentLikes || 0) - 1 : 0;
         });
@@ -62,16 +63,16 @@ const LikeButton = ({ projectId }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all shadow-sm ${
-                isLiked 
-                ? "bg-red-50 border-red-200 text-red-500 dark:bg-red-900/20 dark:border-red-800" 
+                isLiked
+                ? "bg-red-50 border-red-200 text-red-500 dark:bg-red-900/20 dark:border-red-800"
                 : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-500 hover:border-red-300 hover:text-red-400"
             }`}
         >
-            <motion.i 
+            <Icon
                 className={`${isLiked ? "fas" : "far"} fa-heart text-lg ${isLiked ? "text-red-500" : ""}`}
                 animate={isLiked ? { scale: [1, 1.2, 1] } : { scale: 1 }}
                 transition={{ duration: 0.3 }}
-            ></motion.i>
+            ></Icon>
             <span className="font-bold text-sm">
                 {likes > 0 ? likes : "Like"}
             </span>
@@ -85,7 +86,7 @@ const LikeButton = ({ projectId }) => {
                     exit={{ opacity: 0 }}
                     className="absolute -top-8 left-1/2 -translate-x-1/2 text-red-500 pointer-events-none"
                 >
-                    <i className="fas fa-heart text-2xl"></i>
+                    <Icon className="fas fa-heart text-2xl"></Icon>
                 </motion.div>
             )}
         </AnimatePresence>

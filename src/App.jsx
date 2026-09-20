@@ -1,6 +1,8 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, MotionConfig } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import Navbar from './components/Navbar';
 import Loading from './components/Loading';
@@ -39,12 +41,14 @@ const CinemaLogPreview = lazy(() => import('./pages/admin/CinemaLogPreview'));
 
 function App() {
   const location = useLocation();
+  const { t } = useTranslation();
   const [shouldLoadChatbot, setShouldLoadChatbot] = useState(false);
   
   usePageTracking();
 
   useEffect(() => {
-    const targetId = decodeURIComponent(location.hash.replace(/^#/, ''));
+    let targetId = '';
+    try { targetId = decodeURIComponent(location.hash.replace(/^#/, '')); } catch { return undefined; }
     if (!targetId) {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       return undefined;
@@ -86,13 +90,17 @@ function App() {
 
   return (
     <HelmetProvider>
+      <MotionConfig reducedMotion="user">
       <ToastProvider>
+        <a href="#main-content" className="fixed left-4 top-3 z-[100] -translate-y-24 rounded-lg bg-primary px-5 py-3 font-bold text-white focus:translate-y-0">{t('common.skip')}</a>
         <ScrollProgress />
         <div className="bg-noise"></div>
         <Spotlight />
 
         {!isAdminRoute && <Navbar />}
 
+        <div id="main-content" tabIndex={-1} className="outline-none">
+        <ErrorBoundary key={location.pathname}>
         <Suspense fallback={<Loading />}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -192,14 +200,17 @@ function App() {
           </AnimatePresence>
         </Suspense>
 
+        </ErrorBoundary>
+        </div>
         {!isAdminRoute && <Footer />}
 
-        {!isAdminRoute && shouldLoadChatbot && (
+        {!isAdminRoute && location.pathname !== '/contact' && shouldLoadChatbot && (
           <Suspense fallback={null}>
             <Chatbot />
           </Suspense>
         )}
       </ToastProvider>
+      </MotionConfig>
     </HelmetProvider>
   );
 }

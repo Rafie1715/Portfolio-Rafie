@@ -1,3 +1,4 @@
+import { allowsAdmin } from './adminPolicy';
 const normalizeEmail = (value) => String(value || "").trim().toLowerCase();
 
 const parseAdminEmails = () => {
@@ -8,15 +9,10 @@ const parseAdminEmails = () => {
     .filter(Boolean);
 };
 
-export const isAdminUser = (user) => {
-  if (!user?.email) return false;
-
-  const adminEmails = parseAdminEmails();
-
-  // If allowlist is empty, fall back to authenticated-only behavior to avoid lockout.
-  if (adminEmails.length === 0) return true;
-
-  return adminEmails.includes(normalizeEmail(user.email));
+export const isAdminUser = async (user) => {
+  if (!user) return false;
+  const { claims } = await user.getIdTokenResult();
+  return allowsAdmin({ claims, email: user.email, emailVerified: user.emailVerified }, parseAdminEmails());
 };
 
 export const getAdminEmails = () => parseAdminEmails();

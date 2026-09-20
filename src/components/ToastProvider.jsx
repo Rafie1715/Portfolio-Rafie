@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import { useCallback, useMemo, useState } from 'react';
 import { ToastContext } from '../hooks/useToast';
 
@@ -51,7 +52,7 @@ export const ToastProvider = ({ children }) => {
               aria-live="polite"
             >
               <div className="flex items-start gap-3">
-                <i className={`${style.icon} mt-0.5 text-lg`}></i>
+                <Icon className={`${style.icon} mt-0.5 text-lg`}></Icon>
                 <div className="min-w-0 flex-1">
                   {toast.title && <p className="font-semibold leading-tight">{toast.title}</p>}
                   {toast.message && <p className="mt-1 text-sm leading-relaxed opacity-90">{toast.message}</p>}
@@ -62,7 +63,7 @@ export const ToastProvider = ({ children }) => {
                   className="rounded-full p-1 text-current/70 transition hover:bg-black/5 hover:text-current dark:hover:bg-white/10"
                   aria-label="Dismiss notification"
                 >
-                  <i className="fas fa-times text-xs"></i>
+                  <Icon className="fas fa-times text-xs"></Icon>
                 </button>
               </div>
             </div>

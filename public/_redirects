@@ -1,2 +1,7 @@
- /favicon.ico /favicon.svg 200
-/* /index.html  200
+/favicon.ico /favicon.svg 200
+/admin/* /index.html 200
+/login /index.html 200
+/workspace /index.html 200
+/afk /index.html 200
+/project/* /index.html 200
+/* /404.html 404

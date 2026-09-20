@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -141,7 +142,7 @@ const Footer = () => {
                             whileHover={{ y: -3, scale: 1.1 }}
                             className={`w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-gray-400 transition-colors shadow-sm ${social.color}`}
                         >
-                            <i className={`${social.icon} text-lg`} aria-hidden="true"></i>
+                            <Icon className={`${social.icon} text-lg`} aria-hidden="true"></Icon>
                         </motion.a>
                     ))}
                 </div>
@@ -152,7 +153,7 @@ const Footer = () => {
                     download="CV_Rafie_Rojagat_Bachri.pdf"
                     className="text-xs font-bold px-4 py-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-primary hover:text-white transition-all flex items-center gap-2 shadow-sm hover:shadow-md"
                 >
-                    <i className="fas fa-download"></i> {t('footer.download_cv')}
+                    <Icon className="fas fa-download"></Icon> {t('footer.download_cv')}
                 </motion.a>
             </motion.div>
         </motion.div>

@@ -1,126 +1,30 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { projects as localProjects } from '../data/projects';
-import { useFirebaseInit } from '../hooks/useFirebaseInit';
-import { doc, getDoc } from 'firebase/firestore';
+import Icon from '../components/Icon';
+import { lazy, Suspense, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useProjects } from '../hooks/useProjects';
+import ProjectCatalogStatus from '../components/ProjectCatalogStatus';
+import NotFound from './NotFound';
+import ImageDialog from '../components/ImageDialog';
+import ProjectEvidence from '../components/ProjectEvidence';
 import DecisionReplay from '../components/DecisionReplay';
 import SEO from '../components/SEO';
-import { motion, AnimatePresence } from 'framer-motion';
-import LikeButton from '../components/LikeButton';
+import { motion } from 'framer-motion';
+const LikeButton = lazy(() => import('../components/LikeButton'));
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import Loading from '../components/Loading';
 
-const enrichCmsProject = (project) => {
-  const title = typeof project?.title === 'object'
-    ? project.title.en || project.title.id || ''
-    : project?.title || '';
-  const normalizedTitle = String(title).toLowerCase().replace(/[^a-z0-9]+/g, '');
-  const isRestUp = normalizedTitle.includes('restup') || normalizedTitle.includes('sleepqualitymonitoring');
-
-  if (!isRestUp || project.impactDetails) return project;
-
-  return {
-    ...project,
-    year: project.year || '2026',
-    impactDetails: {
-      role: {
-        en: 'Thesis Researcher and ML Developer',
-        id: 'Peneliti Skripsi dan ML Developer',
-      },
-      team: {
-        en: 'Independent thesis project',
-        id: 'Proyek skripsi mandiri',
-      },
-      result: {
-        en: '92.06% Random Forest accuracy',
-        id: 'Akurasi Random Forest 92,06%',
-      },
-      scope: {
-        en: 'Sleep quality monitoring and prediction',
-        id: 'Pemantauan dan prediksi kualitas tidur',
-      },
-    },
-  };
-};
-
 const ProjectDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
-  const { dbFirestore, loading: firebaseLoading } = useFirebaseInit('dbFirestore');
-
-  const [project, setProject] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
+  const { projects, loading, error, retry } = useProjects();
   const [selectedImage, setSelectedImage] = useState(null);
-
-  useEffect(() => {
-    const fetchProject = async () => {
-      setLoading(true);
-      setErrorMessage('');
-
-      const foundLocal = localProjects.find((p) => p.id === id);
-      
-      if (foundLocal) {
-        setProject(enrichCmsProject(foundLocal));
-        setLoading(false);
-        return;
-      }
-
-      if (!dbFirestore) {
-        if (!firebaseLoading) {
-          setErrorMessage('This project is hosted in CMS and could not be loaded right now.');
-          setLoading(false);
-        }
-        return;
-      }
-
-      try {
-        const docRef = doc(dbFirestore, "projects", id);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          setProject(enrichCmsProject({ id: docSnap.id, ...docSnap.data() }));
-        } else {
-          navigate('/not-found');
-        }
-      } catch (error) {
-        console.error("Error fetching project:", error);
-        setErrorMessage('Failed to load project data from CMS. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProject();
-    window.scrollTo(0, 0);
-  }, [id, navigate, dbFirestore, firebaseLoading]);
-
+  const [showLikes, setShowLikes] = useState(false);
+  const project = projects.find(entry => entry.id === id);
   if (loading) return <Loading />;
-  if (!project) {
-    return (
-      <PageTransition>
-        <div className="bg-white dark:bg-dark min-h-screen pt-24 pb-20 transition-colors duration-300">
-          <div className="container mx-auto px-4 max-w-3xl">
-            <div className="rounded-2xl border border-amber-200 dark:border-amber-800/40 bg-amber-50 dark:bg-amber-900/20 p-6 md:p-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-amber-700 dark:text-amber-300 mb-3">Project unavailable</h1>
-              <p className="text-amber-800/90 dark:text-amber-200/90 mb-6">
-                {errorMessage || 'This project could not be loaded at the moment.'}
-              </p>
-              <Link
-                to="/projects"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-semibold hover:bg-secondary transition"
-              >
-                <i className="fas fa-arrow-left"></i> Back to Projects
-              </Link>
-            </div>
-          </div>
-        </div>
-      </PageTransition>
-    );
-  }
+  if (error) return <main className="min-h-screen px-4 pt-28"><ProjectCatalogStatus error retry={retry} /></main>;
+  if (!project) return <NotFound />;
 
   const getData = (data) => {
     if (!data) return "";
@@ -134,7 +38,7 @@ const ProjectDetail = () => {
   const getFeatures = (data) => {
       const raw = getData(data);
       if (Array.isArray(raw)) return raw;
-      if (typeof raw === 'string') return [raw]; 
+      if (typeof raw === 'string') return [raw];
       return [];
   };
 
@@ -237,7 +141,7 @@ const ProjectDetail = () => {
           title={`${title} | Rafie Rojagat Portfolio`}
           description={shortDesc}
           url={`https://rafierb.me/project/${project.id}`}
-          image={`https://rafierb.me${project.image}`}
+          image={project.image}
           type="article"
           keywords={`${title}, ${project.category}, Software Project, ${techKeywords}, Portfolio Project`}
           published={project.createdAt}
@@ -253,7 +157,7 @@ const ProjectDetail = () => {
             className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-8 overflow-x-auto whitespace-nowrap"
           >
             <Link to="/" className="hover:text-primary transition-colors flex items-center gap-1">
-              <i className="fas fa-home text-xs"></i> {t('navbar.home')}
+              <Icon className="fas fa-home text-xs"></Icon> {t('navbar.home')}
             </Link>
             <span className="mx-2 text-gray-300 dark:text-gray-600">/</span>
             <Link to="/projects" className="hover:text-primary transition-colors">
@@ -286,7 +190,7 @@ const ProjectDetail = () => {
 
               <motion.div variants={itemVariants} className="flex flex-col gap-4 flex-shrink-0 min-w-[140px]">
                 <div className="self-start md:self-end">
-                  <LikeButton projectId={project.id} />
+                  {showLikes ? <Suspense fallback={null}><LikeButton projectId={project.id} /></Suspense> : <button type="button" onClick={() => setShowLikes(true)} className="rounded-full border px-4 py-2 text-sm">{t('common.show_reactions')}</button>}
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {project.github && (
@@ -298,7 +202,7 @@ const ProjectDetail = () => {
                       rel="noreferrer"
                       className="px-5 py-2.5 rounded-full bg-gray-100 dark:bg-slate-800 text-dark dark:text-white font-medium hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-sm"
                     >
-                      <i className="fab fa-github text-lg"></i> {t('projects.source_code')}
+                      <Icon className="fab fa-github text-lg"></Icon> {t('projects.source_code')}
                     </motion.a>
                   )}
                   {project.live && (
@@ -310,20 +214,22 @@ const ProjectDetail = () => {
                       rel="noreferrer"
                       className="px-5 py-2.5 rounded-full bg-primary text-white font-medium hover:bg-secondary transition-colors shadow-lg shadow-primary/30 flex items-center gap-2 text-sm"
                     >
-                      <i className="fas fa-external-link-alt"></i> {t('projects.live_site')}
+                      <Icon className="fas fa-external-link-alt"></Icon> {t('projects.live_site')}
                     </motion.a>
                   )}
                 </div>
                 <div className="flex flex-wrap gap-3">
                   {project.figma && (
                     <motion.a whileHover={{ scale: 1.05 }} href={project.figma} target="_blank" rel="noreferrer" className="px-5 py-2 rounded-full bg-gray-100 dark:bg-slate-800 text-xs font-bold hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-                      <i className="fab fa-figma text-blue-500"></i> {t('projects.design')}
+                      <Icon className="fab fa-figma text-blue-500"></Icon> {t('projects.design')}
                     </motion.a>
                   )}
                 </div>
               </motion.div>
             </div>
           </motion.div>
+
+          <ProjectEvidence project={project} />
 
           {selectedImpactCards.length > 0 && (
             <motion.section
@@ -351,7 +257,7 @@ const ProjectDetail = () => {
                 {selectedImpactCards.map((item) => (
                   <div key={item.label} className="border-l-2 border-blue-200 dark:border-blue-800 pl-4 py-1">
                     <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 flex items-center justify-center mb-3">
-                      <i className={item.icon}></i>
+                      <Icon className={item.icon}></Icon>
                     </div>
                     <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
                       {item.label}
@@ -371,6 +277,7 @@ const ProjectDetail = () => {
             transition={{ duration: 0.55, ease: "easeOut", delay: 0.15 }}
             className="rounded-lg overflow-hidden shadow-xl mb-12 border border-gray-100 dark:border-slate-800 bg-gray-100 dark:bg-slate-900"
           >
+            <button type="button" onClick={() => setSelectedImage(project.image)} aria-label={t('common.preview') + ': ' + title} className="block w-full cursor-zoom-in">
             <img
               src={project.image}
               alt={title}
@@ -379,6 +286,7 @@ const ProjectDetail = () => {
               className="w-full h-auto object-cover"
               sizes="(min-width: 1024px) 896px, 100vw"
             />
+            </button>
             {project.conceptualCover && (
               <figcaption className="border-t border-gray-200 bg-white px-4 py-3 text-sm text-gray-500 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-400">
                 {t('projectDetail.conceptual_cover')}
@@ -401,7 +309,7 @@ const ProjectDetail = () => {
                   whileHover={{ y: -5, backgroundColor: "rgba(37, 99, 235, 0.1)" }}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-darkLight border border-gray-200 dark:border-slate-700 shadow-sm transition-colors cursor-default"
                 >
-                  <i className={`${tech.icon} text-xl colored`}></i>
+                  <Icon className={`${tech.icon} text-xl colored`}></Icon>
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{tech.name}</span>
                 </motion.div>
               ))}
@@ -439,7 +347,7 @@ const ProjectDetail = () => {
                         whileHover={{ x: 5 }}
                       >
                         <div className="mt-1 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 flex items-center justify-center flex-shrink-0">
-                          <i className="fas fa-check text-xs"></i>
+                          <Icon className="fas fa-check text-xs"></Icon>
                         </div>
                         <span className="text-gray-700 dark:text-gray-300">{feature}</span>
                       </motion.li>
@@ -482,7 +390,9 @@ const ProjectDetail = () => {
               <h2 className="text-2xl font-bold text-dark dark:text-white mb-8">{t('projectDetail.gallery')}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {project.gallery.map((img, idx) => (
-                  <motion.div
+                  <motion.button
+                    type="button"
+                    aria-label={`${t('common.preview')} ${title} - ${idx + 1}`}
                     key={idx}
                     variants={itemVariants}
                     whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
@@ -497,50 +407,17 @@ const ProjectDetail = () => {
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <i className="fas fa-search-plus text-white text-3xl drop-shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-300"></i>
+                        <Icon className="fas fa-search-plus text-white text-3xl drop-shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-300"></Icon>
                       </div>
                     </div>
-                  </motion.div>
+                  </motion.button>
                 ))}
               </div>
             </motion.section>
           )}
         </div>
 
-        <AnimatePresence>
-          {selectedImage && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm"
-              onClick={() => setSelectedImage(null)}
-            >
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                className="relative max-w-7xl w-full max-h-screen flex flex-col items-center"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <img
-                  src={selectedImage}
-                  alt="Full Preview"
-                  className="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                />
-
-                <button
-                  className="absolute -top-12 right-0 md:-right-6 text-white text-3xl hover:text-primary transition-colors bg-white/10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md"
-                  onClick={() => setSelectedImage(null)}
-                >
-                  &times;
-                </button>
-
-                <p className="text-gray-400 mt-4 text-sm">{t('projectDetail.click_close')}</p>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <ImageDialog image={selectedImage ? { src: selectedImage, alt: title } : null} onClose={() => setSelectedImage(null)} />
       </motion.main>
     </PageTransition>
   );

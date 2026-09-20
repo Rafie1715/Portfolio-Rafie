@@ -1089,3 +1089,24 @@ export const projects = [
     gallery: []
   }
 ];
+
+const evidenceById = {
+  OD60ttuTSwZW62TRJFm6: {
+    contribution: { en: 'Independent Informatics thesis: I built the Kotlin tracking and assessment flow, used Firebase for application data, and evaluated a Random Forest classifier with Scikit-Learn.', id: 'Skripsi Informatika mandiri: saya membangun alur pelacakan dan penilaian dengan Kotlin, menggunakan Firebase untuk data aplikasi, dan mengevaluasi klasifikasi Random Forest dengan Scikit-Learn.' },
+    flow: [{ en: 'Record sleep activity and complete the daily assessment.', id: 'Catat aktivitas tidur dan lengkapi penilaian harian.' }, { en: 'Review the sleep-quality classification.', id: 'Tinjau hasil klasifikasi kualitas tidur.' }, { en: 'Explore weekly statistics and educational content.', id: 'Lihat statistik mingguan dan konten edukasi.' }],
+    metricContext: { en: '92.06% refers to the classification accuracy reported in the thesis evaluation. It describes model performance, rather than a measured improvement in users’ sleep.', id: '92,06% merujuk pada akurasi klasifikasi yang dilaporkan dalam evaluasi skripsi. Angka ini menjelaskan kinerja model, bukan peningkatan kualitas tidur pengguna yang telah diukur.' },
+    article: '/blog/restup-random-forest-android',
+  },
+  'mandiri-news': {
+    contribution: { en: 'In the Bank Mandiri x Rakamin project-based virtual internship, I built three Android screens and integrated three REST endpoints using MVVM, Retrofit, Coroutines, and Paging 3.', id: 'Dalam project-based virtual internship Bank Mandiri x Rakamin, saya membangun tiga layar Android dan mengintegrasikan tiga REST endpoint menggunakan MVVM, Retrofit, Coroutines, dan Paging 3.' },
+    metricContext: { en: '88.71/100 is the program assessment score (Excellent). The cover is a conceptual illustration; implementation documentation is available in the experience section.', id: '88,71/100 merupakan nilai evaluasi program (Excellent). Cover merupakan ilustrasi konsep; dokumentasi implementasi tersedia di bagian pengalaman.' },
+    article: '/blog/mandiri-news-paging-android',
+  },
+  planetku: {
+    contribution: { en: 'As Mobile Development Lead in a six-member Bangkit capstone team, I focused on the Android experience and connecting the product features. The waste-classification accuracy is a result of the team’s model.', id: 'Sebagai Mobile Development Lead dalam tim capstone Bangkit beranggotakan enam orang, saya berfokus pada pengalaman Android dan integrasi fitur produk. Akurasi klasifikasi sampah merupakan hasil model tim.' },
+    flow: [{ en: 'Classify waste from an image.', id: 'Klasifikasikan sampah dari gambar.' }, { en: 'Explore the carbon calculation.', id: 'Jelajahi perhitungan karbon.' }, { en: 'Find a waste bank.', id: 'Temukan bank sampah.' }],
+  },
+};
+for (const project of projects) {
+  if (evidenceById[project.id]) project.evidence = evidenceById[project.id];
+}

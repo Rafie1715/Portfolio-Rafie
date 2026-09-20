@@ -1,21 +1,27 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { trackPageView } from '../utils/analytics';
-
-/**
- * Hook to track page views on route changes
- */
 export const usePageTracking = () => {
-  const location = useLocation();
-
+  const { pathname } = useLocation();
+  const previous = useRef(pathname);
   useEffect(() => {
-    // Get page title from document or pathname
-    const pageTitle = document.title || location.pathname;
-    
-    // Track page view
-    trackPageView(location.pathname, pageTitle);
-    
-    // Scroll to top on page change
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+    let timer;
+    let tracked = false;
+    const moved = previous.current !== pathname;
+    previous.current = pathname;
+    const observe = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const heading = document.querySelector('#main-content h1');
+        if (!heading || tracked) return;
+        tracked = true;
+        trackPageView(pathname, document.title);
+        if (moved && !location.hash) { heading.setAttribute('tabindex', '-1'); heading.focus({ preventScroll: true }); }
+      }, 250);
+    };
+    const observer = new MutationObserver(observe);
+    observer.observe(document.getElementById('root'), { childList: true, subtree: true });
+    observe();
+    return () => { clearTimeout(timer); observer.disconnect(); };
+  }, [pathname]);
 };

@@ -1,6 +1,7 @@
-import { writeFile } from 'node:fs/promises'
+import { writeFile, readFile } from 'node:fs/promises'
 import { blogs } from '../src/data/blogs.js'
-import { projects } from '../src/data/projects.js'
+import { loadPublicProjects } from '../netlify/functions/_shared/projects.js'
+const projects = await readFile(new URL('../.generated/public-projects.json', import.meta.url), 'utf8').then(JSON.parse).catch(() => loadPublicProjects())
 
 const origin = 'https://rafierb.me'
 

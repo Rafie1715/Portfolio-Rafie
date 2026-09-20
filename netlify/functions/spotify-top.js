@@ -25,8 +25,8 @@ export const handler = async (event) => {
       body: new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
-        client_id: process.env.VITE_SPOTIFY_CLIENT_ID,
-        client_secret: process.env.VITE_SPOTIFY_CLIENT_SECRET,
+        client_id: (process.env.SPOTIFY_CLIENT_ID || process.env.VITE_SPOTIFY_CLIENT_ID),
+        client_secret: (process.env.SPOTIFY_CLIENT_SECRET || process.env.VITE_SPOTIFY_CLIENT_SECRET),
       }).toString(),
     });
 
@@ -41,7 +41,7 @@ export const handler = async (event) => {
         },
         body: JSON.stringify({
           error: 'Failed to refresh Spotify token',
-          details: error,
+
         }),
       };
     }

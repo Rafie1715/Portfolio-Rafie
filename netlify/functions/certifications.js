@@ -1,55 +1,13 @@
+import { getAdminApp } from './_shared/admin.js';
+import { allowsAdmin } from '../../src/utils/adminPolicy.js';
 import admin from "firebase-admin";
 
 const parseAllowlist = () => {
-  const raw = process.env.VITE_ADMIN_EMAILS || process.env.ADMIN_EMAILS || "";
+  const raw = process.env.ADMIN_EMAILS || process.env.VITE_ADMIN_EMAILS || "";
   return raw
     .split(",")
     .map((email) => String(email || "").trim().toLowerCase())
     .filter(Boolean);
-};
-
-const getPrivateKey = () => {
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY || process.env.GOOGLE_PRIVATE_KEY || "";
-  return privateKey.replace(/\\n/g, "\n");
-};
-
-const getServiceAccountFromJson = () => {
-  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON || "";
-  if (!raw.trim()) return null;
-
-  const parsed = JSON.parse(raw);
-  if (!parsed.projectId || !parsed.clientEmail || !parsed.privateKey) {
-    throw new Error("Invalid Firebase service account JSON.");
-  }
-
-  return {
-    projectId: parsed.projectId,
-    clientEmail: parsed.clientEmail,
-    privateKey: String(parsed.privateKey).replace(/\\n/g, "\n"),
-  };
-};
-
-const getAdminApp = () => {
-  if (admin.apps.length) return admin.app();
-
-  const serviceAccount = getServiceAccountFromJson();
-  const projectId = serviceAccount?.projectId || process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID;
-  const clientEmail = serviceAccount?.clientEmail || process.env.FIREBASE_CLIENT_EMAIL || process.env.GOOGLE_CLIENT_EMAIL;
-  const privateKey = serviceAccount?.privateKey || getPrivateKey();
-
-  if (!projectId || !clientEmail || !privateKey) {
-    throw new Error(
-      "Missing Firebase Admin credentials. Set FIREBASE_SERVICE_ACCOUNT_JSON, or set FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY in Netlify environment variables."
-    );
-  }
-
-  return admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId,
-      clientEmail,
-      privateKey,
-    }),
-  });
 };
 
 const sendJson = (statusCode, body) => ({
@@ -63,15 +21,7 @@ const sendJson = (statusCode, body) => ({
   body: JSON.stringify(body),
 });
 
-const isAllowedAdmin = (decodedToken) => {
-  if (decodedToken?.admin === true) return true;
-
-  const allowlist = parseAllowlist();
-  const email = String(decodedToken?.email || "").trim().toLowerCase();
-  if (!email || allowlist.length === 0) return false;
-
-  return allowlist.includes(email);
-};
+export const isAllowedAdmin = (decodedToken) => allowsAdmin({ claims: decodedToken, email: decodedToken?.email, emailVerified: decodedToken?.email_verified }, parseAllowlist());
 
 export const handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {

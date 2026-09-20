@@ -1,3 +1,4 @@
+import Icon from '../../components/Icon';
 import { signOut } from "firebase/auth";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { useState } from "react";
@@ -41,70 +42,70 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
             <div className="w-11 h-11 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-4">
-              <i className="fas fa-layer-group"></i>
+              <Icon className="fas fa-layer-group"></Icon>
             </div>
             <h2 className="text-xl font-bold mb-2 dark:text-white">Manage Projects</h2>
             <p className="text-gray-500 dark:text-gray-400 mb-5">Review, search, and delete project entries from your CMS collection.</p>
             <Link to="/admin/projects" className="inline-flex items-center justify-center gap-2 text-center bg-primary text-white px-4 py-2.5 rounded-lg w-full hover:bg-secondary transition font-semibold">
-              Open Project Manager <i className="fas fa-arrow-right text-xs"></i>
+              Open Project Manager <Icon className="fas fa-arrow-right text-xs"></Icon>
             </Link>
           </div>
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
             <div className="w-11 h-11 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-4">
-              <i className="fas fa-plus-circle"></i>
+              <Icon className="fas fa-plus-circle"></Icon>
             </div>
             <h2 className="text-xl font-bold mb-2 dark:text-white">Add New Project</h2>
             <p className="text-gray-500 dark:text-gray-400 mb-5">Publish a new case study with thumbnail, links, stack, and full details.</p>
             <Link to="/admin/add-project" className="inline-flex items-center justify-center gap-2 text-center bg-emerald-600 text-white px-4 py-2.5 rounded-lg w-full hover:bg-emerald-700 transition font-semibold">
-              Create Project <i className="fas fa-wand-magic-sparkles text-xs"></i>
+              Create Project <Icon className="fas fa-wand-magic-sparkles text-xs"></Icon>
             </Link>
           </div>
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
             <div className="w-11 h-11 rounded-lg bg-violet-500/10 text-violet-500 flex items-center justify-center mb-4">
-              <i className="fas fa-eye"></i>
+              <Icon className="fas fa-eye"></Icon>
             </div>
             <h2 className="text-xl font-bold mb-2 dark:text-white">Preview Public Site</h2>
             <p className="text-gray-500 dark:text-gray-400 mb-5">Open the public portfolio in a new tab and verify content changes quickly.</p>
             <Link to="/projects" className="inline-flex items-center justify-center gap-2 text-center border border-gray-300 dark:border-slate-600 text-dark dark:text-white px-4 py-2.5 rounded-lg w-full hover:border-primary hover:text-primary transition font-semibold">
-              Open Projects Page <i className="fas fa-up-right-from-square text-xs"></i>
+              Open Projects Page <Icon className="fas fa-up-right-from-square text-xs"></Icon>
             </Link>
           </div>
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
             <div className="w-11 h-11 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center mb-4">
-              <i className="fas fa-certificate"></i>
+              <Icon className="fas fa-certificate"></Icon>
             </div>
             <h2 className="text-xl font-bold mb-2 dark:text-white">Manage Certifications</h2>
             <p className="text-gray-500 dark:text-gray-400 mb-5">Review and manage certification items shown in the About page carousel.</p>
             <Link to="/admin/certifications" className="inline-flex items-center justify-center gap-2 text-center bg-amber-600 text-white px-4 py-2.5 rounded-lg w-full hover:bg-amber-700 transition font-semibold">
-              Open Certification Manager <i className="fas fa-arrow-right text-xs"></i>
+              Open Certification Manager <Icon className="fas fa-arrow-right text-xs"></Icon>
             </Link>
           </div>
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
             <div className="w-11 h-11 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center mb-4">
-              <i className="fas fa-award"></i>
+              <Icon className="fas fa-award"></Icon>
             </div>
             <h2 className="text-xl font-bold mb-2 dark:text-white">Add New Certification</h2>
             <p className="text-gray-500 dark:text-gray-400 mb-5">Publish a new certification with bilingual fields, badge, and thumbnail image.</p>
             <Link to="/admin/add-certification" className="inline-flex items-center justify-center gap-2 text-center bg-indigo-600 text-white px-4 py-2.5 rounded-lg w-full hover:bg-indigo-700 transition font-semibold">
-              Create Certification <i className="fas fa-wand-magic-sparkles text-xs"></i>
+              Create Certification <Icon className="fas fa-wand-magic-sparkles text-xs"></Icon>
             </Link>
           </div>
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700">
             <div className="w-11 h-11 rounded-lg bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-4">
-              <i className="fas fa-film"></i>
+              <Icon className="fas fa-film"></Icon>
             </div>
             <h2 className="text-xl font-bold mb-2 dark:text-white">Manage Movie Lists</h2>
             <p className="text-gray-500 dark:text-gray-400 mb-5">Manage watched picks and want-to-watch list for AFK page, then preview safely.</p>
             <Link to="/admin/movie-picks" className="inline-flex items-center justify-center gap-2 text-center bg-cyan-600 text-white px-4 py-2.5 rounded-lg w-full hover:bg-cyan-700 transition font-semibold mb-2">
-              Open Movie Manager <i className="fas fa-arrow-right text-xs"></i>
+              Open Movie Manager <Icon className="fas fa-arrow-right text-xs"></Icon>
             </Link>
             <Link to="/admin/cinema-log-preview" className="inline-flex items-center justify-center gap-2 text-center border border-gray-300 dark:border-slate-600 text-dark dark:text-white px-4 py-2.5 rounded-lg w-full hover:border-primary hover:text-primary transition font-semibold">
-              Open Preview <i className="fas fa-up-right-from-square text-xs"></i>
+              Open Preview <Icon className="fas fa-up-right-from-square text-xs"></Icon>
             </Link>
           </div>
         </div>

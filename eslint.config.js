@@ -28,6 +28,7 @@ export default defineConfig([
   },
   {
     files: [
+      'vite.config.js',
       'netlify/functions/**/*.js',
       'scripts/**/*.mjs',
       'tests/**/*.js',

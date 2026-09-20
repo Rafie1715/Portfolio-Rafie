@@ -1,3 +1,5 @@
+import { portfolioProfile } from '../data/portfolioProfile';
+import { normalizeLanguage } from '../utils/language';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +16,7 @@ const SEO = ({
   noindex = false
 }) => {
   const { i18n } = useTranslation();
-  const currentLang = i18n.language || 'en';
+  const currentLang = normalizeLanguage(i18n.resolvedLanguage || i18n.language);
   
   const baseUrl = 'https://rafierb.me';
   
@@ -27,7 +29,7 @@ const SEO = ({
   const safeTitle = safeText(title);
   const safeDesc = safeText(description);
   const canonicalUrl = url || baseUrl;
-  const ogImage = image || `${baseUrl}/og-image.png`;
+  const ogImage = new URL(image || "/og-image.png", baseUrl).href;
   const pathOnly = canonicalUrl.startsWith(baseUrl)
     ? canonicalUrl.replace(baseUrl, '')
     : canonicalUrl;
@@ -37,6 +39,7 @@ const SEO = ({
   const normalizeDate = (value) => {
     if (!value) return undefined;
     if (value?.toDate && typeof value.toDate === 'function') return value.toDate().toISOString();
+    if (value?.seconds != null || value?._seconds != null) return new Date((value.seconds ?? value._seconds) * 1000).toISOString();
     if (value instanceof Date) return value.toISOString();
     if (typeof value === 'number') return new Date(value).toISOString();
     if (typeof value === 'string') return value;
@@ -56,8 +59,8 @@ const SEO = ({
     "description": "Recent Informatics graduate specializing in Android, Front-End, and AI-integrated development",
     "image": `${baseUrl}/images/profile.webp`,
     "sameAs": [
-      "https://github.com/rafierojagat",
-      "https://www.linkedin.com/in/rafierojagat"
+      portfolioProfile.contact.github,
+      portfolioProfile.contact.linkedin
     ],
     "knowsAbout": ["Kotlin", "Android Development", "React.js", "Front-End Development", "Machine Learning", "Generative AI"],
     "alumniOf": {
@@ -143,8 +146,6 @@ const SEO = ({
       <meta name="twitter:description" content={safeDesc} />
       <meta name="twitter:image" content={ogImage} />
       <meta name="twitter:image:alt" content={safeTitle} />
-      <meta name="twitter:creator" content="@rafierojagat" />
-      <meta name="twitter:site" content="@rafierojagat" />
 
       {/* Additional Meta Tags */}
       <meta name="theme-color" content="#2563eb" />

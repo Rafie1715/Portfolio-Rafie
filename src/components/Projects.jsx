@@ -17,7 +17,8 @@ import {
   X,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { projects as manualProjects } from '../data/projects';
+import { useProjects } from '../hooks/useProjects';
+import ProjectCatalogStatus from './ProjectCatalogStatus';
 import { trackExternalLink, trackProjectView } from '../utils/analytics';
 import LazyImage from './LazyImage';
 
@@ -99,14 +100,6 @@ const getProjectDomains = (project) => {
 };
 
 const getProjectDomain = (project) => getProjectDomains(project)[0];
-
-const getTimestamp = (value) => {
-  if (!value) return 0;
-  if (typeof value?.toMillis === 'function') return value.toMillis();
-  if (value?.seconds) return value.seconds * 1000;
-  const parsed = new Date(value).getTime();
-  return Number.isNaN(parsed) ? 0 : parsed;
-};
 
 const ProjectActions = ({ project, title, compact = false, t }) => {
   const externalActions = [
@@ -297,7 +290,7 @@ const ProjectCard = ({
 const Projects = () => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [cmsProjects, setCmsProjects] = useState([]);
+  const { projects: catalog, loading, error, retry } = useProjects();
   const [showAllArchive, setShowAllArchive] = useState(false);
   const [repos, setRepos] = useState([]);
   const [githubState, setGithubState] = useState('idle');
@@ -306,56 +299,6 @@ const Projects = () => {
   const { t, i18n } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
   const currentLang = i18n.language || 'en';
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const fetchCmsProjects = async () => {
-      try {
-        const [firebaseModule, firestoreModule] = await Promise.all([
-          import('../config/firebase'),
-          import('firebase/firestore'),
-        ]);
-        const { dbFirestore } = firebaseModule;
-        const { collection, getDocs, orderBy, query } = firestoreModule;
-        if (!dbFirestore || cancelled) return;
-
-        let snapshot;
-        try {
-          const projectQuery = query(collection(dbFirestore, 'projects'), orderBy('createdAt', 'desc'));
-          snapshot = await getDocs(projectQuery);
-        } catch (orderedError) {
-          console.warn('CMS ordering unavailable, using a local sort.', orderedError);
-          snapshot = await getDocs(collection(dbFirestore, 'projects'));
-        }
-
-        if (cancelled) return;
-        const list = snapshot.docs
-          .map((projectDoc) => ({ id: projectDoc.id, ...projectDoc.data() }))
-          .filter((project) => project.isPublished !== false)
-          .sort((a, b) => getTimestamp(b.createdAt) - getTimestamp(a.createdAt));
-
-        setCmsProjects(list);
-      } catch (error) {
-        console.error('Failed to load CMS projects:', error);
-        if (!cancelled) setCmsProjects([]);
-      }
-    };
-
-    let idleId;
-    let timeoutId;
-    if ('requestIdleCallback' in window) {
-      idleId = window.requestIdleCallback(fetchCmsProjects, { timeout: 2000 });
-    } else {
-      timeoutId = window.setTimeout(fetchCmsProjects, 600);
-    }
-
-    return () => {
-      cancelled = true;
-      if (idleId) window.cancelIdleCallback(idleId);
-      if (timeoutId) window.clearTimeout(timeoutId);
-    };
-  }, []);
 
   useEffect(() => {
     const section = githubSectionRef.current;
@@ -399,15 +342,7 @@ const Projects = () => {
     return () => controller.abort();
   }, [shouldLoadGithub]);
 
-  const allProjects = useMemo(() => {
-    const localIds = new Set(manualProjects.map((project) => normalizeText(project.id)));
-    const localTitles = new Set(manualProjects.map(normalizeTitle));
-    const uniqueCms = cmsProjects.filter((project) => (
-      !localIds.has(normalizeText(project.id)) && !localTitles.has(normalizeTitle(project))
-    ));
-
-    return [...manualProjects, ...uniqueCms].map(enhanceProject);
-  }, [cmsProjects]);
+  const allProjects = useMemo(() => catalog.map(enhanceProject), [catalog]);
 
   const featuredProjects = useMemo(() => allProjects
     .filter((project) => Number(project.featuredOrder) > 0)
@@ -469,6 +404,7 @@ const Projects = () => {
   return (
     <section id="projects" className="bg-gray-50 py-10 transition-colors duration-300 dark:bg-dark md:py-14">
       <div className="container mx-auto max-w-6xl px-4">
+        <ProjectCatalogStatus loading={loading} error={error} retry={retry} />
         {!isBrowsing && (
           <section aria-labelledby="featured-projects-title" className="mb-16 md:mb-20">
             <div className="mb-7 max-w-2xl">

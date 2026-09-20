@@ -1,10 +1,11 @@
+import Icon from '../components/Icon';
 import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { useFirebaseInit } from '../hooks/useFirebaseInit';
-import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, limit } from 'firebase/firestore';
+import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, limit, where } from 'firebase/firestore';
 
 const SpotifyNowPlaying = lazy(() => import('../components/SpotifyNowPlaying'));
 const SpotifyTopTracks = lazy(() => import('../components/SpotifyTopTracks'));
@@ -146,7 +147,7 @@ const AfkPage = () => {
                     return;
                 }
 
-                const picksSnapshot = await getDocs(collection(dbFirestore, 'moviePicks'));
+                const picksSnapshot = await getDocs(query(collection(dbFirestore, 'moviePicks'), where('isPublished', '==', true)));
                 const picks = picksSnapshot.docs
                     .map((entry) => ({ id: entry.id, ...entry.data() }))
                     .filter((item) => item.isPublished !== false)
@@ -202,7 +203,7 @@ const AfkPage = () => {
 
             try {
                 setLoadingWatchlist(true);
-                const snapshot = await getDocs(collection(dbFirestore, 'movieWatchlist'));
+                const snapshot = await getDocs(query(collection(dbFirestore, 'movieWatchlist'), where('isPublished', '==', true)));
                 const items = snapshot.docs
                     .map((entry) => ({ id: entry.id, ...entry.data() }))
                     .filter((item) => item.isPublished !== false)
@@ -518,7 +519,7 @@ const AfkPage = () => {
                 <div className="container mx-auto px-4 max-w-6xl relative z-10">
                     <header ref={afkHeaderRef} className="text-center max-w-3xl mx-auto pt-2 mb-9">
                         <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary mb-4" aria-hidden="true">
-                            <i className="fas fa-gamepad text-lg" />
+                            <Icon className="fas fa-gamepad text-lg" />
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black text-dark dark:text-white mb-2">/afk</h1>
                         <p className="text-gray-600 dark:text-gray-300 font-semibold text-base md:text-lg">{t('afk.subtitle')}</p>
@@ -538,7 +539,7 @@ const AfkPage = () => {
                                     {currentMoments.map((moment) => (
                                         <div key={moment.key} className="flex items-center gap-3 py-2 sm:px-5 first:sm:pl-0 last:sm:pr-0 min-w-0">
                                             <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-primary" aria-hidden="true">
-                                                <i className={`fas ${moment.icon} text-sm`} />
+                                                <Icon className={`fas ${moment.icon} text-sm`} />
                                             </span>
                                             <div className="min-w-0">
                                                 <p className="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400">{moment.label}</p>
@@ -553,7 +554,7 @@ const AfkPage = () => {
                         <motion.section ref={musicSectionRef} variants={itemVariants} className="border-t border-slate-200 dark:border-slate-700 pt-8">
                             <div className="flex items-start gap-4 mb-7">
                                 <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-green-500/10 text-green-600 dark:text-green-400" aria-hidden="true">
-                                    <i className="fab fa-spotify text-xl" />
+                                    <Icon className="fab fa-spotify text-xl" />
                                 </span>
                                 <div>
                                     <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.spotify')}</h2>
@@ -579,7 +580,7 @@ const AfkPage = () => {
                         <motion.section ref={cinemaSectionRef} variants={itemVariants} className="border-t border-slate-200 dark:border-slate-700 pt-8">
                             <div className="flex items-start gap-4 mb-8">
                                 <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400" aria-hidden="true">
-                                    <i className="fas fa-film text-lg" />
+                                    <Icon className="fas fa-film text-lg" />
                                 </span>
                                 <div>
                                     <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.cinema_log')}</h2>
@@ -622,7 +623,7 @@ const AfkPage = () => {
                                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                                                                 <div className="absolute inset-x-0 bottom-0 p-4">
                                                                     <div className="flex items-center gap-2 text-xs font-bold text-amber-300 mb-1">
-                                                                        <i className="fas fa-star" aria-hidden="true" />
+                                                                        <Icon className="fas fa-star" aria-hidden="true" />
                                                                         <span>{t('afk.best_year')} · {getMovieRating(favorite)}</span>
                                                                     </div>
                                                                     <h4 className="text-lg font-black text-white line-clamp-1">{favorite.title}</h4>
@@ -645,7 +646,7 @@ const AfkPage = () => {
                                                                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity" />
                                                                         <div className="absolute inset-x-0 bottom-0 p-2 text-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                                                                             <p className="text-[11px] leading-tight font-bold text-white line-clamp-2">{movie.title}</p>
-                                                                            <p className="text-[10px] text-amber-300 mt-1"><i className="fas fa-star mr-1" aria-hidden="true" />{getMovieRating(movie)}</p>
+                                                                            <p className="text-[10px] text-amber-300 mt-1"><Icon className="fas fa-star mr-1" aria-hidden="true" />{getMovieRating(movie)}</p>
                                                                         </div>
                                                                     </a>
                                                                 ))}
@@ -664,7 +665,7 @@ const AfkPage = () => {
                                             className="mt-8 inline-flex items-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2.5 text-sm font-bold text-dark dark:text-white hover:border-primary hover:text-primary transition-colors"
                                             aria-expanded={showMovieArchive}
                                         >
-                                            <i className={`fas ${showMovieArchive ? 'fa-chevron-up' : 'fa-box-archive'}`} aria-hidden="true" />
+                                            <Icon className={`fas ${showMovieArchive ? 'fa-chevron-up' : 'fa-box-archive'}`} aria-hidden="true" />
                                             {showMovieArchive ? t('afk.hide_archive') : t('afk.show_archive', { count: moviesByYear.length - 2 })}
                                         </button>
                                     )}
@@ -686,7 +687,7 @@ const AfkPage = () => {
                                     )}
                                 </div>
                                 <div className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400 sm:ml-auto">
-                                    <i className="fab fa-discord text-indigo-500 text-base" aria-hidden="true" />
+                                    <Icon className="fab fa-discord text-indigo-500 text-base" aria-hidden="true" />
                                     <span>{statusInfo.isOnline ? t('afk.currently_live') : t('afk.chilling')}</span>
                                 </div>
                             </div>
@@ -696,7 +697,7 @@ const AfkPage = () => {
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-6">
                                 <div className="flex items-start gap-4">
                                     <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400" aria-hidden="true">
-                                        <i className="fas fa-bolt" />
+                                        <Icon className="fas fa-bolt" />
                                     </span>
                                     <div>
                                         <p className="text-xs uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-400 font-bold mb-1">{t('afk.playful_break')}</p>
@@ -745,10 +746,10 @@ const AfkPage = () => {
 
                                     <div className="flex flex-wrap justify-center gap-3">
                                         <button type="button" onClick={startReactionGame} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition-colors">
-                                            <i className="fas fa-rotate-right" aria-hidden="true" />{t('afk.reaction_game.restart_btn')}
+                                            <Icon className="fas fa-rotate-right" aria-hidden="true" />{t('afk.reaction_game.restart_btn')}
                                         </button>
                                         <button type="button" onClick={() => { if (reactionTimerRef.current) clearTimeout(reactionTimerRef.current); setReactionPhase('idle'); setReactionTime(null); setReactionMessage(t('afk.reaction_game.message_ready')); }} className="inline-flex items-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2.5 text-sm font-bold text-dark dark:text-white hover:border-primary hover:text-primary transition-colors">
-                                            <i className="fas fa-eraser" aria-hidden="true" />{t('afk.reaction_game.reset_btn')}
+                                            <Icon className="fas fa-eraser" aria-hidden="true" />{t('afk.reaction_game.reset_btn')}
                                         </button>
                                     </div>
                                 </div>
@@ -766,7 +767,7 @@ const AfkPage = () => {
                                                             {entry.initials || 'RR'}
                                                         </span>
                                                         <span className="text-sm font-bold text-dark dark:text-white">#{index + 1}</span>
-                                                        {index === 0 && <i className="fas fa-crown text-amber-500 text-xs" aria-label={t('afk.reaction_game.leaderboard.champion')} />}
+                                                        {index === 0 && <Icon className="fas fa-crown text-amber-500 text-xs" aria-label={t('afk.reaction_game.leaderboard.champion')} />}
                                                     </div>
                                                     <span className="text-sm font-mono text-primary font-bold">{entry.score} ms</span>
                                                 </motion.div>
@@ -780,7 +781,7 @@ const AfkPage = () => {
                         <motion.section ref={watchlistSectionRef} variants={itemVariants} className="border-t border-slate-200 dark:border-slate-700 pt-8">
                             <div className="flex items-start gap-4 mb-7">
                                 <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400" aria-hidden="true">
-                                    <i className="fas fa-bookmark" />
+                                    <Icon className="fas fa-bookmark" />
                                 </span>
                                 <div>
                                     <h2 className="text-2xl font-bold text-dark dark:text-white">{t('afk.want_to_watch')}</h2>
@@ -807,7 +808,7 @@ const AfkPage = () => {
                                                 <p className="text-xs uppercase tracking-wider text-primary font-bold mb-1">#{index + 1}</p>
                                                 <h4 className="text-base md:text-lg font-extrabold text-dark dark:text-white line-clamp-1 group-hover:text-primary transition-colors">{movie.title}</h4>
                                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                    <i className="fas fa-star text-amber-500 mr-1" aria-hidden="true" />{getMovieRating(movie)}
+                                                    <Icon className="fas fa-star text-amber-500 mr-1" aria-hidden="true" />{getMovieRating(movie)}
                                                     {movie.release_date ? ` · ${movie.release_date.split('-')[0]}` : ''}
                                                 </p>
                                                 {movie.note && <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">{movie.note}</p>}

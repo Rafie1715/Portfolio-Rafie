@@ -1,10 +1,13 @@
+import Icon from '../components/Icon';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { X } from 'lucide-react';
 import Hero from '../components/Hero';
 import HomeAboutSnapshot from '../components/HomeAboutSnapshot';
 import RecruiterLens from '../components/RecruiterLens';
-import { projects } from '../data/projects';
+import { useProjects } from '../hooks/useProjects';
+import ProjectCatalogStatus from '../components/ProjectCatalogStatus';
+import LivingTechStack from '../components/LivingTechStack';
 import { blogs } from '../data/blogs';
 import BlogCard from '../components/BlogCard';
 import SpotlightCard from '../components/SpotlightCard';
@@ -12,7 +15,7 @@ import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { motion, useReducedMotion } from 'framer-motion';
-import { trackEvent } from '../utils/analytics';
+import { trackEvent, trackProjectView } from '../utils/analytics';
 
 const HomePersonalPanel = lazy(() => import('../components/HomePersonalPanel'));
 
@@ -62,6 +65,7 @@ const VALID_LENSES = new Set(Object.keys(FEATURED_PROJECTS_BY_LENS));
 
 const HomePage = () => {
   const { t, i18n } = useTranslation();
+  const { projects, loading, error, retry } = useProjects();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = i18n.language || 'en';
   const shouldReduceMotion = useReducedMotion();
@@ -133,16 +137,15 @@ const HomePage = () => {
         <RecruiterLens
           value={recruiterLens}
           onChange={handleLensChange}
-          onTechnologySelect={handleTechnologySelect}
         />
 
-        <section id="selected-work" className="py-12 md:py-20 px-4 container mx-auto" aria-live="polite">
+        <section id="selected-work" className="scroll-mt-24 py-8 md:py-10 px-4 container mx-auto" aria-live="polite">
           <motion.div
             variants={revealVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.35 }}
-            className="text-center mb-12"
+            className="text-center mb-8"
           >
             <p className="text-xs font-semibold uppercase text-blue-600 dark:text-blue-400 mb-3">{t('home.highlights')}</p>
             <h2 className="text-3xl font-bold text-dark dark:text-white mb-4">{t(`${lensKey}.work_title`)}</h2>
@@ -167,10 +170,11 @@ const HomePage = () => {
             )}
           </motion.div>
 
+          <ProjectCatalogStatus loading={loading} error={error} retry={retry} />
           <motion.div
             variants={projectGridVariants}
-            initial="hidden"
-            whileInView="visible"
+            initial={false}
+            animate="visible"
             viewport={{ once: true, amount: 0.15 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
             key={recruiterLens}
@@ -185,7 +189,8 @@ const HomePage = () => {
               return (
                 <motion.div
                   key={project.id}
-                  variants={revealVariants}
+                  initial={false}
+                  animate={{ opacity: isDimmed ? 0.45 : 1, y: 0 }}
                   className={`h-full rounded-lg transition-[opacity,filter,box-shadow] duration-300 ${
                     isRelatedTechnology
                       ? 'ring-2 ring-primary ring-offset-4 ring-offset-white dark:ring-offset-dark'
@@ -234,11 +239,12 @@ const HomePage = () => {
 
                       <Link
                         to={`/project/${project.id}`}
-                        aria-label={`${title} - View Details`}
+                        onClick={() => trackProjectView(project.id, title)}
+                        aria-label={`${title}: ${t('projects.view_details')}`}
                         className="inline-flex items-center gap-2 w-fit mt-auto rounded-lg border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-all duration-300 hover:bg-primary hover:text-white hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                       >
                         <span>{t('projects.view_details')}</span>
-                        <i className="fas fa-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-0.5"></i>
+                        <Icon className="fas fa-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-0.5"></Icon>
                       </Link>
                     </div>
                   </SpotlightCard>
@@ -255,6 +261,7 @@ const HomePage = () => {
         </section>
 
         <HomeAboutSnapshot />
+        <section className="container mx-auto max-w-6xl px-4 py-12 sm:px-6"><LivingTechStack key={recruiterLens} mode={recruiterLens} onTechnologySelect={handleTechnologySelect} /></section>
 
         <section className="py-20 px-4 container mx-auto bg-gray-50 dark:bg-darkLight my-12 rounded-2xl">
           <div className="text-center mb-12">
@@ -276,6 +283,7 @@ const HomePage = () => {
         </section>
 
         <DeferredPersonalPanel />
+        <section className="mx-auto max-w-3xl px-5 py-16 text-center"><h2 className="text-3xl font-bold">{t('common.connect')}</h2><p className="mt-4 text-slate-600 dark:text-slate-400">{t('common.connect_desc')}</p><Link to="/contact" className="mt-6 inline-flex min-h-12 items-center rounded-lg bg-primary px-6 py-3 font-bold text-white">{t('hero.contact_me')}</Link></section>
       </main>
     </PageTransition>
   );

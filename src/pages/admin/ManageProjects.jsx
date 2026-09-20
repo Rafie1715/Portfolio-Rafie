@@ -1,12 +1,14 @@
 import { useCallback, useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
-import { collection, getDocs, deleteDoc, doc, addDoc, writeBatch } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, addDoc, setDoc, writeBatch } from "firebase/firestore";
 import { projects as localProjects } from "../../data/projects";
 import { useToast } from "../../hooks/useToast";
 
 const ManageProjects = () => {
   const [cmsProjects, setCmsProjects] = useState([]);
+  const [contentSource, setContentSource] = useState('');
+  useEffect(() => { fetch('/.netlify/functions/projects').then(response => response.json()).then(data => setContentSource(data.source || '')).catch(() => {}); }, []);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [deletingId, setDeletingId] = useState("");
@@ -67,13 +69,26 @@ const ManageProjects = () => {
       source: "local",
     }));
 
-    return [...cmsProjects, ...normalizedLocal];
+    const cmsKeys = new Set(cmsProjects.flatMap(project => [project.id, project.localId]).filter(Boolean));
+    return [...cmsProjects, ...normalizedLocal.filter(project => !cmsKeys.has(project.id))];
   }, [cmsProjects]);
+
+  const importLocal = async (project) => {
+    if (!dbFirestore || duplicatingId) return;
+    setDuplicatingId(project.id);
+    try {
+      const { source: _source, ...data } = project;
+      await setDoc(doc(dbFirestore, 'projects', project.id), { ...data, localId: project.id, isPublished: true, updatedAt: new Date() });
+      await fetchProjects({ silent: true });
+      showToast({ type: 'success', title: 'Ready to edit', message: 'The CMS now controls this project. Open Edit to update it.' });
+    } catch { showToast({ type: 'error', title: 'Import failed', message: 'Could not create the CMS override.' }); }
+    finally { setDuplicatingId(''); }
+  };
 
   const handleDelete = async (id) => {
     if (!dbFirestore || deletingId) return;
 
-    if (window.confirm("Are you sure you want to delete this project?")) {
+    if (window.confirm("Delete this CMS entry? For a repository project this removes the override and restores the repository version. Use the Publish checkbox in Edit to hide it instead.")) {
       try {
         setDeletingId(id);
         await deleteDoc(doc(dbFirestore, "projects", id));
@@ -110,6 +125,8 @@ const ManageProjects = () => {
 
       delete payload.id;
       delete payload.source;
+      delete payload.localId;
+      payload.isPublished = true;
 
       const docRef = await addDoc(collection(dbFirestore, "projects"), payload);
 
@@ -263,6 +280,8 @@ const ManageProjects = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
+      {contentSource === 'static' && <p role="status" className="mb-5 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">This deployment serves repository projects. CMS edits are saved, but become public only when the server is configured with Firebase Admin credentials and PORTFOLIO_CONTENT_SOURCE=cms.</p>}
+
       <div className="max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <div>
@@ -414,7 +433,7 @@ const ManageProjects = () => {
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-gray-500">Edit in `src/data/projects.js`</span>
+                        <button type="button" onClick={() => importLocal(project)} disabled={Boolean(duplicatingId)} className="rounded bg-blue-100 px-3 py-2 text-sm font-bold text-blue-700">{duplicatingId === project.id ? "Importing…" : "Manage in CMS"}</button>
                       )}
                     </td>
                   </tr>

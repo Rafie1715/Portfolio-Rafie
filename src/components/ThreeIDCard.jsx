@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { RotateCcw } from 'lucide-react';
+import { createLanyard, stepLanyard, limitLanyardTarget, LANYARD_ANCHOR, LANYARD_LENGTH } from '../utils/lanyardPhysics';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 
@@ -54,7 +57,7 @@ const createBadgeTexture = (profileImage) => {
   context.fillRect(0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
   context.fillStyle = '#047857';
-  context.fillRect(0, 0, TEXTURE_WIDTH, 215);
+  context.fillRect(0, 0, TEXTURE_WIDTH, 180);
 
   context.fillStyle = '#ffffff';
   context.beginPath();
@@ -71,18 +74,14 @@ const createBadgeTexture = (profileImage) => {
 
   context.textAlign = 'left';
   context.fillStyle = '#ffffff';
-  context.font = '700 34px Arial';
-  context.fillText('UPN VETERAN JAKARTA', 175, 88);
-  context.fillStyle = '#d1fae5';
-  context.font = '700 19px Arial';
-  context.fillText('FACULTY OF COMPUTER SCIENCE', 175, 126);
-  context.font = '700 18px Arial';
-  context.fillText('PROFILE ID', 690, 174);
+  context.font = '700 48px Arial';
+  context.fillText('UPN VETERAN', 175, 80);
+  context.fillText('JAKARTA', 175, 140);
 
-  const photoX = 225;
-  const photoY = 270;
-  const photoWidth = 450;
-  const photoHeight = 390;
+  const photoX = 140;
+  const photoY = 235;
+  const photoWidth = 620;
+  const photoHeight = 510;
   drawRoundedRect(context, photoX, photoY, photoWidth, photoHeight, 24);
   context.save();
   context.clip();
@@ -99,44 +98,24 @@ const createBadgeTexture = (profileImage) => {
   context.stroke();
 
   context.textAlign = 'center';
-  context.fillStyle = '#64748b';
-  context.font = '700 18px Arial';
-  context.fillText('DEVELOPER PROFILE', TEXTURE_WIDTH / 2, 725);
   context.fillStyle = '#0f172a';
-  context.font = '700 42px Arial';
-  context.fillText('RAFIE ROJAGAT BACHRI', TEXTURE_WIDTH / 2, 780);
+  context.font = '700 108px Arial';
+  context.fillText('Rafie', TEXTURE_WIDTH / 2, 885);
+  context.font = '700 90px Arial';
+  context.fillText('Rojagat Bachri', TEXTURE_WIDTH / 2, 990);
   context.fillStyle = '#047857';
-  context.font = '700 25px Arial';
-  context.fillText('INFORMATICS GRADUATE', TEXTURE_WIDTH / 2, 825);
-
-  context.strokeStyle = '#e2e8f0';
-  context.lineWidth = 3;
-  context.beginPath();
-  context.moveTo(90, 885);
-  context.lineTo(810, 885);
-  context.stroke();
-
-  context.fillStyle = '#64748b';
-  context.font = '700 17px Arial';
-  context.fillText('FOCUS', 260, 945);
-  context.fillText('GRADUATION', 640, 945);
-  context.fillStyle = '#0f172a';
-  context.font = '700 27px Arial';
-  context.fillText('MOBILE & WEB', 260, 990);
-  context.fillText('2026', 640, 990);
+  context.font = '700 54px Arial';
+  context.fillText('Android · Web · AI', TEXTURE_WIDTH / 2, 1090);
 
   context.fillStyle = '#dcfce7';
-  drawRoundedRect(context, 275, 1040, 350, 72, 16);
+  drawRoundedRect(context, 145, 1150, 610, 110, 30);
   context.fill();
   context.fillStyle = '#166534';
-  context.font = '700 23px Arial';
-  context.fillText('OPEN TO WORK', TEXTURE_WIDTH / 2, 1087);
+  context.font = '700 58px Arial';
+  context.fillText('OPEN TO WORK', TEXTURE_WIDTH / 2, 1226);
 
-  context.fillStyle = '#0f172a';
-  context.fillRect(0, 1195, TEXTURE_WIDTH, 125);
-  context.fillStyle = '#cbd5e1';
-  context.font = '700 19px Arial';
-  context.fillText('ANDROID  /  FRONT-END  /  AI', TEXTURE_WIDTH / 2, 1268);
+  context.fillStyle = '#047857';
+  context.fillRect(0, 1300, TEXTURE_WIDTH, 20);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -213,113 +192,183 @@ const AnimationDriver = ({ active }) => {
   return null;
 };
 
-const BadgeModel = ({ active, reducedMotion }) => {
+const STRAP_SEGMENTS = 48;
+const makeStrapGeometry = () => {
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array((STRAP_SEGMENTS + 1) * 6), 3).setUsage(THREE.DynamicDrawUsage));
+  const indices = [];
+  for (let i = 0; i < STRAP_SEGMENTS; i++) indices.push(i * 2, i * 2 + 1, i * 2 + 2, i * 2 + 1, i * 2 + 3, i * 2 + 2);
+  geometry.setIndex(indices);
+  return geometry;
+};
+
+const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange }) => {
   const pivot = useRef(null);
+  const points = useRef(createLanyard());
+  const drag = useRef(null);
   const angularVelocity = useRef(new THREE.Vector3());
+  const previousEndpoint = useRef(new THREE.Vector2(0, LANYARD_ANCHOR.y - LANYARD_LENGTH));
   const [hovered, setHovered] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const { gl, camera, viewport, invalidate } = useThree();
   const geometry = useMemo(() => createCardGeometry(), []);
   const texture = useMemo(() => createBadgeTexture(profileImage), [profileImage]);
+  const straps = useMemo(() => [makeStrapGeometry(), makeStrapGeometry()], []);
+  const curve = useMemo(() => new THREE.CatmullRomCurve3(createLanyard().map(p => new THREE.Vector3(p.x, p.y, 0))), []);
+  const scratch = useMemo(() => ({
+    raycaster: new THREE.Raycaster(), pointer: new THREE.Vector2(), hit: new THREE.Vector3(),
+    plane: new THREE.Plane(new THREE.Vector3(0, 0, 1), 0),
+    point: new THREE.Vector3(), tangent: new THREE.Vector3(),
+  }), []);
 
   useEffect(() => {
     const image = new Image();
     let cancelled = false;
-    image.onload = () => {
-      if (!cancelled) setProfileImage(image);
-    };
+    image.onload = () => { if (!cancelled) setProfileImage(image); };
     image.src = '/images/profile.webp';
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
-
   useEffect(() => () => geometry.dispose(), [geometry]);
   useEffect(() => () => texture?.dispose(), [texture]);
+  useEffect(() => () => straps.forEach(strap => strap.dispose()), [straps]);
 
   useEffect(() => {
-    document.body.style.cursor = dragging ? 'grabbing' : hovered ? 'grab' : '';
-    return () => {
-      document.body.style.cursor = '';
-    };
-  }, [dragging, hovered]);
+    const canvas = gl.domElement;
+    canvas.style.setProperty('cursor', dragging ? 'grabbing' : hovered ? 'grab' : '');
+    return () => { canvas.style.removeProperty('cursor'); };
+  }, [dragging, hovered, gl]);
 
-  const finishDrag = (event) => {
-    event?.stopPropagation();
-    event?.target.releasePointerCapture?.(event.pointerId);
-    angularVelocity.current.multiplyScalar(1.18);
-    setDragging(false);
-  };
+  useEffect(() => {
+    const canvas = gl.domElement;
+    const finish = event => {
+      if (!drag.current || (event?.pointerId != null && event.pointerId !== drag.current.pointerId)) return;
+      const { pointerId } = drag.current;
+      drag.current = null;
+      if (canvas.hasPointerCapture(pointerId)) canvas.releasePointerCapture(pointerId);
+      setDragging(false); setHovered(false); onDragChange(false); invalidate();
+    };
+    const move = event => {
+      if (!drag.current || event.pointerId !== drag.current.pointerId) return;
+      event.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      scratch.pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
+      scratch.raycaster.setFromCamera(scratch.pointer, camera);
+      if (scratch.raycaster.ray.intersectPlane(scratch.plane, scratch.hit)) {
+        const { offset } = drag.current;
+        drag.current.target = limitLanyardTarget({ x: scratch.hit.x - offset.x, y: scratch.hit.y - offset.y }, Math.max(0.35, viewport.width / 2 - 1.45));
+        invalidate();
+      }
+    };
+    canvas.addEventListener('pointermove', move, { passive: false });
+    canvas.addEventListener('pointerup', finish);
+    canvas.addEventListener('pointercancel', finish);
+    canvas.addEventListener('lostpointercapture', finish);
+    window.addEventListener('blur', finish);
+    return () => {
+      finish();
+      canvas.removeEventListener('pointermove', move);
+      canvas.removeEventListener('pointerup', finish);
+      canvas.removeEventListener('pointercancel', finish);
+      canvas.removeEventListener('lostpointercapture', finish);
+      window.removeEventListener('blur', finish);
+    };
+  }, [camera, gl, invalidate, onDragChange, scratch, viewport.width]);
+
+  useEffect(() => {
+    if (!active && drag.current) {
+      const { pointerId } = drag.current;
+      if (gl.domElement.hasPointerCapture(pointerId)) gl.domElement.releasePointerCapture(pointerId);
+    }
+  }, [active, gl]);
+
+  useEffect(() => {
+    if (drag.current && gl.domElement.hasPointerCapture(drag.current.pointerId)) gl.domElement.releasePointerCapture(drag.current.pointerId);
+    points.current = createLanyard();
+    angularVelocity.current.set(0, 0, 0);
+    previousEndpoint.current.set(0, LANYARD_ANCHOR.y - LANYARD_LENGTH);
+    if (pivot.current) pivot.current.rotation.set(0, 0, 0);
+    invalidate();
+  }, [resetSignal, gl, invalidate]);
+
+  useEffect(() => {
+    if (reducedMotion && !dragging) {
+      points.current = createLanyard();
+      angularVelocity.current.set(0, 0, 0);
+      if (pivot.current) pivot.current.rotation.set(0, 0, 0);
+      invalidate();
+    }
+  }, [reducedMotion, dragging, invalidate]);
 
   useFrame((state, delta) => {
-    if (!pivot.current || !active || reducedMotion) return;
+    if (!pivot.current) return;
+    const dt = Math.min(delta, 0.05);
+    if (active && (!reducedMotion || dragging)) stepLanyard(points.current, dt, drag.current?.target || null);
+    const end = points.current.at(-1);
+    const before = points.current.at(-2);
+    if (active && !reducedMotion) {
+      const vx = (end.x - previousEndpoint.current.x) / Math.max(dt, 1 / 120);
+      const vy = (end.y - previousEndpoint.current.y) / Math.max(dt, 1 / 120);
+      const lean = Math.atan2(end.x - before.x, before.y - end.y);
+      stepRotationSpring(pivot.current.rotation, angularVelocity.current, 'z', THREE.MathUtils.clamp(lean * 0.32 - vx * 0.035, -0.42, 0.42), 24, 5.8, dt, 0.5);
+      stepRotationSpring(pivot.current.rotation, angularVelocity.current, 'y', THREE.MathUtils.clamp(vx * 0.06 + end.x * 0.08, -0.3, 0.3), 20, 5.5, dt, 0.38);
+      stepRotationSpring(pivot.current.rotation, angularVelocity.current, 'x', THREE.MathUtils.clamp(vy * -0.035, -0.2, 0.2), 22, 6, dt, 0.25);
+    }
+    // Reserve room for the entire tilted badge, including its lower corners.
+    const tilt = pivot.current.rotation.z;
+    const halfWidth = viewport.width / 2 - 0.18;
+    const cardHalfWidth = 1.3 * Math.cos(tilt);
+    const bottomOffset = 3.75 * Math.sin(tilt);
+    const boundedX = THREE.MathUtils.clamp(end.x,
+      -halfWidth + cardHalfWidth - Math.min(0, bottomOffset),
+      halfWidth - cardHalfWidth - Math.max(0, bottomOffset));
+    end.previousX += boundedX - end.x;
+    end.x = boundedX;
+    pivot.current.position.set(end.x, end.y, 0);
+    previousEndpoint.current.set(end.x, end.y);
 
-    const elapsed = state.clock.getElapsedTime();
-    const frameDelta = Math.min(delta, 1 / 30);
-    const targetX = dragging
-      ? state.pointer.y * -0.22
-      : hovered
-        ? state.pointer.y * -0.055
-        : Math.sin(elapsed * 0.55) * 0.015;
-    const targetY = dragging
-      ? state.pointer.x * 0.52
-      : hovered
-        ? state.pointer.x * 0.12
-        : Math.sin(elapsed * 0.42) * 0.055;
-    const targetZ = dragging
-      ? state.pointer.x * -0.16
-      : Math.sin(elapsed * 0.7) * 0.018;
-    const stiffness = dragging ? 52 : 18;
-    const damping = dragging ? 10 : 5.2;
-
-    stepRotationSpring(
-      pivot.current.rotation,
-      angularVelocity.current,
-      'x',
-      targetX,
-      stiffness,
-      damping,
-      frameDelta,
-      0.28,
-    );
-    stepRotationSpring(
-      pivot.current.rotation,
-      angularVelocity.current,
-      'y',
-      targetY,
-      stiffness,
-      damping,
-      frameDelta,
-      0.62,
-    );
-    stepRotationSpring(
-      pivot.current.rotation,
-      angularVelocity.current,
-      'z',
-      targetZ,
-      stiffness,
-      damping,
-      frameDelta,
-      0.22,
-    );
+    points.current.forEach((p, i) => curve.points[i].set(p.x, p.y, 0));
+    straps.forEach((strap, stripe) => {
+      const attribute = strap.getAttribute('position');
+      const halfWidth = stripe ? 0.011 : 0.085;
+      const offset = stripe ? 0.04 : 0;
+      for (let i = 0; i <= STRAP_SEGMENTS; i++) {
+        curve.getPoint(i / STRAP_SEGMENTS, scratch.point);
+        curve.getTangent(i / STRAP_SEGMENTS, scratch.tangent);
+        const nx = -scratch.tangent.y; const ny = scratch.tangent.x;
+        attribute.setXYZ(i * 2, scratch.point.x + nx * (offset - halfWidth), scratch.point.y + ny * (offset - halfWidth), stripe ? 0.009 : 0);
+        attribute.setXYZ(i * 2 + 1, scratch.point.x + nx * (offset + halfWidth), scratch.point.y + ny * (offset + halfWidth), stripe ? 0.009 : 0);
+      }
+      attribute.needsUpdate = true;
+    });
   });
+
+  const startDrag = event => {
+    if (!active || drag.current || event.button !== 0 || event.nativeEvent?.isPrimary === false) return;
+    event.stopPropagation();
+    if (!event.ray.intersectPlane(scratch.plane, scratch.hit)) return;
+    const end = points.current.at(-1);
+    drag.current = {
+      pointerId: event.pointerId,
+      offset: { x: scratch.hit.x - end.x, y: scratch.hit.y - end.y },
+      target: { x: end.x, y: end.y },
+    };
+    gl.domElement.setPointerCapture(event.pointerId);
+    setDragging(true); setHovered(true); onDragChange(true); invalidate();
+  };
 
   return (
     <group>
-      <mesh position={[0, 2.58, 0]}>
-        <boxGeometry args={[0.18, 2.25, 0.06]} />
-        <meshStandardMaterial color="#047857" roughness={0.68} />
-      </mesh>
-      <mesh position={[0.045, 2.58, 0.036]}>
-        <boxGeometry args={[0.025, 2.25, 0.012]} />
-        <meshBasicMaterial color="#facc15" />
-      </mesh>
-      <mesh position={[0, 3.73, 0]}>
-        <sphereGeometry args={[0.12, 20, 20]} />
+      {straps.map((strap, index) => (
+        <mesh key={index} geometry={strap} frustumCulled={false}>
+          <meshBasicMaterial color={index ? '#facc15' : '#047857'} side={THREE.DoubleSide} />
+        </mesh>
+      ))}
+      <mesh position={[0, LANYARD_ANCHOR.y, 0]}>
+        <sphereGeometry args={[0.1, 16, 16]} />
         <meshStandardMaterial color="#94a3b8" metalness={0.75} roughness={0.25} />
       </mesh>
-
-      <group ref={pivot} position={[0, 1.43, 0]}>
+      <group ref={pivot} position={[0, LANYARD_ANCHOR.y - LANYARD_LENGTH, 0]}>
         <mesh position={[0, -0.04, 0]}>
           <boxGeometry args={[0.46, 0.28, 0.16]} />
           <meshStandardMaterial color="#64748b" metalness={0.72} roughness={0.28} />
@@ -328,35 +377,10 @@ const BadgeModel = ({ active, reducedMotion }) => {
           <torusGeometry args={[0.17, 0.045, 12, 28]} />
           <meshStandardMaterial color="#475569" metalness={0.78} roughness={0.25} />
         </mesh>
-
-        <group
-          position={[0, -1.94, 0]}
-          onPointerOver={(event) => {
-            event.stopPropagation();
-            setHovered(true);
-          }}
-          onPointerOut={() => {
-            if (!dragging) setHovered(false);
-          }}
-          onPointerDown={(event) => {
-            if (reducedMotion) return;
-            event.stopPropagation();
-            event.target.setPointerCapture?.(event.pointerId);
-            setHovered(true);
-            setDragging(true);
-          }}
-          onPointerUp={finishDrag}
-          onPointerCancel={finishDrag}
-          onLostPointerCapture={() => setDragging(false)}
-        >
+        <group position={[0, -1.94, 0]} onPointerDown={startDrag}
+          onPointerOver={() => setHovered(true)} onPointerOut={() => { if (!drag.current) setHovered(false); }}>
           <mesh geometry={geometry}>
-            <meshPhysicalMaterial
-              color="#f8fafc"
-              clearcoat={0.7}
-              clearcoatRoughness={0.22}
-              metalness={0.08}
-              roughness={0.48}
-            />
+            <meshPhysicalMaterial color="#f8fafc" clearcoat={0.7} clearcoatRoughness={0.22} metalness={0.08} roughness={0.48} />
           </mesh>
           <mesh position={[0, 0, 0.091]}>
             <planeGeometry args={[2.25, 3.35]} />
@@ -384,6 +408,15 @@ const useReducedMotion = () => {
 };
 
 export default function ThreeIDCard() {
+  const { t } = useTranslation();
+  const [dragging, setDragging] = useState(false);
+  const [resetSignal, setResetSignal] = useState(0);
+  const [documentVisible, setDocumentVisible] = useState(() => !document.hidden);
+  useEffect(() => {
+    const update = () => setDocumentVisible(!document.hidden);
+    document.addEventListener('visibilitychange', update);
+    return () => document.removeEventListener('visibilitychange', update);
+  }, []);
   const containerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(true);
   const reducedMotion = useReducedMotion();
@@ -398,27 +431,32 @@ export default function ThreeIDCard() {
     return () => observer.disconnect();
   }, []);
 
-  const active = isVisible && !reducedMotion;
+  const active = isVisible && documentVisible;
 
   return (
     <div
       ref={containerRef}
+      data-card-dragging={dragging}
       className="w-full max-w-[520px] overflow-hidden rounded-lg border border-slate-200 bg-slate-100 shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-900"
     >
-      <div className="h-[440px] w-full md:h-[500px]" aria-label="Interactive 3D preview of Rafie's profile ID card">
+      <div className="h-[440px] w-full md:h-[500px]" role="img" aria-label={t('common.developer_id_preview')}>
         <Canvas
           frameloop="demand"
           dpr={[1, 1.5]}
-          camera={{ position: [0, 0.65, 9.5], fov: 36, near: 0.1, far: 30 }}
+          camera={{ position: [0, 0.65, 9.5], fov: 40, near: 0.1, far: 30 }}
           gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
-          style={{ touchAction: 'pan-y' }}
+          style={{ touchAction: 'none' }}
         >
           <ambientLight intensity={1.9} />
           <directionalLight position={[4, 6, 8]} intensity={2.4} color="#ffffff" />
           <directionalLight position={[-4, 1, 5]} intensity={1.1} color="#a7f3d0" />
-          <BadgeModel active={active} reducedMotion={reducedMotion} />
-          <AnimationDriver active={active} />
+          <BadgeModel active={active} reducedMotion={reducedMotion} resetSignal={resetSignal} onDragChange={setDragging} />
+          <AnimationDriver active={active && (!reducedMotion || dragging)} />
         </Canvas>
+      </div>
+      <div className="flex items-center justify-between gap-3 border-t border-slate-200 px-4 py-2 dark:border-slate-700">
+        <p className="text-left text-xs leading-5 text-slate-500 dark:text-slate-400">{t('common.developer_id_drag')}</p>
+        <button type="button" onClick={() => setResetSignal(value => value + 1)} aria-label={t('common.developer_id_reset')} title={t('common.developer_id_reset')} className="flex size-11 shrink-0 items-center justify-center rounded-lg text-primary hover:bg-blue-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"><RotateCcw size={17} aria-hidden="true" /></button>
       </div>
     </div>
   );

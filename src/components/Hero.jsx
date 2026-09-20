@@ -1,49 +1,12 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { MapPin, BriefcaseBusiness, Layers, Code2, Download, Send } from 'lucide-react';
+import { trackCTAClick, trackExternalLink } from '../utils/analytics';
 
-const HeroProductScene = lazy(() => import('./HeroProductScene'));
-
-const canUseWebGL = () => {
-  try {
-    if (!window.WebGLRenderingContext) return false;
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
-    const supported = Boolean(context);
-    context?.getExtension('WEBGL_lose_context')?.loseContext();
-    return supported;
-  } catch {
-    return false;
-  }
-};
-
-const HeroProductPoster = () => (
-  <div
-    data-hero-product-poster
-    className="pointer-events-none absolute inset-0 z-10 overflow-hidden"
-    aria-hidden="true"
-  >
-    <div className="absolute -bottom-20 -right-12 hidden h-56 w-28 rotate-6 overflow-hidden rounded-[1.65rem] border-[5px] border-slate-400/60 bg-slate-950 opacity-[0.16] shadow-xl dark:border-slate-500 dark:opacity-20 sm:bottom-12 sm:right-3 sm:block sm:h-80 sm:w-40 sm:opacity-20 dark:sm:opacity-30 md:right-[5%] md:bottom-auto md:top-[24%]">
-      <div
-        className="h-full w-full bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/images/project-restup.jpg')",
-          backgroundPosition: '50% 0%',
-          backgroundSize: '300% 200%',
-        }}
-      />
-    </div>
-    <img
-      src="/images/project-computercrafter.webp"
-      alt=""
-      loading="lazy"
-      decoding="async"
-      className="absolute left-[3%] top-[28%] hidden w-60 -rotate-3 border-[5px] border-slate-300/70 opacity-20 shadow-lg dark:border-slate-600 dark:opacity-25 lg:block"
-    />
-  </div>
-);
+import HeroNodeBackground from './HeroNodeBackground';
 
 const TypewriterLine = ({ phrases, prefix, accessibleText, reduceMotion, active }) => {
   const safePhrases = Array.isArray(phrases) && phrases.length > 0 ? phrases : [''];
@@ -96,7 +59,7 @@ const TypewriterLine = ({ phrases, prefix, accessibleText, reduceMotion, active 
   );
 };
 
-const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
+const Hero = ({ recruiterLens = 'overview' }) => {
   const { t, i18n } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
   const heroRef = useRef(null);
@@ -104,26 +67,7 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
   const [isDocumentVisible, setIsDocumentVisible] = useState(
     () => typeof document === 'undefined' || document.visibilityState === 'visible',
   );
-  const [sceneRequested, setSceneRequested] = useState(false);
-  const [webglSupported, setWebglSupported] = useState(true);
-  const [isMobileViewport, setIsMobileViewport] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches,
-  );
-  const gridX = useSpring(useMotionValue(0), { stiffness: 90, damping: 24 });
-  const gridY = useSpring(useMotionValue(0), { stiffness: 90, damping: 24 });
-  const lensKey = `home.recruiter_lens.modes.${recruiterLens}`;
-
-  const requestProductScene = useCallback(() => {
-    if (shouldReduceMotion || sceneRequested || isMobileViewport) return;
-
-    const connection = navigator.connection;
-    const constrainedConnection = connection?.saveData
-      || ['slow-2g', '2g'].includes(connection?.effectiveType);
-    if (constrainedConnection) return;
-
-    setWebglSupported(canUseWebGL());
-    setSceneRequested(true);
-  }, [isMobileViewport, sceneRequested, shouldReduceMotion]);
+  const lensKey = "home.recruiter_lens.modes." + recruiterLens;
 
   useEffect(() => {
     const element = heroRef.current;
@@ -145,41 +89,14 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 639px)');
-    const handleViewportChange = (event) => setIsMobileViewport(event.matches);
-    mediaQuery.addEventListener('change', handleViewportChange);
-    return () => mediaQuery.removeEventListener('change', handleViewportChange);
-  }, []);
-
-  useEffect(() => {
-    if (shouldReduceMotion || sceneRequested || isMobileViewport) return undefined;
-
-    let idleId;
-    const timeoutId = window.setTimeout(() => {
-      if ('requestIdleCallback' in window) {
-        idleId = window.requestIdleCallback(requestProductScene, { timeout: 1800 });
-      } else {
-        requestProductScene();
-      }
-    }, 5000);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-      if (idleId) window.cancelIdleCallback(idleId);
-    };
-  }, [isMobileViewport, requestProductScene, sceneRequested, shouldReduceMotion]);
-
   const quickFacts = [
-    { icon: 'fas fa-map-marker-alt', text: t('hero.quick_facts.location') },
-    { icon: 'fas fa-briefcase', text: t('hero.quick_facts.availability') },
-    { icon: 'fas fa-layer-group', text: t(`${lensKey}.focus`) },
-    { icon: 'fas fa-code', text: t(`${lensKey}.stack`) },
+    { icon: MapPin, text: t('hero.quick_facts.location') },
+    { icon: BriefcaseBusiness, text: t('hero.quick_facts.availability') },
+    { icon: Layers, text: t(`${lensKey}.focus`) },
+    { icon: Code2, text: t(`${lensKey}.stack`) },
   ];
   const rolePhrases = t(`${lensKey}.hero_phrases`, { returnObjects: true });
   const accessibleTagline = t(`${lensKey}.tagline`);
-  const showProductScene = !isMobileViewport && sceneRequested && webglSupported && !shouldReduceMotion;
-  const showProductPoster = !isMobileViewport && !showProductScene;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -220,57 +137,21 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
     },
   };
 
-  const handlePointerMove = (event) => {
-    if (shouldReduceMotion || event.pointerType === 'touch' || window.innerWidth < 768) return;
-
-    requestProductScene();
-
-    const bounds = event.currentTarget.getBoundingClientRect();
-    gridX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 10);
-    gridY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 10);
-  };
-
-  const resetGridPosition = () => {
-    gridX.set(0);
-    gridY.set(0);
-  };
-
   return (
     <section
       ref={heroRef}
       id="home"
-      onPointerMove={handlePointerMove}
-      onFocusCapture={requestProductScene}
-      onPointerLeave={resetGridPosition}
-      className="relative md:min-h-[calc(100svh-140px)] flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-24 pb-8 sm:pb-12 md:pb-14 overflow-hidden transition-colors duration-300"
+      className="relative md:min-h-[calc(100svh-140px)] flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-28 pb-8 sm:pb-12 md:pb-14 overflow-hidden transition-colors duration-300"
     >
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
           aria-hidden="true"
-          style={{ x: gridX, y: gridY }}
-          className="absolute -inset-4 bg-[linear-gradient(to_right,#64748b14_1px,transparent_1px),linear-gradient(to_bottom,#64748b14_1px,transparent_1px)] bg-[size:32px_32px] will-change-transform"
+          className="absolute -inset-4 bg-[linear-gradient(to_right,#64748b0a_1px,transparent_1px),linear-gradient(to_bottom,#64748b0a_1px,transparent_1px)] bg-[size:32px_32px]"
         />
         <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-950/20"></div>
       </div>
 
-      {showProductScene && (
-        <div
-          className="absolute inset-0 z-10 opacity-[0.28] transition-opacity duration-500 dark:opacity-30 sm:opacity-60 dark:sm:opacity-60 md:opacity-75"
-          data-active-lens={recruiterLens}
-          aria-hidden="true"
-        >
-          <Suspense fallback={<HeroProductPoster />}>
-            <HeroProductScene
-              active={isHeroVisible && isDocumentVisible}
-              activeLens={recruiterLens}
-              eventSource={heroRef}
-              onSelectLens={onRecruiterLensChange}
-            />
-          </Suspense>
-        </div>
-      )}
-
-      {showProductPoster && <HeroProductPoster />}
+      <HeroNodeBackground active={isHeroVisible && isDocumentVisible} reduceMotion={shouldReduceMotion} />
 
       <motion.div
         className="z-20 text-center max-w-5xl mx-auto flex flex-col items-center justify-center h-full w-full"
@@ -278,6 +159,15 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
         initial="hidden"
         animate="visible"
       >
+        <motion.figure variants={itemVariants} className="mb-5 rounded-full bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 p-1 shadow-lg shadow-blue-500/15">
+          <img
+            src="/images/profile.webp"
+            alt={t('home.about_snapshot.photo_alt')}
+            width="144" height="144" fetchPriority="high" decoding="async"
+            className="size-24 rounded-full border-4 border-white object-cover object-[center_25%] dark:border-slate-900 sm:size-28 lg:size-36"
+          />
+        </motion.figure>
+
         <motion.p variants={itemVariants} className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-gray-500 dark:text-gray-400 mb-2 md:mb-3 px-2">
           {t('hero.greeting')}
         </motion.p>
@@ -297,7 +187,7 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
             prefix={t('hero.typewriter_prefix')}
             accessibleText={accessibleTagline}
             reduceMotion={shouldReduceMotion}
-            active={isHeroVisible}
+            active={isHeroVisible && isDocumentVisible}
           />
         </motion.p>
 
@@ -311,7 +201,7 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
                 transition={{ duration: 0.2 }}
                 className="group flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2 bg-white/80 dark:bg-slate-800/80 text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium shadow-sm hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-md transition-[border-color,box-shadow]"
               >
-                <i className={`${fact.icon} text-primary text-xs transition-transform duration-200 group-hover:-translate-y-0.5`}></i>
+                <fact.icon size={16} aria-hidden="true" className="shrink-0 text-primary transition-transform duration-200 group-hover:-translate-y-0.5" />
                 <span>{fact.text}</span>
               </motion.div>
             ))}
@@ -320,8 +210,8 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
 
         <motion.div variants={groupVariants} className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-5 md:gap-6 w-full px-4 sm:px-0">
           <motion.div variants={itemVariants} className="w-full sm:w-auto">
-            <Link to="/projects" className="group relative w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-[1.03] hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center gap-2">
-              <i className="fas fa-briefcase relative z-10"></i>
+            <Link to="/projects" onClick={() => trackCTAClick('view_projects')} className="group relative w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-[1.03] hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center gap-2">
+              <BriefcaseBusiness size={18} aria-hidden="true" className="relative z-10" />
               <span className="relative z-10">{t('hero.view_projects')}</span>
               {!shouldReduceMotion && (
                 <motion.span
@@ -338,14 +228,14 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
 
           <motion.div variants={itemVariants} className="w-full sm:w-auto">
             <a href="/assets/CV Rafie Rojagat Bachri.pdf" download="CV_Rafie_Rojagat_Bachri.pdf" className="w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-300 rounded-full font-bold text-sm sm:text-base hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-all duration-300 backdrop-blur-sm bg-white/70 dark:bg-slate-900/40 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5">
-              <i className="fas fa-download"></i>
+              <Download size={18} aria-hidden="true" />
               {t('hero.download_cv')}
             </a>
           </motion.div>
 
           <motion.div variants={itemVariants} className="w-full sm:w-auto">
-            <Link to="/contact" className="w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-bold text-sm sm:text-base hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 dark:hover:border-blue-400 transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-black/20 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5">
-              <i className="fas fa-paper-plane"></i>
+            <Link to="/contact" onClick={() => trackCTAClick('contact')} className="w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-bold text-sm sm:text-base hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 dark:hover:border-blue-400 transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-black/20 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5">
+              <Send size={18} aria-hidden="true" />
               {t('hero.contact_me')}
             </Link>
           </motion.div>
@@ -360,13 +250,13 @@ const Hero = ({ recruiterLens = 'overview', onRecruiterLensChange }) => {
         </motion.p>
 
         <motion.div variants={itemVariants} className="mt-8 flex gap-5 text-2xl text-gray-400 md:mt-12 md:gap-6 md:text-3xl">
-          <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="p-2 hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="GitHub">
+          <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="p-2 hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="GitHub" onClick={event => trackExternalLink('github', event.currentTarget.href)}>
             <FaGithub />
           </a>
-          <a href="https://linkedin.com/in/rafie-rojagat" target="_blank" rel="noreferrer" className="p-2 hover:text-blue-600 hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="LinkedIn">
+          <a href="https://linkedin.com/in/rafie-rojagat" target="_blank" rel="noreferrer" className="p-2 hover:text-blue-600 hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="LinkedIn" onClick={event => trackExternalLink('linkedin', event.currentTarget.href)}>
             <FaLinkedin />
           </a>
-          <a href="https://instagram.com/rafie_rb" target="_blank" rel="noreferrer" className="p-2 hover:text-pink-500 hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="Instagram">
+          <a href="https://instagram.com/rafie_rb" target="_blank" rel="noreferrer" className="p-2 hover:text-pink-500 hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="Instagram" onClick={event => trackExternalLink('instagram', event.currentTarget.href)}>
             <FaInstagram />
           </a>
         </motion.div>

@@ -1,165 +1,55 @@
-import { useState, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom';
+import { Menu, X, Moon, Sun } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import useTheme from '../hooks/useTheme';
-import { useTranslation } from 'react-i18next'; // 1. Import Hook
+import { normalizeLanguage } from '../utils/language';
 
-const Navbar = () => {
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+  const trigger = useRef(null);
+  const nav = useRef(null);
+  const location = useLocation();
+  const [params, setParams] = useSearchParams();
   const { t, i18n } = useTranslation();
-  const nextLanguage = i18n.language === 'en' ? 'Indonesian' : 'English';
-  const nextTheme = theme === 'dark' ? 'light' : 'dark';
-
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'id' : 'en';
-    i18n.changeLanguage(newLang);
-  };
-
+  const { theme, toggleTheme } = useTheme();
+  const lang = normalizeLanguage(i18n.resolvedLanguage || i18n.language);
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const scroll = () => setScrolled(window.scrollY > 20);
+    scroll(); window.addEventListener('scroll', scroll, { passive: true });
+    return () => window.removeEventListener('scroll', scroll);
   }, []);
-
-  const navLinks = [
-    { name: t('navbar.home'), to: "/" },
-    { name: t('navbar.about'), to: "/about" },
-    { name: t('navbar.projects'), to: "/projects" },
-    { name: t('navbar.blog'), to: "/blog" },
-    { name: t('navbar.workspace'), to: "/workspace" },
-    { name: t('navbar.contact'), to: "/contact" },
-  ];
-
-  const navbarClasses = scrolled 
-    ? 'bg-white/80 dark:bg-dark/80 shadow-sm backdrop-blur-md py-3' 
-    : 'bg-transparent py-5';
-
-  return (
-    <nav aria-label="Primary navigation" className={`fixed w-full z-50 transition-all duration-300 ${navbarClasses}`}>
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        
-        <Link 
-          to="/" 
-          className="text-xl font-bold tracking-wider text-gray-800 dark:text-white hover:text-primary transition-colors"
-        >
-          Rafie<span className="text-primary">.</span>
-        </Link>
-        
-        <div className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
-            <div key={link.to} className="relative">
-              <NavLink
-                to={link.to}
-                className={({ isActive }) => 
-                  `text-sm font-medium transition-colors hover:text-primary relative group ${
-                    isActive 
-                      ? 'text-primary font-bold' 
-                      : 'text-gray-600 dark:text-gray-300'
-                  }`
-                }
-              >
-                {link.name}
-              </NavLink>
-              <motion.span 
-                className="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-primary to-blue-400"
-                initial={{ width: 0 }}
-                whileHover={{ width: "100%" }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              />
-            </div>
-          ))}
-
-          <button
-            onClick={toggleLanguage}
-            className="px-3 py-2 min-h-[44px] min-w-[44px] rounded text-xs font-bold border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
-            title={`Switch to ${nextLanguage}`}
-            aria-label={`Switch to ${nextLanguage}`}
-          >
-            {i18n.language === 'en' ? 'ID' : 'EN'}
-          </button>
-
-          <button
-            onClick={toggleTheme}
-            className="w-10 h-10 sm:w-11 sm:h-11 min-h-[44px] min-w-[44px] rounded-full bg-gray-100 dark:bg-slate-800 text-yellow-500 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 flex items-center justify-center transition-all duration-300 shadow-sm hover:scale-110"
-            aria-label={`Switch to ${nextTheme} mode`}
-            title={`Switch to ${nextTheme} mode`}
-          >
-            {theme === 'dark' ? (
-              <i className="fas fa-sun text-lg"></i>
-            ) : (
-              <i className="fas fa-moon text-slate-600 text-lg"></i>
-            )}
-          </button>
-        </div>
-
-        <div className="md:hidden flex items-center gap-3">
-          <button
-            onClick={toggleLanguage}
-            className="px-3 py-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-sm font-bold text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all"
-            title={`Switch to ${nextLanguage}`}
-            aria-label={`Switch to ${nextLanguage}`}
-          >
-            {i18n.language === 'en' ? 'ID' : 'EN'}
-          </button>
-
-          <button 
-            onClick={toggleTheme} 
-            className="p-2 min-h-[44px] min-w-[44px] text-xl transition-colors text-yellow-500 dark:text-yellow-400 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
-            aria-label={`Switch to ${nextTheme} mode`}
-            title={`Switch to ${nextTheme} mode`}
-          >
-             {theme === 'dark' ? <i className="fas fa-sun"></i> : <i className="fas fa-moon text-slate-600"></i>}
-          </button>
-
-          <button 
-            className="p-2 min-h-[44px] min-w-[44px] text-2xl focus:outline-none text-gray-800 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-all" 
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-expanded={isOpen}
-            aria-controls="mobile-navigation"
-          >
-            <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`}></i>
-          </button>
-        </div>
+  useEffect(() => {
+    const queryLanguage = new URLSearchParams(location.search).get('lang');
+    if (queryLanguage === 'en' || queryLanguage === 'id') i18n.changeLanguage(queryLanguage);
+  }, [location.search, i18n]);
+  useEffect(() => {
+    if (!open) return undefined;
+    const close = event => {
+      if (event.type === 'keydown' && event.key === 'Escape') { setOpen(false); trigger.current?.focus(); }
+      if (event.type === 'pointerdown' && !nav.current?.contains(event.target)) setOpen(false);
+    };
+    document.addEventListener('keydown', close); document.addEventListener('pointerdown', close);
+    return () => { document.removeEventListener('keydown', close); document.removeEventListener('pointerdown', close); };
+  }, [open]);
+  const toggleLanguage = () => {
+    const next = lang === 'en' ? 'id' : 'en';
+    i18n.changeLanguage(next);
+    const nextParams = new URLSearchParams(params); nextParams.set('lang', next); setParams(nextParams, { replace: true });
+  };
+  const links = ['home', 'about', 'projects', 'blog', 'workspace', 'contact'];
+  const to = key => key === 'home' ? '/' : '/' + key;
+  return <nav ref={nav} aria-label={t('common.nav')} className={'fixed inset-x-0 top-0 z-50 border-b transition-colors ' + (scrolled || open ? 'border-slate-200 bg-white/95 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-dark/95' : 'border-transparent bg-white/90 dark:bg-dark/90')}>
+    <div className="container mx-auto flex min-h-20 items-center justify-between gap-3 px-4 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+      <Link to="/" onClick={() => setOpen(false)} className="justify-self-start text-2xl font-black tracking-wide">Rafie<span className="text-primary">.</span></Link>
+      <div className="hidden items-center justify-center gap-6 lg:flex">{links.map(key => <NavLink key={key} to={to(key)} className={({ isActive }) => 'rounded px-1 py-3 text-sm font-semibold hover:text-primary ' + (isActive ? 'text-primary' : 'text-slate-600 dark:text-slate-300')}>{t('navbar.' + key)}</NavLink>)}</div>
+      <div className="flex items-center justify-self-end gap-1 sm:gap-3">
+        <button type="button" onClick={toggleLanguage} aria-label={t('common.language')} className="min-h-11 min-w-11 rounded-lg border border-slate-200 px-3 text-xs font-bold dark:border-slate-700">{lang === 'en' ? 'ID' : 'EN'}</button>
+        <button type="button" onClick={toggleTheme} aria-label={t(theme === 'dark' ? 'common.theme_light' : 'common.theme_dark')} className="flex size-11 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">{theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}</button>
+        <button ref={trigger} type="button" onClick={() => setOpen(value => !value)} aria-label={t(open ? 'common.menu_close' : 'common.menu_open')} aria-expanded={open} aria-controls="mobile-navigation" className="flex size-11 items-center justify-center rounded-lg lg:hidden">{open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button>
       </div>
-
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            id="mobile-navigation"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: 'easeOut' }}
-            className="absolute left-0 top-full w-full overflow-hidden border-b border-gray-100 bg-white shadow-xl dark:border-slate-800 dark:bg-dark md:hidden"
-          >
-            <div className="flex flex-col space-y-1 px-4 pb-6 pt-2">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setIsOpen(false)}
-                  className={({ isActive }) =>
-                    `block rounded-lg px-4 py-3 text-base font-medium transition-colors ${
-                      isActive
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-slate-800'
-                    }`
-                  }
-                >
-                  {link.name}
-                </NavLink>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
-  );
-};
-
-export default Navbar;
+    </div>
+    {open && <div id="mobile-navigation" className="border-t border-slate-200 bg-white px-4 pb-5 dark:border-slate-800 dark:bg-dark lg:hidden">{links.map(key => <NavLink key={key} to={to(key)} onClick={() => setOpen(false)} className={({ isActive }) => 'block rounded-lg px-4 py-3 font-semibold ' + (isActive ? 'bg-primary/10 text-primary' : 'text-slate-700 dark:text-slate-300')}>{t('navbar.' + key)}</NavLink>)}</div>}
+  </nav>;
+}

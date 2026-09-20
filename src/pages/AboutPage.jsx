@@ -9,7 +9,6 @@ import Skills from "../components/Skills";
 import Timeline from "../components/Timeline";
 
 const Certifications = lazy(() => import("../components/Certifications"));
-const ProfileLab = lazy(() => import("../components/ProfileLab"));
 
 const DeferredSection = ({ children, minHeight = 320 }) => {
   const targetRef = useRef(null);
@@ -108,11 +107,6 @@ const AboutPage = () => {
           </Suspense>
         </DeferredSection>
 
-        <DeferredSection minHeight={320}>
-          <Suspense fallback={<SectionFallback />}>
-            <ProfileLab />
-          </Suspense>
-        </DeferredSection>
       </main>
     </PageTransition>
   );

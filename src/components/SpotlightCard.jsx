@@ -29,9 +29,7 @@ const SpotlightCard = ({ children, className = "" }) => {
       onMouseMove={handleMouseMove}
       onMouseEnter={handleFocus}
       onMouseLeave={handleBlur}
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
+      initial={false}
       transition={{ duration: 0.5, ease: "easeOut" }}
       whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
       className={`relative overflow-hidden rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-darkLight ${className}`}

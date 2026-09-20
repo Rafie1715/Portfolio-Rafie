@@ -1,9 +1,22 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
+import { handler as projectHandler } from './netlify/functions/projects.js'
+import { handler as certificationHandler } from './netlify/functions/public-certifications.js'
 import react from '@vitejs/plugin-react'
 
+Object.assign(process.env, loadEnv(process.env.NODE_ENV || 'development', process.cwd(), ''));
+const publicCatalog = () => {
+  const mount = server => { server.middlewares.use(async (request, response, next) => {
+    const handlers = { '/.netlify/functions/projects': projectHandler, '/.netlify/functions/public-certifications': certificationHandler };
+    const handler = handlers[request.url?.split('?')[0]];
+    if (!handler) return next();
+    const result = await handler({ httpMethod: request.method });
+    response.writeHead(result.statusCode, result.headers); response.end(result.body);
+  }); };
+  return { name: 'public-project-catalog', configureServer: mount, configurePreviewServer: mount };
+};
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), publicCatalog()],
   server: {
     proxy: {
       '/.netlify/functions': {
@@ -25,7 +38,10 @@ export default defineConfig({
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'animation': ['framer-motion'],
           'i18n': ['i18next', 'react-i18next'],
-          'firebase': ['firebase/app', 'firebase/firestore', 'firebase/auth'],
+          'firebase-app': ['firebase/app'],
+          'firebase-auth': ['firebase/auth'],
+          'firebase-store': ['firebase/firestore'],
+          'firebase-database': ['firebase/database'],
           'ui-libs': ['react-helmet-async'],
           'three-core': ['three'],
           'three-react': ['@react-three/fiber'],

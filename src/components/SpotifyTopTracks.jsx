@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -126,10 +127,10 @@ export default function SpotifyTopTracks() {
                     aria-label={`${t('afk.play_track')} ${track.name}`}
                     title={`${t('afk.play_track')} ${track.name}`}
                   >
-                    <i className="fas fa-play text-xs" aria-hidden="true" />
+                    <Icon className="fas fa-play text-xs" aria-hidden="true" />
                   </button>
                   <a href={track.external_urls?.spotify} target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-lg text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors" aria-label={`${t('afk.open_spotify')}: ${track.name}`} title={t('afk.open_spotify')}>
-                    <i className="fas fa-arrow-up-right-from-square text-xs" aria-hidden="true" />
+                    <Icon className="fas fa-arrow-up-right-from-square text-xs" aria-hidden="true" />
                   </a>
                 </div>
               </div>
@@ -144,7 +145,7 @@ export default function SpotifyTopTracks() {
                   <p className="text-xs text-slate-600 dark:text-gray-400 truncate">{selectedTrack.artists[0]?.name}</p>
                 </div>
                 <button type="button" onClick={() => setSelectedTrack(null)} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-slate-700" aria-label={t('afk.close_player')} title={t('afk.close_player')}>
-                  <i className="fas fa-xmark" aria-hidden="true" />
+                  <Icon className="fas fa-xmark" aria-hidden="true" />
                 </button>
               </div>
               <div className="rounded overflow-hidden">

@@ -17,7 +17,7 @@ import {
   Send,
   ShieldCheck,
 } from 'lucide-react';
-import { trackFormSubmission, trackExternalLink } from '../utils/analytics';
+import { trackFormSubmission, trackExternalLink, trackEvent } from '../utils/analytics';
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xanjlvvr';
 const CONTACT_EMAIL = 'rojagatrafie@gmail.com';
@@ -110,6 +110,7 @@ const Contact = () => {
     requestControllerRef.current = controller;
     const timeoutId = window.setTimeout(() => controller.abort(), 12000);
 
+    trackEvent('Forms', 'submit_attempt', 'contact_form', 1);
     setSubmission({ status: 'loading', message: '' });
     setFieldErrors({});
 
@@ -201,6 +202,10 @@ const Contact = () => {
     <section id="contact" className="relative z-10 pb-16 md:pb-20">
       <div className="mx-auto grid max-w-6xl items-start gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(19rem,0.75fr)] lg:gap-14 lg:px-8">
         <motion.div {...revealProps}>
+          <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50/60 p-4 dark:border-blue-900 dark:bg-blue-950/30">
+            <p className="text-sm font-semibold">{t('common.contact_direct')}</p>
+            <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2"><a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex min-h-11 items-center gap-2 break-all font-semibold text-primary"><Mail size={17} aria-hidden="true" />{CONTACT_EMAIL}</a><a href="https://linkedin.com/in/rafie-rojagat" target="_blank" rel="noreferrer" onClick={() => trackExternalLink('linkedin', 'https://linkedin.com/in/rafie-rojagat')} className="inline-flex min-h-11 items-center gap-2 font-semibold text-primary"><Linkedin size={17} aria-hidden="true" />LinkedIn</a></div>
+          </div>
           <form
             onSubmit={handleSubmit}
             aria-busy={isSubmitting}

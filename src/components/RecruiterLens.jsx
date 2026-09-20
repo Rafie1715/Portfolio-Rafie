@@ -8,7 +8,6 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import LivingTechStack from './LivingTechStack';
 
 const lensOptions = [
   { id: 'overview', icon: BriefcaseBusiness },
@@ -34,13 +33,11 @@ const copyCurrentUrl = async () => {
   input.remove();
 };
 
-const RecruiterLens = ({ value, onChange, onTechnologySelect }) => {
+const RecruiterLens = ({ value, onChange }) => {
   const { t } = useTranslation();
   const [copyState, setCopyState] = useState('idle');
   const resetTimer = useRef(null);
   const controlsRef = useRef(null);
-  const modeKey = `home.recruiter_lens.modes.${value}`;
-  const proofItems = t(`${modeKey}.proof`, { returnObjects: true });
 
   useEffect(() => () => window.clearTimeout(resetTimer.current), []);
 
@@ -50,7 +47,7 @@ const RecruiterLens = ({ value, onChange, onTechnologySelect }) => {
     if (!controls || !selected) return;
 
     const centeredPosition = selected.offsetLeft - ((controls.clientWidth - selected.offsetWidth) / 2);
-    controls.scrollTo({ left: Math.max(0, centeredPosition), behavior: 'smooth' });
+    controls.scrollTo({ left: Math.max(0, centeredPosition), behavior: 'auto' });
   }, [value]);
 
   const handleCopy = async () => {
@@ -66,25 +63,14 @@ const RecruiterLens = ({ value, onChange, onTechnologySelect }) => {
   };
 
   return (
-    <section className="border-y border-slate-200 bg-slate-50/80 py-8 dark:border-slate-800 dark:bg-slate-900/45">
+    <section className="border-y border-slate-200 bg-slate-50/80 py-4 dark:border-slate-800 dark:bg-slate-900/45">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="mb-2 text-xs font-bold uppercase text-primary">
-              {t('home.recruiter_lens.eyebrow')}
-            </p>
-            <h2 className="text-2xl font-bold text-dark dark:text-white md:text-3xl">
-              {t(`${modeKey}.title`)}
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300 md:text-base">
-              {t(`${modeKey}.summary`)}
-            </p>
-          </div>
-
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:justify-between">
+          <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{t('common.lens_label')}</p>
           <div className="flex min-w-0 items-center gap-2 lg:flex-none">
             <div
               ref={controlsRef}
-              className="flex min-w-0 max-w-full flex-1 gap-1 overflow-x-auto rounded-lg border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-950 lg:flex-none lg:overflow-visible"
+              className="grid min-w-0 max-w-full flex-1 grid-cols-2 gap-1 sm:flex sm:overflow-x-auto rounded-lg border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-950 lg:flex-none lg:overflow-visible"
               role="group"
               aria-label={t('home.recruiter_lens.control_label')}
             >
@@ -119,20 +105,6 @@ const RecruiterLens = ({ value, onChange, onTechnologySelect }) => {
               {copyState === 'copied' ? <Check size={18} aria-hidden="true" /> : <Link2 size={18} aria-hidden="true" />}
             </button>
           </div>
-        </div>
-
-        <LivingTechStack key={value} mode={value} onTechnologySelect={onTechnologySelect} />
-
-        <div className="mt-6 grid border-t border-slate-200 pt-5 dark:border-slate-700 sm:grid-cols-3">
-          {Array.isArray(proofItems) && proofItems.map((item, index) => (
-            <dl
-              key={item.label}
-              className={`py-3 sm:px-5 sm:py-0 ${index > 0 ? 'border-t border-slate-200 dark:border-slate-700 sm:border-l sm:border-t-0' : ''}`}
-            >
-              <dt className="text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400">{item.label}</dt>
-              <dd className="mt-1 text-sm font-semibold leading-6 text-slate-900 dark:text-white">{item.value}</dd>
-            </dl>
-          ))}
         </div>
 
         <p className="sr-only" role="status" aria-live="polite">

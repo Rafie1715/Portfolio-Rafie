@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -190,7 +191,7 @@ const LivingTechStack = ({ mode, onTechnologySelect }) => {
                           color: technology.color,
                         }}
                       >
-                        <i className={`${technology.icon} text-[25px]`} aria-hidden="true" />
+                        <Icon className={`${technology.icon} text-[25px]`} aria-hidden="true" />
                       </span>
                       <span className="min-w-0 text-xs font-bold leading-4 text-slate-700 dark:text-slate-200 sm:text-sm">
                         {technology.name}
@@ -217,7 +218,7 @@ const LivingTechStack = ({ mode, onTechnologySelect }) => {
             }}
             aria-hidden="true"
           >
-            <i className={`${activeTechnology.icon} text-[28px]`} />
+            <Icon className={`${activeTechnology.icon} text-[28px]`} />
           </span>
           <p className="mt-4 text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400">
             {t('home.recruiter_lens.living_stack.active_label')}

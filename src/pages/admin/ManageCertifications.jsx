@@ -1,3 +1,4 @@
+import Icon from '../../components/Icon';
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
@@ -86,7 +87,7 @@ const ManageCertifications = () => {
   }, [certifications]);
 
   const allCertifications = useMemo(() => {
-    const normalizedLocal = localCertifications.map((cert, index) => ({
+    const normalizedLocal = localCertifications.filter(local => !certifications.some(cert => String(cert.localId) === String(local.id) || getText(cert.title).trim().toLowerCase() === getText(local.title).trim().toLowerCase())).map((cert, index) => ({
       ...cert,
       id: `local-${cert.id || index + 1}`,
       source: "local",
@@ -112,7 +113,7 @@ const ManageCertifications = () => {
 
   const handleDelete = async (id) => {
     if (!dbFirestore || deletingId) return;
-    if (!window.confirm("Delete this certification?")) return;
+    if (!window.confirm("Delete this CMS certification? A matching repository certificate will reappear. Unpublish the override to keep it hidden.")) return;
 
     try {
       setDeletingId(id);
@@ -411,7 +412,7 @@ const ManageCertifications = () => {
                       </td>
                       <td className="py-3 px-4 text-center font-bold text-gray-500">
                         <div className={`inline-flex items-center gap-2 ${cert.source === "cms" ? "cursor-grab active:cursor-grabbing" : ""}`}>
-                          {cert.source === "cms" && <i className="fas fa-grip-vertical text-gray-400"></i>}
+                          {cert.source === "cms" && <Icon className="fas fa-grip-vertical text-gray-400"></Icon>}
                           <span>{cert.source === "cms" && getOrder(cert) !== Number.MAX_SAFE_INTEGER ? getOrder(cert) : "-"}</span>
                         </div>
                       </td>

@@ -1,3 +1,4 @@
+import Icon from './Icon';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -104,7 +105,7 @@ export default function SpotifyNowPlaying() {
             )}
             <div className="flex-1 min-w-0">
               <p className="text-xs text-green-600 font-semibold uppercase tracking-wide">
-                <i className={`fas ${nowPlaying.isPlaying ? 'fa-volume-high' : 'fa-clock-rotate-left'} mr-1.5`} aria-hidden="true" />
+                <Icon className={`fas ${nowPlaying.isPlaying ? 'fa-volume-high' : 'fa-clock-rotate-left'} mr-1.5`} aria-hidden="true" />
                 {nowPlaying.isPlaying ? t('afk.spotify_status.now_playing') : t('afk.spotify_status.last_played')}
               </p>
               <p className="text-sm font-semibold text-slate-900 dark:text-white truncate group-hover:text-green-700 transition-colors">
