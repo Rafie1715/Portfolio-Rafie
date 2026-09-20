@@ -7,8 +7,26 @@ import { handler as retiredToken } from '../netlify/functions/spotify-auth.js';
 import { createProjectsHandler } from '../netlify/functions/projects.js';
 import { projects } from '../src/data/projects.js';
 import { blogs } from '../src/data/blogs.js';
+import { getContentSource } from '../netlify/functions/_shared/projects.js';
 
 const local = [{ id: 'restup', title: { en: 'RestUP' }, shortDesc: { en: 'Original' }, gallery: ['/cover.jpg'], evidence: { contribution: { en: 'Independent project' } } }];
+test('partial Firebase credentials keep the public catalog on static content', () => {
+ const original = {
+  source: process.env.PORTFOLIO_CONTENT_SOURCE,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  privateKey: process.env.FIREBASE_PRIVATE_KEY,
+ };
+ delete process.env.PORTFOLIO_CONTENT_SOURCE;
+ process.env.FIREBASE_PROJECT_ID = 'test-project';
+ process.env.FIREBASE_CLIENT_EMAIL = 'test@example.com';
+ delete process.env.FIREBASE_PRIVATE_KEY;
+ assert.equal(getContentSource(), 'static');
+ if (original.source === undefined) delete process.env.PORTFOLIO_CONTENT_SOURCE; else process.env.PORTFOLIO_CONTENT_SOURCE = original.source;
+ if (original.projectId === undefined) delete process.env.FIREBASE_PROJECT_ID; else process.env.FIREBASE_PROJECT_ID = original.projectId;
+ if (original.clientEmail === undefined) delete process.env.FIREBASE_CLIENT_EMAIL; else process.env.FIREBASE_CLIENT_EMAIL = original.clientEmail;
+ if (original.privateKey === undefined) delete process.env.FIREBASE_PRIVATE_KEY; else process.env.FIREBASE_PRIVATE_KEY = original.privateKey;
+});
 test('empty allowlist and unverified email fail closed; claim and verified allowlist succeed', () => {
  assert.equal(allowsAdmin({ email: 'owner@example.com', emailVerified: true }), false);
  assert.equal(allowsAdmin({ email: 'owner@example.com', emailVerified: false }, ['owner@example.com']), false);

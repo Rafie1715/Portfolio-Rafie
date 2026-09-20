@@ -2,7 +2,13 @@ import { projects } from '../../../src/data/projects.js';
 import { mergeProjectCatalog } from '../../../src/utils/projectCatalog.js';
 
 export function getContentSource() {
-  const hasAdminCredentials = Boolean(process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON || process.env.FIREBASE_PRIVATE_KEY || process.env.GOOGLE_PRIVATE_KEY);
+  const hasServiceAccountJson = Boolean(process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+  const hasSplitCredentials = Boolean(
+    (process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID)
+    && (process.env.FIREBASE_CLIENT_EMAIL || process.env.GOOGLE_CLIENT_EMAIL)
+    && (process.env.FIREBASE_PRIVATE_KEY || process.env.GOOGLE_PRIVATE_KEY)
+  );
+  const hasAdminCredentials = hasServiceAccountJson || hasSplitCredentials;
   return process.env.PORTFOLIO_CONTENT_SOURCE || (hasAdminCredentials ? 'cms' : 'static');
 }
 export async function loadPublicProjects() {
