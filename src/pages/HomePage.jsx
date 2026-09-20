@@ -20,14 +20,25 @@ import { trackEvent, trackProjectView } from '../utils/analytics';
 const HomePersonalPanel = lazy(() => import('../components/HomePersonalPanel'));
 
 const DeferredPersonalPanel = () => {
+  const { t } = useTranslation();
+  const [expanded, setExpanded] = useState(false);
+  const [desktop, setDesktop] = useState(() => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches);
+  const enabled = desktop || expanded;
   const targetRef = useRef(null);
   const [shouldRender, setShouldRender] = useState(
     () => typeof window === 'undefined' || !('IntersectionObserver' in window),
   );
 
   useEffect(() => {
+    const media = window.matchMedia('(min-width: 768px)');
+    const update = event => setDesktop(event.matches);
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
     const target = targetRef.current;
-    if (!target || shouldRender) return undefined;
+    if (!target || shouldRender || !enabled) return undefined;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -41,15 +52,24 @@ const DeferredPersonalPanel = () => {
 
     observer.observe(target);
     return () => observer.disconnect();
-  }, [shouldRender]);
+  }, [shouldRender, enabled]);
 
   return (
-    <div ref={targetRef} className="min-h-[520px]">
-      {shouldRender && (
+    <div ref={targetRef} className="md:min-h-[520px]">
+      <div className="mx-4 mb-8 rounded-xl border border-slate-200 p-5 dark:border-slate-700 md:hidden">
+        <p className="font-semibold">{t('common.personal_more')}</p>
+        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+          <Link to="/afk" className="inline-flex min-h-11 items-center font-semibold text-primary">{t('hero.afk_cta.link')}</Link>
+          <button type="button" aria-expanded={expanded} aria-controls="home-personal-content" onClick={() => setExpanded(value => !value)} className="min-h-11 text-sm font-semibold text-slate-600 dark:text-slate-300">{t(expanded ? 'common.personal_collapse' : 'common.personal_expand')}</button>
+        </div>
+      </div>
+      <div id="home-personal-content" hidden={!enabled}>
+      {shouldRender && enabled && (
         <Suspense fallback={<div className="container mx-auto min-h-[520px] px-4 py-14 md:py-20" aria-hidden="true" />}>
           <HomePersonalPanel />
         </Suspense>
       )}
+      </div>
     </div>
   );
 };
@@ -139,7 +159,7 @@ const HomePage = () => {
           onChange={handleLensChange}
         />
 
-        <section id="selected-work" className="scroll-mt-24 py-8 md:py-10 px-4 container mx-auto" aria-live="polite">
+        <section id="selected-work" tabIndex={-1} className="scroll-mt-24 py-8 md:py-10 px-4 container mx-auto focus:outline-none" aria-live="polite">
           <motion.div
             variants={revealVariants}
             initial="hidden"
@@ -176,7 +196,7 @@ const HomePage = () => {
             initial={false}
             animate="visible"
             viewport={{ once: true, amount: 0.15 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
+            className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 mb-6 sm:mb-12"
             key={recruiterLens}
           >
             {featuredProjects.map((project) => {
@@ -201,6 +221,7 @@ const HomePage = () => {
                     <div className="h-48 overflow-hidden relative">
                       <img
                         src={project.image}
+                        style={{ objectFit: project.imageFit || 'cover' }}
                         alt={title}
                         loading="lazy"
                         decoding="async"
@@ -228,7 +249,7 @@ const HomePage = () => {
 
                       {result && (
                         <div className="mb-5 border-l-2 border-emerald-400 pl-3">
-                          <p className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">
+                          <p className="text-[10px] font-bold uppercase text-slate-600 dark:text-slate-400">
                             {t('home.recruiter_lens.project_proof')}
                           </p>
                           <p className="mt-1 text-sm font-semibold leading-5 text-slate-800 dark:text-slate-100">
@@ -263,15 +284,17 @@ const HomePage = () => {
         <HomeAboutSnapshot />
         <section className="container mx-auto max-w-6xl px-4 py-12 sm:px-6"><LivingTechStack key={recruiterLens} mode={recruiterLens} onTechnologySelect={handleTechnologySelect} /></section>
 
-        <section className="py-20 px-4 container mx-auto bg-gray-50 dark:bg-darkLight my-12 rounded-2xl">
-          <div className="text-center mb-12">
+        <section className="mx-auto max-w-3xl px-5 py-10 sm:py-16 text-center"><h2 className="text-3xl font-bold">{t('common.connect')}</h2><p className="mt-4 text-slate-600 dark:text-slate-400">{t('common.connect_desc')}</p><Link to="/contact" className="mt-6 inline-flex min-h-12 items-center rounded-lg bg-primary px-6 py-3 font-bold text-white">{t('hero.contact_me')}</Link></section>
+
+        <section className="py-10 sm:py-20 px-4 container mx-auto bg-gray-50 dark:bg-darkLight my-6 sm:my-12 rounded-2xl">
+          <div className="text-center mb-6 sm:mb-12">
             <h2 className="text-3xl font-bold text-dark dark:text-white mb-4">{t('home.latest_blog')}</h2>
             <p className="text-gray-600 dark:text-gray-400">{t('home.blog_glimpse')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {featuredBlogs.map((blog) => (
-              <BlogCard key={blog.id} blog={blog} />
+              <BlogCard key={blog.id} blog={blog} compact />
             ))}
           </div>
 
@@ -283,7 +306,7 @@ const HomePage = () => {
         </section>
 
         <DeferredPersonalPanel />
-        <section className="mx-auto max-w-3xl px-5 py-16 text-center"><h2 className="text-3xl font-bold">{t('common.connect')}</h2><p className="mt-4 text-slate-600 dark:text-slate-400">{t('common.connect_desc')}</p><Link to="/contact" className="mt-6 inline-flex min-h-12 items-center rounded-lg bg-primary px-6 py-3 font-bold text-white">{t('hero.contact_me')}</Link></section>
+
       </main>
     </PageTransition>
   );

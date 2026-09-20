@@ -141,7 +141,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
     <section
       ref={heroRef}
       id="home"
-      className="relative md:min-h-[calc(100svh-140px)] flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-28 pb-8 sm:pb-12 md:pb-14 overflow-hidden transition-colors duration-300"
+      className="relative md:min-h-[calc(100svh-140px)] flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-6 sm:pb-12 md:pb-14 overflow-hidden transition-colors duration-300"
     >
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -159,7 +159,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
         initial="hidden"
         animate="visible"
       >
-        <motion.figure variants={itemVariants} className="mb-5 rounded-full bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 p-1 shadow-lg shadow-blue-500/15">
+        <motion.figure variants={itemVariants} className="mb-3 sm:mb-5 rounded-full bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 p-1 shadow-lg shadow-blue-500/15">
           <img
             src="/images/profile.webp"
             alt={t('home.about_snapshot.photo_alt')}
@@ -180,7 +180,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
           </motion.h1>
         </div>
 
-        <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-6 mt-2 md:mt-3 font-normal max-w-3xl mx-auto leading-relaxed px-4 min-h-[3.25rem] sm:min-h-[2rem]">
+        <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-4 sm:mb-6 mt-2 md:mt-3 font-normal max-w-3xl mx-auto leading-relaxed px-4 min-h-[3.25rem] sm:min-h-[2rem]">
           <TypewriterLine
             key={`${i18n.resolvedLanguage}-${recruiterLens}`}
             phrases={rolePhrases}
@@ -191,8 +191,8 @@ const Hero = ({ recruiterLens = 'overview' }) => {
           />
         </motion.p>
 
-        <motion.div variants={groupVariants} className="mb-6 md:mb-8 w-full max-w-3xl px-4 sm:px-0">
-          <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:justify-center">
+        <motion.div variants={groupVariants} className="mb-4 sm:mb-6 md:mb-8 w-full max-w-3xl px-4 sm:px-0">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:flex sm:flex-wrap sm:justify-center">
             {quickFacts.map((fact) => (
               <motion.div
                 key={fact.text}
@@ -208,8 +208,8 @@ const Hero = ({ recruiterLens = 'overview' }) => {
           </div>
         </motion.div>
 
-        <motion.div variants={groupVariants} className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-5 md:gap-6 w-full px-4 sm:px-0">
-          <motion.div variants={itemVariants} className="w-full sm:w-auto">
+        <motion.div variants={groupVariants} className="grid grid-cols-2 sm:flex sm:flex-row justify-center gap-3 sm:gap-5 md:gap-6 w-full px-4 sm:px-0">
+          <motion.div variants={itemVariants} className="col-span-2 w-full sm:w-auto">
             <Link to="/projects" onClick={() => trackCTAClick('view_projects')} className="group relative w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-[1.03] hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center gap-2">
               <BriefcaseBusiness size={18} aria-hidden="true" className="relative z-10" />
               <span className="relative z-10">{t('hero.view_projects')}</span>
@@ -227,16 +227,16 @@ const Hero = ({ recruiterLens = 'overview' }) => {
           </motion.div>
 
           <motion.div variants={itemVariants} className="w-full sm:w-auto">
-            <a href="/assets/CV Rafie Rojagat Bachri.pdf" download="CV_Rafie_Rojagat_Bachri.pdf" className="w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-300 rounded-full font-bold text-sm sm:text-base hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-all duration-300 backdrop-blur-sm bg-white/70 dark:bg-slate-900/40 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5">
+            <a href="/assets/CV Rafie Rojagat Bachri.pdf" download="CV_Rafie_Rojagat_Bachri.pdf" className="w-full px-2 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-300 rounded-full font-bold text-sm sm:text-base hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-all duration-300 backdrop-blur-sm bg-white/70 dark:bg-slate-900/40 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5">
               <Download size={18} aria-hidden="true" />
               {t('hero.download_cv')}
             </a>
           </motion.div>
 
           <motion.div variants={itemVariants} className="w-full sm:w-auto">
-            <Link to="/contact" onClick={() => trackCTAClick('contact')} className="w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-bold text-sm sm:text-base hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 dark:hover:border-blue-400 transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-black/20 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5">
+            <Link to="/contact" onClick={() => trackCTAClick('contact')} className="w-full px-2 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-bold text-sm sm:text-base hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 dark:hover:border-blue-400 transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-black/20 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5">
               <Send size={18} aria-hidden="true" />
-              {t('hero.contact_me')}
+              <span className="sm:hidden">{t('navbar.contact')}</span><span className="hidden sm:inline">{t('hero.contact_me')}</span>
             </Link>
           </motion.div>
         </motion.div>
@@ -249,7 +249,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
           .
         </motion.p>
 
-        <motion.div variants={itemVariants} className="mt-8 flex gap-5 text-2xl text-gray-400 md:mt-12 md:gap-6 md:text-3xl">
+        <motion.div variants={itemVariants} className="mt-4 sm:mt-8 flex gap-5 text-2xl text-gray-400 md:mt-12 md:gap-6 md:text-3xl">
           <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="p-2 hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="GitHub" onClick={event => trackExternalLink('github', event.currentTarget.href)}>
             <FaGithub />
           </a>

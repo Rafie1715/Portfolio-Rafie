@@ -8,7 +8,7 @@ import {
   getLocalizedBlogValue,
 } from '../utils/blog';
 
-const BlogCard = ({ blog, animateLayout = false }) => {
+const BlogCard = ({ blog, animateLayout = false, compact = false }) => {
   const { t, i18n } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
   const language = getBlogLanguage(i18n);
@@ -48,7 +48,7 @@ const BlogCard = ({ blog, animateLayout = false }) => {
         aria-label={`${t('pages.blog.read_article')}: ${title}`}
         className="group flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-colors hover:border-primary/40 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary/60"
       >
-        <div className="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-slate-800">
+        <div className={compact ? "hidden aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-slate-800 md:block" : "aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-slate-800"}>
           <img
             src={blog.image}
             alt={title}
@@ -67,7 +67,7 @@ const BlogCard = ({ blog, animateLayout = false }) => {
             {title}
           </h2>
 
-          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300 sm:text-base">
+          <p className={(compact ? "hidden md:block " : "") + "mt-3 line-clamp-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300 sm:text-base"}>
             {excerpt}
           </p>
 
@@ -82,7 +82,7 @@ const BlogCard = ({ blog, animateLayout = false }) => {
             </span>
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-2" aria-label="Article tags">
+          <div className={(compact ? "hidden md:flex" : "flex") + " mt-5 flex-wrap gap-2"} aria-label="Article tags">
             {blog.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}

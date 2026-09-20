@@ -1,6 +1,7 @@
 import { getAdminApp } from './_shared/admin.js';
 import { allowsAdmin } from '../../src/utils/adminPolicy.js';
-import admin from "firebase-admin";
+import { getAuth } from 'firebase-admin/auth';
+import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 
 const parseAllowlist = () => {
   const raw = process.env.ADMIN_EMAILS || process.env.VITE_ADMIN_EMAILS || "";
@@ -44,14 +45,14 @@ export const handler = async (event) => {
     }
 
     const app = getAdminApp();
-    const decodedToken = await admin.auth(app).verifyIdToken(idToken);
+    const decodedToken = await getAuth(app).verifyIdToken(idToken);
 
     if (!isAllowedAdmin(decodedToken)) {
       return sendJson(403, { error: "Account is not allowed to write certifications.", code: "permission-denied" });
     }
 
-    const db = admin.firestore(app);
-    const now = admin.firestore.FieldValue.serverTimestamp();
+    const db = getFirestore(app);
+    const now = FieldValue.serverTimestamp();
     const body = event.body ? JSON.parse(event.body) : {};
     const { action, id, payload = {}, ids = [], items = [] } = body;
 

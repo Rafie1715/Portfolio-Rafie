@@ -1,6 +1,13 @@
 export const projects = [
   {
     id: "OD60ttuTSwZW62TRJFm6",
+    github: "https://github.com/Rafie1715/Sleep-Quality-Monitoring-App-using-Random-Forest",
+    evaluation: {
+      source: "https://github.com/Rafie1715/Sleep-Quality-Monitoring-App-using-Random-Forest/blob/main/Machine_Learning_Code.ipynb",
+      testSamples: 63,
+      baselineAccuracy: 93.65, balancedAccuracy: 92.06,
+      baselinePoorRecall: 0.83, balancedPoorRecall: 0.94,
+    },
     title: {
       en: "RestUP - Sleep Quality Monitoring App",
       id: "RestUP - Aplikasi Pemantauan Kualitas Tidur"
@@ -103,8 +110,8 @@ export const projects = [
       id: "Mandiri News - Aplikasi Berita Android"
     },
     category: "mobile",
-    image: "/images/project-mandiri-news.jpg",
-    conceptualCover: true,
+    image: "/images/mandiri-project-1.webp",
+    imageFit: "contain",
     featuredOrder: 2,
     year: "2026",
     impact: {
@@ -1099,7 +1106,7 @@ const evidenceById = {
   },
   'mandiri-news': {
     contribution: { en: 'In the Bank Mandiri x Rakamin project-based virtual internship, I built three Android screens and integrated three REST endpoints using MVVM, Retrofit, Coroutines, and Paging 3.', id: 'Dalam project-based virtual internship Bank Mandiri x Rakamin, saya membangun tiga layar Android dan mengintegrasikan tiga REST endpoint menggunakan MVVM, Retrofit, Coroutines, dan Paging 3.' },
-    metricContext: { en: '88.71/100 is the program assessment score (Excellent). The cover is a conceptual illustration; implementation documentation is available in the experience section.', id: '88,71/100 merupakan nilai evaluasi program (Excellent). Cover merupakan ilustrasi konsep; dokumentasi implementasi tersedia di bagian pengalaman.' },
+    metricContext: { en: '88.71/100 is the program assessment score (Excellent). The images show the implemented news feed and the project presentation.', id: '88,71/100 merupakan nilai evaluasi program (Excellent). Gambar menampilkan implementasi feed berita dan presentasi proyek.' },
     article: '/blog/mandiri-news-paging-android',
   },
   planetku: {

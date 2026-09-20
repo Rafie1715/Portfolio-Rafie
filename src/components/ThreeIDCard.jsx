@@ -202,7 +202,7 @@ const makeStrapGeometry = () => {
   return geometry;
 };
 
-const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange }) => {
+const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange, touchInteraction }) => {
   const pivot = useRef(null);
   const points = useRef(createLanyard());
   const drag = useRef(null);
@@ -238,6 +238,10 @@ const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange }) => {
     canvas.style.setProperty('cursor', dragging ? 'grabbing' : hovered ? 'grab' : '');
     return () => { canvas.style.removeProperty('cursor'); };
   }, [dragging, hovered, gl]);
+
+  useEffect(() => {
+    gl.domElement.style.setProperty('touch-action', touchInteraction ? 'none' : 'pan-y');
+  }, [gl, touchInteraction]);
 
   useEffect(() => {
     const canvas = gl.domElement;
@@ -345,6 +349,7 @@ const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange }) => {
 
   const startDrag = event => {
     if (!active || drag.current || event.button !== 0 || event.nativeEvent?.isPrimary === false) return;
+    if (event.pointerType === 'touch' && !touchInteraction) return;
     event.stopPropagation();
     if (!event.ray.intersectPlane(scratch.plane, scratch.hit)) return;
     const end = points.current.at(-1);
@@ -410,10 +415,14 @@ const useReducedMotion = () => {
 export default function ThreeIDCard() {
   const { t } = useTranslation();
   const [dragging, setDragging] = useState(false);
+  const [touchInteraction, setTouchInteraction] = useState(false);
   const [resetSignal, setResetSignal] = useState(0);
   const [documentVisible, setDocumentVisible] = useState(() => !document.hidden);
   useEffect(() => {
-    const update = () => setDocumentVisible(!document.hidden);
+    const update = () => {
+      setDocumentVisible(!document.hidden);
+      if (document.hidden) setTouchInteraction(false);
+    };
     document.addEventListener('visibilitychange', update);
     return () => document.removeEventListener('visibilitychange', update);
   }, []);
@@ -424,7 +433,10 @@ export default function ThreeIDCard() {
   useEffect(() => {
     if (!containerRef.current) return undefined;
     const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+        if (!entry.isIntersecting) setTouchInteraction(false);
+      },
       { threshold: 0.05 },
     );
     observer.observe(containerRef.current);
@@ -445,17 +457,19 @@ export default function ThreeIDCard() {
           dpr={[1, 1.5]}
           camera={{ position: [0, 0.65, 9.5], fov: 40, near: 0.1, far: 30 }}
           gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
-          style={{ touchAction: 'none' }}
+          style={{ touchAction: touchInteraction ? 'none' : 'pan-y' }}
         >
           <ambientLight intensity={1.9} />
           <directionalLight position={[4, 6, 8]} intensity={2.4} color="#ffffff" />
           <directionalLight position={[-4, 1, 5]} intensity={1.1} color="#a7f3d0" />
-          <BadgeModel active={active} reducedMotion={reducedMotion} resetSignal={resetSignal} onDragChange={setDragging} />
+          <BadgeModel active={active} reducedMotion={reducedMotion} resetSignal={resetSignal} onDragChange={setDragging} touchInteraction={touchInteraction} />
           <AnimationDriver active={active && (!reducedMotion || dragging)} />
         </Canvas>
       </div>
-      <div className="flex items-center justify-between gap-3 border-t border-slate-200 px-4 py-2 dark:border-slate-700">
-        <p className="text-left text-xs leading-5 text-slate-500 dark:text-slate-400">{t('common.developer_id_drag')}</p>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 px-4 py-2 dark:border-slate-700">
+        <p className="flex-1 text-left text-xs leading-5 text-slate-600 dark:text-slate-300 [@media(any-pointer:coarse)]:hidden">{t('common.developer_id_drag')}</p>
+        <p className="hidden w-full text-left text-xs leading-5 text-slate-600 dark:text-slate-300 [@media(any-pointer:coarse)]:block">{t(touchInteraction ? 'common.developer_id_touch_active' : 'common.developer_id_scroll')}</p>
+        <button type="button" data-card-touch-toggle aria-pressed={touchInteraction} onClick={() => { setTouchInteraction(value => !value); setResetSignal(value => value + 1); }} className="hidden min-h-11 items-center rounded-lg border border-blue-300 px-3 text-sm font-semibold text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary dark:border-blue-700 [@media(any-pointer:coarse)]:inline-flex">{t(touchInteraction ? 'common.developer_id_done' : 'common.developer_id_play')}</button>
         <button type="button" onClick={() => setResetSignal(value => value + 1)} aria-label={t('common.developer_id_reset')} title={t('common.developer_id_reset')} className="flex size-11 shrink-0 items-center justify-center rounded-lg text-primary hover:bg-blue-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"><RotateCcw size={17} aria-hidden="true" /></button>
       </div>
     </div>

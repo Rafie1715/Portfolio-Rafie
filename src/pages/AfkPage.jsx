@@ -296,14 +296,14 @@ const AfkPage = () => {
 
         if (gameActivity) {
             return {
-                text: `${t('afk.playing')} ${gameActivity.name}`,
+                text: `${t('common.activity_using')} ${gameActivity.name}`,
                 color: 'bg-blue-500', isOnline: true,
                 gameDetails: gameActivity,
                 avatar: `https://cdn.discordapp.com/avatars/${discordData.discord_user.id}/${discordData.discord_user.avatar}.png`
             };
         }
         return {
-            text: discordData.discord_status === 'offline' ? t('afk.offline') : (discordData.discord_status.charAt(0).toUpperCase() + discordData.discord_status.slice(1)),
+            text: t('common.activity_' + (['online', 'idle', 'dnd', 'offline'].includes(discordData.discord_status) ? discordData.discord_status : 'offline')),
             color: statusColors[discordData.discord_status] || 'bg-gray-500',
             isOnline: discordData.discord_status !== 'offline',
             avatar: `https://cdn.discordapp.com/avatars/${discordData.discord_user.id}/${discordData.discord_user.avatar}.png`
@@ -478,7 +478,7 @@ const AfkPage = () => {
         {
             key: 'game',
             icon: 'fa-gamepad',
-            label: t('afk.afk_snapshot.game.label'),
+            label: t('common.activity_label'),
             description: statusInfo.gameDetails?.name || t('afk.afk_snapshot.game.desc'),
         },
         {

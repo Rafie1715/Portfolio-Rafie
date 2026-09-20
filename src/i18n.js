@@ -1167,13 +1167,13 @@ const resources = {
                 category_label: "Proyek",
                 impact: {
                     eyebrow: "Ringkasan Rekruter",
-                    title: "Selected Impact",
+                    title: "Kontribusi & Hasil",
                     desc: "Ringkasan cepat tentang peran saya, kebutuhan proyek, dan tautan untuk mengecek hasilnya.",
                     role: "Peran",
                     team: "Tim",
                     result: "Hasil",
                     scope: "Cakupan",
-                    tech_link: "Tech & Link",
+                    tech_link: "Teknologi & Tautan",
                     team_fallback: "Proyek mandiri atau tim"
                 },
                 decision_replay: {

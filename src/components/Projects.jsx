@@ -203,6 +203,7 @@ const ProjectCard = ({
       >
         <LazyImage
           src={project.image}
+          style={{ objectFit: project.imageFit || 'cover' }}
           alt={title}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
           wrapperClassName="absolute inset-0 h-full w-full"
@@ -247,7 +248,7 @@ const ProjectCard = ({
           <dl className="mb-4 grid grid-cols-1 gap-3 border-y border-gray-100 py-4 sm:grid-cols-2 dark:border-slate-700">
             {(role || scope) && (
               <div className="min-w-0">
-                <dt className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase text-gray-400 dark:text-gray-500">
+                <dt className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase text-gray-600 dark:text-gray-400">
                   <Users size={14} aria-hidden="true" /> {t('projectDetail.impact.role')}
                 </dt>
                 <dd className="text-sm font-semibold leading-snug text-gray-800 dark:text-gray-100">{role || scope}</dd>
@@ -255,7 +256,7 @@ const ProjectCard = ({
             )}
             {result && (
               <div className="min-w-0">
-                <dt className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase text-gray-400 dark:text-gray-500">
+                <dt className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase text-gray-600 dark:text-gray-400">
                   <BarChart3 size={14} aria-hidden="true" /> {t('projectDetail.impact.result')}
                 </dt>
                 <dd className="text-sm font-semibold leading-snug text-gray-800 dark:text-gray-100">{result}</dd>

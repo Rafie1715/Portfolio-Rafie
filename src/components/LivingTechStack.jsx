@@ -1,4 +1,5 @@
 import Icon from './Icon';
+import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -98,6 +99,7 @@ const technologiesByLens = {
 
 const LivingTechStack = ({ mode, onTechnologySelect }) => {
   const { t } = useTranslation();
+  const location = useLocation();
   const sectionRef = useRef(null);
   const [isInView, setIsInView] = useState(
     () => typeof window !== 'undefined' && !('IntersectionObserver' in window),
@@ -235,6 +237,12 @@ const LivingTechStack = ({ mode, onTechnologySelect }) => {
             </span>
             {t(`home.recruiter_lens.technologies.${activeTechnology.id}.usage`)}
           </p>
+          <Link to={{ pathname: '/', search: location.search, hash: '#selected-work' }} onClick={() => {
+            handleTechnologySelect(activeTechnology);
+            const work = document.getElementById('selected-work');
+            work?.focus({ preventScroll: true });
+            work?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+          }} className="mt-4 inline-flex min-h-11 items-center rounded-lg font-semibold text-primary underline decoration-primary/40 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">{t('common.related_work', { technology: activeTechnology.name })}</Link>
         </div>
       </div>
     </div>

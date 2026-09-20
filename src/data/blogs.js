@@ -103,7 +103,7 @@ export const blogs = [
     updatedAt: '2026-08-28',
     category: 'case-study',
     tags: ['Android', 'Kotlin', 'Paging 3', 'REST API'],
-    image: '/images/project-mandiri-news.jpg',
+    image: '/images/mandiri-project-2.webp',
     projectId: 'mandiri-news',
     impact: {
       role: { en: 'Mobile Apps Developer', id: 'Mobile Apps Developer' },

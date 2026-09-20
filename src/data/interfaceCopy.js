@@ -1,5 +1,8 @@
 export const interfaceCopy = {
  en: {
+  developer_id_play: 'Play with card', developer_id_done: 'Done', developer_id_scroll: 'Swipe to scroll. Activate the card to drag it.', developer_id_touch_active: 'Drag in any direction. Tap Done to scroll again.',
+  related_work: 'View projects using {{technology}}', personal_more: 'Music and life outside coding', personal_expand: 'Show a little more', personal_collapse: 'Show less', activity_label: 'Activity', activity_using: 'Using', activity_idle: 'Away from the keyboard', activity_online: 'Online', activity_dnd: 'Do not disturb', activity_offline: 'Offline',
+
   developer_id_drag: 'Drag the card in any direction, then let go.', developer_id_reset: 'Reset card position',
   developer_id_loading: 'Loading Developer ID...', developer_id_description: 'Developer ID of Rafie Rojagat Bachri, Informatics graduate, focused on Android, front-end, and AI.', developer_id_preview: '3D Developer ID of Rafie Rojagat Bachri',
   certificates_loading: 'Loading certificates...', certificates_error: 'Certificates could not be loaded. Please try again.',
@@ -15,6 +18,9 @@ export const interfaceCopy = {
   recovery_title: 'Something went wrong', recovery_desc: 'Please reload this page, or contact me directly.', reload: 'Reload page',
  },
  id: {
+  developer_id_play: 'Mainkan kartu', developer_id_done: 'Selesai', developer_id_scroll: 'Geser untuk scroll. Aktifkan kartu untuk menariknya.', developer_id_touch_active: 'Tarik ke segala arah. Ketuk Selesai untuk scroll kembali.',
+  related_work: 'Lihat proyek dengan {{technology}}', personal_more: 'Musik dan keseharian di luar coding', personal_expand: 'Lihat selengkapnya', personal_collapse: 'Ringkas kembali', activity_label: 'Aktivitas', activity_using: 'Menggunakan', activity_idle: 'Sedang tidak aktif', activity_online: 'Online', activity_dnd: 'Jangan ganggu', activity_offline: 'Offline',
+
   developer_id_drag: 'Tarik kartu ke segala arah, lalu lepaskan.', developer_id_reset: 'Kembalikan posisi kartu',
   developer_id_loading: 'Memuat ID Developer...', developer_id_description: 'ID Developer Rafie Rojagat Bachri, lulusan Informatika yang berfokus pada Android, front-end, dan AI.', developer_id_preview: 'ID Developer 3D Rafie Rojagat Bachri',
   certificates_loading: 'Memuat sertifikat...', certificates_error: 'Sertifikat belum dapat dimuat. Silakan coba lagi.',

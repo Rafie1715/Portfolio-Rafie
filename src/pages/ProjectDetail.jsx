@@ -6,6 +6,7 @@ import ProjectCatalogStatus from '../components/ProjectCatalogStatus';
 import NotFound from './NotFound';
 import ImageDialog from '../components/ImageDialog';
 import ProjectEvidence from '../components/ProjectEvidence';
+import ModelEvaluation from '../components/ModelEvaluation';
 import DecisionReplay from '../components/DecisionReplay';
 import SEO from '../components/SEO';
 import { motion } from 'framer-motion';
@@ -259,7 +260,7 @@ const ProjectDetail = () => {
                     <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 flex items-center justify-center mb-3">
                       <Icon className={item.icon}></Icon>
                     </div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
+                    <p className="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">
                       {item.label}
                     </p>
                     <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 leading-relaxed">
@@ -283,7 +284,7 @@ const ProjectDetail = () => {
               alt={title}
               decoding="async"
               fetchPriority="high"
-              className="w-full h-auto object-cover"
+              className="w-full max-h-[32rem] object-contain"
               sizes="(min-width: 1024px) 896px, 100vw"
             />
             </button>
@@ -317,6 +318,8 @@ const ProjectDetail = () => {
           </motion.div>
 
           <DecisionReplay key={project.id} steps={decisionReplaySteps} />
+
+          <ModelEvaluation evaluation={project.evaluation} />
 
           <div className="mb-16 max-w-3xl space-y-10">
               <motion.section
@@ -404,7 +407,7 @@ const ProjectDetail = () => {
                         src={img}
                         alt={`Screenshot ${idx + 1}`}
                         loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <Icon className="fas fa-search-plus text-white text-3xl drop-shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-300"></Icon>
