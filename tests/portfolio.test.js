@@ -32,6 +32,7 @@ test('empty allowlist and unverified email fail closed; claim and verified allow
  assert.equal(allowsAdmin({ email: 'owner@example.com', emailVerified: false }, ['owner@example.com']), false);
  assert.equal(allowsAdmin({ email: ' Owner@Example.com ', emailVerified: true }, ['owner@example.com']), true);
  assert.equal(allowsAdmin({ claims: { admin: true } }), true);
+ assert.equal(allowsAdmin({ claims: { admin: true }, email: 'admin@rafie.com', emailVerified: false }), true);
  assert.equal(allowsAdmin({ claims: { admin: 'true' } }), false);
 });
 test('CMS edits override a local project while retaining untouched evidence and stable URLs', () => {

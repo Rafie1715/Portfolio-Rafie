@@ -32,6 +32,19 @@ Halaman publik dan sitemap merupakan snapshot saat build. Setiap perubahan CMS y
 
 Menghapus override CMS dapat memunculkan kembali data repository. Untuk menyembunyikan proyek/sertifikasi lokal, simpan override unpublished; jangan hanya menghapus override.
 
+### Akun lama berhasil login tetapi Access Denied
+
+Login Firebase tidak otomatis memberi hak admin. Akun seperti admin@rafie.com yang belum terverifikasi perlu custom claim admin: true, atau verifikasi email serta allowlist yang konsisten. Menambahkan VITE_ADMIN_EMAILS saja tidak cukup untuk email yang belum terverifikasi.
+
+Untuk akun login yang tidak mempunyai kotak masuk email, gunakan skrip operator berikut dari lingkungan dengan kredensial Firebase Admin. Kredensial server dapat dimuat dari environment proses atau .env.local yang diabaikan Git; jangan membagikannya di chat atau memasukkannya ke bundle browser. Ganti YOUR_FIREBASE_PROJECT_ID dengan ID proyek Firebase yang sesuai.
+
+```sh
+node scripts/set-admin-claim.mjs --email admin@rafie.com --project YOUR_FIREBASE_PROJECT_ID
+node scripts/set-admin-claim.mjs --email admin@rafie.com --project YOUR_FIREBASE_PROJECT_ID --apply
+```
+
+Perintah pertama hanya membaca akun. Periksa project, UID, dan email sebelum menjalankan perintah kedua untuk menetapkan role. Skrip mempertahankan custom claims lain dan tidak mengubah password atau status verifikasi email. Setelah role tersimpan, login ulang atau pilih Refresh access. Perubahan role tidak membutuhkan deploy website; tombol dan pesan baru membutuhkan deploy. Jangan menjalankan skrip ini otomatis pada setiap build atau menjadikannya endpoint publik.
+
 ## Environment integrasi
 
 Gunakan SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN, GITHUB_TOKEN, dan TMDB_API_KEY sebagai variabel khusus server. Nama VITE_ lama masih diterima sementara untuk kompatibilitas, tetapi pindahkan konfigurasi deployment ke nama server. Endpoint spotify-auth sengaja mengembalikan 410; endpoint publik hanya menyediakan data widget.
