@@ -8,5 +8,5 @@ export function getAdminApp() {
   const clientEmail = account.client_email || account.clientEmail || process.env.FIREBASE_CLIENT_EMAIL || process.env.GOOGLE_CLIENT_EMAIL;
   const privateKey = account.private_key || account.privateKey || process.env.FIREBASE_PRIVATE_KEY || process.env.GOOGLE_PRIVATE_KEY;
   if (!projectId || !clientEmail || !privateKey) throw new Error('Firebase Admin credentials are required for CMS content.');
-  return initializeApp({ credential: cert({ projectId, clientEmail, privateKey: privateKey.replace(/\\n/g, '\n') }) });
+  return initializeApp({ projectId, credential: cert({ projectId, clientEmail, privateKey: privateKey.replace(/\\n/g, '\n') }) });
 }
