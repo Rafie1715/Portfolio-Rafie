@@ -42,6 +42,31 @@ test('a draft override hides the local project instead of resurrecting static co
  assert.deepEqual(mergeProjectCatalog(local, [{ id: 'restup', isPublished: false }]), []);
  assert.deepEqual(mergeProjectCatalog(local, [{ id: 'legacy-id', title: { en: 'RestUP' }, isPublished: false }]), []);
 });
+test('legacy CMS records retain reviewed local content without publishing unreviewed overrides', () => {
+ for (const identity of [
+  { id: 'restup' },
+  { id: 'legacy-id', localId: 'restup' },
+  { id: 'legacy-id', title: { en: 'RestUP' } },
+ ]) {
+  const result = mergeProjectCatalog(local, [{ ...identity, shortDesc: { en: 'Unreviewed CMS text' }, privateNotes: 'private' }]);
+  assert.deepEqual(result, local);
+ }
+ for (const isPublished of [null, 'true', 'false', 0, 1]) {
+  assert.deepEqual(mergeProjectCatalog(local, [{ id: 'restup', isPublished, shortDesc: 'Unreviewed' }]), local);
+ }
+});
+test('RestUP remains available through the API when its legacy CMS entry has no publication flag', async () => {
+ const restupId = 'OD60ttuTSwZW62TRJFm6';
+ const merged = mergeProjectCatalog(projects, [{ id: restupId, title: 'Legacy RestUP', github: '' }]);
+ const handler = createProjectsHandler(async () => merged);
+ const response = await handler({ httpMethod: 'GET' });
+ const restup = JSON.parse(response.body).projects.find(project => project.id === restupId);
+ assert.equal(response.statusCode, 200);
+ assert.deepEqual(restup, projects.find(project => project.id === restupId));
+ assert.ok(restup.github.includes('Sleep-Quality-Monitoring-App-using-Random-Forest'));
+ assert.equal(restup.evaluation.testSamples, 63);
+ assert.ok(!mergeProjectCatalog(projects, [{ id: restupId, isPublished: false }]).some(project => project.id === restupId));
+});
 test('CMS records require explicit publication and private fields never enter public payloads', () => {
  const result = mergeProjectCatalog([], [{ id: 'draft', title: 'Draft' }, { id: 'live', title: 'Live', isPublished: true, privateNotes: 'secret', ownerEmail: 'private@example.com' }]);
  assert.deepEqual(result, [{ id: 'live', title: 'Live' }]);

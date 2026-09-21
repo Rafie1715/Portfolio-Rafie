@@ -13,6 +13,8 @@ Tetapkan PORTFOLIO_CONTENT_SOURCE secara eksplisit pada environment build DAN Fu
 - static: proyek/sertifikasi dari src/data. Edit CMS tidak mengubah katalog publik.
 - cms: data repository digabung dengan Firestore melalui Firebase Admin. CMS menimpa proyek lokal berdasarkan id, localId, atau judul lama. isPublished: false menyembunyikan proyek, termasuk versi lokalnya. ID URL proyek lokal dipertahankan.
 
+Untuk proyek, dokumen CMS lama tanpa flag isPublished boolean diabaikan saat penggabungan: versi repository yang sudah publik tetap tampil, sedangkan isi override lama tidak diterbitkan. Proyek yang hanya ada di CMS tetap membutuhkan isPublished: true. isPublished: false tetap menyembunyikan versi repository. Jika RestUP tetap tidak muncul sesudah deploy kode terbaru, buka Edit RestUP di admin dan periksa Publish this project; centang dan simpan bila ingin memublikasikannya, lalu build/deploy ulang untuk memperbarui HTML awal dan sitemap.
+
 Tanpa konfigurasi eksplisit, adanya kredensial Firebase Admin memilih cms; jika tidak ada, static. Kegagalan CMS mengembalikan 503 dan tombol coba lagi, tanpa menampilkan kembali draft dari fallback lokal.
 
 CMS membutuhkan FIREBASE_SERVICE_ACCOUNT_JSON (JSON service account), atau FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY. Simpan hanya di environment server/build, jangan dengan prefiks VITE_. Variabel VITE_FIREBASE_* berisi konfigurasi SDK publik, bukan service account.
@@ -44,4 +46,14 @@ Hosting harus mendukung Netlify Functions serta public/_redirects dan public/_he
 
 ## Bukti proyek yang masih perlu dilengkapi
 
-RestUP belum mempunyai URL demo/repository publik terverifikasi dalam data yang tersedia. Tambahkan tautan yang memang siap dibagikan, video alur singkat, dan rincian evaluasi model (dataset, pembagian train/test, ukuran sampel, baseline, keterbatasan). Gunakan screenshot implementasi asli Mandiri News jika tersedia. Angka akurasi model tidak boleh dipresentasikan sebagai peningkatan kualitas tidur atau dampak pengguna.
+Repository publik RestUP telah diverifikasi dan ditautkan. Halaman detail memuat perbandingan keluaran notebook (baseline 93,65%, model berbobot 92,06%, 63 data uji), metode 80:20, dan batas evaluasinya. Spreadsheet yang diberikan pemilik berisi 317 respons; snapshot ini perlu dicocokkan dengan notebook sebelum mereproduksi angka persis. Jangan memasukkan data mentah responden ke repository atau website. Video demo dan screenshot layar RestUP terpisah masih dapat ditambahkan bila tersedia. Mandiri News kini menggunakan screenshot implementasi asli dari dokumentasi proyek. Akurasi model tidak boleh dipresentasikan sebagai peningkatan kualitas tidur pengguna.
+
+## Hasil verifikasi 21 September 2026
+
+- Build produksi, lint, dan 21 tes otomatis lulus.
+- Sebanyak 23 pemeriksaan browser pada preview produksi lulus: scroll dan tarik kartu pada layar sentuh, navigasi teknologi dengan bahasa/fokus tetap tersimpan, panel personal mobile, bukti proyek, lebar 320–1440 piksel, serta feedback formulir.
+- Respons formulir sukses, pembatasan permintaan (429), dan kegagalan server (500) diuji dengan simulasi tanpa mengirim pesan ke Formspree. Pengiriman dan penerimaan email nyata belum diverifikasi.
+- Pemeriksaan baca saja pada domain publik menemukan metadata khusus untuk Projects/Contact, respons 404 untuk URL tidak dikenal, CV berupa PDF, dan endpoint proyek/sertifikasi/GitHub/Spotify berupa JSON. GET /api/chat mengembalikan 405 sesuai metode yang diizinkan; jawaban Gemini nyata belum diuji.
+- HTML awal detail RestUP pada domain publik masih memakai judul beranda saat diperiksa. Build lokal memiliki halaman detail tersendiri; periksa kembali snapshot konten dan hasil deployment pada route tersebut. Sebagian permintaan publik mengalami timeout koneksi, sehingga hasil ini bukan pengukuran uptime atau Core Web Vitals.
+
+Verifikasi lokal tidak melakukan deployment, perubahan CMS, maupun pengiriman data responden. Cocokkan hasil dengan deploy preview sebelum menerbitkan versi berikutnya.
