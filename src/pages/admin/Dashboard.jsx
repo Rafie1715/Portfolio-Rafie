@@ -22,7 +22,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
+    <div className="admin-page min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-8 sm:pt-24 pb-10">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-8 md:mb-10">
           <div>

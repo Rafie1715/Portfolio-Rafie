@@ -50,6 +50,6 @@ export default function Navbar() {
         <button ref={trigger} type="button" onClick={() => setOpen(value => !value)} aria-label={t(open ? 'common.menu_close' : 'common.menu_open')} aria-expanded={open} aria-controls="mobile-navigation" className="flex size-11 items-center justify-center rounded-lg lg:hidden">{open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button>
       </div>
     </div>
-    {open && <div id="mobile-navigation" className="border-t border-slate-200 bg-white px-4 pb-5 dark:border-slate-800 dark:bg-dark lg:hidden">{links.map(key => <NavLink key={key} to={to(key)} onClick={() => setOpen(false)} className={({ isActive }) => 'block rounded-lg px-4 py-3 font-semibold ' + (isActive ? 'bg-primary/10 text-primary' : 'text-slate-700 dark:text-slate-300')}>{t('navbar.' + key)}</NavLink>)}</div>}
+    {open && <div id="mobile-navigation" className="max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain border-t border-slate-200 bg-white px-4 pb-5 dark:border-slate-800 dark:bg-dark lg:hidden">{links.map(key => <NavLink key={key} to={to(key)} onClick={() => setOpen(false)} className={({ isActive }) => 'block rounded-lg px-4 py-3 font-semibold ' + (isActive ? 'bg-primary/10 text-primary' : 'text-slate-700 dark:text-slate-300')}>{t('navbar.' + key)}</NavLink>)}</div>}
   </nav>;
 }

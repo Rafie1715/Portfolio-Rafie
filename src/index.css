@@ -25,6 +25,45 @@
   @apply bg-primary text-white;
 }
 
+/* Keep form text readable without mobile Safari's focus zoom. */
+@media (max-height: 520px) {
+  .chatbot-suggestions { display: none; }
+}
+@media (max-width: 639px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="hidden"]),
+  textarea, select { font-size: 16px; }
+
+  .admin-page :is(button, a[class*="rounded"]) { min-height: 44px; }
+  .admin-page :is(input, textarea, select) { max-width: 100%; }
+  .admin-page :is(h1, h2, p) { overflow-wrap: anywhere; }
+
+  /* Reflow the same table rows as labelled cards; all actions stay visible. */
+  .admin-mobile-table { display: block; width: 100%; min-width: 0; }
+  .admin-mobile-table thead { display: block; }
+  .admin-mobile-table thead tr { display: block; }
+  .admin-mobile-table th { display: none; }
+  .admin-mobile-table th:has(input[type="checkbox"]) { display: block; padding: .5rem .75rem; text-align: left; }
+  .admin-mobile-table tbody { display: grid; gap: .75rem; padding: .75rem; }
+  .admin-mobile-table tbody tr { display: block; min-width: 0; padding: .5rem 0; border: 1px solid #cbd5e1; border-radius: .75rem; }
+  .dark .admin-mobile-table tbody tr { border-color: #334155; }
+  .admin-mobile-table td {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    align-items: start;
+    gap: .5rem;
+    min-width: 0;
+    padding: .5rem .75rem;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+  .admin-mobile-table td::before { content: attr(data-label); padding-top: .15rem; font-size: .7rem; font-weight: 600; opacity: .7; }
+  .admin-mobile-table td > * { min-width: 0; max-width: 100%; }
+  .admin-mobile-table td > .flex { flex-wrap: wrap; justify-content: flex-start; }
+  .admin-mobile-table td[data-label="Actions"],
+  .admin-mobile-table td[data-label="Note"] { grid-template-columns: minmax(0, 1fr); }
+  .admin-mobile-table td[data-label="Actions"] :is(a, button) { display: inline-flex; align-items: center; justify-content: center; }
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -244,12 +283,49 @@ html { scroll-padding-top: 6rem; }
   .dark .text-primary { @apply text-blue-400; }
 }
 
-/* Connected hero network; move all junctions together and pause offscreen. */
-@keyframes hero-node-drift {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(6px, -10px); }
+/* Hero light ribbons: strong at the edges, quiet underneath the content. */
+.hero-lights { contain: paint; }
+.hero-light-haze {
+  background: radial-gradient(ellipse at 4% 65%, #3b82f619, transparent 35%),
+    radial-gradient(ellipse at 98% 28%, #06b6d419, transparent 37%);
 }
-.hero-node-drift { animation: hero-node-drift 24s ease-in-out infinite; }
+.dark .hero-light-haze {
+  background: radial-gradient(ellipse at 4% 65%, #2563eb24, transparent 35%),
+    radial-gradient(ellipse at 98% 28%, #06b6d41c, transparent 37%);
+}
+.hero-light-parallax {
+  transform: translate(var(--light-x, 0px), var(--light-y, 0px));
+  transition: transform 800ms ease-out;
+}
+.hero-light-canvas {
+  opacity: .6;
+  mask-image: radial-gradient(ellipse 48% 64% at 50% 45%, #0000000d 15%, #00000026 48%, #000 100%);
+}
+.dark .hero-light-canvas { opacity: .85; }
+.hero-light-ribbon {
+  transform-origin: center;
+  animation: hero-light-drift var(--ribbon-duration) ease-in-out var(--ribbon-delay) infinite;
+}
+.hero-light-ribbon-2 { opacity: .45; }
+.hero-light-trail { animation: hero-light-flow var(--ribbon-duration) linear var(--ribbon-delay) infinite; }
+.hero-light-spark { fill: #0284c7; }
+.dark .hero-light-spark { fill: #cffafe; }
+.hero-lights[data-running="false"] .hero-light-ribbon,
+.hero-lights[data-running="false"] .hero-light-trail { animation-play-state: paused; }
+@keyframes hero-light-drift {
+  0%, 100% { transform: translateY(-7px) rotate(-.5deg); }
+  50% { transform: translateY(7px) rotate(.5deg); }
+}
+@keyframes hero-light-flow { to { stroke-dashoffset: -1000; } }
+@media (max-width: 639px) {
+  .hero-light-ribbon-2, .hero-light-particle-secondary { display: none; }
+  .hero-light-canvas {
+    opacity: .5;
+    mask-image: linear-gradient(to right, #000, #00000026 24%, #00000012 50%, #00000026 76%, #000);
+  }
+  .dark .hero-light-canvas { opacity: .65; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .hero-node-drift { animation: none; }
+  .hero-light-ribbon, .hero-light-trail { animation: none; }
+  .hero-light-parallax { transform: none; transition: none; }
 }

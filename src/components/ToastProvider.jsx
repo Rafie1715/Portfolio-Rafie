@@ -40,7 +40,7 @@ export const ToastProvider = ({ children }) => {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="fixed top-5 right-5 z-[120] flex w-[min(92vw,24rem)] flex-col gap-3">
+      <div className="fixed inset-x-4 top-4 z-[120] flex flex-col gap-3 sm:left-auto sm:right-5 sm:top-5 sm:w-96">
         {toasts.map((toast) => {
           const style = toastStyles[toast.type] || toastStyles.info;
 
@@ -53,14 +53,14 @@ export const ToastProvider = ({ children }) => {
             >
               <div className="flex items-start gap-3">
                 <Icon className={`${style.icon} mt-0.5 text-lg`}></Icon>
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 [overflow-wrap:anywhere]">
                   {toast.title && <p className="font-semibold leading-tight">{toast.title}</p>}
                   {toast.message && <p className="mt-1 text-sm leading-relaxed opacity-90">{toast.message}</p>}
                 </div>
                 <button
                   type="button"
                   onClick={() => removeToast(toast.id)}
-                  className="rounded-full p-1 text-current/70 transition hover:bg-black/5 hover:text-current dark:hover:bg-white/10"
+                  className="flex size-11 shrink-0 items-center justify-center rounded-full text-current/70 transition hover:bg-black/5 hover:text-current dark:hover:bg-white/10"
                   aria-label="Dismiss notification"
                 >
                   <Icon className="fas fa-times text-xs"></Icon>

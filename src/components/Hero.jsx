@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { MapPin, BriefcaseBusiness, Layers, Code2, Download, Send } from 'lucide-react';
 import { trackCTAClick, trackExternalLink } from '../utils/analytics';
 
-import HeroNodeBackground from './HeroNodeBackground';
+import HeroLightBackground from './HeroLightBackground';
 
 const TypewriterLine = ({ phrases, prefix, accessibleText, reduceMotion, active }) => {
   const safePhrases = Array.isArray(phrases) && phrases.length > 0 ? phrases : [''];
@@ -146,12 +146,12 @@ const Hero = ({ recruiterLens = 'overview' }) => {
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
           aria-hidden="true"
-          className="absolute -inset-4 bg-[linear-gradient(to_right,#64748b0a_1px,transparent_1px),linear-gradient(to_bottom,#64748b0a_1px,transparent_1px)] bg-[size:32px_32px]"
+          className="absolute -inset-4 opacity-40 bg-[linear-gradient(to_right,#64748b0a_1px,transparent_1px),linear-gradient(to_bottom,#64748b0a_1px,transparent_1px)] bg-[size:48px_48px]"
         />
         <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-950/20"></div>
       </div>
 
-      <HeroNodeBackground active={isHeroVisible && isDocumentVisible} reduceMotion={shouldReduceMotion} />
+      <HeroLightBackground active={isHeroVisible && isDocumentVisible} />
 
       <motion.div
         className="z-20 text-center max-w-5xl mx-auto flex flex-col items-center justify-center h-full w-full"

@@ -279,7 +279,7 @@ const ManageProjects = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
+    <div className="admin-page min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-8 sm:pt-24 pb-10">
       {contentSource === 'static' && <p role="status" className="mb-5 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">This deployment serves repository projects. CMS edits are saved, but become public only when the server is configured with Firebase Admin credentials and PORTFOLIO_CONTENT_SOURCE=cms.</p>}
 
       <div className="max-w-6xl mx-auto">
@@ -289,7 +289,7 @@ const ManageProjects = () => {
            <h1 className="text-3xl font-black dark:text-white">Project Manager</h1>
            <p className="text-gray-500 dark:text-gray-400 mt-1">Manage CMS projects shown on your public portfolio.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <button onClick={() => fetchProjects()} className="px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary transition">
             Refresh
           </button>
@@ -354,10 +354,10 @@ const ManageProjects = () => {
            <p className="p-8 text-center text-gray-500">No projects found. Start adding some!</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="admin-mobile-table w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-200 uppercase text-sm leading-normal">
-                  <th className="py-3 px-4 text-center">
+                  <th className="py-3 px-4 text-center"><label className="inline-flex min-h-11 items-center gap-2">
                     <input
                       type="checkbox"
                       checked={areAllCmsProjectsOnPageSelected}
@@ -366,7 +366,7 @@ const ManageProjects = () => {
                       className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                       aria-label="Select all CMS projects on this page"
                     />
-                  </th>
+                  <span className="sm:hidden">Select all</span></label></th>
                   <th className="py-3 px-6">Thumbnail</th>
                   <th className="py-3 px-6">Title</th>
                   <th className="py-3 px-6">Category</th>
@@ -377,7 +377,7 @@ const ManageProjects = () => {
               <tbody className="text-gray-600 dark:text-gray-300 text-sm font-light">
                 {paginatedProjects.map((project) => (
                   <tr key={project.id} className="border-b border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50">
-                    <td className="py-3 px-4 text-center">
+                    <td data-label="Select" className="py-3 px-4 text-center">
                       {project.source === 'cms' ? (
                         <input
                           type="checkbox"
@@ -390,25 +390,25 @@ const ManageProjects = () => {
                         <span className="text-xs text-gray-300 dark:text-gray-600">-</span>
                       )}
                     </td>
-                    <td className="py-3 px-6">
+                    <td data-label="Thumbnail" className="py-3 px-6">
                       <img src={project.image} alt="thumb" className="w-16 h-10 object-cover rounded" onError={(e) => { e.currentTarget.src = '/images/profile.webp'; }} />
                     </td>
                     
-                    <td className="py-3 px-6 font-medium">
+                    <td data-label="Title" className="py-3 px-6 font-medium">
                         {getTitle(project)}
                     </td>
 
-                    <td className="py-3 px-6">
+                    <td data-label="Category" className="py-3 px-6">
                         <span className={`py-1 px-3 rounded-full text-xs font-bold uppercase ${categoryBadgeClass(project.category)}`}>
                             {project.category}
                         </span>
                     </td>
-                    <td className="py-3 px-6">
+                    <td data-label="Source" className="py-3 px-6">
                       <span className={`py-1 px-3 rounded-full text-xs font-bold uppercase ${project.source === 'cms' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-700'}`}>
                         {project.source === 'cms' ? 'CMS' : 'Local'}
                       </span>
                     </td>
-                    <td className="py-3 px-6 text-center">
+                    <td data-label="Actions" className="py-3 px-6 text-center">
                       {project.source === 'cms' ? (
                         <div className="flex items-center justify-center gap-2">
                           <Link

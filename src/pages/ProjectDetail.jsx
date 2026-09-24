@@ -151,24 +151,22 @@ const ProjectDetail = () => {
 
         <div className="container mx-auto px-4 max-w-4xl">
 
-          <motion.nav
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-8 overflow-x-auto whitespace-nowrap"
+          <nav
+            aria-label="Breadcrumb"
+            className="flex min-w-0 items-center text-sm text-gray-500 dark:text-gray-400 mb-6 sm:mb-8 whitespace-nowrap"
           >
-            <Link to="/" className="hover:text-primary transition-colors flex items-center gap-1">
+            <Link to="/" className="min-h-11 shrink-0 hover:text-primary transition-colors flex items-center gap-1">
               <Icon className="fas fa-home text-xs"></Icon> {t('navbar.home')}
             </Link>
             <span className="mx-2 text-gray-300 dark:text-gray-600">/</span>
-            <Link to="/projects" className="hover:text-primary transition-colors">
+            <Link to="/projects" className="inline-flex min-h-11 shrink-0 items-center hover:text-primary transition-colors">
               {t('navbar.projects')}
             </Link>
             <span className="mx-2 text-gray-300 dark:text-gray-600">/</span>
-            <span className="text-primary font-medium truncate max-w-[200px]">
+            <span aria-current="page" className="min-w-0 text-primary font-medium truncate max-w-[200px]">
               {title}
             </span>
-          </motion.nav>
+          </nav>
 
           <motion.div
             className="mb-10"
@@ -184,7 +182,7 @@ const ProjectDetail = () => {
                 <motion.h1 variants={itemVariants} className="text-3xl md:text-5xl font-bold text-dark dark:text-white mb-4 leading-tight">
                   {title}
                 </motion.h1>
-                <motion.p variants={itemVariants} className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl">
+                <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl">
                   {shortDesc}
                 </motion.p>
               </div>

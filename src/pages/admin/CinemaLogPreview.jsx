@@ -41,7 +41,7 @@ const CinemaLogPreview = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-gray-50 dark:bg-dark pt-24 pb-20 transition-colors duration-300 relative overflow-x-hidden">
+      <div className="admin-page min-h-screen bg-gray-50 dark:bg-dark pt-8 sm:pt-24 pb-12 sm:pb-20 transition-colors duration-300 relative overflow-x-hidden">
         <SEO
           title="Cinema Log Preview | Rafie Rojagat"
           description="Preview of the Cinema Log layout used on the AFK page."
@@ -82,11 +82,11 @@ const CinemaLogPreview = () => {
           </div>
 
           <motion.section
-            className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-[2.5rem] p-6 md:p-8 shadow-xl hover:shadow-yellow-500/10 transition-all duration-500 h-[640px] flex flex-col overflow-hidden"
+            className="bg-white/70 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700/50 rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 md:p-8 shadow-xl hover:shadow-yellow-500/10 transition-all duration-500 h-[640px] flex flex-col overflow-hidden"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="flex items-center justify-between mb-6 flex-shrink-0 gap-4">
+            <div className="flex flex-wrap items-center justify-between mb-6 flex-shrink-0 gap-4">
               <h2 className="text-2xl font-bold text-dark dark:text-white flex items-center gap-3">
                 <span className="text-3xl filter drop-shadow-md">🍿</span> Cinema Log
               </h2>
@@ -138,7 +138,7 @@ const CinemaLogPreview = () => {
                         </a>
                       )}
 
-                      <div className="grid grid-cols-3 gap-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                         {others.map((movie) => (
                           <a
                             key={movie.id}
@@ -153,7 +153,7 @@ const CinemaLogPreview = () => {
                               loading="lazy"
                               alt={movie.title}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-center">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 text-center">
                               <span className="text-white text-[11px] font-bold line-clamp-2 leading-tight">{movie.title}</span>
                               <span className="text-yellow-400 text-[10px] font-bold mt-1">⭐ {movie.myRating || movie.vote_average.toFixed(1)}</span>
                             </div>

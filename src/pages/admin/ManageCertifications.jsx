@@ -272,7 +272,7 @@ const ManageCertifications = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
+    <div className="admin-page min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-8 sm:pt-24 pb-10">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <div>
@@ -285,7 +285,7 @@ const ManageCertifications = () => {
             </p>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <button
               onClick={() => fetchCertifications()}
               className="px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary transition"
@@ -333,7 +333,7 @@ const ManageCertifications = () => {
                 className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-4 py-2.5 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40"
               />
               {selectedCertificationIds.length > 0 && (
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => handleBulkPublish(true)}
                     disabled={bulkPublishing}
@@ -359,10 +359,10 @@ const ManageCertifications = () => {
             <p className="p-8 text-center text-gray-500">No certifications found.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="admin-mobile-table w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-200 uppercase text-sm leading-normal">
-                    <th className="py-3 px-4 text-center">
+                    <th className="py-3 px-4 text-center"><label className="inline-flex min-h-11 items-center gap-2">
                       <input
                         type="checkbox"
                         checked={areAllCmsSelected}
@@ -371,7 +371,7 @@ const ManageCertifications = () => {
                         className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                         aria-label="Select all CMS certifications"
                       />
-                    </th>
+                    <span className="sm:hidden">Select all</span></label></th>
                     <th className="py-3 px-4 text-center">Order</th>
                     <th className="py-3 px-6">Thumbnail</th>
                     <th className="py-3 px-6">Title</th>
@@ -397,7 +397,7 @@ const ManageCertifications = () => {
                       onDragEnd={() => setDraggingId("")}
                       className="border-b border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50"
                     >
-                      <td className="py-3 px-4 text-center">
+                      <td data-label="Select" className="py-3 px-4 text-center">
                         {cert.source === "cms" ? (
                           <input
                             type="checkbox"
@@ -410,13 +410,13 @@ const ManageCertifications = () => {
                           <span className="text-xs text-gray-300 dark:text-gray-600">-</span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-center font-bold text-gray-500">
+                      <td data-label="Order" className="py-3 px-4 text-center font-bold text-gray-500">
                         <div className={`inline-flex items-center gap-2 ${cert.source === "cms" ? "cursor-grab active:cursor-grabbing" : ""}`}>
                           {cert.source === "cms" && <Icon className="fas fa-grip-vertical text-gray-400"></Icon>}
                           <span>{cert.source === "cms" && getOrder(cert) !== Number.MAX_SAFE_INTEGER ? getOrder(cert) : "-"}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-6">
+                      <td data-label="Thumbnail" className="py-3 px-6">
                         <img
                           src={cert.img || "/images/profile.webp"}
                           alt={getText(cert.alt) || "thumb"}
@@ -426,20 +426,20 @@ const ManageCertifications = () => {
                           }}
                         />
                       </td>
-                      <td className="py-3 px-6 font-medium">{getText(cert.title) || "Untitled"}</td>
-                      <td className="py-3 px-6">{getText(cert.issuer) || "-"}</td>
-                      <td className="py-3 px-6">{getText(cert.category) || "-"}</td>
-                      <td className="py-3 px-6">
+                      <td data-label="Title" className="py-3 px-6 font-medium">{getText(cert.title) || "Untitled"}</td>
+                      <td data-label="Issuer" className="py-3 px-6">{getText(cert.issuer) || "-"}</td>
+                      <td data-label="Category" className="py-3 px-6">{getText(cert.category) || "-"}</td>
+                      <td data-label="Status" className="py-3 px-6">
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${cert.isPublished === false ? "bg-slate-100 text-slate-600" : "bg-emerald-100 text-emerald-700"}`}>
                           {cert.isPublished === false ? "Draft" : "Published"}
                         </span>
                       </td>
-                      <td className="py-3 px-6">
+                      <td data-label="Source" className="py-3 px-6">
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase ${cert.source === "cms" ? "bg-indigo-100 text-indigo-700" : "bg-slate-100 text-slate-700"}`}>
                           {cert.source === "cms" ? "CMS" : "Local"}
                         </span>
                       </td>
-                      <td className="py-3 px-6 text-center">
+                      <td data-label="Actions" className="py-3 px-6 text-center">
                         {cert.source === "cms" ? (
                           <div className="flex items-center justify-center gap-2">
                             <Link

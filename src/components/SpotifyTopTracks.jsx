@@ -59,7 +59,7 @@ export default function SpotifyTopTracks() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0">
       <div className="mb-4">
         <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">{t('afk.top_tracks')}</h3>
         <div className="inline-flex max-w-full gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 p-1 overflow-x-auto">
@@ -68,7 +68,7 @@ export default function SpotifyTopTracks() {
               type="button"
               key={range.id}
               onClick={() => setTimeRange(range.id)}
-              className={`whitespace-nowrap px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+              className={`min-h-11 whitespace-nowrap px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
                 timeRange === range.id
                   ? 'bg-green-500 text-slate-950'
                   : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
@@ -110,26 +110,26 @@ export default function SpotifyTopTracks() {
               variants={item}
               className="group block"
             >
-              <div className="bg-green-50 dark:bg-green-900/20 text-slate-900 dark:text-white border border-green-200 dark:border-green-700 hover:shadow-lg rounded p-3 transition-all duration-300 flex items-center gap-3">
-                <span className="text-sm font-bold text-slate-600 dark:text-green-300 w-6 text-center">{idx + 1}</span>
+              <div className="bg-green-50 dark:bg-green-900/20 text-slate-900 dark:text-white border border-green-200 dark:border-green-700 hover:shadow-lg rounded p-3 transition-all duration-300 flex flex-wrap sm:flex-nowrap items-center gap-3">
+                <span className="text-sm font-bold text-slate-600 dark:text-green-300 w-6 shrink-0 text-center">{idx + 1}</span>
                 {track.album?.images[0]?.url && (
-                  <img src={track.album.images[0].url} alt={track.album?.name} className="w-10 h-10 rounded object-cover" />
+                  <img src={track.album.images[0].url} alt={track.album?.name} className="w-10 h-10 shrink-0 rounded object-cover" />
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-slate-900 dark:text-white truncate group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors">{track.name}</p>
                   <p className="text-xs text-slate-600 dark:text-gray-400 truncate">{track.artists[0]?.name || 'Unknown Artist'}</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex w-full sm:w-auto shrink-0 items-center justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => setSelectedTrack(track)}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500 text-slate-950 hover:bg-green-400 transition-colors"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg bg-green-500 text-slate-950 hover:bg-green-400 transition-colors"
                     aria-label={`${t('afk.play_track')} ${track.name}`}
                     title={`${t('afk.play_track')} ${track.name}`}
                   >
                     <Icon className="fas fa-play text-xs" aria-hidden="true" />
                   </button>
-                  <a href={track.external_urls?.spotify} target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-lg text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors" aria-label={`${t('afk.open_spotify')}: ${track.name}`} title={t('afk.open_spotify')}>
+                  <a href={track.external_urls?.spotify} target="_blank" rel="noopener noreferrer" className="flex h-11 w-11 items-center justify-center rounded-lg text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors" aria-label={`${t('afk.open_spotify')}: ${track.name}`} title={t('afk.open_spotify')}>
                     <Icon className="fas fa-arrow-up-right-from-square text-xs" aria-hidden="true" />
                   </a>
                 </div>
@@ -139,12 +139,12 @@ export default function SpotifyTopTracks() {
 
           {selectedTrack && (
             <div className="mt-4">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between gap-3 mb-2">
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{selectedTrack.name}</p>
                   <p className="text-xs text-slate-600 dark:text-gray-400 truncate">{selectedTrack.artists[0]?.name}</p>
                 </div>
-                <button type="button" onClick={() => setSelectedTrack(null)} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-slate-700" aria-label={t('afk.close_player')} title={t('afk.close_player')}>
+                <button type="button" onClick={() => setSelectedTrack(null)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-slate-700" aria-label={t('afk.close_player')} title={t('afk.close_player')}>
                   <Icon className="fas fa-xmark" aria-hidden="true" />
                 </button>
               </div>

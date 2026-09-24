@@ -295,7 +295,7 @@ const Chatbot = () => {
             aria-labelledby="rafie-assistant-title"
             className="fixed inset-x-3 bottom-3 z-[70] flex h-[min(640px,calc(100dvh-1.5rem))] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-darkLight sm:left-auto sm:right-5 sm:w-[390px]"
           >
-            <header className="flex shrink-0 items-center gap-3 bg-slate-950 px-4 py-3 text-white dark:bg-slate-900">
+            <header className="flex shrink-0 items-center gap-2 sm:gap-3 bg-slate-950 px-4 py-3 text-white dark:bg-slate-900">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary">
                 <Bot className="h-5 w-5" aria-hidden="true" />
               </div>
@@ -314,7 +314,7 @@ const Chatbot = () => {
                 aria-label={t("chatbot.reset")}
                 title={t("chatbot.reset")}
                 disabled={messages.length === 1 && !isLoading}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -323,7 +323,7 @@ const Chatbot = () => {
                 onClick={closePanel}
                 aria-label={t("chatbot.close")}
                 title={t("chatbot.close")}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-slate-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -395,7 +395,7 @@ const Chatbot = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="shrink-0 border-t border-slate-200 bg-white px-3 py-3 dark:border-slate-700 dark:bg-darkLight">
+            <div className="chatbot-suggestions shrink-0 border-t border-slate-200 bg-white px-3 py-3 dark:border-slate-700 dark:bg-darkLight">
               <p className="mb-2 text-[11px] font-bold uppercase text-slate-500 dark:text-slate-400">
                 {t("chatbot.quick_ask")}
               </p>

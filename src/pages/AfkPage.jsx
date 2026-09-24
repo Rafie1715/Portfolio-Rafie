@@ -564,8 +564,8 @@ const AfkPage = () => {
 
                             {shouldLoadMusic ? (
                                 <Suspense fallback={<div className="h-56 rounded-xl bg-slate-200/70 dark:bg-slate-800 animate-pulse" />}>
-                                    <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
-                                        <div>
+                                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-start">
+                                        <div className="min-w-0">
                                             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">{t('afk.now_playing')}</h3>
                                             <SpotifyNowPlaying />
                                         </div>
@@ -632,7 +632,7 @@ const AfkPage = () => {
                                                         )}
 
                                                         {otherMovies.length > 0 && (
-                                                            <div className={`grid grid-cols-3 gap-3 ${favorite ? '' : 'sm:grid-cols-4 lg:grid-cols-6'}`}>
+                                                            <div className={`grid grid-cols-2 min-[400px]:grid-cols-3 gap-3 ${favorite ? '' : 'sm:grid-cols-4 lg:grid-cols-6'}`}>
                                                                 {otherMovies.map((movie) => (
                                                                     <a key={movie.id} href={`https://www.themoviedb.org/movie/${movie.id}`} target="_blank" rel="noreferrer" className="relative aspect-[2/3] overflow-hidden rounded-lg group bg-slate-200 dark:bg-slate-800">
                                                                         {movie.poster_path && (

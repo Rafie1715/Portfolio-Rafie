@@ -426,7 +426,7 @@ const EditProject = () => {
 
   if (initialLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
+      <div className="admin-page min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-8 sm:pt-24 pb-10">
         <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 p-10 rounded-2xl border border-gray-200 dark:border-slate-700 text-center">
           <p className="text-gray-600 dark:text-gray-300">Loading project data...</p>
         </div>
@@ -435,12 +435,12 @@ const EditProject = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
+    <div className="admin-page min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-8 sm:pt-24 pb-10">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-8">
           <button
             onClick={handleCancel}
-            className="w-10 h-10 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition flex items-center justify-center"
+            className="w-11 h-11 shrink-0 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition flex items-center justify-center"
           >
             <Icon className="fas fa-arrow-left"></Icon>
           </button>
@@ -471,7 +471,7 @@ const EditProject = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <label className="flex items-center gap-3 rounded-lg border p-4"><input type="checkbox" checked={formData.isPublished} onChange={event => { setFormData(current => ({ ...current, isPublished: event.target.checked })); setHasUnsavedChanges(true); }} />Publish this project</label>
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
               <Icon className="fas fa-pen-nib text-primary"></Icon> Project Basics
             </h2>
@@ -541,7 +541,7 @@ const EditProject = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
               <Icon className="fas fa-lightbulb text-primary"></Icon> Challenge & Solution
             </h2>
@@ -573,7 +573,7 @@ const EditProject = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-2 flex items-center gap-2">
               <Icon className="fas fa-language text-primary"></Icon> Indonesian Content
             </h2>
@@ -684,7 +684,7 @@ const EditProject = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
               <Icon className="fas fa-wrench text-primary"></Icon> Tech Stack & Features
             </h2>
@@ -703,7 +703,7 @@ const EditProject = () => {
                     }
                   }}
                   placeholder="e.g., React, Firebase, Tailwind"
-                  className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition text-sm"
+                  className="min-w-0 flex-1 px-4 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 transition text-sm"
                 />
                 <button
                   type="button"
@@ -719,9 +719,9 @@ const EditProject = () => {
                   {techItems.map((tech, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 border border-primary/30 text-primary rounded-lg text-sm"
+                      className="flex max-w-full items-center gap-2 break-words px-3 py-1.5 bg-primary/10 border border-primary/30 text-primary rounded-lg text-sm"
                     >
-                      <span>{tech}</span>
+                      <span className="min-w-0 [overflow-wrap:anywhere]">{tech}</span>
                       <button
                         type="button"
                         onClick={() => removeTechItem(idx)}
@@ -750,7 +750,7 @@ const EditProject = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-6 flex items-center gap-2">
               <Icon className="fas fa-image text-primary"></Icon> Thumbnail & Links
             </h2>
@@ -803,7 +803,7 @@ const EditProject = () => {
             </div>
           </div>
 
-          <div className="flex gap-3 sticky bottom-10">
+          <div className="flex flex-col gap-3 sm:flex-row sm:sticky sm:bottom-4 sm:rounded-xl sm:bg-gray-50/95 sm:p-2 sm:dark:bg-dark/95">
             <button
               type="button"
               onClick={handleCancel}

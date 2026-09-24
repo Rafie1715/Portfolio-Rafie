@@ -27,8 +27,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-dark">
-      <form onSubmit={handleLogin} className="p-8 bg-white dark:bg-slate-800 rounded-xl shadow-xl w-80">
+    <div className="admin-page flex min-h-[100svh] items-center justify-center px-4 py-8 bg-gray-100 dark:bg-dark">
+      <form onSubmit={handleLogin} className="w-full max-w-sm p-5 sm:p-8 bg-white dark:bg-slate-800 rounded-xl shadow-xl">
         <h2 className="text-2xl font-bold mb-6 text-center dark:text-white">Admin Login</h2>
         
         <input 

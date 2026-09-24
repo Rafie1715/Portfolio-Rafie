@@ -281,7 +281,7 @@ const AddCertification = () => {
   }, [imagePreview]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
+    <div className="admin-page min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-8 sm:pt-24 pb-10">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <Link to="/admin/certifications" className="text-gray-500 hover:text-primary mb-2 inline-block">
@@ -294,7 +294,7 @@ const AddCertification = () => {
         {success && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700">{success}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-4">English Content</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -371,7 +371,7 @@ const AddCertification = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-2">Indonesian Content</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               Auto-generated from English. You can edit before save.
@@ -430,7 +430,7 @@ const AddCertification = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl border border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-bold text-dark dark:text-white mb-4">Visual Settings</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -503,7 +503,7 @@ const AddCertification = () => {
             )}
           </div>
 
-          <div className="flex justify-end gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
             <Link
               to="/admin/certifications"
               className="px-5 py-2.5 rounded-lg border border-gray-300 dark:border-slate-600 font-semibold"

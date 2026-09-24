@@ -240,7 +240,7 @@ const WorkspacePage = () => {
               {workflowItems.map((item, index) => (
                 <motion.article key={item.key} {...revealProps} className="border-t-2 border-gray-300 pt-5 dark:border-slate-600">
                   <div className="flex items-center justify-between gap-4">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-primary shadow-sm ring-1 ring-gray-200 dark:bg-slate-800 dark:ring-slate-700">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-white text-primary shadow-sm ring-1 ring-gray-200 dark:bg-slate-800 dark:ring-slate-700">
                       {item.icon}
                     </span>
                     <span className="text-sm font-black text-gray-300 dark:text-slate-600">0{index + 1}</span>
@@ -346,7 +346,7 @@ const WorkspacePage = () => {
                         href={item.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex h-10 w-10 flex-none items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition-colors hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:text-gray-400"
+                        className="flex h-11 w-11 flex-none items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition-colors hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:text-gray-400"
                         aria-label={`${getLinkLabel(item)}: ${item.title}`}
                         title={getLinkLabel(item)}
                       >
@@ -382,13 +382,13 @@ const WorkspacePage = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={shouldReduceMotion ? undefined : { opacity: 0, y: 10, scale: 0.98 }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
-                className="relative my-auto w-full max-w-3xl overflow-hidden rounded-lg border border-white/10 bg-white shadow-2xl dark:bg-slate-900"
+                className="relative my-auto max-h-[calc(100dvh-2rem)] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-lg border border-white/10 bg-white shadow-2xl dark:bg-slate-900"
               >
                 <button
                   ref={closeButtonRef}
                   type="button"
                   onClick={() => setSelectedItem(null)}
-                  className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-lg bg-slate-950/80 text-white transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-white/70"
+                  className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-lg bg-slate-950/80 text-white transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-white/70"
                   aria-label={t('workspace.close_preview')}
                   title={t('workspace.close_preview')}
                 >

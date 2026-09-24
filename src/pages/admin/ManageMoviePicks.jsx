@@ -243,7 +243,7 @@ const ManageMoviePicks = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-24 pb-10">
+    <div className="admin-page min-h-screen bg-gray-50 dark:bg-dark px-4 md:px-8 pt-8 sm:pt-24 pb-10">
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
@@ -378,7 +378,7 @@ const ManageMoviePicks = () => {
             <p className="p-8 text-center text-gray-500">No {isWatchlist ? "watchlist items" : "picks"} yet. Add your first one above.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
+              <table className="admin-mobile-table min-w-full text-sm">
                 <thead className="bg-gray-50 dark:bg-slate-900/40">
                   <tr>
                     <th className="text-left px-4 py-3 font-semibold text-gray-600 dark:text-gray-300">TMDB ID</th>
@@ -391,7 +391,7 @@ const ManageMoviePicks = () => {
                 <tbody>
                   {picks.map((pick) => (
                     <tr key={pick.id} className="border-t border-gray-100 dark:border-slate-700/70">
-                      <td className="px-4 py-3 align-top">
+                      <td data-label="TMDB ID" className="px-4 py-3 align-top">
                         <input
                           type="number"
                           min="1"
@@ -400,7 +400,7 @@ const ManageMoviePicks = () => {
                           className="w-28 rounded-lg border border-gray-300 dark:border-slate-600 px-2.5 py-2 bg-white dark:bg-slate-900 text-dark dark:text-white"
                         />
                       </td>
-                      <td className="px-4 py-3 align-top">
+                      <td data-label="Order" className="px-4 py-3 align-top">
                         <input
                           type="number"
                           min="1"
@@ -409,7 +409,7 @@ const ManageMoviePicks = () => {
                           className="w-24 rounded-lg border border-gray-300 dark:border-slate-600 px-2.5 py-2 bg-white dark:bg-slate-900 text-dark dark:text-white"
                         />
                       </td>
-                      <td className="px-4 py-3 align-top min-w-[300px]">
+                      <td data-label="Note" className="px-4 py-3 align-top min-w-[300px]">
                         <textarea
                           value={pick.note || ""}
                           rows={2}
@@ -417,7 +417,7 @@ const ManageMoviePicks = () => {
                           className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-2.5 py-2 bg-white dark:bg-slate-900 text-dark dark:text-white"
                         />
                       </td>
-                      <td className="px-4 py-3 align-top">
+                      <td data-label="Status" className="px-4 py-3 align-top">
                         <button
                           type="button"
                           onClick={() => handleTogglePublish(pick)}
@@ -431,7 +431,7 @@ const ManageMoviePicks = () => {
                           {pick.isPublished ? "Published" : "Hidden"}
                         </button>
                       </td>
-                      <td className="px-4 py-3 align-top">
+                      <td data-label="Actions" className="px-4 py-3 align-top">
                         <div className="flex justify-end gap-2">
                           <button
                             type="button"
