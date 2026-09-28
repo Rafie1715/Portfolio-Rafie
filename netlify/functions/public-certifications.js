@@ -2,7 +2,7 @@ import { webHandler } from './_shared/webHandler.js';
 import { certifications } from '../../src/data/certifications.js';
 import { mergeCertificationCatalog } from '../../src/utils/certificationCatalog.js';
 import { getContentSource } from './_shared/projects.js';
-export const handler = async event => {
+export const handleEvent = async event => {
  const headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
  if (event.httpMethod !== 'GET') return { statusCode: 405, headers: { ...headers, Allow: 'GET' }, body: '{}' };
  try {
@@ -19,5 +19,5 @@ export const handler = async event => {
  } catch { return { statusCode: 503, headers, body: JSON.stringify({ error: 'Certifications are temporarily unavailable.' }) }; }
 };
 
-export default webHandler(handler);
+export default webHandler(handleEvent);
 export const config = { path: '/api/public-certifications', rateLimit: { windowLimit: 90, windowSize: 60, aggregateBy: ['ip', 'domain'] } };

@@ -41,7 +41,7 @@ export const createEngagementHandler = (write = persist) => async event => {
     return json(200, { ok: true });
   } catch (error) { return errorResponse(error); }
 };
-export const handler = createEngagementHandler();
+export const handleEvent = createEngagementHandler();
 export const config = { path: '/api/engagement', rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ['ip', 'domain'] } };
 
-export default webHandler(handler, 1024);
+export default webHandler(handleEvent, 1024);

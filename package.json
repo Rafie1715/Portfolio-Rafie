@@ -38,6 +38,11 @@
     "three": "^0.160.1",
     "web-vitals": "^4.2.4"
   },
+  "overrides": {
+    "jwks-rsa@4.1.0": {
+      "jose": "5.10.0"
+    }
+  },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
     "@types/react": "^18.3.3",

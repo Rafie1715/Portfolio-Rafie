@@ -1,7 +1,7 @@
 import { webHandler } from './_shared/webHandler.js';
 import { json } from './_shared/security.js';
 import { fetchUpstream } from './_shared/upstream.js';
-export const handler = async (event) => {
+export const handleEvent = async (event) => {
   if (event.httpMethod !== "GET") return json(405, { error: "Method not allowed." }, { Allow: "GET" });
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const USERNAME = "Rafie1715";
@@ -46,5 +46,5 @@ export const handler = async (event) => {
   }
 };
 
-export default webHandler(handler);
+export default webHandler(handleEvent);
 export const config = { path: '/api/github', rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ['ip', 'domain'] } };

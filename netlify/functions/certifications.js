@@ -5,7 +5,7 @@ import { json as sendJson, readJson, requireAdmin, errorResponse } from './_shar
 import { validateCertificationInput } from './_shared/certificationInput.js';
 export { isAllowedAdmin } from './_shared/security.js';
 
-export const handler = async (event) => {
+export const handleEvent = async (event) => {
   if (event.httpMethod === "OPTIONS") {
     return sendJson(200, { ok: true });
   }
@@ -109,4 +109,4 @@ export const handler = async (event) => {
 
 export const config = { path: '/api/certifications', rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ['ip', 'domain'] } };
 
-export default webHandler(handler);
+export default webHandler(handleEvent);

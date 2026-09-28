@@ -11,7 +11,7 @@ export const createProjectsHandler = (load = loadPublicProjects) => async (event
     return { statusCode: 503, headers, body: JSON.stringify({ error: 'Projects are temporarily unavailable.' }) };
   }
 };
-export const handler = createProjectsHandler();
+export const handleEvent = createProjectsHandler();
 
-export default webHandler(handler);
+export default webHandler(handleEvent);
 export const config = { path: '/api/projects', rateLimit: { windowLimit: 90, windowSize: 60, aggregateBy: ['ip', 'domain'] } };

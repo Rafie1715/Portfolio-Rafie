@@ -1,7 +1,7 @@
 import { webHandler } from './_shared/webHandler.js';
 import { json } from './_shared/security.js';
 import { fetchUpstream, parseMovieIds } from './_shared/upstream.js';
-export const handler = async (event) => {
+export const handleEvent = async (event) => {
   if (event.httpMethod !== "GET") return json(405, { error: "Method not allowed." }, { Allow: "GET" });
   let parsedIds;
   try { parsedIds = parseMovieIds(event.queryStringParameters?.ids); }
@@ -121,5 +121,5 @@ export const handler = async (event) => {
   }
 };
 
-export default webHandler(handler);
+export default webHandler(handleEvent);
 export const config = { path: '/api/movies', rateLimit: { windowLimit: 12, windowSize: 60, aggregateBy: ['ip', 'domain'] } };

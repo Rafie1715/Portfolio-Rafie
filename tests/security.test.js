@@ -5,7 +5,7 @@ import { validateCertificationInput } from '../netlify/functions/_shared/certifi
 import { uploadImage } from '../src/utils/uploadImage.js';
 import { createEngagementHandler } from '../netlify/functions/engagement.js';
 import { webHandler } from '../netlify/functions/_shared/webHandler.js';
-import { handler as movies } from '../netlify/functions/movies.js';
+import { handleEvent as movies } from '../netlify/functions/movies.js';
 import { parseMovieIds } from '../netlify/functions/_shared/upstream.js';
 import { safeUrl } from '../src/utils/safeUrl.js';
 import { mergeProjectCatalog } from '../src/utils/projectCatalog.js';
