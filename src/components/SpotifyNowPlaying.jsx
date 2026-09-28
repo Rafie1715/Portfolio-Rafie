@@ -13,7 +13,7 @@ export default function SpotifyNowPlaying() {
     const fetchNowPlaying = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/.netlify/functions/spotify');
+        const response = await fetch('/api/spotify');
         const data = await response.json();
 
         if (data.error || !data.item) {

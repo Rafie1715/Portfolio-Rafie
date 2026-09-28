@@ -7,23 +7,24 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   const { auth, loading } = useFirebaseInit('auth');
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (!auth) return;
+    if (!auth || submitting) return;
+    setSubmitting(true);
+    setError(false);
     
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("Logged in:", user);
+      .then(() => {
         navigate("/admin/dashboard");
       })
-      .catch((error) => {
+      .catch(() => {
         setError(true);
-        console.error("Error:", error.message);
-      });
+      })
+      .finally(() => setSubmitting(false));
   };
 
   return (
@@ -33,12 +34,18 @@ const Login = () => {
         
         <input 
           type="email" 
+          autoComplete="username"
+          aria-label="Email"
+          required
           placeholder="Email" 
           className="w-full mb-4 p-2 border rounded dark:bg-slate-700 dark:text-white"
           onChange={e => setEmail(e.target.value)}
         />
         <input 
           type="password" 
+          autoComplete="current-password"
+          aria-label="Password"
+          required
           placeholder="Password" 
           className="w-full mb-6 p-2 border rounded dark:bg-slate-700 dark:text-white"
           onChange={e => setPassword(e.target.value)}
@@ -48,10 +55,10 @@ const Login = () => {
         
         <button
           type="submit"
-          disabled={!auth || loading}
+          disabled={!auth || loading || submitting}
           className="w-full bg-primary text-white py-2 rounded font-bold hover:bg-secondary transition disabled:cursor-wait disabled:opacity-60"
         >
-          {loading ? "Preparing login..." : "Login"}
+          {loading ? "Preparing login..." : submitting ? "Signing in..." : "Login"}
         </button>
       </form>
     </div>

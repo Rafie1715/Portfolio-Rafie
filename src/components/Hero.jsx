@@ -7,6 +7,7 @@ import { MapPin, BriefcaseBusiness, Layers, Code2, Download, Send } from 'lucide
 import { trackCTAClick, trackExternalLink } from '../utils/analytics';
 
 import HeroLightBackground from './HeroLightBackground';
+import PersonalMark from './PersonalMark';
 
 const TypewriterLine = ({ phrases, prefix, accessibleText, reduceMotion, active }) => {
   const safePhrases = Array.isArray(phrases) && phrases.length > 0 ? phrases : [''];
@@ -159,13 +160,16 @@ const Hero = ({ recruiterLens = 'overview' }) => {
         initial="hidden"
         animate="visible"
       >
-        <motion.figure variants={itemVariants} className="mb-3 sm:mb-5 rounded-full bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 p-1 shadow-lg shadow-blue-500/15">
+        <motion.figure variants={itemVariants} className="relative mb-3 sm:mb-5 rounded-full bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 p-1 shadow-lg shadow-blue-500/15">
           <img
             src="/images/profile.webp"
             alt={t('home.about_snapshot.photo_alt')}
             width="144" height="144" fetchPriority="high" decoding="async"
             className="size-24 rounded-full border-4 border-white object-cover object-[center_25%] dark:border-slate-900 sm:size-28 lg:size-36"
           />
+          <span className="absolute -bottom-1 -right-3 rounded-md border border-blue-200 bg-white px-1.5 py-0.5 text-blue-600 shadow-sm dark:border-slate-600 dark:bg-slate-900 dark:text-blue-400" aria-hidden="true">
+            <PersonalMark className="h-5 w-10" />
+          </span>
         </motion.figure>
 
         <motion.p variants={itemVariants} className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-gray-500 dark:text-gray-400 mb-2 md:mb-3 px-2">

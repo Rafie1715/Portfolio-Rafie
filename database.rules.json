@@ -1,0 +1,10 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "visitors": { ".read": true },
+    "project_likes": {
+      "$projectId": { ".read": true }
+    }
+  }
+}

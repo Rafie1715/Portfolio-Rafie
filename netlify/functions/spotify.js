@@ -1,4 +1,8 @@
-export const handler = async () => {
+import { webHandler } from './_shared/webHandler.js';
+import { json } from './_shared/security.js';
+import { fetchUpstream } from './_shared/upstream.js';
+export const handler = async (event) => {
+  if (event.httpMethod !== "GET") return json(405, { error: "Method not allowed." }, { Allow: "GET" });
   const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
 
   if (!refreshToken) {
@@ -6,7 +10,7 @@ export const handler = async () => {
       statusCode: 503,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'X-Content-Type-Options': 'nosniff',
       },
       body: JSON.stringify({
         error: 'Spotify refresh token not configured',
@@ -16,7 +20,7 @@ export const handler = async () => {
 
   try {
     // Get new access token using refresh token
-    const authResponse = await fetch('https://accounts.spotify.com/api/token', {
+    const authResponse = await fetchUpstream('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -24,19 +28,19 @@ export const handler = async () => {
       body: new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
-        client_id: (process.env.SPOTIFY_CLIENT_ID || process.env.VITE_SPOTIFY_CLIENT_ID),
-        client_secret: (process.env.SPOTIFY_CLIENT_SECRET || process.env.VITE_SPOTIFY_CLIENT_SECRET),
+        client_id: process.env.SPOTIFY_CLIENT_ID,
+        client_secret: process.env.SPOTIFY_CLIENT_SECRET,
       }).toString(),
     });
 
     if (!authResponse.ok) {
-      const error = await authResponse.json();
-      console.error('Spotify auth error:', error);
+
+
       return {
         statusCode: 503,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          'X-Content-Type-Options': 'nosniff',
         },
         body: JSON.stringify({
           error: 'Failed to refresh Spotify token',
@@ -48,7 +52,7 @@ export const handler = async () => {
     const { access_token } = await authResponse.json();
 
     // Get currently playing track
-    const currentlyPlayingResponse = await fetch(
+    const currentlyPlayingResponse = await fetchUpstream(
       'https://api.spotify.com/v1/me/player/currently-playing',
       {
         headers: {
@@ -60,7 +64,7 @@ export const handler = async () => {
     // Handle 204 No Content (nothing playing)
     if (currentlyPlayingResponse.status === 204) {
       // Try to get last played track
-      const recentlyPlayedResponse = await fetch(
+      const recentlyPlayedResponse = await fetchUpstream(
         'https://api.spotify.com/v1/me/player/recently-played?limit=1',
         {
           headers: {
@@ -72,9 +76,10 @@ export const handler = async () => {
       if (!recentlyPlayedResponse.ok) {
         return {
           statusCode: 200,
-          headers: {
+        headers: {
+          'Cache-Control': 'public, max-age=15, s-maxage=30',
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            'X-Content-Type-Options': 'nosniff',
           },
           body: JSON.stringify({
             error: 'Not playing anything',
@@ -89,8 +94,9 @@ export const handler = async () => {
       return {
         statusCode: 200,
         headers: {
+          'Cache-Control': 'public, max-age=15, s-maxage=30',
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          'X-Content-Type-Options': 'nosniff',
         },
         body: JSON.stringify({
           item: lastTrack.track,
@@ -107,19 +113,20 @@ export const handler = async () => {
 
     return {
       statusCode: 200,
-      headers: {
+        headers: {
+          'Cache-Control': 'public, max-age=15, s-maxage=30',
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'X-Content-Type-Options': 'nosniff',
       },
       body: JSON.stringify(data),
     };
-  } catch (error) {
-    console.error('Spotify error:', error);
+  } catch {
+
     return {
       statusCode: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'X-Content-Type-Options': 'nosniff',
       },
       body: JSON.stringify({
         error: 'Failed to fetch Spotify data',
@@ -127,3 +134,6 @@ export const handler = async () => {
     };
   }
 };
+
+export default webHandler(handler);
+export const config = { path: '/api/spotify', rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ['ip', 'domain'] } };

@@ -1,15 +1,19 @@
-export const handler = async () => {
-  const GITHUB_TOKEN = (process.env.GITHUB_TOKEN || process.env.VITE_GITHUB_TOKEN);
-  const USERNAME = "Rafie1715"; 
+import { webHandler } from './_shared/webHandler.js';
+import { json } from './_shared/security.js';
+import { fetchUpstream } from './_shared/upstream.js';
+export const handler = async (event) => {
+  if (event.httpMethod !== "GET") return json(405, { error: "Method not allowed." }, { Allow: "GET" });
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  const USERNAME = "Rafie1715";
 
   if (!GITHUB_TOKEN) {
-    return { statusCode: 500, body: JSON.stringify({ error: "Missing GitHub Token" }) };
+    return json(503, { error: 'Service temporarily unavailable.' });
   }
 
   const url = `https://api.github.com/users/${USERNAME}/repos?sort=updated&per_page=100&type=owner`;
 
   try {
-    const response = await fetch(url, {
+    const response = await fetchUpstream(url, {
       headers: {
         Authorization: `token ${GITHUB_TOKEN}`,
         "Content-Type": "application/json",
@@ -23,21 +27,24 @@ export const handler = async () => {
     const repos = await response.json();
 
     const portfolioRepos = repos
-      .filter(repo => 
-        !repo.fork &&         
-        !repo.private         
+      .filter(repo =>
+        !repo.fork &&
+        !repo.private
       )
-      .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at)) 
+      .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
       .slice(0, 6);
 
     return {
       statusCode: 200,
-      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+      headers: { 'X-Content-Type-Options': 'nosniff', 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=60, s-maxage=300' },
       body: JSON.stringify(portfolioRepos),
     };
 
-  } catch (error) {
-    console.error(error);
-    return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
+  } catch {
+
+    return json(502, { error: 'Service temporarily unavailable.' });
   }
 };
+
+export default webHandler(handler);
+export const config = { path: '/api/github', rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ['ip', 'domain'] } };

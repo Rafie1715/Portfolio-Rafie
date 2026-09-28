@@ -21,7 +21,7 @@ export default function SpotifyTopTracks() {
     const fetchTopTracks = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/.netlify/functions/spotify-top?time_range=${timeRange}`);
+        const response = await fetch(`/api/spotify-top?time_range=${timeRange}`);
         const data = await response.json();
 
         if (data.error || !data.items) {

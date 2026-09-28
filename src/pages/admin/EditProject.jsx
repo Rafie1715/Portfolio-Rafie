@@ -1,3 +1,4 @@
+import { uploadImage } from '../../utils/uploadImage';
 import Icon from '../../components/Icon';
 import { useState, useEffect, useRef } from "react";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
@@ -46,8 +47,6 @@ const EditProject = () => {
     isPublished: true,
   });
 
-  const CLOUD_NAME = "djchoocal";
-  const UPLOAD_PRESET = "rafie_portfolio";
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
   const getLocalizedText = (value) => {
@@ -253,8 +252,7 @@ const EditProject = () => {
 
   const isValidUrl = (url) => {
     try {
-      new URL(url);
-      return true;
+      return ['https:', 'http:'].includes(new URL(url).protocol);
     } catch {
       return false;
     }
@@ -263,33 +261,7 @@ const EditProject = () => {
   const uploadImageIfNeeded = async () => {
     if (!formData.imageFile) return formData.currentImage || "";
 
-    const imgFormData = new FormData();
-    imgFormData.append("file", formData.imageFile);
-    imgFormData.append("upload_preset", UPLOAD_PRESET);
-
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`);
-
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const progress = Math.round((event.loaded / event.total) * 100);
-          setUploadProgress(progress);
-        }
-      };
-
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          const response = JSON.parse(xhr.responseText);
-          resolve(response.secure_url);
-        } else {
-          reject(new Error("Image upload failed"));
-        }
-      };
-
-      xhr.onerror = () => reject(new Error("Network error during upload"));
-      xhr.send(imgFormData);
-    });
+    return uploadImage({ file: formData.imageFile, onProgress: setUploadProgress });
   };
 
   const handleSubmit = async (e) => {
@@ -770,7 +742,7 @@ const EditProject = () => {
                       <p className="text-sm text-gray-600 dark:text-gray-400">Click to upload</p>
                     </div>
                   )}
-                  <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                  <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageChange} className="hidden" />
                 </label>
                 <p className="text-xs text-gray-500 mt-2">Leave image empty if you want to keep the current thumbnail.</p>
               </div>

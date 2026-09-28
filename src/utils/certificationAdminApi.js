@@ -1,4 +1,4 @@
-const CERTIFICATIONS_FUNCTION_URL = "/.netlify/functions/certifications";
+const CERTIFICATIONS_FUNCTION_URL = "/api/certifications";
 
 const normalizeResponseError = async (response) => {
   try {

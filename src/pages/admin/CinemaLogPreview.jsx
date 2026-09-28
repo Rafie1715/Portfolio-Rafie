@@ -11,7 +11,7 @@ const CinemaLogPreview = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch('/.netlify/functions/movies');
+        const response = await fetch('/api/movies');
         const data = await response.json();
         if (Array.isArray(data)) setMovies(data);
       } catch (error) {

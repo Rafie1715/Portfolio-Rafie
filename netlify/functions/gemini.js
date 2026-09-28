@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { readBoundedBody } from './_shared/webHandler.js';
 import {
   buildPortfolioSystemInstruction,
   getSuggestedActionIds,
@@ -65,6 +66,13 @@ export default async (request) => {
     }, { Allow: "POST" });
   }
 
+  if (request.headers.get('sec-fetch-site') === 'cross-site') {
+    return jsonResponse(403, { error: { code: 'forbidden', message: 'Cross-site request denied.' } });
+  }
+  if (!/^application\/json(?:\s*;|$)/i.test(request.headers.get('content-type') || '')) {
+    return jsonResponse(415, { error: { code: 'invalid_input', message: 'JSON content type required.' } });
+  }
+
   const declaredLength = Number(request.headers.get("content-length") || 0);
   if (declaredLength > MAX_BODY_LENGTH) {
     return jsonResponse(413, {
@@ -74,12 +82,13 @@ export default async (request) => {
 
   let payload;
   try {
-    const rawBody = await request.text();
+    const rawBody = await readBoundedBody(request, MAX_BODY_LENGTH);
     if (!rawBody || rawBody.length > MAX_BODY_LENGTH) {
       return invalidInput("A JSON request body is required.");
     }
     payload = JSON.parse(rawBody);
-  } catch {
+  } catch (error) {
+    if (error?.status === 413) return jsonResponse(413, { error: { code: 'payload_too_large', message: 'Request body is too large.' } });
     return invalidInput("The request body must be valid JSON.");
   }
 
@@ -136,10 +145,7 @@ export default async (request) => {
       || error?.name === "RequestTimeoutError"
       || /timed?\s*out|timeout/i.test(error?.message || "");
 
-    console.error("Gemini request failed", {
-      name: error?.name || "Error",
-      message: error?.message || "Unknown provider error",
-    });
+    console.error('Gemini request failed:', timedOut ? 'timeout' : 'provider_error');
 
     return jsonResponse(timedOut ? 504 : 502, {
       error: {

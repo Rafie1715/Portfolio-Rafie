@@ -1,12 +1,20 @@
+import { recordEngagement } from '../utils/engagementApi';
 import Icon from './Icon';
 import { useEffect, useState } from "react";
 import { useFirebaseInit } from "../hooks/useFirebaseInit";
-import { ref, onValue, runTransaction } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import { motion, AnimatePresence } from "framer-motion";
+
+function readLikes() {
+  try { const value = JSON.parse(localStorage.getItem('liked_projects') || '[]'); return Array.isArray(value) ? value : []; }
+  catch { return []; }
+}
 
 const LikeButton = ({ projectId }) => {
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const [showHeart, setShowHeart] = useState(false);
   const { db } = useFirebaseInit('db');
 
@@ -19,7 +27,7 @@ const LikeButton = ({ projectId }) => {
     });
 
     const checkLocalLike = () => {
-        const likedProjects = JSON.parse(localStorage.getItem("liked_projects") || "[]");
+        const likedProjects = readLikes();
         setIsLiked(likedProjects.includes(projectId));
     };
 
@@ -28,38 +36,26 @@ const LikeButton = ({ projectId }) => {
     return () => unsubscribe();
   }, [projectId, db]);
 
-  const handleLike = () => {
-    if (!db) return; // Safety check
-
-    const likesRef = ref(db, `project_likes/${projectId}`);
-    const likedProjects = JSON.parse(localStorage.getItem("liked_projects") || "[]");
-
-    if (isLiked) {
-        const updatedStorage = likedProjects.filter(id => id !== projectId);
-        localStorage.setItem("liked_projects", JSON.stringify(updatedStorage));
-        runTransaction(likesRef, (currentLikes) => {
-            return (currentLikes || 0) > 0 ? (currentLikes || 0) - 1 : 0;
-        });
-
-        setIsLiked(false);
-
-    } else {
-        likedProjects.push(projectId);
-        localStorage.setItem("liked_projects", JSON.stringify(likedProjects));
-        runTransaction(likesRef, (currentLikes) => {
-            return (currentLikes || 0) + 1;
-        });
-
-        setIsLiked(true);
-        setShowHeart(true);
-        setTimeout(() => setShowHeart(false), 1000);
-    }
+  const handleLike = async () => {
+    if (!db || saving) return;
+    setSaving(true); setError('');
+    try {
+      await recordEngagement({ action: 'like', projectId, delta: isLiked ? -1 : 1 });
+      const stored = readLikes().filter(id => id !== projectId);
+      if (!isLiked) stored.push(projectId);
+      try { localStorage.setItem('liked_projects', JSON.stringify(stored)); } catch { /* Storage may be disabled. */ }
+      setIsLiked(!isLiked);
+      if (!isLiked) { setShowHeart(true); setTimeout(() => setShowHeart(false), 1000); }
+    } catch { setError('Unable to save. Please retry.'); }
+    finally { setSaving(false); }
   };
 
   return (
     <div className="relative inline-block">
         <motion.button
             onClick={handleLike}
+            disabled={saving}
+            aria-pressed={isLiked}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all shadow-sm ${
@@ -78,6 +74,7 @@ const LikeButton = ({ projectId }) => {
             </span>
         </motion.button>
 
+        {error && <p role="status" className="mt-2 text-xs text-red-500">{error}</p>}
         <AnimatePresence>
             {showHeart && (
                 <motion.div

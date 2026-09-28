@@ -15,26 +15,13 @@ Check it out live here: [**https://rafierb.me**](https://rafierb.me)
 - **Backend:** Netlify Functions (Serverless)
 - **Deployment:** Netlify
 
-## 🔐 Admin Security Setup
-- Add an email allowlist in your `.env` file:
-	- `VITE_ADMIN_EMAILS=your-admin@email.com,another-admin@email.com`
-- Frontend admin routes now check authenticated users against this allowlist.
-- Backend write access must still be protected by Firestore Rules.
+## Admin security
 
-### Firestore Rules
-- A template rules file is included at `firestore.rules`.
-- The rules support three admin checks:
-	- custom claim `admin: true` (recommended)
-	- verified admin email allowlist
-	- optional UID allowlist fallback
-- Deploy rules with Firebase CLI:
-	- `firebase deploy --only firestore:rules`
-- Public users can still read projects, but create/update/delete is admin-only.
+Use a Firebase custom claim `admin: true` for the owner account. Firestore Rules require this claim; an email allowlist in the UI alone does not grant database permissions.
 
-### Recommended (Custom Claim)
-- Set custom claim for your admin account using Firebase Admin SDK:
-	- `admin.auth().setCustomUserClaims(uid, { admin: true })`
-- After setting claim, logout/login once so the new token is used.
+Follow [the security review and deployment steps](docs/SECURITY_REVIEW.md) before deploying these changes. They cover the chosen unsigned Cloudinary upload tradeoff, server-only environment variables, admin role checks, and both Firebase rule sets.
+
+Public project and certification data is served through filtered catalog APIs. Direct CMS access is restricted to administrators. Public counters and reaction scores are written through a validated, rate-limited server endpoint.
 
 ## 📸 Screenshots
 <img width="1919" height="904" alt="image" src="https://github.com/user-attachments/assets/84d41166-06b5-408b-ab89-82ef985fe8e8" />

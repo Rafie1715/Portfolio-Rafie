@@ -1,28 +1,9 @@
+import { webHandler } from './_shared/webHandler.js';
 import { getAdminApp } from './_shared/admin.js';
-import { allowsAdmin } from '../../src/utils/adminPolicy.js';
-import { getAuth } from 'firebase-admin/auth';
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
-
-const parseAllowlist = () => {
-  const raw = process.env.ADMIN_EMAILS || process.env.VITE_ADMIN_EMAILS || "";
-  return raw
-    .split(",")
-    .map((email) => String(email || "").trim().toLowerCase())
-    .filter(Boolean);
-};
-
-const sendJson = (statusCode, body) => ({
-  statusCode,
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(body),
-});
-
-export const isAllowedAdmin = (decodedToken) => allowsAdmin({ claims: decodedToken, email: decodedToken?.email, emailVerified: decodedToken?.email_verified }, parseAllowlist());
+import { json as sendJson, readJson, requireAdmin, errorResponse } from './_shared/security.js';
+import { validateCertificationInput } from './_shared/certificationInput.js';
+export { isAllowedAdmin } from './_shared/security.js';
 
 export const handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
@@ -34,26 +15,12 @@ export const handler = async (event) => {
   }
 
   try {
-    const authHeader = event.headers.authorization || event.headers.Authorization || "";
-    if (!authHeader.startsWith("Bearer ")) {
-      return sendJson(401, { error: "Missing authorization token.", code: "unauthenticated" });
-    }
-
-    const idToken = authHeader.slice("Bearer ".length).trim();
-    if (!idToken) {
-      return sendJson(401, { error: "Missing authorization token.", code: "unauthenticated" });
-    }
-
+    const body = validateCertificationInput(readJson(event));
+    await requireAdmin(event);
     const app = getAdminApp();
-    const decodedToken = await getAuth(app).verifyIdToken(idToken);
-
-    if (!isAllowedAdmin(decodedToken)) {
-      return sendJson(403, { error: "Account is not allowed to write certifications.", code: "permission-denied" });
-    }
 
     const db = getFirestore(app);
     const now = FieldValue.serverTimestamp();
-    const body = event.body ? JSON.parse(event.body) : {};
     const { action, id, payload = {}, ids = [], items = [] } = body;
 
     if (action === "create") {
@@ -136,10 +103,10 @@ export const handler = async (event) => {
 
     return sendJson(400, { error: "Unsupported action.", code: "invalid-argument" });
   } catch (error) {
-    console.error("certifications function error:", error);
-    return sendJson(500, {
-      error: error?.message || "Internal server error.",
-      code: error?.code || "internal",
-    });
+    return errorResponse(error);
   }
 };
+
+export const config = { path: '/api/certifications', rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ['ip', 'domain'] } };
+
+export default webHandler(handler);

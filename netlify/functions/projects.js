@@ -1,3 +1,4 @@
+import { webHandler } from './_shared/webHandler.js';
 import { getContentSource, loadPublicProjects } from './_shared/projects.js';
 
 export const createProjectsHandler = (load = loadPublicProjects) => async (event) => {
@@ -11,3 +12,6 @@ export const createProjectsHandler = (load = loadPublicProjects) => async (event
   }
 };
 export const handler = createProjectsHandler();
+
+export default webHandler(handler);
+export const config = { path: '/api/projects', rateLimit: { windowLimit: 90, windowSize: 60, aggregateBy: ['ip', 'domain'] } };

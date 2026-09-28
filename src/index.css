@@ -9,6 +9,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Project notes are revealed on demand, keeping the familiar card layout. */
+.project-build-note-paper {
+  background-color: #f0f6ff;
+  background-image: repeating-linear-gradient(transparent, transparent 23px, #2563eb0a 23px, #2563eb0a 24px);
+  border-left: 2px solid #60a5fa;
+}
+.dark .project-build-note-paper { background-color: #17253b; }
+
 /* Reduce Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *,

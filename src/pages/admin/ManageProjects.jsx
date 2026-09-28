@@ -8,7 +8,7 @@ import { useToast } from "../../hooks/useToast";
 const ManageProjects = () => {
   const [cmsProjects, setCmsProjects] = useState([]);
   const [contentSource, setContentSource] = useState('');
-  useEffect(() => { fetch('/.netlify/functions/projects').then(response => response.json()).then(data => setContentSource(data.source || '')).catch(() => {}); }, []);
+  useEffect(() => { fetch('/api/projects').then(response => response.json()).then(data => setContentSource(data.source || '')).catch(() => {}); }, []);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [deletingId, setDeletingId] = useState("");

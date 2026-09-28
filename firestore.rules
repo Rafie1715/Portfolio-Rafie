@@ -10,35 +10,22 @@ service cloud.firestore {
       return isSignedIn() && request.auth.token.admin == true;
     }
 
-    // Fallback: allow verified admin emails while claims are not yet configured.
-    function hasAdminEmail() {
-      return isSignedIn()
-        && request.auth.token.email_verified == true
-        && request.auth.token.email != null
-        && request.auth.token.email in [
-          "admin@rafie.com"
-        ];
-    }
-
-    // Optional UID allowlist fallback.
+    // Do not grant database privileges to a hardcoded email/domain.
+    // Assign { admin: true } using the owner-only recovery script before deploying rules.
     function isAdmin() {
-      return hasAdminClaim()
-        || hasAdminEmail()
-        || (isSignedIn() && request.auth.uid in [
-          // "REPLACE_WITH_ADMIN_UID_1",
-          // "REPLACE_WITH_ADMIN_UID_2"
-        ]);
+      return hasAdminClaim();
     }
 
-    // Public portfolio read access.
+    // Public catalogs are served by Functions with publication/field filtering.
+    // Direct reads would expose every field of a published CMS document.
     match /projects/{projectId} {
-      allow read: if isAdmin() || resource.data.isPublished == true;
+      allow read: if isAdmin();
       allow create, update, delete: if isAdmin();
     }
 
-    // Public certification read access + admin CMS write access.
+    // Certification public reads also go through the filtered catalog API.
     match /certifications/{certificationId} {
-      allow read: if isAdmin() || resource.data.isPublished == true;
+      allow read: if isAdmin();
       allow create, update, delete: if isAdmin();
     }
 
@@ -57,15 +44,8 @@ service cloud.firestore {
     // Public AFK reaction leaderboard.
     match /reactionScores/{scoreId} {
       allow read: if true;
-      allow create: if request.resource.data.keys().hasOnly(['score', 'createdAt', 'source', 'initials'])
-        && request.resource.data.score is int
-        && request.resource.data.score >= 0
-        && request.resource.data.score <= 5000
-        && request.resource.data.createdAt is timestamp
-        && request.resource.data.source == 'afk-reaction-time'
-        && request.resource.data.initials is string
-        && request.resource.data.initials.size() >= 1
-        && request.resource.data.initials.size() <= 4;
+      // Writes go through the validated, rate-limited engagement function.
+      allow create: if false;
       allow update, delete: if false;
     }
 

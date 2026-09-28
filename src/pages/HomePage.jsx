@@ -11,6 +11,7 @@ import LivingTechStack from '../components/LivingTechStack';
 import { blogs } from '../data/blogs';
 import BlogCard from '../components/BlogCard';
 import SpotlightCard from '../components/SpotlightCard';
+import ProjectBuildNote from '../components/ProjectBuildNote';
 import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
@@ -257,6 +258,8 @@ const HomePage = () => {
                           </p>
                         </div>
                       )}
+
+                      <ProjectBuildNote project={project} />
 
                       <Link
                         to={`/project/${project.id}`}

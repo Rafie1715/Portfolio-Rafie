@@ -1,3 +1,5 @@
+import { fetchMovieDetails } from '../utils/movieApi';
+import { recordEngagement } from '../utils/engagementApi';
 import Icon from '../components/Icon';
 import { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -5,7 +7,7 @@ import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { useFirebaseInit } from '../hooks/useFirebaseInit';
-import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, limit, where } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, limit, where } from 'firebase/firestore';
 
 const SpotifyNowPlaying = lazy(() => import('../components/SpotifyNowPlaying'));
 const SpotifyTopTracks = lazy(() => import('../components/SpotifyTopTracks'));
@@ -137,7 +139,7 @@ const AfkPage = () => {
         const fetchOther = async () => {
             try {
                 setLoadingMovies(true);
-                const moviesRes = await fetch('/.netlify/functions/movies');
+                const moviesRes = await fetch('/api/movies');
                 const moviesText = await moviesRes.text();
                 const moviesData = moviesText ? JSON.parse(moviesText) : [];
                 const legacyMovies = Array.isArray(moviesData) ? moviesData : [];
@@ -163,10 +165,7 @@ const AfkPage = () => {
                     return;
                 }
 
-                const movieIds = picks.map((item) => item.movieId).join(',');
-                const detailRes = await fetch(`/.netlify/functions/movies?ids=${movieIds}`);
-                const detailText = await detailRes.text();
-                const detailData = detailText ? JSON.parse(detailText) : [];
+                const detailData = await fetchMovieDetails(picks.map(item => item.movieId));
                 const adminMovies = Array.isArray(detailData) ? detailData : [];
 
                 if (adminMovies.length === 0) {
@@ -221,9 +220,7 @@ const AfkPage = () => {
                     return;
                 }
 
-                const movieIds = items.map((item) => item.movieId).join(',');
-                const detailRes = await fetch(`/.netlify/functions/movies?ids=${movieIds}`);
-                const detailData = await detailRes.json();
+                const detailData = await fetchMovieDetails(items.map(item => item.movieId));
 
                 const movieMap = new Map(
                     (Array.isArray(detailData) ? detailData : [])
@@ -420,14 +417,14 @@ const AfkPage = () => {
 
             const entry = {
                 score: elapsed,
-                createdAt: serverTimestamp(),
+
                 source: 'afk-reaction-time',
                 initials: getReactionInitials(),
             };
 
             if (dbFirestore) {
                 try {
-                    await addDoc(collection(dbFirestore, 'reactionScores'), entry);
+                    await recordEngagement({ action: 'reaction', score: entry.score, initials: entry.initials });
                     setReactionSaved(true);
 
                     const leaderboardQuery = query(

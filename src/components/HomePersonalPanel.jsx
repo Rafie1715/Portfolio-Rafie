@@ -42,7 +42,7 @@ const HomePersonalPanel = () => {
     }
 
     try {
-      const response = await fetch('/.netlify/functions/spotify-top?time_range=medium_term', { signal });
+      const response = await fetch('/api/spotify-top?time_range=medium_term', { signal });
       const contentType = response.headers.get('content-type') || '';
 
       if (!response.ok || !contentType.includes('application/json')) {

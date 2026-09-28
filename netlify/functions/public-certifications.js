@@ -1,3 +1,4 @@
+import { webHandler } from './_shared/webHandler.js';
 import { certifications } from '../../src/data/certifications.js';
 import { mergeCertificationCatalog } from '../../src/utils/certificationCatalog.js';
 import { getContentSource } from './_shared/projects.js';
@@ -17,3 +18,6 @@ export const handler = async event => {
   return { statusCode: 200, headers, body: JSON.stringify({ certifications: mergeCertificationCatalog(certifications, cms) }) };
  } catch { return { statusCode: 503, headers, body: JSON.stringify({ error: 'Certifications are temporarily unavailable.' }) }; }
 };
+
+export default webHandler(handler);
+export const config = { path: '/api/public-certifications', rateLimit: { windowLimit: 90, windowSize: 60, aggregateBy: ['ip', 'domain'] } };

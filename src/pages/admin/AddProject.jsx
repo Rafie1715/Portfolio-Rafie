@@ -1,3 +1,4 @@
+import { uploadImage } from '../../utils/uploadImage';
 import Icon from '../../components/Icon';
 import { useState, useEffect, useRef } from "react";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
@@ -41,8 +42,6 @@ const AddProject = () => {
     imageFile: null,
   });
 
-  const CLOUD_NAME = "djchoocal";
-  const UPLOAD_PRESET = "rafie_portfolio";
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
   const handleInputChange = (e) => {
@@ -157,8 +156,7 @@ const AddProject = () => {
 
   const isValidUrl = (url) => {
     try {
-      new URL(url);
-      return true;
+      return ['https:', 'http:'].includes(new URL(url).protocol);
     } catch {
       return false;
     }
@@ -182,33 +180,7 @@ const AddProject = () => {
     setLoading(true);
 
     try {
-      const imgFormData = new FormData();
-      imgFormData.append("file", formData.imageFile);
-      imgFormData.append("upload_preset", UPLOAD_PRESET);
-
-      const imageUrl = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`);
-
-        xhr.upload.onprogress = (event) => {
-          if (event.lengthComputable) {
-            const progress = Math.round((event.loaded / event.total) * 100);
-            setUploadProgress(progress);
-          }
-        };
-
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            resolve(response.secure_url);
-          } else {
-            reject("Image upload failed");
-          }
-        };
-
-        xhr.onerror = () => reject("Network error during upload");
-        xhr.send(imgFormData);
-      });
+      const imageUrl = await uploadImage({ file: formData.imageFile, onProgress: setUploadProgress });
 
       const techArray = techItems.map((name) => ({
         name: name.trim(),
@@ -681,7 +653,7 @@ const AddProject = () => {
                   )}
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp"
                     onChange={handleImageChange}
                     className="hidden"
                   />

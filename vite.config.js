@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react'
 Object.assign(process.env, loadEnv(process.env.NODE_ENV || 'development', process.cwd(), ''));
 const publicCatalog = () => {
   const mount = server => { server.middlewares.use(async (request, response, next) => {
-    const handlers = { '/.netlify/functions/projects': projectHandler, '/.netlify/functions/public-certifications': certificationHandler };
+    const handlers = { '/api/projects': projectHandler, '/api/public-certifications': certificationHandler };
     const handler = handlers[request.url?.split('?')[0]];
     if (!handler) return next();
     const result = await handler({ httpMethod: request.method });
@@ -16,6 +16,14 @@ const publicCatalog = () => {
 };
 // https://vite.dev/config/
 export default defineConfig({
+  // Only these deliberately public values may enter the browser bundle.
+  // In particular, legacy VITE_* server secrets are no longer exposed automatically.
+  envPrefix: [],
+  define: Object.fromEntries([
+    'VITE_FIREBASE_API_KEY', 'VITE_FIREBASE_AUTH_DOMAIN', 'VITE_FIREBASE_DATABASE_URL',
+    'VITE_FIREBASE_PROJECT_ID', 'VITE_FIREBASE_STORAGE_BUCKET', 'VITE_FIREBASE_MESSAGING_SENDER_ID',
+    'VITE_FIREBASE_APP_ID', 'VITE_FIREBASE_MEASUREMENT_ID', 'VITE_GA_ID', 'VITE_ADMIN_EMAILS',
+  ].map(name => [`import.meta.env.${name}`, JSON.stringify(process.env[name] || '')])),
   plugins: [react(), publicCatalog()],
   server: {
     proxy: {
@@ -23,10 +31,10 @@ export default defineConfig({
         target: 'http://localhost:9999',
         changeOrigin: true,
       },
-      '/api/chat': {
+      '/api': {
         target: 'http://localhost:9999',
         changeOrigin: true,
-        rewrite: () => '/.netlify/functions/gemini',
+        rewrite: path => path === '/api/chat' ? '/.netlify/functions/gemini' : path.replace('/api/', '/.netlify/functions/'),
       },
     },
   },

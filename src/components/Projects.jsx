@@ -326,7 +326,7 @@ const Projects = () => {
     const fetchRepos = async () => {
       setGithubState('loading');
       try {
-        const response = await fetch('/.netlify/functions/github', { signal: controller.signal });
+        const response = await fetch('/api/github', { signal: controller.signal });
         if (!response.ok) throw new Error(`GitHub request failed with ${response.status}`);
         const data = await response.json();
         setRepos(Array.isArray(data) ? data.slice(0, 3) : []);

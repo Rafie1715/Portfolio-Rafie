@@ -1,3 +1,4 @@
+import { uploadImage } from '../../utils/uploadImage';
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
@@ -42,8 +43,6 @@ const EditCertification = () => {
     alt: "",
   });
 
-  const CLOUD_NAME = "djchoocal";
-  const UPLOAD_PRESET = "rafie_portfolio";
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
   const getText = (value) => {
@@ -206,33 +205,7 @@ const EditCertification = () => {
       let imageUrl = formData.currentImage;
 
       if (formData.imageFile) {
-        const imgFormData = new FormData();
-        imgFormData.append("file", formData.imageFile);
-        imgFormData.append("upload_preset", UPLOAD_PRESET);
-
-        imageUrl = await new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open("POST", `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`);
-
-          xhr.upload.onprogress = (event) => {
-            if (event.lengthComputable) {
-              const progress = Math.round((event.loaded / event.total) * 100);
-              setUploadProgress(progress);
-            }
-          };
-
-          xhr.onload = () => {
-            if (xhr.status === 200) {
-              const response = JSON.parse(xhr.responseText);
-              resolve(response.secure_url);
-            } else {
-              reject("Image upload failed");
-            }
-          };
-
-          xhr.onerror = () => reject("Network error during upload");
-          xhr.send(imgFormData);
-        });
+        imageUrl = await uploadImage({ file: formData.imageFile, onProgress: setUploadProgress });
       }
 
       const payload = {
@@ -549,7 +522,7 @@ const EditCertification = () => {
               <label className="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-300">Replace Thumbnail</label>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp"
                 onChange={handleImageChange}
                 className="w-full text-sm text-gray-600 dark:text-gray-300"
               />

@@ -11,7 +11,7 @@ export function useProjects() {
     const load = async () => {
       setState({ projects: [], loading: true, error: false });
       try {
-        const response = await fetch('/.netlify/functions/projects', { signal: controller.signal, cache: 'no-store' });
+        const response = await fetch('/api/projects', { signal: controller.signal, cache: 'no-store' });
         if (!response.ok) throw new Error('Project catalog unavailable');
         const data = await response.json();
         if (!Array.isArray(data.projects)) throw new Error('Invalid project catalog');

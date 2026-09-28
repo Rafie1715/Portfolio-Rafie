@@ -1,6 +1,7 @@
+import { recordEngagement } from '../utils/engagementApi';
 import { useEffect, useState } from "react";
 import { useFirebaseInit } from "../hooks/useFirebaseInit";
-import { ref, onValue, runTransaction } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 
 const VisitorCounter = () => {
   const [visits, setVisits] = useState(0);
@@ -21,14 +22,13 @@ const VisitorCounter = () => {
       setLoading(false);
     });
 
-    const hasVisited = sessionStorage.getItem("visit_counted");
+    let hasVisited = false;
+    try { hasVisited = sessionStorage.getItem("visit_counted"); } catch { /* Storage may be disabled. */ }
     
     if (!hasVisited) {
-      runTransaction(visitsRef, (currentVisits) => {
-        return (currentVisits || 0) + 1;
-      }).then(() => {
-        sessionStorage.setItem("visit_counted", "true");
-      });
+      recordEngagement({ action: 'visit' }).then(() => {
+        try { sessionStorage.setItem('visit_counted', 'true'); } catch { /* Storage may be disabled. */ }
+      }).catch(() => { /* Counting is optional; keep the page usable during outages. */ });
     }
 
     return () => unsubscribe();

@@ -32,7 +32,7 @@ const Certifications = () => {
     const load = async () => {
       setLoading(true); setError(false);
       try {
-        const response = await fetch('/.netlify/functions/public-certifications', { signal: controller.signal, cache: 'no-store' });
+        const response = await fetch('/api/public-certifications', { signal: controller.signal, cache: 'no-store' });
         if (!response.ok) throw new Error('Certificates unavailable');
         const data = await response.json();
         if (!Array.isArray(data.certifications)) throw new Error('Invalid certificates');

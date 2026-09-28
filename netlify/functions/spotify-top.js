@@ -1,4 +1,8 @@
+import { webHandler } from './_shared/webHandler.js';
+import { json } from './_shared/security.js';
+import { fetchUpstream } from './_shared/upstream.js';
 export const handler = async (event) => {
+  if (event.httpMethod !== "GET") return json(405, { error: "Method not allowed." }, { Allow: "GET" });
   const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
   const timeRange = event.queryStringParameters?.time_range || 'short_term';
 
@@ -7,7 +11,7 @@ export const handler = async (event) => {
       statusCode: 503,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'X-Content-Type-Options': 'nosniff',
       },
       body: JSON.stringify({
         error: 'Spotify refresh token not configured',
@@ -17,7 +21,7 @@ export const handler = async (event) => {
 
   try {
     // Get new access token using refresh token
-    const authResponse = await fetch('https://accounts.spotify.com/api/token', {
+    const authResponse = await fetchUpstream('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -25,19 +29,19 @@ export const handler = async (event) => {
       body: new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
-        client_id: (process.env.SPOTIFY_CLIENT_ID || process.env.VITE_SPOTIFY_CLIENT_ID),
-        client_secret: (process.env.SPOTIFY_CLIENT_SECRET || process.env.VITE_SPOTIFY_CLIENT_SECRET),
+        client_id: process.env.SPOTIFY_CLIENT_ID,
+        client_secret: process.env.SPOTIFY_CLIENT_SECRET,
       }).toString(),
     });
 
     if (!authResponse.ok) {
-      const error = await authResponse.json();
-      console.error('Spotify auth error:', error);
+
+
       return {
         statusCode: 503,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          'X-Content-Type-Options': 'nosniff',
         },
         body: JSON.stringify({
           error: 'Failed to refresh Spotify token',
@@ -55,7 +59,7 @@ export const handler = async (event) => {
       : 'short_term';
 
     // Get user's top tracks
-    const topTracksResponse = await fetch(
+    const topTracksResponse = await fetchUpstream(
       `https://api.spotify.com/v1/me/top/tracks?time_range=${validTimeRange}&limit=20`,
       {
         headers: {
@@ -74,18 +78,18 @@ export const handler = async (event) => {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'X-Content-Type-Options': 'nosniff',
         'Cache-Control': 'public, max-age=300, s-maxage=900, stale-while-revalidate=86400',
       },
       body: JSON.stringify(data),
     };
-  } catch (error) {
-    console.error('Spotify error:', error);
+  } catch {
+
     return {
       statusCode: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'X-Content-Type-Options': 'nosniff',
       },
       body: JSON.stringify({
         error: 'Failed to fetch Spotify top tracks',
@@ -93,3 +97,6 @@ export const handler = async (event) => {
     };
   }
 };
+
+export default webHandler(handler);
+export const config = { path: '/api/spotify-top', rateLimit: { windowLimit: 30, windowSize: 60, aggregateBy: ['ip', 'domain'] } };
