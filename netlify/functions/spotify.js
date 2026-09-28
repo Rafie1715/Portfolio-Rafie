@@ -1,9 +1,14 @@
 import { webHandler } from './_shared/webHandler.js';
 import { json } from './_shared/security.js';
 import { fetchUpstream } from './_shared/upstream.js';
+import { integrationEnv } from './_shared/integrationEnv.js';
 export const handleEvent = async (event) => {
   if (event.httpMethod !== "GET") return json(405, { error: "Method not allowed." }, { Allow: "GET" });
   const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
+  const clientId = integrationEnv('SPOTIFY_CLIENT_ID');
+  const clientSecret = integrationEnv('SPOTIFY_CLIENT_SECRET');
+
+  if (!clientId || !clientSecret) return json(503, { error: 'Spotify is not configured.' });
 
   if (!refreshToken) {
     return {
@@ -28,8 +33,8 @@ export const handleEvent = async (event) => {
       body: new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
-        client_id: process.env.SPOTIFY_CLIENT_ID,
-        client_secret: process.env.SPOTIFY_CLIENT_SECRET,
+        client_id: clientId,
+        client_secret: clientSecret,
       }).toString(),
     });
 
@@ -89,7 +94,7 @@ export const handleEvent = async (event) => {
       }
 
       const recentlyPlayed = await recentlyPlayedResponse.json();
-      const lastTrack = recentlyPlayed.items[0];
+      const lastTrack = recentlyPlayed.items?.[0];
 
       return {
         statusCode: 200,
@@ -99,7 +104,7 @@ export const handleEvent = async (event) => {
           'X-Content-Type-Options': 'nosniff',
         },
         body: JSON.stringify({
-          item: lastTrack.track,
+          item: lastTrack?.track || null,
           is_playing: false,
         }),
       };

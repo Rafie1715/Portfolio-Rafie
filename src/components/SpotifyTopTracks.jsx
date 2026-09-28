@@ -22,6 +22,7 @@ export default function SpotifyTopTracks() {
       try {
         setLoading(true);
         const response = await fetch(`/api/spotify-top?time_range=${timeRange}`);
+        if (!response.ok) throw new Error('Spotify temporarily unavailable');
         const data = await response.json();
 
         if (data.error || !data.items) {

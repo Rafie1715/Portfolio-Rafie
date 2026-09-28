@@ -51,6 +51,7 @@ const AfkPage = () => {
     const [movies, setMovies] = useState([]);
     const [watchlist, setWatchlist] = useState([]);
     const [loadingMovies, setLoadingMovies] = useState(true);
+    const [moviesError, setMoviesError] = useState(false);
     const [loadingWatchlist, setLoadingWatchlist] = useState(true);
     const [discordData, setDiscordData] = useState(null);
     const [reactionPhase, setReactionPhase] = useState('idle');
@@ -139,7 +140,9 @@ const AfkPage = () => {
         const fetchOther = async () => {
             try {
                 setLoadingMovies(true);
+                setMoviesError(false);
                 const moviesRes = await fetch('/api/movies');
+                if (!moviesRes.ok) throw new Error('Movie service unavailable');
                 const moviesText = await moviesRes.text();
                 const moviesData = moviesText ? JSON.parse(moviesText) : [];
                 const legacyMovies = Array.isArray(moviesData) ? moviesData : [];
@@ -181,6 +184,7 @@ const AfkPage = () => {
 
                 setMovies(mergedMovies);
             } catch (error) {
+                setMoviesError(true);
                 console.error("Error fetching movies:", error);
             } finally {
                 setLoadingMovies(false);
@@ -591,7 +595,7 @@ const AfkPage = () => {
                                 </div>
                             ) : moviesByYear.length === 0 ? (
                                 <div className="text-sm text-gray-500 dark:text-gray-400 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl px-5 py-8 text-center">
-                                    {t('afk.no_movies')}
+                                    {t(moviesError ? 'afk.movies_unavailable' : 'afk.no_movies')}
                                 </div>
                             ) : (
                                 <>

@@ -14,6 +14,7 @@ export default function SpotifyNowPlaying() {
       try {
         setLoading(true);
         const response = await fetch('/api/spotify');
+        if (!response.ok) throw new Error('Spotify temporarily unavailable');
         const data = await response.json();
 
         if (data.error || !data.item) {
@@ -24,7 +25,7 @@ export default function SpotifyNowPlaying() {
 
         setNowPlaying({
           name: data.item.name,
-          artist: data.item.artists[0]?.name || 'Unknown',
+          artist: data.item.artists?.[0]?.name || 'Unknown',
           album: data.item.album?.name || 'Unknown',
           image: data.item.album?.images[0]?.url,
           url: data.item.external_urls?.spotify,

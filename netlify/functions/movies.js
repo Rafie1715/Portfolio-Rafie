@@ -1,12 +1,20 @@
 import { webHandler } from './_shared/webHandler.js';
 import { json } from './_shared/security.js';
 import { fetchUpstream, parseMovieIds } from './_shared/upstream.js';
+import { integrationEnv } from './_shared/integrationEnv.js';
+
+async function loadMovie(movieId, apiKey) {
+  const response = await fetchUpstream(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${encodeURIComponent(apiKey)}&language=en-US`);
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error('Movie provider unavailable.');
+  return response.json();
+}
 export const handleEvent = async (event) => {
   if (event.httpMethod !== "GET") return json(405, { error: "Method not allowed." }, { Allow: "GET" });
   let parsedIds;
   try { parsedIds = parseMovieIds(event.queryStringParameters?.ids); }
   catch { return json(400, { error: 'Use at most 60 positive movie IDs.' }); }
-  const API_KEY = process.env.TMDB_API_KEY;
+  const API_KEY = integrationEnv('TMDB_API_KEY');
 
   if (!API_KEY) {
 
@@ -16,8 +24,7 @@ export const handleEvent = async (event) => {
   try {
     if (parsedIds.length > 0) {
       const requests = parsedIds.map((movieId) =>
-        fetchUpstream(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`)
-          .then((res) => res.json())
+        loadMovie(movieId, API_KEY)
       );
 
       const results = await Promise.all(requests);
@@ -97,8 +104,7 @@ export const handleEvent = async (event) => {
     ];
 
     const requests = MOVIE_CONFIG.map(movie =>
-      fetchUpstream(`https://api.themoviedb.org/3/movie/${movie.id}?api_key=${API_KEY}&language=en-US`)
-        .then(res => res.json())
+      loadMovie(movie.id, API_KEY)
         .then(data => ({
             ...data,
             isFavorite: movie.favorite,

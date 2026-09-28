@@ -1,9 +1,10 @@
 import { webHandler } from './_shared/webHandler.js';
 import { json } from './_shared/security.js';
 import { fetchUpstream } from './_shared/upstream.js';
+import { integrationEnv } from './_shared/integrationEnv.js';
 export const handleEvent = async (event) => {
   if (event.httpMethod !== "GET") return json(405, { error: "Method not allowed." }, { Allow: "GET" });
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  const GITHUB_TOKEN = integrationEnv('GITHUB_TOKEN');
   const USERNAME = "Rafie1715";
 
   if (!GITHUB_TOKEN) {
