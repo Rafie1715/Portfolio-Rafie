@@ -1,3 +1,4 @@
+import { projectPath } from '../utils/projectRoutes';
 import Icon from '../components/Icon';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -78,7 +79,7 @@ const DeferredPersonalPanel = () => {
 const FEATURED_PROJECTS_BY_LENS = {
   overview: ['OD60ttuTSwZW62TRJFm6', 'mandiri-news', 'planetku'],
   android: ['mandiri-news', 'planetku', 'OD60ttuTSwZW62TRJFm6'],
-  frontend: ['computer-crafter', 'portfolio-website', 'personal-notes'],
+  frontend: ['portfolio-website', 'personal-notes', 'computer-crafter'],
   ai: ['OD60ttuTSwZW62TRJFm6', 'planetku', 'sentimen-deepseek'],
 };
 
@@ -262,7 +263,7 @@ const HomePage = () => {
                       <ProjectBuildNote project={project} />
 
                       <Link
-                        to={`/project/${project.id}`}
+                        to={projectPath(project)}
                         onClick={() => trackProjectView(project.id, title)}
                         aria-label={`${title}: ${t('projects.view_details')}`}
                         className="inline-flex items-center gap-2 w-fit mt-auto rounded-lg border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-all duration-300 hover:bg-primary hover:text-white hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -278,7 +279,7 @@ const HomePage = () => {
           </motion.div>
 
           <div className="text-center">
-            <Link to="/projects" className="inline-block px-8 py-3 rounded-full border border-gray-300 dark:border-slate-700 text-dark dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+            <Link to={recruiterLens === 'overview' ? '/projects' : `/projects?focus=${recruiterLens}`} className="inline-block px-8 py-3 rounded-full border border-gray-300 dark:border-slate-700 text-dark dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
               {t('home.view_all')}
             </Link>
           </div>

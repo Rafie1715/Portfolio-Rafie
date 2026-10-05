@@ -30,7 +30,7 @@ export const handleEvent = async (event) => {
     const portfolioRepos = repos
       .filter(repo =>
         !repo.fork &&
-        !repo.private
+        !repo.private && repo.name?.toLowerCase() !== USERNAME.toLowerCase()
       )
       .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
       .slice(0, 6);

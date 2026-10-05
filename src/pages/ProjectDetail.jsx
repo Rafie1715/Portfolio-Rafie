@@ -1,427 +1,129 @@
-import Icon from '../components/Icon';
-import { lazy, Suspense, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { createElement, useState, lazy, Suspense } from 'react';
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowLeft, ArrowUpRight, Github, ExternalLink } from 'lucide-react';
 import { useProjects } from '../hooks/useProjects';
+import { findProjectByRoute, projectPath, projectSlug } from '../utils/projectRoutes';
 import ProjectCatalogStatus from '../components/ProjectCatalogStatus';
-import NotFound from './NotFound';
-import ImageDialog from '../components/ImageDialog';
 import ProjectEvidence from '../components/ProjectEvidence';
+import ProjectArchitecture from '../components/ProjectArchitecture';
 import ModelEvaluation from '../components/ModelEvaluation';
 import DecisionReplay from '../components/DecisionReplay';
-import SEO from '../components/SEO';
-import { motion } from 'framer-motion';
-const LikeButton = lazy(() => import('../components/LikeButton'));
-import { useTranslation } from 'react-i18next';
+import ImageDialog from '../components/ImageDialog';
 import PageTransition from '../components/PageTransition';
 import Loading from '../components/Loading';
+import SEO from '../components/SEO';
+import NotFound from './NotFound';
+const LikeButton = lazy(() => import('../components/LikeButton'));
 
-const ProjectDetail = () => {
+export default function ProjectDetail() {
   const { id } = useParams();
+  const location = useLocation();
   const { t, i18n } = useTranslation();
-  const currentLang = i18n.language;
+  const reduceMotion = useReducedMotion();
   const { projects, loading, error, retry } = useProjects();
   const [selectedImage, setSelectedImage] = useState(null);
   const [showLikes, setShowLikes] = useState(false);
-  const project = projects.find(entry => entry.id === id);
+  const project = findProjectByRoute(projects, id);
   if (loading) return <Loading />;
   if (error) return <main className="min-h-screen px-4 pt-28"><ProjectCatalogStatus error retry={retry} /></main>;
   if (!project) return <NotFound />;
+  if (id !== projectSlug(project)) return <Navigate replace to={projectPath(project) + location.search + location.hash} />;
 
-  const getData = (data) => {
-    if (!data) return "";
-    if (typeof data === 'string') return data;
-    if (typeof data === 'object' && (data.en || data.id)) {
-      return data[currentLang] || data.en || "";
-    }
-    return String(data);
-  };
-
-  const getFeatures = (data) => {
-      const raw = getData(data);
-      if (Array.isArray(raw)) return raw;
-      if (typeof raw === 'string') return [raw];
-      return [];
-  };
-
-  const title = getData(project.title);
-  const shortDesc = getData(project.shortDesc);
-  const fullDesc = getData(project.fullDesc);
-  const challenges = getData(project.challenges);
-  const solution = getData(project.solution);
-  const lessonLearned = getData(project.lessonLearned);
-  const featuresList = getFeatures(project.features);
-  const techStack = Array.isArray(project.techStack) ? project.techStack : [];
-  const techNames = techStack.map((tech) => tech?.name).filter(Boolean);
-  const techKeywords = techNames.join(', ');
-  const impactDetails = project.impactDetails || {};
-  const structuredRole = getData(impactDetails.role);
-  const structuredTeam = getData(impactDetails.team);
-  const structuredResult = getData(impactDetails.result);
-  const structuredScope = getData(impactDetails.scope);
-  const impactSummary = getData(project.impact);
-  const impactParts = typeof impactSummary === 'string'
-    ? impactSummary.split(/[•|]/).map((part) => part.trim()).filter(Boolean)
-    : [];
-  const firstFeature = featuresList[0] || shortDesc;
-  const teamText = impactParts.find((part, index) => (
-    index > 0 && /(team|tim|member|anggota|solo|lead|cohort)/i.test(part)
-  ));
-  const resultText = impactParts.find((part, index) => (
-    index > 0 && part !== teamText
-  ));
-  const availableLinks = [
-    project.live && t('projects.live_site'),
-    project.github && t('projects.source_code'),
-    project.figma && t('projects.design'),
-    project.prototype && t('projects.prototype'),
-  ].filter(Boolean);
-
-  const selectedImpactCards = [
-    {
-      label: t('projectDetail.impact.role'),
-      value: structuredRole || impactParts[0] || `${project.category || 'Software'} Project`,
-      icon: 'fas fa-user-tie',
-    },
-    {
-      label: t('projectDetail.impact.team'),
-      value: structuredTeam || teamText || (/solo/i.test(impactParts[0] || '') ? 'Solo project' : t('projectDetail.impact.team_fallback')),
-      icon: 'fas fa-users',
-    },
-    {
-      label: t('projectDetail.impact.result'),
-      value: structuredResult || resultText || firstFeature,
-      icon: 'fas fa-chart-line',
-    },
-    {
-      label: t('projectDetail.impact.tech_link'),
-      value: [structuredScope, techNames.slice(0, 3).join(', '), availableLinks.join(' + ')].filter(Boolean).join(' / '),
-      icon: 'fas fa-link',
-    },
-  ].filter((item) => item.value);
+  const text = value => typeof value === 'string' ? value : value?.[i18n.resolvedLanguage] || value?.en || '';
+  const title = text(project.title);
+  const impact = project.impactDetails || {};
+  const features = text(project.features);
   const replay = project.decisionReplay || {};
-  const decisionReplaySteps = [
-    { key: 'problem', value: challenges },
-    { key: 'constraint', value: getData(replay.constraint) },
-    { key: 'options', value: getData(replay.options) },
-    { key: 'decision', value: getData(replay.decision) || solution },
-    { key: 'tradeoff', value: getData(replay.tradeoff) },
-    {
-      key: 'evidence',
-      value: getData(replay.evidence) || structuredResult || resultText || impactSummary,
-    },
-  ].filter((step) => step.value);
+  const steps = [
+    { key: 'problem', value: text(project.challenges) },
+    { key: 'constraint', value: text(replay.constraint) },
+    { key: 'options', value: text(replay.options) },
+    { key: 'decision', value: text(replay.decision) || text(project.solution) },
+    { key: 'tradeoff', value: text(replay.tradeoff) },
+  ].filter(step => step.value);
+  const facts = [
+    [t('projectDetail.impact.role'), text(impact.role)],
+    [t('projectDetail.impact.team'), text(impact.team)],
+    [t('common.project_period'), project.year],
+  ].filter(([, value]) => value);
+  const links = [
+    [project.github, t('projects.source_code'), Github],
+    [project.live, t('projects.live_site'), ExternalLink],
+    [project.figma, t('projects.design'), ArrowUpRight],
+    [project.prototype, t('projects.prototype'), ArrowUpRight],
+  ].filter(([href]) => href);
+  const result = text(impact.result) || text(project.impact);
+  const metricContext = text(project.evidence?.metricContext);
+  const sectionTitle = 'mb-4 text-2xl font-bold text-dark dark:text-white';
+  const bodyText = 'leading-7 text-slate-600 dark:text-slate-300';
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.1 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 50 } },
-  };
-
-  const fadeInBottom = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  };
-
-  return (
-    <PageTransition>
-      <motion.main
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="bg-white dark:bg-dark min-h-screen overflow-x-hidden pt-24 pb-20 transition-colors duration-300"
-      >
-
-        <SEO
-          title={`${title} | Rafie Rojagat Portfolio`}
-          description={shortDesc}
-          url={`https://rafierb.me/project/${project.id}`}
-          image={project.image}
-          type="article"
-          keywords={`${title}, ${project.category}, Software Project, ${techKeywords}, Portfolio Project`}
-          published={project.createdAt}
-          modified={project.updatedAt}
-        />
-
-        <div className="container mx-auto px-4 max-w-4xl">
-
-          <nav
-            aria-label="Breadcrumb"
-            className="flex min-w-0 items-center text-sm text-gray-500 dark:text-gray-400 mb-6 sm:mb-8 whitespace-nowrap"
-          >
-            <Link to="/" className="min-h-11 shrink-0 hover:text-primary transition-colors flex items-center gap-1">
-              <Icon className="fas fa-home text-xs"></Icon> {t('navbar.home')}
-            </Link>
-            <span className="mx-2 text-gray-300 dark:text-gray-600">/</span>
-            <Link to="/projects" className="inline-flex min-h-11 shrink-0 items-center hover:text-primary transition-colors">
-              {t('navbar.projects')}
-            </Link>
-            <span className="mx-2 text-gray-300 dark:text-gray-600">/</span>
-            <span aria-current="page" className="min-w-0 text-primary font-medium truncate max-w-[200px]">
-              {title}
-            </span>
-          </nav>
-
-          <motion.div
-            className="mb-10"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-              <div className="flex-1">
-                <motion.span variants={itemVariants} className="text-primary font-bold tracking-wider uppercase text-sm mb-2 block">
-                  {project.category} {t('projectDetail.category_label')}
-                </motion.span>
-                <motion.h1 variants={itemVariants} className="text-3xl md:text-5xl font-bold text-dark dark:text-white mb-4 leading-tight">
-                  {title}
-                </motion.h1>
-                <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl">
-                  {shortDesc}
-                </motion.p>
-              </div>
-
-              <motion.div variants={itemVariants} className="flex flex-col gap-4 flex-shrink-0 min-w-[140px]">
-                <div className="self-start md:self-end">
-                  {showLikes ? <Suspense fallback={null}><LikeButton projectId={project.id} /></Suspense> : <button type="button" onClick={() => setShowLikes(true)} className="rounded-full border px-4 py-2 text-sm">{t('common.show_reactions')}</button>}
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  {project.github && (
-                    <motion.a
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      href={project.github}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="px-5 py-2.5 rounded-full bg-gray-100 dark:bg-slate-800 text-dark dark:text-white font-medium hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 text-sm"
-                    >
-                      <Icon className="fab fa-github text-lg"></Icon> {t('projects.source_code')}
-                    </motion.a>
-                  )}
-                  {project.live && (
-                    <motion.a
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      href={project.live}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="px-5 py-2.5 rounded-full bg-primary text-white font-medium hover:bg-secondary transition-colors shadow-lg shadow-primary/30 flex items-center gap-2 text-sm"
-                    >
-                      <Icon className="fas fa-external-link-alt"></Icon> {t('projects.live_site')}
-                    </motion.a>
-                  )}
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  {project.figma && (
-                    <motion.a whileHover={{ scale: 1.05 }} href={project.figma} target="_blank" rel="noreferrer" className="px-5 py-2 rounded-full bg-gray-100 dark:bg-slate-800 text-xs font-bold hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
-                      <Icon className="fab fa-figma text-blue-500"></Icon> {t('projects.design')}
-                    </motion.a>
-                  )}
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          <ProjectEvidence project={project} />
-
-          {selectedImpactCards.length > 0 && (
-            <motion.section
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
-              variants={fadeInBottom}
-              className="mb-8 border-y border-blue-100 dark:border-blue-900/40 py-5 md:py-6"
-            >
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-400 mb-2">
-                    {t('projectDetail.impact.eyebrow')}
-                  </p>
-                  <h2 className="text-2xl font-bold text-dark dark:text-white">
-                    {t('projectDetail.impact.title')}
-                  </h2>
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 max-w-lg">
-                  {t('projectDetail.impact.desc')}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {selectedImpactCards.map((item) => (
-                  <div key={item.label} className="border-l-2 border-blue-200 dark:border-blue-800 pl-4 py-1">
-                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 flex items-center justify-center mb-3">
-                      <Icon className={item.icon}></Icon>
-                    </div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 mb-1">
-                      {item.label}
-                    </p>
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 leading-relaxed">
-                      {item.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </motion.section>
-          )}
-
-          <motion.figure
-            initial={{ opacity: 0, scale: 0.98, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: "easeOut", delay: 0.15 }}
-            className="rounded-lg overflow-hidden shadow-xl mb-12 border border-gray-100 dark:border-slate-800 bg-gray-100 dark:bg-slate-900"
-          >
-            <button type="button" onClick={() => setSelectedImage(project.image)} aria-label={t('common.preview') + ': ' + title} className="block w-full cursor-zoom-in">
-            <img
-              src={project.image}
-              alt={title}
-              decoding="async"
-              fetchPriority="high"
-              className="w-full max-h-[32rem] object-contain"
-              sizes="(min-width: 1024px) 896px, 100vw"
-            />
-            </button>
-            {project.conceptualCover && (
-              <figcaption className="border-t border-gray-200 bg-white px-4 py-3 text-sm text-gray-500 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-400">
-                {t('projectDetail.conceptual_cover')}
-              </figcaption>
-            )}
-          </motion.figure>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={fadeInBottom}
-            className="mb-12"
-          >
-            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">{t('projectDetail.tech_used')}</h3>
-            <div className="flex flex-wrap gap-3">
-              {techStack.map((tech, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ y: -5, backgroundColor: "rgba(37, 99, 235, 0.1)" }}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-darkLight border border-gray-200 dark:border-slate-700 shadow-sm transition-colors cursor-default"
-                >
-                  <Icon className={`${tech.icon} text-xl colored`}></Icon>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{tech.name}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <DecisionReplay key={project.id} steps={decisionReplaySteps} />
-
-          <ModelEvaluation evaluation={project.evaluation} />
-
-          <div className="mb-16 max-w-3xl space-y-10">
-              <motion.section
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInBottom}
-              >
-                <h2 className="text-2xl font-bold text-dark dark:text-white mb-4">{t('projectDetail.overview')}</h2>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line text-lg">
-                  {fullDesc}
-                </p>
-              </motion.section>
-
-              {featuresList && featuresList.length > 0 && (
-                <motion.section
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeInBottom}
-                >
-                  <h2 className="text-2xl font-bold text-dark dark:text-white mb-6">{t('projectDetail.features')}</h2>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {featuresList.map((feature, idx) => (
-                      <motion.li
-                        key={idx}
-                        className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors"
-                        whileHover={{ x: 5 }}
-                      >
-                        <div className="mt-1 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 flex items-center justify-center flex-shrink-0">
-                          <Icon className="fas fa-check text-xs"></Icon>
-                        </div>
-                        <span className="text-gray-700 dark:text-gray-300">{feature}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </motion.section>
-              )}
-          </div>
-
-          {lessonLearned && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="mb-20"
-            >
-              <div className="relative p-8 rounded-3xl bg-gradient-to-br from-primary/5 via-transparent to-blue-500/5 border border-primary/10 overflow-hidden shadow-sm">
-                <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
-
-                <div className="relative z-10">
-                  <h2 className="text-2xl font-bold text-dark dark:text-white mb-4 flex items-center gap-3">
-                    <span className="text-3xl">🎓</span> {t('projectDetail.learned')}
-                  </h2>
-                  <p className="text-lg text-gray-700 dark:text-gray-200 leading-relaxed italic border-l-4 border-primary pl-6 py-2">
-                    "{lessonLearned}"
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {project.gallery && project.gallery.length > 0 && (
-            <motion.section
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={containerVariants}
-              className="mb-20"
-            >
-              <h2 className="text-2xl font-bold text-dark dark:text-white mb-8">{t('projectDetail.gallery')}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {project.gallery.map((img, idx) => (
-                  <motion.button
-                    type="button"
-                    aria-label={`${t('common.preview')} ${title} - ${idx + 1}`}
-                    key={idx}
-                    variants={itemVariants}
-                    whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-                    onClick={() => setSelectedImage(img)}
-                    className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all cursor-zoom-in"
-                  >
-                    <div className="aspect-video bg-gray-100 dark:bg-slate-800">
-                      <img
-                        src={img}
-                        alt={`Screenshot ${idx + 1}`}
-                        loading="lazy"
-                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <Icon className="fas fa-search-plus text-white text-3xl drop-shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-300"></Icon>
-                      </div>
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
-            </motion.section>
-          )}
-        </div>
-
-        <ImageDialog image={selectedImage ? { src: selectedImage, alt: title } : null} onClose={() => setSelectedImage(null)} />
-      </motion.main>
-    </PageTransition>
-  );
-};
-
-export default ProjectDetail;
+  return <PageTransition>
+    <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduceMotion ? 0 : 0.2 }} className="min-h-screen bg-white px-4 pb-20 pt-24 text-dark dark:bg-dark dark:text-white">
+      <SEO title={`${title} | Rafie Rojagat Portfolio`} description={text(project.shortDesc)} url={`https://rafierb.me${projectPath(project)}`} image={project.image} type="article" published={project.createdAt} modified={project.updatedAt} />
+      <div className="mx-auto max-w-4xl">
+        <nav aria-label="Breadcrumb" className="mb-5 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+          <Link to="/projects" className="inline-flex min-h-11 shrink-0 items-center gap-2 font-medium hover:text-primary"><ArrowLeft size={16} aria-hidden="true" />{t('navbar.projects')}</Link>
+          <span aria-hidden="true">/</span><span className="min-w-0 truncate" aria-current="page">{title}</span>
+        </nav>
+        <header className="mb-8">
+          <p className="mb-2 text-sm font-bold uppercase tracking-wide text-primary">{project.category} {t('projectDetail.category_label')}</p>
+          <h1 className="max-w-3xl text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">{title}</h1>
+          <p className={`mt-4 max-w-3xl text-lg ${bodyText}`}>{text(project.shortDesc)}</p>
+          <div className="mt-5 flex flex-wrap gap-3">{links.map(([href, label, icon]) => <a key={label} href={href} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 hover:border-primary dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-300">{createElement(icon, { size: 18, 'aria-hidden': true })}{label}</a>)}</div>
+        </header>
+        {facts.length > 0 && <section aria-label={t('projectDetail.impact.eyebrow')} className="mb-8 border-y border-slate-200 py-5 dark:border-slate-700">
+          <h2 className="mb-4 text-xs font-bold uppercase tracking-wide text-primary">{t('projectDetail.impact.eyebrow')}</h2>
+          <dl className="grid gap-5 sm:grid-cols-3">{facts.map(([label, value]) => <div key={label}><dt className="text-sm text-slate-500 dark:text-slate-400">{label}</dt><dd className="mt-1 font-semibold">{value}</dd></div>)}</dl>
+        </section>}
+        <ProjectEvidence project={project} showResults={false} />
+        <figure className="mb-10 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
+          <button type="button" aria-label={`${t('common.preview')}: ${title}`} onClick={() => setSelectedImage({ src: project.image, alt: title })} className="block w-full cursor-zoom-in">
+            <img src={project.image} alt={title} decoding="async" fetchPriority="high" className="mx-auto max-h-[28rem] w-full object-contain" />
+          </button>
+          {project.conceptualCover && <figcaption className="border-t border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">{t('projectDetail.conceptual_cover')}</figcaption>}
+        </figure>
+        <section className="mb-8">
+          <h2 className={sectionTitle}>{t('projectDetail.overview')}</h2>
+          <p className={bodyText}>{text(project.fullDesc)}</p>
+        </section>
+        <ProjectArchitecture flows={project.architecture} />
+        <section className="mb-10">
+          <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{t('projectDetail.tech_used')}</h2>
+          <ul className="flex flex-wrap gap-2">{(project.techStack || []).map(tech => <li key={tech.name} className="rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">{tech.name}</li>)}</ul>
+        </section>
+        {Array.isArray(features) && features.length > 0 && <section className="mb-10">
+          <h2 className={sectionTitle}>{t('projectDetail.features')}</h2>
+          <ul className="grid list-inside list-disc gap-3 text-slate-600 dark:text-slate-300 sm:grid-cols-2">{features.map(feature => <li key={feature} className="leading-7">{feature}</li>)}</ul>
+        </section>}
+        <DecisionReplay key={project.id} steps={steps} />
+        {(result || metricContext) && <section className="mb-8">
+          <h2 className={sectionTitle}>{t('common.project_results')}</h2>
+          {result && <p className="font-semibold text-primary">{result}</p>}
+          {metricContext && <p className={`mt-3 ${bodyText}`}>{metricContext}</p>}
+        </section>}
+        <ModelEvaluation evaluation={project.evaluation} />
+        {project.lessonLearned && <section className="my-10 border-l-2 border-primary pl-5">
+          <h2 className={sectionTitle}>{t('projectDetail.learned')}</h2>
+          <p className={bodyText}>{text(project.lessonLearned)}</p>
+        </section>}
+        {project.gallery?.length > 0 && <section className="my-12">
+          <h2 className={sectionTitle}>{t('projectDetail.gallery')}</h2>
+          <div className="grid gap-6 sm:grid-cols-2">{project.gallery.map((src, index) => {
+            const caption = text(project.galleryCaptions?.[index]) || t('common.screenshot_caption', { title, number: index + 1 });
+            return <figure key={src} className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
+              <button type="button" onClick={() => setSelectedImage({ src, alt: caption })} aria-label={`${t('common.preview')}: ${caption}`} className="block w-full cursor-zoom-in bg-slate-50 p-2 dark:bg-slate-900"><img src={src} alt={caption} loading="lazy" className="h-64 w-full object-contain" /></button>
+              <figcaption className="p-4 text-sm leading-6 text-slate-600 dark:text-slate-400">{caption}</figcaption>
+            </figure>;
+          })}</div>
+        </section>}
+        <footer className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-6 dark:border-slate-700">
+          <Link to="/projects" className="inline-flex min-h-11 items-center gap-2 font-semibold text-primary"><ArrowLeft size={18} aria-hidden="true" />{t('hero.view_projects')}</Link>
+          {showLikes ? <Suspense fallback={null}><LikeButton projectId={project.id} /></Suspense> : <button type="button" onClick={() => setShowLikes(true)} className="min-h-11 rounded-lg border border-slate-300 px-4 py-2 text-sm dark:border-slate-700">{t('common.show_reactions')}</button>}
+        </footer>
+      </div>
+      <ImageDialog image={selectedImage} onClose={() => setSelectedImage(null)} />
+    </motion.main>
+  </PageTransition>;
+}

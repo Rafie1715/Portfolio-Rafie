@@ -46,7 +46,8 @@ const TypewriterLine = ({ phrases, prefix, accessibleText, reduceMotion, active 
     : currentPhrase.slice(0, characterCount);
 
   return (
-    <span aria-label={accessibleText}>
+    <span>
+      <span className="sr-only">{accessibleText}</span>
       <span aria-hidden="true">
         {prefix}{' '}
         <span className="font-semibold text-blue-600 dark:text-blue-400">
@@ -142,7 +143,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
     <section
       ref={heroRef}
       id="home"
-      className="relative md:min-h-[calc(100svh-140px)] flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-6 sm:pb-12 md:pb-14 overflow-hidden transition-colors duration-300"
+      className="relative flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-24 pb-6 sm:pb-8 overflow-hidden transition-colors duration-300"
     >
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -165,26 +166,28 @@ const Hero = ({ recruiterLens = 'overview' }) => {
             src="/images/profile.webp"
             alt={t('home.about_snapshot.photo_alt')}
             width="144" height="144" fetchPriority="high" decoding="async"
-            className="size-24 rounded-full border-4 border-white object-cover object-[center_25%] dark:border-slate-900 sm:size-28 lg:size-36"
+            className="size-20 rounded-full border-4 border-white object-cover object-[center_25%] dark:border-slate-900 sm:size-24"
           />
           <span className="absolute -bottom-1 -right-3 rounded-md border border-blue-200 bg-white px-1.5 py-0.5 text-blue-600 shadow-sm dark:border-slate-600 dark:bg-slate-900 dark:text-blue-400" aria-hidden="true">
             <PersonalMark className="h-5 w-10" />
           </span>
         </motion.figure>
 
-        <motion.p variants={itemVariants} className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-gray-500 dark:text-gray-400 mb-2 md:mb-3 px-2">
+        <motion.p variants={itemVariants} className="text-lg sm:text-xl font-medium text-gray-500 dark:text-gray-400 mb-2 md:mb-3 px-2">
           {t('hero.greeting')}
         </motion.p>
 
         <div className="overflow-hidden mb-3 md:mb-2 px-2 pb-2">
-          <motion.h1 variants={nameVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight leading-tight break-words">
+          <motion.h1 variants={nameVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight break-words">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-500 drop-shadow-sm">
               Rafie Rojagat Bachri
             </span>
           </motion.h1>
         </div>
 
-        <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-4 sm:mb-6 mt-2 md:mt-3 font-normal max-w-3xl mx-auto leading-relaxed px-4 min-h-[3.25rem] sm:min-h-[2rem]">
+        <p className="max-w-3xl px-2 text-base font-semibold leading-relaxed text-slate-700 dark:text-slate-200 sm:text-lg">{t('common.professional_identity')}</p>
+        <p className="mt-1 max-w-2xl px-2 text-sm leading-6 text-slate-600 dark:text-slate-400">{t('common.professional_summary')}</p>
+        <motion.p variants={itemVariants} className="text-sm text-gray-500 dark:text-gray-400 mb-3 mt-2 font-normal max-w-3xl mx-auto leading-relaxed px-4 min-h-12 sm:min-h-6">
           <TypewriterLine
             key={`${i18n.resolvedLanguage}-${recruiterLens}`}
             phrases={rolePhrases}
@@ -195,7 +198,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
           />
         </motion.p>
 
-        <motion.div variants={groupVariants} className="mb-4 sm:mb-6 md:mb-8 w-full max-w-3xl px-4 sm:px-0">
+        <motion.div variants={groupVariants} className="mb-4 w-full max-w-3xl px-4 sm:px-0">
           <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:flex sm:flex-wrap sm:justify-center">
             {quickFacts.map((fact) => (
               <motion.div
@@ -214,7 +217,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
 
         <motion.div variants={groupVariants} className="grid grid-cols-2 sm:flex sm:flex-row justify-center gap-3 sm:gap-5 md:gap-6 w-full px-4 sm:px-0">
           <motion.div variants={itemVariants} className="col-span-2 w-full sm:w-auto">
-            <Link to="/projects" onClick={() => trackCTAClick('view_projects')} className="group relative w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-[1.03] hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center gap-2">
+            <Link to={recruiterLens === 'overview' ? '/projects' : `/projects?focus=${recruiterLens}`} onClick={() => trackCTAClick('view_projects')} className="group relative w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-[1.03] hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center gap-2">
               <BriefcaseBusiness size={18} aria-hidden="true" className="relative z-10" />
               <span className="relative z-10">{t('hero.view_projects')}</span>
               {!shouldReduceMotion && (
@@ -245,15 +248,9 @@ const Hero = ({ recruiterLens = 'overview' }) => {
           </motion.div>
         </motion.div>
 
-        <motion.p variants={itemVariants} className="mt-4 px-4 text-center text-sm text-gray-500 dark:text-gray-400 md:text-base">
-          {t('hero.afk_cta.prefix')}{' '}
-          <Link to="/afk" className="font-semibold text-blue-600 dark:text-blue-400 hover:underline underline-offset-4">
-            {t('hero.afk_cta.link')}
-          </Link>
-          .
-        </motion.p>
 
-        <motion.div variants={itemVariants} className="mt-4 sm:mt-8 flex gap-5 text-2xl text-gray-400 md:mt-12 md:gap-6 md:text-3xl">
+
+        <motion.div variants={itemVariants} className="mt-3 flex gap-4 text-xl text-gray-400">
           <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="p-2 hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="GitHub" onClick={event => trackExternalLink('github', event.currentTarget.href)}>
             <FaGithub />
           </a>

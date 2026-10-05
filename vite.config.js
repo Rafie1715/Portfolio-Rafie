@@ -1,19 +1,8 @@
 import { defineConfig, loadEnv } from 'vite'
-import { handleEvent as projectHandler } from './netlify/functions/projects.js'
-import { handleEvent as certificationHandler } from './netlify/functions/public-certifications.js'
+import { localApi } from './scripts/local-api.mjs'
 import react from '@vitejs/plugin-react'
 
 Object.assign(process.env, loadEnv(process.env.NODE_ENV || 'development', process.cwd(), ''));
-const publicCatalog = () => {
-  const mount = server => { server.middlewares.use(async (request, response, next) => {
-    const handlers = { '/api/projects': projectHandler, '/api/public-certifications': certificationHandler };
-    const handler = handlers[request.url?.split('?')[0]];
-    if (!handler) return next();
-    const result = await handler({ httpMethod: request.method });
-    response.writeHead(result.statusCode, result.headers); response.end(result.body);
-  }); };
-  return { name: 'public-project-catalog', configureServer: mount, configurePreviewServer: mount };
-};
 // https://vite.dev/config/
 export default defineConfig({
   // Only these deliberately public values may enter the browser bundle.
@@ -24,19 +13,9 @@ export default defineConfig({
     'VITE_FIREBASE_PROJECT_ID', 'VITE_FIREBASE_STORAGE_BUCKET', 'VITE_FIREBASE_MESSAGING_SENDER_ID',
     'VITE_FIREBASE_APP_ID', 'VITE_FIREBASE_MEASUREMENT_ID', 'VITE_GA_ID', 'VITE_ADMIN_EMAILS',
   ].map(name => [`import.meta.env.${name}`, JSON.stringify(process.env[name] || '')])),
-  plugins: [react(), publicCatalog()],
+  plugins: [react(), localApi()],
   server: {
-    proxy: {
-      '/.netlify/functions': {
-        target: 'http://localhost:9999',
-        changeOrigin: true,
-      },
-      '/api': {
-        target: 'http://localhost:9999',
-        changeOrigin: true,
-        rewrite: path => path === '/api/chat' ? '/.netlify/functions/gemini' : path.replace('/api/', '/.netlify/functions/'),
-      },
-    },
+    watch: { ignored: ['**/.generated/**', '**/.netlify/**', '**/review-artifacts/**'] },
   },
   build: {
     rollupOptions: {

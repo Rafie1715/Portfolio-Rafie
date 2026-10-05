@@ -38,14 +38,14 @@ export default function Navbar() {
     i18n.changeLanguage(next);
     const nextParams = new URLSearchParams(params); nextParams.set('lang', next); setParams(nextParams, { replace: true });
   };
-  const links = ['home', 'about', 'projects', 'blog', 'workspace', 'contact'];
+  const links = ['home', 'about', 'projects', 'blog', 'contact'];
   const to = key => key === 'home' ? '/' : '/' + key;
   return <nav ref={nav} aria-label={t('common.nav')} className={'fixed inset-x-0 top-0 z-50 border-b transition-colors ' + (scrolled || open ? 'border-slate-200 bg-white/95 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-dark/95' : 'border-transparent bg-white/90 dark:bg-dark/90')}>
     <div className="container mx-auto flex min-h-20 items-center justify-between gap-3 px-4 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
       <Link to="/" onClick={() => setOpen(false)} className="justify-self-start text-2xl font-black tracking-wide">Rafie<span className="text-primary">.</span></Link>
       <div className="hidden items-center justify-center gap-6 lg:flex">{links.map(key => <NavLink key={key} to={to(key)} className={({ isActive }) => 'rounded px-1 py-3 text-sm font-semibold hover:text-primary ' + (isActive ? 'text-primary' : 'text-slate-600 dark:text-slate-300')}>{t('navbar.' + key)}</NavLink>)}</div>
       <div className="flex items-center justify-self-end gap-1 sm:gap-3">
-        <button type="button" onClick={toggleLanguage} aria-label={t('common.language')} className="min-h-11 min-w-11 rounded-lg border border-slate-200 px-3 text-xs font-bold dark:border-slate-700">{lang === 'en' ? 'ID' : 'EN'}</button>
+        <button type="button" onClick={toggleLanguage} aria-label={`${lang === 'en' ? 'ID' : 'EN'}: ${t('common.language')}`} className="min-h-11 min-w-11 rounded-lg border border-slate-200 px-3 text-xs font-bold dark:border-slate-700">{lang === 'en' ? 'ID' : 'EN'}</button>
         <button type="button" onClick={toggleTheme} aria-label={t(theme === 'dark' ? 'common.theme_light' : 'common.theme_dark')} className="flex size-11 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">{theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}</button>
         <button ref={trigger} type="button" onClick={() => setOpen(value => !value)} aria-label={t(open ? 'common.menu_close' : 'common.menu_open')} aria-expanded={open} aria-controls="mobile-navigation" className="flex size-11 items-center justify-center rounded-lg lg:hidden">{open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button>
       </div>

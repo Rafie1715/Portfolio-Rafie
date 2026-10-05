@@ -1,6 +1,8 @@
+import { caseStudyDetails } from './caseStudyDetails.js';
 export const projects = [
   {
     id: "OD60ttuTSwZW62TRJFm6",
+    slug: "restup",
     github: "https://github.com/Rafie1715/Sleep-Quality-Monitoring-App-using-Random-Forest",
     evaluation: {
       source: "https://github.com/Rafie1715/Sleep-Quality-Monitoring-App-using-Random-Forest/blob/main/Machine_Learning_Code.ipynb",
@@ -104,202 +106,236 @@ export const projects = [
     gallery: []
   },
   {
-    id: "mandiri-news",
-    title: {
-      en: "Mandiri News - Android News App",
-      id: "Mandiri News - Aplikasi Berita Android"
+    "id": "mandiri-news",
+    "title": {
+      "en": "Mandiri News - Android News App",
+      "id": "Mandiri News - Aplikasi Berita Android"
     },
-    category: "mobile",
-    image: "/images/mandiri-project-1.webp",
-    imageFit: "contain",
-    featuredOrder: 2,
-    year: "2026",
-    impact: {
-      en: "Mobile Apps Developer | 3 screens and 3 REST endpoints | 88.71/100",
-      id: "Mobile Apps Developer | 3 layar dan 3 REST endpoint | 88,71/100"
+    "category": "mobile",
+    "image": "/images/mandiri-project-1.webp",
+    "imageFit": "contain",
+    "featuredOrder": 2,
+    "year": "2026",
+    "impact": {
+      "en": "Mobile Apps Developer | 3 screens and 3 REST endpoints | 88.71/100",
+      "id": "Mobile Apps Developer | 3 layar dan 3 REST endpoint | 88,71/100"
     },
-    impactDetails: {
-      role: {
-        en: "Mobile Apps Developer",
-        id: "Mobile Apps Developer"
+    "impactDetails": {
+      "role": {
+        "en": "Mobile Apps Developer",
+        "id": "Mobile Apps Developer"
       },
-      team: {
-        en: "Project-Based Virtual Internship",
-        id: "Project-Based Virtual Internship"
+      "team": {
+        "en": "Project-Based Virtual Internship",
+        "id": "Project-Based Virtual Internship"
       },
-      result: {
-        en: "Excellent predicate, 88.71/100",
-        id: "Predikat Excellent, 88,71/100"
+      "result": {
+        "en": "Excellent predicate, 88.71/100",
+        "id": "Predikat Excellent, 88,71/100"
       },
-      scope: {
-        en: "3 main screens and 3 REST endpoints",
-        id: "3 layar utama dan 3 REST endpoint"
+      "scope": {
+        "en": "3 main screens and 3 REST endpoints",
+        "id": "3 layar utama dan 3 REST endpoint"
       }
     },
-    shortDesc: {
-      en: "An Android news reader built during the Bank Mandiri x Rakamin virtual internship with paginated REST data and endless scrolling.",
-      id: "Aplikasi pembaca berita Android dari virtual internship Bank Mandiri x Rakamin dengan data REST terpaginasikan dan endless scrolling."
+    "shortDesc": {
+      "en": "An Android news reader built during the Bank Mandiri x Rakamin virtual internship with paginated REST data and endless scrolling.",
+      "id": "Aplikasi pembaca berita Android dari virtual internship Bank Mandiri x Rakamin dengan data REST terpaginasikan dan endless scrolling."
     },
-    fullDesc: {
-      en: "Mandiri News was developed for the Bank Mandiri x Rakamin Project-Based Virtual Internship in March 2026. I built three primary Android screens and connected them to three REST endpoints so users could browse and continuously load business news in a clear mobile flow.",
-      id: "Mandiri News dikembangkan dalam Project-Based Virtual Internship Bank Mandiri x Rakamin pada Maret 2026. Saya membangun tiga layar utama Android dan menghubungkannya ke tiga REST endpoint agar pengguna dapat menelusuri dan memuat berita bisnis secara berkelanjutan dalam alur mobile yang jelas."
+    "fullDesc": {
+      "en": "Mandiri News was developed for the Bank Mandiri x Rakamin Project-Based Virtual Internship in March 2026. I built three primary Android screens and connected them to three REST endpoints so users could browse and continuously load business news in a clear mobile flow.",
+      "id": "Mandiri News dikembangkan dalam Project-Based Virtual Internship Bank Mandiri x Rakamin pada Maret 2026. Saya membangun tiga layar utama Android dan menghubungkannya ke tiga REST endpoint agar pengguna dapat menelusuri dan memuat berita bisnis secara berkelanjutan dalam alur mobile yang jelas."
     },
-    challenges: {
-      en: "The main challenge was keeping paginated API data predictable and the interface responsive while new pages were loaded continuously.",
-      id: "Tantangan utamanya adalah menjaga data API terpaginasikan tetap konsisten dan antarmuka tetap responsif saat halaman baru dimuat secara berkelanjutan."
+    "challenges": {
+      "en": "The main challenge was keeping paginated API data predictable and the interface responsive while new pages were loaded continuously.",
+      "id": "Tantangan utamanya adalah menjaga data API terpaginasikan tetap konsisten dan antarmuka tetap responsif saat halaman baru dimuat secara berkelanjutan."
     },
-    solution: {
-      en: "I structured the application with MVVM, used Retrofit for the REST layer, Kotlin Coroutines for asynchronous work, and Paging 3 to manage endless scrolling and loading states.",
-      id: "Saya menyusun aplikasi dengan MVVM, menggunakan Retrofit untuk lapisan REST, Kotlin Coroutines untuk proses asinkron, dan Paging 3 untuk mengelola endless scrolling serta loading state."
+    "solution": {
+      "en": "I structured the application with MVVM, used Retrofit for the REST layer, Kotlin Coroutines for asynchronous work, and Paging 3 to manage endless scrolling and loading states.",
+      "id": "Saya menyusun aplikasi dengan MVVM, menggunakan Retrofit untuk lapisan REST, Kotlin Coroutines untuk proses asinkron, dan Paging 3 untuk mengelola endless scrolling serta loading state."
     },
-    lessonLearned: {
-      en: "This project strengthened my understanding of production-oriented Android architecture, API state handling, and paginated mobile experiences.",
-      id: "Proyek ini memperkuat pemahaman saya tentang arsitektur Android yang berorientasi produksi, penanganan state API, dan pengalaman mobile terpaginasikan."
+    "lessonLearned": {
+      "en": "This project strengthened my understanding of production-oriented Android architecture, API state handling, and paginated mobile experiences.",
+      "id": "Proyek ini memperkuat pemahaman saya tentang arsitektur Android yang berorientasi produksi, penanganan state API, dan pengalaman mobile terpaginasikan."
     },
-    decisionReplay: {
-      constraint: {
-        en: "The internship scope required three Android screens and three REST endpoints while keeping loading, empty, failure, and appended-page states predictable.",
-        id: "Cakupan internship membutuhkan tiga layar Android dan tiga REST endpoint dengan loading, empty, failure, serta state penambahan halaman yang tetap konsisten."
+    "decisionReplay": {
+      "constraint": {
+        "en": "The internship scope required three Android screens and three REST endpoints while keeping loading, empty, failure, and appended-page states predictable.",
+        "id": "Cakupan internship membutuhkan tiga layar Android dan tiga REST endpoint dengan loading, empty, failure, serta state penambahan halaman yang tetap konsisten."
       },
-      options: {
-        en: "Manage page counters and list mutation manually, or adopt Paging 3 as the source of truth for pagination and loading states.",
-        id: "Mengelola penghitung halaman dan mutasi daftar secara manual, atau menggunakan Paging 3 sebagai sumber utama untuk paginasi dan loading state."
+      "options": {
+        "en": "Manage page counters and list mutation manually, or adopt Paging 3 as the source of truth for pagination and loading states.",
+        "id": "Mengelola penghitung halaman dan mutasi daftar secara manual, atau menggunakan Paging 3 sebagai sumber utama untuk paginasi dan loading state."
       },
-      decision: {
-        en: "Structure the app with MVVM, use Retrofit for REST access, Coroutines for asynchronous work, and Paging 3 for endless scrolling.",
-        id: "Menyusun aplikasi dengan MVVM, menggunakan Retrofit untuk akses REST, Coroutines untuk proses asinkron, dan Paging 3 untuk endless scrolling."
+      "decision": {
+        "en": "Structure the app with MVVM, use Retrofit for REST access, Coroutines for asynchronous work, and Paging 3 for endless scrolling.",
+        "id": "Menyusun aplikasi dengan MVVM, menggunakan Retrofit untuk akses REST, Coroutines untuk proses asinkron, dan Paging 3 untuk endless scrolling."
       },
-      tradeoff: {
-        en: "The architecture required more setup than direct network calls, but produced clearer responsibilities and more reliable state handling.",
-        id: "Arsitektur membutuhkan setup lebih banyak daripada pemanggilan jaringan langsung, tetapi menghasilkan pembagian tanggung jawab dan penanganan state yang lebih andal."
+      "tradeoff": {
+        "en": "The architecture required more setup than direct network calls, but produced clearer responsibilities and more reliable state handling.",
+        "id": "Arsitektur membutuhkan setup lebih banyak daripada pemanggilan jaringan langsung, tetapi menghasilkan pembagian tanggung jawab dan penanganan state yang lebih andal."
       },
-      evidence: {
-        en: "All three screens and REST integrations were delivered, receiving an Excellent predicate with a score of 88.71/100.",
-        id: "Ketiga layar dan integrasi REST selesai dikembangkan serta memperoleh predikat Excellent dengan nilai 88,71/100."
+      "evidence": {
+        "en": "All three screens and REST integrations were delivered, receiving an Excellent predicate with a score of 88.71/100.",
+        "id": "Ketiga layar dan integrasi REST selesai dikembangkan serta memperoleh predikat Excellent dengan nilai 88,71/100."
       }
     },
-    features: {
-      en: [
+    "features": {
+      "en": [
         "Three primary news screens",
         "Three REST API integrations",
         "Paginated news feed with Paging 3",
         "Responsive asynchronous loading"
       ],
-      id: [
+      "id": [
         "Tiga layar berita utama",
         "Integrasi tiga REST API",
         "Feed berita terpaginasikan dengan Paging 3",
         "Pemuatan asinkron yang responsif"
       ]
     },
-    techStack: [
-      { name: "Kotlin", icon: "devicon-kotlin-plain" },
-      { name: "Android Studio", icon: "devicon-androidstudio-plain" },
-      { name: "Retrofit", icon: "fas fa-code" },
-      { name: "Coroutines", icon: "devicon-kotlin-plain" },
-      { name: "Paging 3", icon: "fas fa-layer-group" }
+    "techStack": [
+      {
+        "name": "Kotlin",
+        "icon": "devicon-kotlin-plain"
+      },
+      {
+        "name": "Android Studio",
+        "icon": "devicon-androidstudio-plain"
+      },
+      {
+        "name": "Retrofit",
+        "icon": "fas fa-code"
+      },
+      {
+        "name": "Coroutines",
+        "icon": "devicon-kotlin-plain"
+      },
+      {
+        "name": "Paging 3",
+        "icon": "fas fa-layer-group"
+      }
     ],
-    gallery: [
+    "gallery": [
       "/images/mandiri-project-1.webp",
-      "/images/mandiri-project-2.webp",
+      "/images/mandiri-project-2.webp"
     ],
+    "github": "https://github.com/Rafie1715/MandiriNewsApp",
+    "galleryCaptions": [
+      {
+        "en": "Home screen: breaking news cards and the Discover More article list.",
+        "id": "Layar beranda: kartu breaking news dan daftar artikel Discover More."
+      },
+      {
+        "en": "Internship presentation showing the application UI and its loading and error states.",
+        "id": "Presentasi internship yang menjelaskan UI aplikasi serta penanganan loading dan error."
+      }
+    ]
   },
   {
-    id: "planetku",
-    title: {
-      en: "Planetku (Smart Waste Management App)",
-      id: "Planetku (Aplikasi Pengelolaan Sampah Cerdas)"
+    "id": "planetku",
+    "title": {
+      "en": "Planetku (Smart Waste Management App)",
+      "id": "Planetku (Aplikasi Pengelolaan Sampah Cerdas)"
     },
-    category: "mobile",
-    image: "/images/project-planetku.webp",
-    featuredOrder: 3,
-    year: "2024",
-    impactDetails: {
-      role: {
-        en: "Mobile Development Lead",
-        id: "Lead Mobile Development"
+    "category": "mobile",
+    "image": "/images/project-planetku.webp",
+    "featuredOrder": 3,
+    "year": "2024",
+    "impactDetails": {
+      "role": {
+        "en": "Android Developer",
+        "id": "Android Developer"
       },
-      team: {
-        en: "6-member cross-functional team",
-        id: "Tim lintas fungsi beranggotakan 6 orang"
+      "team": {
+        "en": "6-member cross-functional team",
+        "id": "Tim lintas fungsi beranggotakan 6 orang"
       },
-      result: {
-        en: "90% waste classification accuracy",
-        id: "Akurasi klasifikasi sampah 90%"
+      "result": {
+        "en": "Integrated the ML team's waste classifier",
+        "id": "Mengintegrasikan classifier sampah dari tim ML"
       },
-      scope: {
-        en: "5+ waste classes with on-device AI",
-        id: "5+ kelas sampah dengan AI pada perangkat"
+      "scope": {
+        "en": "UI/UX, authentication, Maps, backend and ML integration",
+        "id": "UI/UX, autentikasi, Maps, integrasi backend dan ML"
       }
     },
-    impact: {
-      en: "Mobile Dev Lead • Built AI waste classifier • 6-member team",
-      id: "Mobile Dev Lead • Bangun AI classifier • Tim 6 orang"
+    "impact": {
+      "en": "Android Developer | UI/UX, Maps and ML integration | 6-member team",
+      "id": "Android Developer | UI/UX, Maps dan integrasi ML | Tim 6 orang"
     },
-    shortDesc: {
-      en: "Capstone project for Bangkit 2024. Features AI-powered waste classification, carbon calculation, and waste bank locator.",
-      id: "Proyek Capstone Bangkit 2024. Fitur klasifikasi sampah berbasis AI, kalkulasi karbon, dan pencari bank sampah."
+    "shortDesc": {
+      "en": "Bangkit capstone: an Android app for waste classification and finding nearby waste banks, built with a six-member team.",
+      "id": "Capstone Bangkit: aplikasi Android untuk klasifikasi sampah dan pencarian bank sampah terdekat, dibangun bersama tim enam orang."
     },
-    fullDesc: {
-      en: "Waste management is a significant challenge in many urban areas. The goal of Planetku was to create a mobile application that empowers users to manage their waste more effectively and sustainably. The app aims to solve problems like incorrect waste sorting, lack of awareness about recycling value, and difficulty in finding nearby waste banks.",
-      id: "Pengelolaan sampah adalah tantangan besar di banyak daerah perkotaan. Tujuan Planetku adalah membuat aplikasi seluler yang memberdayakan pengguna untuk mengelola sampah mereka secara lebih efektif dan berkelanjutan. Aplikasi ini bertujuan untuk memecahkan masalah seperti pemilahan sampah yang salah, kurangnya kesadaran tentang nilai daur ulang, dan kesulitan menemukan bank sampah terdekat."
+    "fullDesc": {
+      "en": "Waste management is a significant challenge in many urban areas. The goal of Planetku was to create a mobile application that empowers users to manage their waste more effectively and sustainably. The app aims to solve problems like incorrect waste sorting, lack of awareness about recycling value, and difficulty in finding nearby waste banks.",
+      "id": "Pengelolaan sampah adalah tantangan besar di banyak daerah perkotaan. Tujuan Planetku adalah membuat aplikasi seluler yang memberdayakan pengguna untuk mengelola sampah mereka secara lebih efektif dan berkelanjutan. Aplikasi ini bertujuan untuk memecahkan masalah seperti pemilahan sampah yang salah, kurangnya kesadaran tentang nilai daur ulang, dan kesulitan menemukan bank sampah terdekat."
     },
-    challenges: {
-      en: "One of the biggest challenges was implementing the camera-based waste classification feature efficiently without slowing down the user's device. The initial model was quite large and slow.",
-      id: "Salah satu tantangan terbesar adalah mengimplementasikan fitur klasifikasi sampah berbasis kamera secara efisien tanpa memperlambat perangkat pengguna. Model awal cukup besar dan lambat."
+    "challenges": {
+      "en": "Connecting UI screens, account access, map locations, backend responses, and the ML team's classification output into one coherent Android flow.",
+      "id": "Menghubungkan layar UI, akses akun, lokasi peta, respons backend, dan hasil klasifikasi tim ML dalam satu alur Android yang utuh."
     },
-    solution: {
-      en: "We worked closely with the Machine Learning team to optimize the TensorFlow Lite model for mobile deployment. On the app side, I implemented asynchronous processing (`Coroutines` in Kotlin) to ensure the UI remained responsive while the image was being analyzed in the background.",
-      id: "Kami bekerja sama dengan tim Machine Learning untuk mengoptimalkan model TensorFlow Lite agar siap digunakan di seluler. Di sisi aplikasi, saya menerapkan pemrosesan asinkron (`Coroutines` di Kotlin) untuk memastikan UI tetap responsif saat gambar dianalisis di latar belakang."
+    "solution": {
+      "en": "I worked on UI/UX, login and registration, Google Maps, backend integration, and bringing the ML team's model into the Android application. Model development and evaluation belonged to the ML team.",
+      "id": "Saya mengerjakan UI/UX, login dan registrasi, Google Maps, integrasi backend, serta integrasi model tim ML ke aplikasi Android. Pengembangan dan evaluasi model merupakan bagian tim ML."
     },
-    lessonLearned: {
-      en: "I learned how to integrate TFLite with Android efficiently and mastered Kotlin Coroutines for background tasks. It also taught me the importance of cross-functional collaboration between ML and Mobile teams.",
-      id: "Saya belajar cara mengintegrasikan TFLite dengan Android secara efisien dan menguasai Kotlin Coroutines untuk tugas latar belakang. Ini juga mengajarkan saya pentingnya kolaborasi lintas fungsi antara tim ML dan Mobile."
+    "lessonLearned": {
+      "en": "Integrating a team's ML output involves more than displaying predictions: the Android flow must coordinate account state, backend data, maps, and clear feedback for users.",
+      "id": "Mengintegrasikan hasil kerja tim ML bukan sekadar menampilkan prediksi: alur Android perlu menyelaraskan state akun, data backend, peta, dan umpan balik yang jelas."
     },
-    decisionReplay: {
-      constraint: {
-        en: "The initial classifier was too large and slow for a comfortable camera flow, and integration had to be coordinated across a six-member cross-functional team.",
-        id: "Classifier awal terlalu besar dan lambat untuk alur kamera yang nyaman, sementara integrasinya perlu dikoordinasikan dalam tim lintas fungsi beranggotakan enam orang."
+    "decisionReplay": {
+      "constraint": {
+        "en": "Mobile, backend, and ML work progressed in parallel.",
+        "id": "Pekerjaan mobile, backend, dan ML berlangsung paralel."
       },
-      options: {
-        en: "Run classification through a remote service, or optimize a TensorFlow Lite model for direct use inside the Android application.",
-        id: "Menjalankan klasifikasi melalui layanan remote, atau mengoptimalkan model TensorFlow Lite agar dapat digunakan langsung di aplikasi Android."
+      "options": {
+        "en": "Build each feature in isolation, or connect features around a consistent account and navigation flow.",
+        "id": "Membangun fitur secara terpisah, atau menghubungkannya melalui alur akun dan navigasi yang konsisten."
       },
-      decision: {
-        en: "Optimize the TensorFlow Lite model for mobile and move image analysis off the main interface thread with Kotlin Coroutines.",
-        id: "Mengoptimalkan model TensorFlow Lite untuk mobile dan memindahkan analisis gambar dari thread antarmuka utama menggunakan Kotlin Coroutines."
+      "decision": {
+        "en": "Connect authentication, Google Maps, backend data, and the ML team's output through a consistent Android interface.",
+        "id": "Menghubungkan autentikasi, Google Maps, data backend, dan keluaran tim ML melalui antarmuka Android yang konsisten."
       },
-      tradeoff: {
-        en: "The team accepted additional model optimization work to keep the camera experience responsive and classification available on the device.",
-        id: "Tim menerima pekerjaan optimasi model tambahan agar pengalaman kamera tetap responsif dan klasifikasi tersedia pada perangkat."
-      },
-      evidence: {
-        en: "The delivered classifier covered more than five waste classes and reached 90% accuracy within the Android product flow.",
-        id: "Classifier yang dikembangkan mencakup lebih dari lima kelas sampah dan mencapai akurasi 90% dalam alur produk Android."
+      "tradeoff": {
+        "en": "Integration required coordinating data formats and interface states with the backend and ML teams.",
+        "id": "Integrasi membutuhkan koordinasi format data dan state antarmuka bersama tim backend dan ML."
       }
     },
-    features: {
-      en: [
-        "AI Waste Classification (Camera & Gallery)",
-        "Real-time Carbon Footprint Calculation",
-        "Interactive Waste Bank Map Locator",
-        "User Reward & Point System"
+    "features": {
+      "en": [
+        "Waste classification through ML integration",
+        "Google Maps waste-bank locations",
+        "Login and registration",
+        "UI/UX and backend integration"
       ],
-      id: [
-        "Klasifikasi Sampah AI (Kamera & Galeri)",
-        "Perhitungan Jejak Karbon Real-time",
-        "Peta Lokasi Bank Sampah Interaktif",
-        "Sistem Poin & Hadiah Pengguna"
+      "id": [
+        "Klasifikasi sampah melalui integrasi ML",
+        "Lokasi bank sampah dengan Google Maps",
+        "Login dan registrasi",
+        "UI/UX dan integrasi backend"
       ]
     },
-    techStack: [
-      { name: "Kotlin", icon: "devicon-kotlin-plain" },
-      { name: "Android Studio", icon: "devicon-androidstudio-plain" },
-      { name: "Firebase", icon: "devicon-firebase-plain" },
-      { name: "TensorFlow", icon: "devicon-tensorflow-original" }
+    "techStack": [
+      {
+        "name": "Kotlin",
+        "icon": "devicon-kotlin-plain"
+      },
+      {
+        "name": "Android Studio",
+        "icon": "devicon-androidstudio-plain"
+      },
+      {
+        "name": "Firebase",
+        "icon": "devicon-firebase-plain"
+      },
+      {
+        "name": "TensorFlow",
+        "icon": "devicon-tensorflow-original"
+      }
     ],
-    github: "https://github.com/PlanetKu-Capstone",
-    gallery: [
+    "github": "https://github.com/Rafie1715/PlanetKuApp",
+    "gallery": [
       "/images/Planetku1.webp",
       "/images/Planetku2.webp",
       "/images/Planetku3.webp",
@@ -308,158 +344,185 @@ export const projects = [
     ]
   },
   {
-    id: "cinemazone",
-    title: {
-      en: "CinemaZone - Movie Ticket Booking App",
-      id: "CinemaZone - Aplikasi Pemesanan Tiket Bioskop"
+    "id": "cinemazone",
+    "title": {
+      "en": "CinemaZone - Movie Ticket Booking App",
+      "id": "CinemaZone - Aplikasi Pemesanan Tiket Bioskop"
     },
-    category: "mobile",
-    image: "/images/project-cinemazone.webp",
-    featuredOrder: 4,
-    year: "2024",
-    impactDetails: {
-      role: {
-        en: "Solo Android Developer",
-        id: "Solo Android Developer"
+    "category": "mobile",
+    "image": "/images/project-cinemazone.webp",
+    "featuredOrder": 4,
+    "year": "2024",
+    "impactDetails": {
+      "role": {
+        "en": "Solo Android Developer",
+        "id": "Solo Android Developer"
       },
-      team: {
-        en: "Independent project",
-        id: "Proyek mandiri"
+      "team": {
+        "en": "Independent project",
+        "id": "Proyek mandiri"
       },
-      result: {
-        en: "4 key booking features delivered",
-        id: "4 fitur utama pemesanan diselesaikan"
+      "result": {
+        "en": "4 key booking features delivered",
+        "id": "4 fitur utama pemesanan diselesaikan"
       },
-      scope: {
-        en: "2 real-time Firebase services",
-        id: "2 layanan Firebase real-time"
+      "scope": {
+        "en": "2 real-time Firebase services",
+        "id": "2 layanan Firebase real-time"
       }
     },
-    impact: {
-      en: "Solo Developer • Real-time seat booking • Firebase integration",
-      id: "Solo Developer • Booking kursi real-time • Integrasi Firebase"
+    "impact": {
+      "en": "Solo Developer • Real-time seat booking • Firebase integration",
+      "id": "Solo Developer • Booking kursi real-time • Integrasi Firebase"
     },
-    shortDesc: {
-      en: "Android app with Firebase Auth, Cloud Firestore for wishlists, and a QR Code e-ticket generator.",
-      id: "Aplikasi Android dengan Firebase Auth, Cloud Firestore untuk wishlist, dan generator e-tiket QR Code."
+    "shortDesc": {
+      "en": "Android app with Firebase Auth, Cloud Firestore for wishlists, and a QR Code e-ticket generator.",
+      "id": "Aplikasi Android dengan Firebase Auth, Cloud Firestore untuk wishlist, dan generator e-tiket QR Code."
     },
-    fullDesc: {
-      en: "The CinemaZone project was developed to create a seamless and feature-rich movie ticket booking experience on an Android platform. The goal was to build an application that handles the entire user journey, from Browse movies and viewing details to selecting seats and generating a digital e-ticket.",
-      id: "Proyek CinemaZone dikembangkan untuk menciptakan pengalaman pemesanan tiket bioskop yang mulus dan kaya fitur di platform Android. Tujuannya adalah membangun aplikasi yang menangani seluruh perjalanan pengguna, mulai dari menelusuri film dan melihat detail hingga memilih kursi dan membuat e-tiket digital."
+    "fullDesc": {
+      "en": "The CinemaZone project was developed to create a seamless and feature-rich movie ticket booking experience on an Android platform. The goal was to build an application that handles the entire user journey, from Browse movies and viewing details to selecting seats and generating a digital e-ticket.",
+      "id": "Proyek CinemaZone dikembangkan untuk menciptakan pengalaman pemesanan tiket bioskop yang mulus dan kaya fitur di platform Android. Tujuannya adalah membangun aplikasi yang menangani seluruh perjalanan pengguna, mulai dari menelusuri film dan melihat detail hingga memilih kursi dan membuat e-tiket digital."
     },
-    challenges: {
-      en: "A primary challenge was designing and implementing the interactive seat picker, which needed to visually represent the cinema layout and handle seat selection state (available, selected, occupied) in real-time.",
-      id: "Tantangan utamanya adalah merancang dan mengimplementasikan pemilih kursi interaktif, yang perlu merepresentasikan tata letak bioskop secara visual dan menangani status pemilihan kursi (tersedia, dipilih, terisi) secara real-time."
+    "challenges": {
+      "en": "A primary challenge was designing and implementing the interactive seat picker, which needed to visually represent the cinema layout and handle seat selection state (available, selected, occupied) in real-time.",
+      "id": "Tantangan utamanya adalah merancang dan mengimplementasikan pemilih kursi interaktif, yang perlu merepresentasikan tata letak bioskop secara visual dan menangani status pemilihan kursi (tersedia, dipilih, terisi) secara real-time."
     },
-    solution: {
-      en: "I implemented this using a dynamic GridView in Android. Each seat was an object with a specific state. I used Firebase's Realtime Database to listen for changes, ensuring that if another user booked a seat, the UI would update instantly.",
-      id: "Saya mengimplementasikan ini menggunakan GridView dinamis di Android. Setiap kursi adalah objek dengan status tertentu. Saya menggunakan Firebase Realtime Database untuk mendengarkan perubahan, memastikan bahwa jika pengguna lain memesan kursi, UI akan diperbarui secara instan."
+    "solution": {
+      "en": "I implemented this using a dynamic GridView in Android. Each seat was an object with a specific state. I used Firebase's Realtime Database to listen for changes, ensuring that if another user booked a seat, the UI would update instantly.",
+      "id": "Saya mengimplementasikan ini menggunakan GridView dinamis di Android. Setiap kursi adalah objek dengan status tertentu. Saya menggunakan Firebase Realtime Database untuk mendengarkan perubahan, memastikan bahwa jika pengguna lain memesan kursi, UI akan diperbarui secara instan."
     },
-    lessonLearned: {
-      en: "This project deepened my understanding of NoSQL databases (Firestore vs Realtime DB). I learned how to handle complex state management for the seat selection logic to prevent double-booking.",
-      id: "Proyek ini memperdalam pemahaman saya tentang database NoSQL (Firestore vs Realtime DB). Saya belajar cara menangani manajemen status yang kompleks untuk logika pemilihan kursi guna mencegah pemesanan ganda."
+    "lessonLearned": {
+      "en": "This project strengthened my understanding of Firebase Authentication, Cloud Firestore, and Realtime Database, particularly in managing booking data and synchronizing seat availability. Handling simultaneous booking requests is an area for further development.",
+      "id": "Proyek ini memperkuat pemahaman saya tentang Firebase Authentication, Cloud Firestore, dan Realtime Database, terutama dalam mengelola data pemesanan dan menyinkronkan ketersediaan kursi. Penanganan permintaan pemesanan secara bersamaan masih menjadi area pengembangan berikutnya."
     },
-    features: {
-      en: [
+    "features": {
+      "en": [
         "User Authentication (Login/Register)",
         "Real-time Seat Selection Status",
         "E-Ticket QR Code Generation",
         "Movie Wishlist System"
       ],
-      id: [
+      "id": [
         "Autentikasi Pengguna (Login/Register)",
         "Status Pemilihan Kursi Real-time",
         "Pembuatan Kode QR E-Ticket",
         "Sistem Wishlist Film"
       ]
     },
-    techStack: [
-      { name: "Kotlin", icon: "devicon-kotlin-plain" },
-      { name: "Firebase", icon: "devicon-firebase-plain" },
-      { name: "Android Studio", icon: "devicon-androidstudio-plain" }
+    "techStack": [
+      {
+        "name": "Kotlin",
+        "icon": "devicon-kotlin-plain"
+      },
+      {
+        "name": "Firebase",
+        "icon": "devicon-firebase-plain"
+      },
+      {
+        "name": "Android Studio",
+        "icon": "devicon-androidstudio-plain"
+      }
     ],
-    github: "https://github.com/Rafie1715/CinemaZone",
-    gallery: [
+    "github": "https://github.com/Rafie1715/CinemaZone",
+    "gallery": [
       "/images/project-cinemazone2.webp",
       "/images/project-cinemazone3.webp"
     ]
   },
   {
-    id: "computer-crafter",
-    title: {
-      en: "Computer Crafter Website",
-      id: "Website Computer Crafter"
+    "id": "computer-crafter",
+    "title": {
+      "en": "Computer Crafter Website",
+      "id": "Website Computer Crafter"
     },
-    category: "web",
-    image: "/images/project-computercrafter.webp",
-    featuredOrder: 5,
-    year: "2023",
-    impactDetails: {
-      role: {
-        en: "Full-stack Developer",
-        id: "Full-stack Developer"
+    "category": "web",
+    "image": "/images/project-computercrafter.webp",
+    "featuredOrder": 5,
+    "year": "2023",
+    "impactDetails": {
+      "role": {
+        "en": "Full-stack Developer",
+        "id": "Full-stack Developer"
       },
-      team: {
-        en: "Collaborative web project",
-        id: "Proyek web kolaboratif"
+      "team": {
+        "en": "Collaborative web project",
+        "id": "Proyek web kolaboratif"
       },
-      result: {
-        en: "100% tested compatibility mismatches detected",
-        id: "100% mismatch kompatibilitas uji terdeteksi"
+      "result": {
+        "en": "Rule-based checks for 50+ PC components",
+        "id": "Pemeriksaan berbasis aturan untuk 50+ komponen PC"
       },
-      scope: {
-        en: "50+ PC components managed",
-        id: "50+ komponen PC dikelola"
+      "scope": {
+        "en": "50+ PC components managed",
+        "id": "50+ komponen PC dikelola"
       }
     },
-    impact: {
-      en: "Full-stack Dev • Built compatibility logic • MySQL + PHP",
-      id: "Full-stack Dev • Logic kompatibilitas • MySQL + PHP"
+    "impact": {
+      "en": "Full-stack Dev • Built compatibility logic • MySQL + PHP",
+      "id": "Full-stack Dev • Logic kompatibilitas • MySQL + PHP"
     },
-    shortDesc: {
-      en: "A web-based PC building simulator for enthusiasts and beginners.",
-      id: "Simulator perakitan PC berbasis web untuk penggemar dan pemula."
+    "shortDesc": {
+      "en": "A web-based PC building simulator for enthusiasts and beginners.",
+      "id": "Simulator perakitan PC berbasis web untuk penggemar dan pemula."
     },
-    fullDesc: {
-      en: "The process of building a personal computer can be intimidating for newcomers due to component compatibility issues. Computer Crafter was created to demystify this process, providing a user-friendly platform where users can select PC parts, see a real-time price total, and be confident that their chosen components will work together.",
-      id: "Proses merakit komputer pribadi bisa menakutkan bagi pendatang baru karena masalah kompatibilitas komponen. Computer Crafter dibuat untuk menyederhanakan proses ini, menyediakan platform yang ramah pengguna di mana pengguna dapat memilih suku cadang PC, melihat total harga waktu nyata, dan yakin bahwa komponen yang mereka pilih akan bekerja bersama."
+    "fullDesc": {
+      "en": "Computer Crafter helps users select PC components, review a running price total, and check supported compatibility rules such as CPU and motherboard sockets.",
+      "id": "Computer Crafter membantu pengguna memilih komponen PC, melihat total harga, dan memeriksa aturan kompatibilitas yang didukung, seperti soket CPU dan motherboard."
     },
-    challenges: {
-      en: "The most complex part of this project was managing the database of components and implementing the compatibility logic. For example, ensuring a selected CPU was compatible with the chosen motherboard's socket type.",
-      id: "Bagian paling kompleks dari proyek ini adalah mengelola database komponen dan menerapkan logika kompatibilitas. Misalnya, memastikan CPU yang dipilih kompatibel dengan jenis soket motherboard yang dipilih."
+    "challenges": {
+      "en": "The most complex part of this project was managing the database of components and implementing the compatibility logic. For example, ensuring a selected CPU was compatible with the chosen motherboard's socket type.",
+      "id": "Bagian paling kompleks dari proyek ini adalah mengelola database komponen dan menerapkan logika kompatibilitas. Misalnya, memastikan CPU yang dipilih kompatibel dengan jenis soket motherboard yang dipilih."
     },
-    solution: {
-      en: "I designed a relational database schema in MySQL to store components with their relevant specifications. Using PHP on the back-end, I created API endpoints that would dynamically filter the options available in the dropdown menus via AJAX.",
-      id: "Saya merancang skema database relasional di MySQL untuk menyimpan komponen dengan spesifikasi yang relevan. Menggunakan PHP di back-end, saya membuat endpoint API yang secara dinamis memfilter opsi yang tersedia di menu drop-down melalui AJAX."
+    "solution": {
+      "en": "I designed a relational database schema in MySQL to store components with their relevant specifications. Using PHP on the back-end, I created API endpoints that would dynamically filter the options available in the dropdown menus via AJAX.",
+      "id": "Saya merancang skema database relasional di MySQL untuk menyimpan komponen dengan spesifikasi yang relevan. Menggunakan PHP di back-end, saya membuat endpoint API yang secara dinamis memfilter opsi yang tersedia di menu drop-down melalui AJAX."
     },
-    lessonLearned: {
-      en: "I gained solid experience in Relational Database Design and normalization. I also learned how to use AJAX for dynamic content loading without refreshing the page.",
-      id: "Saya memperoleh pengalaman yang kuat dalam Desain Database Relasional dan normalisasi. Saya juga belajar cara menggunakan AJAX untuk memuat konten dinamis tanpa me-refresh halaman."
+    "lessonLearned": {
+      "en": "I gained solid experience in Relational Database Design and normalization. I also learned how to use AJAX for dynamic content loading without refreshing the page.",
+      "id": "Saya memperoleh pengalaman yang kuat dalam Desain Database Relasional dan normalisasi. Saya juga belajar cara menggunakan AJAX untuk memuat konten dinamis tanpa me-refresh halaman."
     },
-    features: {
-      en: [
+    "features": {
+      "en": [
         "PC Part Picker Simulator",
         "Automatic Compatibility Check",
         "Real-time Price Estimation",
         "Component Database Management"
       ],
-      id: [
+      "id": [
         "Simulator Pemilih Suku Cadang PC",
         "Pemeriksaan Kompatibilitas Otomatis",
         "Estimasi Harga Real-time",
         "Manajemen Database Komponen"
       ]
     },
-    techStack: [
-      { name: "HTML5", icon: "devicon-html5-plain" },
-      { name: "CSS3", icon: "devicon-css3-plain" },
-      { name: "JavaScript", icon: "devicon-javascript-plain" },
-      { name: "PHP", icon: "devicon-php-plain" },
-      { name: "MySQL", icon: "devicon-mysql-plain" },
-      { name: "Bootstrap", icon: "devicon-bootstrap-plain" }
+    "techStack": [
+      {
+        "name": "HTML5",
+        "icon": "devicon-html5-plain"
+      },
+      {
+        "name": "CSS3",
+        "icon": "devicon-css3-plain"
+      },
+      {
+        "name": "JavaScript",
+        "icon": "devicon-javascript-plain"
+      },
+      {
+        "name": "PHP",
+        "icon": "devicon-php-plain"
+      },
+      {
+        "name": "MySQL",
+        "icon": "devicon-mysql-plain"
+      },
+      {
+        "name": "Bootstrap",
+        "icon": "devicon-bootstrap-plain"
+      }
     ],
-    github: "https://github.com/inotlusrabka/Project-Web",
-    gallery: [
+    "github": "https://github.com/inotlusrabka/Project-Web",
+    "gallery": [
       "/images/project-computercrafter2.webp"
     ]
   },
@@ -1098,22 +1161,54 @@ export const projects = [
 ];
 
 const evidenceById = {
-  OD60ttuTSwZW62TRJFm6: {
-    contribution: { en: 'Independent Informatics thesis: I built the Kotlin tracking and assessment flow, used Firebase for application data, and evaluated a Random Forest classifier with Scikit-Learn.', id: 'Skripsi Informatika mandiri: saya membangun alur pelacakan dan penilaian dengan Kotlin, menggunakan Firebase untuk data aplikasi, dan mengevaluasi klasifikasi Random Forest dengan Scikit-Learn.' },
-    flow: [{ en: 'Record sleep activity and complete the daily assessment.', id: 'Catat aktivitas tidur dan lengkapi penilaian harian.' }, { en: 'Review the sleep-quality classification.', id: 'Tinjau hasil klasifikasi kualitas tidur.' }, { en: 'Explore weekly statistics and educational content.', id: 'Lihat statistik mingguan dan konten edukasi.' }],
-    metricContext: { en: '92.06% refers to the classification accuracy reported in the thesis evaluation. It describes model performance, rather than a measured improvement in users’ sleep.', id: '92,06% merujuk pada akurasi klasifikasi yang dilaporkan dalam evaluasi skripsi. Angka ini menjelaskan kinerja model, bukan peningkatan kualitas tidur pengguna yang telah diukur.' },
-    article: '/blog/restup-random-forest-android',
+  "OD60ttuTSwZW62TRJFm6": {
+    "contribution": {
+      "en": "Independent Informatics thesis: I built the Kotlin tracking and assessment flow, used Firebase for application data, and evaluated a Random Forest classifier with Scikit-Learn.",
+      "id": "Skripsi Informatika mandiri: saya membangun alur pelacakan dan penilaian dengan Kotlin, menggunakan Firebase untuk data aplikasi, dan mengevaluasi klasifikasi Random Forest dengan Scikit-Learn."
+    },
+    "flow": [
+      {
+        "en": "Record sleep activity and complete the daily assessment.",
+        "id": "Catat aktivitas tidur dan lengkapi penilaian harian."
+      },
+      {
+        "en": "Review the sleep-quality classification.",
+        "id": "Tinjau hasil klasifikasi kualitas tidur."
+      },
+      {
+        "en": "Explore weekly statistics and educational content.",
+        "id": "Lihat statistik mingguan dan konten edukasi."
+      }
+    ],
+    "metricContext": {
+      "en": "92.06% refers to the classification accuracy reported in the thesis evaluation. It describes model performance, rather than a measured improvement in users’ sleep.",
+      "id": "92,06% merujuk pada akurasi klasifikasi yang dilaporkan dalam evaluasi skripsi. Angka ini menjelaskan kinerja model, bukan peningkatan kualitas tidur pengguna yang telah diukur."
+    },
+    "article": "/blog/restup-random-forest-android"
   },
-  'mandiri-news': {
-    contribution: { en: 'In the Bank Mandiri x Rakamin project-based virtual internship, I built three Android screens and integrated three REST endpoints using MVVM, Retrofit, Coroutines, and Paging 3.', id: 'Dalam project-based virtual internship Bank Mandiri x Rakamin, saya membangun tiga layar Android dan mengintegrasikan tiga REST endpoint menggunakan MVVM, Retrofit, Coroutines, dan Paging 3.' },
-    metricContext: { en: '88.71/100 is the program assessment score (Excellent). The images show the implemented news feed and the project presentation.', id: '88,71/100 merupakan nilai evaluasi program (Excellent). Gambar menampilkan implementasi feed berita dan presentasi proyek.' },
-    article: '/blog/mandiri-news-paging-android',
+  "mandiri-news": {
+    "contribution": {
+      "en": "In the Bank Mandiri x Rakamin project-based virtual internship, I built three Android screens and integrated three REST endpoints using MVVM, Retrofit, Coroutines, and Paging 3.",
+      "id": "Dalam project-based virtual internship Bank Mandiri x Rakamin, saya membangun tiga layar Android dan mengintegrasikan tiga REST endpoint menggunakan MVVM, Retrofit, Coroutines, dan Paging 3."
+    },
+    "metricContext": {
+      "en": "88.71/100 is the program assessment score (Excellent). The images show the implemented news feed and the project presentation.",
+      "id": "88,71/100 merupakan nilai evaluasi program (Excellent). Gambar menampilkan implementasi feed berita dan presentasi proyek."
+    },
+    "article": "/blog/mandiri-news-paging-android"
   },
-  planetku: {
-    contribution: { en: 'As Mobile Development Lead in a six-member Bangkit capstone team, I focused on the Android experience and connecting the product features. The waste-classification accuracy is a result of the team’s model.', id: 'Sebagai Mobile Development Lead dalam tim capstone Bangkit beranggotakan enam orang, saya berfokus pada pengalaman Android dan integrasi fitur produk. Akurasi klasifikasi sampah merupakan hasil model tim.' },
-    flow: [{ en: 'Classify waste from an image.', id: 'Klasifikasikan sampah dari gambar.' }, { en: 'Explore the carbon calculation.', id: 'Jelajahi perhitungan karbon.' }, { en: 'Find a waste bank.', id: 'Temukan bank sampah.' }],
-  },
+  "planetku": {
+    "contribution": {
+      "en": "I worked on UI/UX, login and registration, Google Maps, backend integration, and bringing the ML team's model into the Android application. Model development and evaluation belonged to the ML team.",
+      "id": "Saya mengerjakan UI/UX, login dan registrasi, Google Maps, integrasi backend, serta integrasi model tim ML ke aplikasi Android. Pengembangan dan evaluasi model merupakan bagian tim ML."
+    },
+    "metricContext": {
+      "en": "The ML team reported 90% classification accuracy. My contribution was Android development and model integration; a reproducible model evaluation is not included here.",
+      "id": "Tim ML melaporkan akurasi klasifikasi 90%. Kontribusi saya adalah pengembangan Android dan integrasi model; evaluasi model yang dapat direproduksi belum disertakan di sini."
+    }
+  }
 };
 for (const project of projects) {
+  Object.assign(project, caseStudyDetails[project.id] || {});
   if (evidenceById[project.id]) project.evidence = evidenceById[project.id];
 }

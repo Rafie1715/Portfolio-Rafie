@@ -34,10 +34,12 @@ export const experiences = [
     description: {
       en: [
         "Led a two-person mentoring team to teach front-end development to 26 students through capstone projects.",
+        "Taught front-end classes and helped prepare some back-end material; my colleague taught the back-end sessions.",
         "Spoke about web development at Multimedia Vibes Project for more than 30 students at SMA PKP Jakarta Islamic School.",
       ],
       id: [
         "Memimpin tim mentoring beranggotakan dua orang untuk mengajar front-end kepada 26 mahasiswa hingga proyek capstone.",
+        "Mengajar kelas front-end dan membantu sebagian penyusunan materi back-end; sesi back-end diajar oleh rekan saya.",
         "Menjadi pembicara materi web development dalam Multimedia Vibes Project untuk lebih dari 30 siswa SMA PKP Jakarta Islamic School.",
       ],
     },
@@ -109,12 +111,12 @@ export const experiences = [
       en: [
         "Completed more than 900 hours of intensive mobile development, technical, and career-readiness learning.",
         "Collaborated in a six-member capstone team to build Planetku, an AI-assisted waste classification product.",
-        "Delivered a model with 90% accuracy across more than five waste classes and integrated it into the product workflow.",
+        "Built Android UI/UX, login and registration, Google Maps, backend integration, and integration of the ML team's waste classifier. The reported 90% model accuracy was the ML team's result.",
       ],
       id: [
         "Menyelesaikan lebih dari 900 jam pembelajaran intensif mobile development, teknis, dan kesiapan karier.",
         "Berkolaborasi dalam tim capstone beranggotakan enam orang untuk membangun Planetku, produk klasifikasi sampah berbantuan AI.",
-        "Menghasilkan model dengan akurasi 90% untuk lebih dari lima kelas sampah dan mengintegrasikannya ke dalam alur produk.",
+        "Mengerjakan UI/UX Android, login dan registrasi, Google Maps, integrasi backend, serta integrasi classifier sampah tim ML. Angka akurasi model 90% merupakan hasil tim ML.",
       ],
     },
     docs: [

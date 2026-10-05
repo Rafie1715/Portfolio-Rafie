@@ -26,6 +26,7 @@ const DecisionReplay = ({ steps }) => {
 
   const activeStep = steps[Math.min(activeIndex, steps.length - 1)];
   const ActiveIcon = stepIcons[activeStep.key] || CircleDotDashed;
+  const decision = steps.find(step => step.key === 'decision');
 
   return (
     <section className="mb-14 border-y border-slate-200 py-8 dark:border-slate-700" aria-labelledby="decision-replay-title">
@@ -43,7 +44,10 @@ const DecisionReplay = ({ steps }) => {
         </p>
       </div>
 
-      <div className="mt-7 grid gap-7 md:grid-cols-[minmax(190px,0.65fr)_minmax(0,1.7fr)]">
+      {decision && <div className="mt-5 border-l-2 border-primary pl-4"><h3 className="font-semibold">{t('common.decision_summary')}</h3><p className="mt-2 leading-7 text-slate-600 dark:text-slate-300">{decision.value}</p></div>}
+      <details className="mt-5">
+      <summary className="min-h-11 cursor-pointer py-3 font-semibold text-primary">{t('common.decision_details')}</summary>
+      <div className="mt-5 grid gap-7 md:grid-cols-[minmax(190px,0.65fr)_minmax(0,1.7fr)]">
         <div className="flex gap-2 overflow-x-auto pb-2 md:flex-col md:overflow-visible md:pb-0" role="group" aria-label={t('projectDetail.decision_replay.controls')}>
           {steps.map((step, index) => {
             const Icon = stepIcons[step.key] || CircleDotDashed;
@@ -86,6 +90,7 @@ const DecisionReplay = ({ steps }) => {
           </p>
         </div>
       </div>
+      </details>
     </section>
   );
 };

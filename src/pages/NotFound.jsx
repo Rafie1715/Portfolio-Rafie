@@ -7,6 +7,9 @@ export default function NotFound() {
     <SEO title={t('common.not_found') + ' | Rafie Rojagat'} description={t('common.not_found_desc')} noindex />
     <p className="text-7xl font-black text-primary">404</p><h1 className="mt-5 text-3xl font-bold">{t('common.not_found')}</h1>
     <p className="mt-4 max-w-lg text-slate-600 dark:text-slate-400">{t('common.not_found_desc')}</p>
-    <Link to="/" className="mt-6 rounded-lg bg-primary px-6 py-3 font-bold text-white">{t('common.back_home')}</Link>
+    <div className="mt-6 flex flex-wrap justify-center gap-3">
+      <Link to="/projects" className="rounded-lg bg-primary px-6 py-3 font-bold text-white">{t('hero.view_projects')}</Link>
+      <Link to="/" className="rounded-lg border border-slate-300 px-6 py-3 font-bold dark:border-slate-600">{t('common.back_home')}</Link>
+    </div>
   </main>;
 }

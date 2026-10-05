@@ -1,3 +1,4 @@
+import { projectPath } from '../../../src/utils/projectRoutes.js';
 import { portfolioProfile } from "../../../src/data/portfolioProfile.js";
 import { experiences } from "../../../src/data/experience.js";
 import { projects } from "../../../src/data/projects.js";
@@ -29,7 +30,7 @@ const listProjects = () => projects
         .join("; ")
       : "No verified impact metrics are recorded.";
     const stack = project.techStack?.map((technology) => technology.name).join(", ") || "Not specified";
-    return `- ${inEnglish(project.title)}${project.year ? ` (${project.year})` : ""}: ${inEnglish(project.shortDesc)} Impact: ${impact}. Stack: ${stack}. Detail route: /project/${project.id}`;
+    return `- ${inEnglish(project.title)}${project.year ? ` (${project.year})` : ""}: ${inEnglish(project.shortDesc)} Impact: ${impact}. Stack: ${stack}. Detail route: ${projectPath(project)}`;
   })
   .join("\n");
 

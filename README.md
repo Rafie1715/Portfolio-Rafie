@@ -15,6 +15,23 @@ Check it out live here: [**https://rafierb.me**](https://rafierb.me)
 - **Backend:** Netlify Functions (Serverless)
 - **Deployment:** Netlify
 
+## Local development
+
+Run `npm install`, then `npm run dev`. Vite serves the frontend and the existing
+API handlers together; a separate function server on port 9999 is not required.
+Both `/api/*` and the legacy `/.netlify/functions/*` URLs work locally.
+The same API adapter is available with `npm run preview` after a build.
+
+Configure provider credentials in your local `.env` using `.env.example` as a
+reference. Credentials remain server-side. Restart Vite after changing them.
+Missing or invalid provider credentials still produce an API error; local mode
+does not substitute fake data or bypass admin authorization. It uses the real
+configured services, including writes when you perform a valid write action.
+
+For Netlify-specific behavior use `npm run dev:netlify` with Netlify CLI installed.
+Netlify's edge rate limits and deployment routing are not emulated by plain Vite.
+Generated review reports are excluded from Vite's file watcher.
+
 ## Admin security
 
 Use a Firebase custom claim `admin: true` for the owner account. Firestore Rules require this claim; an email allowlist in the UI alone does not grant database permissions.

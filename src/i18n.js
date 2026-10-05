@@ -98,7 +98,7 @@ const resources = {
                             usage: "RestUP, Mandiri News, and Planetku"
                         },
                         tensorflow: {
-                            role: "On-device machine learning integration",
+                            role: "Machine learning integration",
                             usage: "Planetku waste classification"
                         },
                         react: {
@@ -178,9 +178,9 @@ const resources = {
                                 "responsive Android features."
                             ],
                             work_title: "Selected Android Work",
-                            work_summary: "Android projects covering REST pagination, Firebase workflows, and on-device machine learning.",
+                            work_summary: "Android projects covering REST pagination, Firebase workflows, and machine learning integration.",
                             seo_title: "Rafie Rojagat | Android Developer Portfolio",
-                            seo_desc: "Android developer portfolio featuring Kotlin, MVVM, Coroutines, Retrofit, Firebase, and on-device machine learning projects.",
+                            seo_desc: "Android developer portfolio featuring Kotlin, MVVM, Coroutines, Retrofit, Firebase, and machine learning integration projects.",
                             proof: [
                                 { label: "Core stack", value: "Kotlin, MVVM, Retrofit, Coroutines" },
                                 { label: "Delivery proof", value: "Three detailed Android case studies" },
@@ -216,16 +216,16 @@ const resources = {
                             stack: "Scikit-Learn, TFLite, OpenCV",
                             hero_phrases: [
                                 "evaluated machine learning models.",
-                                "on-device AI features.",
+                                "AI-integrated features.",
                                 "AI outputs users can understand."
                             ],
                             work_title: "Selected AI & ML Work",
-                            work_summary: "Applied ML projects covering health classification, on-device vision, and sentiment analysis.",
+                            work_summary: "Applied ML projects covering health classification, image classification, and sentiment analysis.",
                             seo_title: "Rafie Rojagat | Applied AI Developer Portfolio",
                             seo_desc: "Applied AI portfolio featuring Scikit-Learn, TensorFlow Lite, OpenCV, model evaluation, and AI-integrated products.",
                             proof: [
                                 { label: "Model evaluation", value: "92.06% sleep classification accuracy" },
-                                { label: "On-device AI", value: "90% waste classification accuracy" },
+                                { label: "ML integration", value: "Android integration of the ML team's classifier" },
                                 { label: "NLP project", value: "87.67% sentiment model accuracy" }
                             ]
                         }
@@ -379,7 +379,7 @@ const resources = {
                 results_title: "Project Results",
                 project_count: "{{count}} projects match your current search and filter.",
                 subtitle: "Recent GitHub Repositories",
-                subtitle_desc: "A small, lazily loaded view of recent public code activity.",
+                subtitle_desc: "Recent public repositories and ongoing projects.",
                 github_eyebrow: "Code Activity",
                 view_details: "View Details",
                 case_study: "View Case Study",
@@ -418,7 +418,7 @@ const resources = {
             projectDetail: {
                 category_label: "Project",
                 impact: {
-                    eyebrow: "Recruiter Snapshot",
+                    eyebrow: "Project at a Glance",
                     title: "Selected Impact",
                     desc: "A quick read on what I owned, what the project needed, and where to inspect the work.",
                     role: "Role",
@@ -847,7 +847,7 @@ const resources = {
                             usage: "RestUP, Mandiri News, dan Planetku"
                         },
                         tensorflow: {
-                            role: "Integrasi machine learning pada perangkat",
+                            role: "Integrasi integrasi machine learning",
                             usage: "Klasifikasi sampah Planetku"
                         },
                         react: {
@@ -927,9 +927,9 @@ const resources = {
                                 "fitur Android yang responsif."
                             ],
                             work_title: "Karya Android Pilihan",
-                            work_summary: "Proyek Android yang mencakup paginasi REST, alur Firebase, dan machine learning pada perangkat.",
+                            work_summary: "Proyek Android yang mencakup paginasi REST, alur Firebase, dan integrasi machine learning.",
                             seo_title: "Rafie Rojagat | Portofolio Developer Android",
-                            seo_desc: "Portofolio developer Android dengan Kotlin, MVVM, Coroutines, Retrofit, Firebase, dan machine learning pada perangkat.",
+                            seo_desc: "Portofolio developer Android dengan Kotlin, MVVM, Coroutines, Retrofit, Firebase, dan integrasi machine learning.",
                             proof: [
                                 { label: "Stack utama", value: "Kotlin, MVVM, Retrofit, Coroutines" },
                                 { label: "Bukti pengembangan", value: "Tiga studi kasus Android terperinci" },
@@ -965,7 +965,7 @@ const resources = {
                             stack: "Scikit-Learn, TFLite, OpenCV",
                             hero_phrases: [
                                 "model machine learning teruji.",
-                                "fitur AI pada perangkat.",
+                                "fitur Integrasi ML.",
                                 "keluaran AI yang mudah dipahami."
                             ],
                             work_title: "Karya AI & ML Pilihan",
@@ -974,7 +974,7 @@ const resources = {
                             seo_desc: "Portofolio AI terapan dengan Scikit-Learn, TensorFlow Lite, OpenCV, evaluasi model, dan produk terintegrasi AI.",
                             proof: [
                                 { label: "Evaluasi model", value: "Akurasi klasifikasi tidur 92,06%" },
-                                { label: "AI pada perangkat", value: "Akurasi klasifikasi sampah 90%" },
+                                { label: "Integrasi ML", value: "Integrasi Android untuk classifier tim ML" },
                                 { label: "Proyek NLP", value: "Akurasi model sentimen 87,67%" }
                             ]
                         }
@@ -1128,7 +1128,7 @@ const resources = {
                 results_title: "Hasil Proyek",
                 project_count: "{{count}} proyek sesuai dengan pencarian dan filter saat ini.",
                 subtitle: "Repositori GitHub Terbaru",
-                subtitle_desc: "Ringkasan kecil aktivitas kode publik yang hanya dimuat saat dibutuhkan.",
+                subtitle_desc: "Repositori publik terbaru dan proyek yang sedang dikerjakan.",
                 github_eyebrow: "Aktivitas Kode",
                 view_details: "Lihat Detail",
                 case_study: "Lihat Studi Kasus",

@@ -1,6 +1,7 @@
+import { projectPath } from '../utils/projectRoutes';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   ArrowRight,
   BarChart3,
@@ -132,7 +133,7 @@ const ProjectActions = ({ project, title, compact = false, t }) => {
   return (
     <div className="mt-auto flex items-center gap-2 border-t border-gray-100 pt-4 dark:border-slate-700">
       <Link
-        to={`/project/${project.id}`}
+        to={projectPath(project)}
         onClick={() => trackProjectView(project.id, title)}
         className={`inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2.5 font-semibold text-white transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary/40 ${compact ? 'text-sm' : 'text-sm sm:text-base'}`}
       >
@@ -196,7 +197,7 @@ const ProjectCard = ({
       className={`group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg dark:border-slate-700 dark:bg-darkLight ${lead ? 'lg:col-span-2 lg:grid lg:h-[32rem] lg:grid-cols-[1.25fr_1fr]' : 'flex h-full flex-col'}`}
     >
       <Link
-        to={`/project/${project.id}`}
+        to={projectPath(project)}
         onClick={() => trackProjectView(project.id, title)}
         className={`relative block aspect-video overflow-hidden bg-gray-100 dark:bg-slate-800 ${lead ? 'lg:h-full lg:aspect-auto' : ''}`}
         aria-label={`${t('projects.case_study')}: ${title}`}
@@ -231,7 +232,7 @@ const ProjectCard = ({
       <div className={`flex flex-1 flex-col ${featured ? 'p-5 sm:p-6' : 'p-5'}`}>
         <div className="mb-4">
           <Link
-            to={`/project/${project.id}`}
+            to={projectPath(project)}
             onClick={() => trackProjectView(project.id, title)}
             className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
           >
@@ -289,7 +290,14 @@ const ProjectCard = ({
 };
 
 const Projects = () => {
-  const [filter, setFilter] = useState('all');
+  const [params, setParams] = useSearchParams();
+  const focusFilters = { android: 'mobile', frontend: 'web', ai: 'ai', mobile: 'mobile', web: 'web', ui: 'ui', other: 'other' };
+  const filter = focusFilters[params.get('focus')] || 'all';
+  const setFilter = value => {
+    const next = new URLSearchParams(params);
+    if (value === 'all') next.delete('focus'); else next.set('focus', value === 'web' ? 'frontend' : value === 'mobile' ? 'android' : value);
+    setParams(next, { replace: true });
+  };
   const [searchTerm, setSearchTerm] = useState('');
   const { projects: catalog, loading, error, retry } = useProjects();
   const [showAllArchive, setShowAllArchive] = useState(false);
@@ -370,6 +378,10 @@ const Projects = () => {
     ].map(normalizeText).join(' ');
 
     return searchableText.includes(normalizedSearch);
+  }).sort((a, b) => {
+    if (filter !== 'web') return 0;
+    const rank = project => project.id === 'portfolio-website' ? 0 : project.id === 'personal-notes' ? 1 : 2;
+    return rank(a) - rank(b);
   }), [allProjects, currentLang, filter, normalizedSearch]);
 
   const archiveProjects = useMemo(
@@ -607,9 +619,9 @@ const Projects = () => {
                     </a>
                   </div>
                   <h3 className="mb-2 text-lg font-bold capitalize text-dark dark:text-white">{repo.name.replace(/-/g, ' ')}</h3>
-                  <p className="mb-5 line-clamp-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {repo.description || t('projects.no_repo_description')}
-                  </p>
+                  {(repo.description || allProjects.some(project => project.github?.toLowerCase() === repo.html_url?.toLowerCase())) && <p className="mb-5 line-clamp-3 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    {repo.description || getLocalized(allProjects.find(project => project.github?.toLowerCase() === repo.html_url?.toLowerCase())?.shortDesc, currentLang)}
+                  </p>}
                   <div className="flex items-center justify-between border-t border-gray-100 pt-4 text-xs text-gray-500 dark:border-slate-700">
                     <span className="flex items-center gap-2">
                       <span className={`size-2.5 rounded-full ${languageColors[repo.language] || languageColors.default}`} aria-hidden="true" />

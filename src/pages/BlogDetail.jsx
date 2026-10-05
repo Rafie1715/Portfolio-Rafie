@@ -1,3 +1,4 @@
+import { projectPath } from '../utils/projectRoutes';
 import { useEffect, useMemo, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link, Navigate, useParams } from 'react-router-dom';
@@ -252,7 +253,7 @@ const BlogDetail = () => {
             {blog.projectId && (
               <div className="mt-12 border-y border-gray-200 py-7 dark:border-slate-700">
                 <Link
-                  to={`/project/${blog.projectId}`}
+                  to={projectPath(blog.projectId)}
                   className="inline-flex items-center gap-2 font-bold text-primary transition hover:text-blue-700 dark:hover:text-blue-300"
                 >
                   {t('pages.blog.open_project')}

@@ -169,85 +169,116 @@ export const blogs = [
     },
   },
   {
-    id: 8,
-    slug: 'planetku-on-device-waste-classification',
-    title: {
-      en: 'Leading the Mobile Build for an On-Device Waste Classifier',
-      id: 'Memimpin Pengembangan Mobile untuk Klasifikasi Sampah pada Perangkat',
+    "id": 8,
+    "slug": "planetku-on-device-waste-classification",
+    "title": {
+      "en": "Building PlanetKu: Android UI, Maps, and ML Integration",
+      "id": "Membangun PlanetKu: UI Android, Maps, dan Integrasi ML"
     },
-    excerpt: {
-      en: 'How a six-person Bangkit capstone team connected TensorFlow Lite classification with a responsive Kotlin experience.',
-      id: 'Cara tim capstone Bangkit beranggotakan enam orang menghubungkan klasifikasi TensorFlow Lite dengan pengalaman Kotlin yang responsif.',
+    "excerpt": {
+      "en": "My Android development contribution to a six-member Bangkit capstone, from account flows to maps and the ML team's classifier.",
+      "id": "Kontribusi pengembangan Android saya dalam capstone Bangkit enam orang, dari alur akun hingga peta dan classifier tim ML."
     },
-    author: 'Rafie Rojagat Bachri',
-    publishedAt: '2026-08-28',
-    updatedAt: '2026-08-28',
-    category: 'case-study',
-    tags: ['Android', 'TensorFlow Lite', 'Coroutines', 'Teamwork'],
-    image: '/images/project-planetku.webp',
-    projectId: 'planetku',
-    impact: {
-      role: { en: 'Mobile Development Lead', id: 'Lead Mobile Development' },
-      team: { en: '6-member cross-functional team', id: 'Tim lintas fungsi beranggotakan 6 orang' },
-      result: { en: '90% waste-classification accuracy', id: 'Akurasi klasifikasi sampah 90%' },
-      scope: { en: '5+ classes with on-device AI', id: '5+ kelas dengan AI pada perangkat' },
+    "author": "Rafie Rojagat Bachri",
+    "publishedAt": "2026-08-28",
+    "updatedAt": "2026-10-04",
+    "category": "case-study",
+    "tags": [
+      "Android",
+      "Kotlin",
+      "Google Maps",
+      "Teamwork"
+    ],
+    "image": "/images/project-planetku.webp",
+    "projectId": "planetku",
+    "impact": {
+      "role": {
+        "en": "Android Developer",
+        "id": "Android Developer"
+      },
+      "team": {
+        "en": "6-member cross-functional team",
+        "id": "Tim lintas fungsi beranggotakan 6 orang"
+      },
+      "result": {
+        "en": "Integrated the ML team's waste classifier",
+        "id": "Mengintegrasikan classifier sampah dari tim ML"
+      },
+      "scope": {
+        "en": "UI/UX, authentication, Maps, backend and ML integration",
+        "id": "UI/UX, autentikasi, Maps, integrasi backend dan ML"
+      }
     },
-    sections: {
-      en: [
+    "sections": {
+      "en": [
         {
-          heading: 'A cross-functional capstone',
-          paragraphs: [
-            'Planetku was built as a Bangkit 2024 capstone by a six-member cross-functional team. The product focused on waste sorting, recycling awareness, carbon calculation, and access to nearby waste banks.',
-            'As Mobile Development Lead, I was responsible for connecting the Android experience with the work produced by the machine-learning and cloud tracks.',
+          "heading": "The product and my role",
+          "paragraphs": [
+            "Waste management is a significant challenge in many urban areas. The goal of Planetku was to create a mobile application that empowers users to manage their waste more effectively and sustainably. The app aims to solve problems like incorrect waste sorting, lack of awareness about recycling value, and difficulty in finding nearby waste banks.",
+            "I worked on UI/UX, login and registration, Google Maps, backend integration, and bringing the ML team's model into the Android application. Model development and evaluation belonged to the ML team."
+          ]
+        },
+        {
+          "heading": "Connecting the application",
+          "paragraphs": [
+            "Connecting UI screens, account access, map locations, backend responses, and the ML team's classification output into one coherent Android flow."
           ],
+          "bullets": [
+            "Waste classification through ML integration",
+            "Google Maps waste-bank locations",
+            "Login and registration",
+            "UI/UX and backend integration"
+          ]
         },
         {
-          heading: 'The on-device constraint',
-          paragraphs: ['The initial waste-classification model was too large and slow for a comfortable camera flow. The challenge was to run analysis on the device without making the interface feel frozen.'],
+          "heading": "Working across disciplines",
+          "paragraphs": [
+            "Integration required coordinating data formats and interface states with the backend and ML teams."
+          ]
         },
         {
-          heading: 'Working across disciplines',
-          paragraphs: ['The mobile and machine-learning teams worked together to optimize the TensorFlow Lite model for deployment. On Android, I used Kotlin Coroutines to move image analysis away from the main interface thread and keep user feedback responsive.'],
-          bullets: [
-            'Camera and gallery-based waste classification',
-            'Real-time carbon-footprint calculation',
-            'Interactive waste-bank map locator',
-            'User reward and point system',
-          ],
-        },
-        {
-          heading: 'Outcome and lesson',
-          paragraphs: ['The final classifier covered more than five waste classes and reached 90% accuracy. The project taught me that successful AI integration depends as much on model constraints, asynchronous product behavior, and team communication as it does on model output.'],
-        },
+          "heading": "Results and attribution",
+          "paragraphs": [
+            "The ML team reported 90% classification accuracy. My contribution was Android development and model integration; a reproducible model evaluation is not included here.",
+            "Integrating a team's ML output involves more than displaying predictions: the Android flow must coordinate account state, backend data, maps, and clear feedback for users."
+          ]
+        }
       ],
-      id: [
+      "id": [
         {
-          heading: 'Capstone lintas fungsi',
-          paragraphs: [
-            'Planetku dibangun sebagai capstone Bangkit 2024 oleh tim lintas fungsi beranggotakan enam orang. Produk ini berfokus pada pemilahan sampah, kesadaran daur ulang, perhitungan karbon, dan akses ke bank sampah terdekat.',
-            'Sebagai Lead Mobile Development, saya bertanggung jawab menghubungkan pengalaman Android dengan hasil kerja track machine learning dan cloud.',
+          "heading": "Produk dan peran saya",
+          "paragraphs": [
+            "Pengelolaan sampah adalah tantangan besar di banyak daerah perkotaan. Tujuan Planetku adalah membuat aplikasi seluler yang memberdayakan pengguna untuk mengelola sampah mereka secara lebih efektif dan berkelanjutan. Aplikasi ini bertujuan untuk memecahkan masalah seperti pemilahan sampah yang salah, kurangnya kesadaran tentang nilai daur ulang, dan kesulitan menemukan bank sampah terdekat.",
+            "Saya mengerjakan UI/UX, login dan registrasi, Google Maps, integrasi backend, serta integrasi model tim ML ke aplikasi Android. Pengembangan dan evaluasi model merupakan bagian tim ML."
+          ]
+        },
+        {
+          "heading": "Menghubungkan aplikasi",
+          "paragraphs": [
+            "Menghubungkan layar UI, akses akun, lokasi peta, respons backend, dan hasil klasifikasi tim ML dalam satu alur Android yang utuh."
           ],
+          "bullets": [
+            "Klasifikasi sampah melalui integrasi ML",
+            "Lokasi bank sampah dengan Google Maps",
+            "Login dan registrasi",
+            "UI/UX dan integrasi backend"
+          ]
         },
         {
-          heading: 'Batasan pemrosesan pada perangkat',
-          paragraphs: ['Model klasifikasi sampah awal terlalu besar dan lambat untuk alur kamera yang nyaman. Tantangannya adalah menjalankan analisis pada perangkat tanpa membuat antarmuka terasa berhenti.'],
+          "heading": "Bekerja lintas disiplin",
+          "paragraphs": [
+            "Integrasi membutuhkan koordinasi format data dan state antarmuka bersama tim backend dan ML."
+          ]
         },
         {
-          heading: 'Bekerja lintas disiplin',
-          paragraphs: ['Tim mobile dan machine learning bekerja sama mengoptimalkan model TensorFlow Lite untuk deployment. Pada Android, saya menggunakan Kotlin Coroutines untuk memindahkan analisis gambar dari thread antarmuka utama dan menjaga umpan balik tetap responsif.'],
-          bullets: [
-            'Klasifikasi sampah melalui kamera dan galeri',
-            'Perhitungan jejak karbon secara real-time',
-            'Peta lokasi bank sampah interaktif',
-            'Sistem poin dan hadiah pengguna',
-          ],
-        },
-        {
-          heading: 'Hasil dan pembelajaran',
-          paragraphs: ['Classifier akhir mencakup lebih dari lima kelas sampah dan mencapai akurasi 90%. Proyek ini mengajarkan bahwa integrasi AI yang berhasil bergantung pada batasan model, perilaku produk yang asinkron, dan komunikasi tim, bukan hanya keluaran model.'],
-        },
-      ],
-    },
+          "heading": "Hasil dan pembagian kontribusi",
+          "paragraphs": [
+            "Tim ML melaporkan akurasi klasifikasi 90%. Kontribusi saya adalah pengembangan Android dan integrasi model; evaluasi model yang dapat direproduksi belum disertakan di sini.",
+            "Mengintegrasikan hasil kerja tim ML bukan sekadar menampilkan prediksi: alur Android perlu menyelaraskan state akun, data backend, peta, dan umpan balik yang jelas."
+          ]
+        }
+      ]
+    }
   },
   {
     id: 1,

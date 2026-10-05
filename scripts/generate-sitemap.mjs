@@ -1,3 +1,4 @@
+import { projectPath } from '../src/utils/projectRoutes.js'
 import { writeFile, readFile } from 'node:fs/promises'
 import { blogs } from '../src/data/blogs.js'
 import { loadPublicProjects } from '../netlify/functions/_shared/projects.js'
@@ -47,7 +48,7 @@ const staticRoutes = [
 ]
 
 const projectRoutes = projects.map((project) => ({
-  path: `/project/${project.id}`,
+  path: projectPath(project),
   changefreq: 'yearly',
   priority: project.featuredOrder ? '0.8' : '0.7',
 }))

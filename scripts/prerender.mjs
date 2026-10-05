@@ -1,3 +1,4 @@
+import { projectPath, projectRedirects } from '../src/utils/projectRoutes.js';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { blogs } from '../src/data/blogs.js';
 import { portfolioProfile } from '../src/data/portfolioProfile.js';
@@ -7,14 +8,14 @@ const origin = 'https://rafierb.me';
 const escape = value => String(value || '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 const text = value => typeof value === 'object' ? value?.en || value?.id || '' : value || '';
 const paragraph = value => '<p class="mt-4 leading-7">' + escape(text(value)) + '</p>';
-const links = projects.map(p => '<li class="mb-6"><a class="font-bold text-primary" href="/project/' + encodeURIComponent(p.id) + '">' + escape(text(p.title)) + '</a>' + paragraph(p.shortDesc) + '</li>').join('');
+const links = projects.map(p => '<li class="mb-6"><a class="font-bold text-primary" href="' + projectPath(p) + '">' + escape(text(p.title)) + '</a>' + paragraph(p.shortDesc) + '</li>').join('');
 const routes = [
- { path: '/', title: 'Rafie Rojagat Bachri | Android Developer', description: portfolioProfile.headline.en, body: '<h1 class="text-4xl font-bold">Rafie Rojagat Bachri</h1>' + paragraph('Android developer building useful, reliable products.') + '<h2 class="mt-8 text-2xl font-bold">Selected work</h2><ul class="mt-5">' + links + '</ul>' },
+ { path: '/', title: 'Rafie Rojagat Bachri | Software Engineer', description: portfolioProfile.headline.en, body: '<h1 class="text-4xl font-bold">Rafie Rojagat Bachri</h1>' + paragraph('Software engineer building useful, reliable products.') + '<h2 class="mt-8 text-2xl font-bold">Selected work</h2><ul class="mt-5">' + links + '</ul>' },
  { path: '/projects', title: 'Projects | Rafie Rojagat', description: 'Android, web, and AI case studies: contributions, decisions, and outcomes.', body: '<h1 class="text-4xl font-bold">Projects</h1><ul class="mt-8">' + links + '</ul>' },
  { path: '/about', title: 'About | Rafie Rojagat', description: portfolioProfile.headline.en, body: '<h1 class="text-4xl font-bold">About Rafie</h1>' + paragraph(portfolioProfile.headline) + paragraph(portfolioProfile.education.institution + ' · GPA ' + portfolioProfile.education.gpa) },
  { path: '/contact', title: 'Contact | Rafie Rojagat', description: portfolioProfile.availability.en, body: '<h1 class="text-4xl font-bold">Let’s build something useful.</h1>' + paragraph(portfolioProfile.availability) + '<a href="mailto:' + portfolioProfile.contact.email + '">' + portfolioProfile.contact.email + '</a>' },
  { path: '/blog', title: 'Engineering Notes | Rafie Rojagat', description: 'Practical Android, web, and machine-learning engineering notes.', body: '<h1 class="text-4xl font-bold">Engineering Notes</h1>' + blogs.map(b => '<article class="mt-8"><h2 class="text-2xl font-bold"><a href="/blog/' + b.slug + '">' + escape(text(b.title)) + '</a></h2>' + paragraph(b.excerpt) + '</article>').join('') },
- ...projects.map(p => ({ path: '/project/' + encodeURIComponent(p.id), title: text(p.title) + ' | Rafie Rojagat', description: text(p.shortDesc), image: p.image, body: '<h1 class="text-4xl font-bold">' + escape(text(p.title)) + '</h1>' + paragraph(p.shortDesc) + paragraph(p.fullDesc) + '<h2 class="mt-8 text-2xl font-bold">My contribution</h2>' + paragraph(p.evidence?.contribution || p.impactDetails?.role || p.impact) + '<h2 class="mt-8 text-2xl font-bold">Engineering decisions</h2>' + paragraph(p.challenges) + paragraph(p.solution) + paragraph(p.evidence?.metricContext) })),
+ ...projects.map(p => ({ path: projectPath(p), title: text(p.title) + ' | Rafie Rojagat', description: text(p.shortDesc), image: p.image, body: '<h1 class="text-4xl font-bold">' + escape(text(p.title)) + '</h1>' + paragraph(p.shortDesc) + paragraph(p.fullDesc) + '<h2 class="mt-8 text-2xl font-bold">My contribution</h2>' + paragraph(p.evidence?.contribution || p.impactDetails?.role || p.impact) + '<h2 class="mt-8 text-2xl font-bold">Engineering decisions</h2>' + paragraph(p.challenges) + paragraph(p.solution) + paragraph(p.evidence?.metricContext) })),
  ...blogs.map(b => ({ path: '/blog/' + b.slug, title: text(b.title) + ' | Rafie Rojagat', description: text(b.excerpt), image: b.image, body: '<h1 class="text-4xl font-bold">' + escape(text(b.title)) + '</h1>' + paragraph(b.excerpt) + (b.sections?.en || []).map(section => '<section class="mt-8"><h2 class="text-2xl font-bold">' + escape(section.heading) + '</h2>' + (section.paragraphs || []).map(paragraph).join('') + '<ul>' + (section.bullets || []).map(item => '<li>' + escape(item) + '</li>').join('') + '</ul></section>').join('') })),
 ];
 for (const route of routes) {
@@ -31,6 +32,9 @@ for (const route of routes) {
   const dir = 'dist' + (route.path === '/' ? '' : route.path);
   await mkdir(dir, { recursive: true }); await writeFile(dir + '/index.html', html);
 }
-const error = template.replace(/<title>.*?<\/title>/,'<title>Page not found | Rafie Rojagat</title>').replaceAll('content="index, follow"','content="noindex, follow"').replace('<div id="root"></div>','<div id="root"></div><noscript><main><h1>Page not found</h1><a href="/">Back to home</a></main></noscript>');
+const error = template.replace(/<title>.*?<\/title>/,'<title>Page not found | Rafie Rojagat</title>').replaceAll('content="index, follow"','content="noindex, follow"').replace('<div id="root"></div>','<div id="root"></div><noscript><main><h1>Page not found</h1><p><a href="/projects">View projects</a></p><a href="/">Back to home</a></main></noscript>');
 await writeFile('dist/404.html', error);
 console.log('Generated static metadata and no-JavaScript content for ' + routes.length + ' public pages and the 404 response.');
+
+const redirects = await readFile('public/_redirects', 'utf8');
+await writeFile('dist/_redirects', [...projectRedirects(projects), redirects].join('\n'));

@@ -1,5 +1,8 @@
 export const interfaceCopy = {
  en: {
+  professional_identity: 'Software Engineer focused on Android and web development.',
+  professional_summary: 'I build with Kotlin and React, with experience in Firebase, REST APIs, and machine learning integration.',
+  project_period: 'Period', architecture: 'How it works', decision_summary: 'The key decision', decision_details: 'Explore the reasoning', project_results: 'Results & evidence', screenshot_caption: '{{title}} — application view {{number}}',
   project_note_title: 'A note from Rafie', project_note_lesson: 'What this project taught me',
   developer_id_play: 'Play with card', developer_id_done: 'Done', developer_id_scroll: 'Swipe to scroll. Activate the card to drag it.', developer_id_touch_active: 'Drag in any direction. Tap Done to scroll again.',
   related_work: 'View projects using {{technology}}', personal_more: 'Music and life outside coding', personal_expand: 'Show a little more', personal_collapse: 'Show less', activity_label: 'Activity', activity_using: 'Using', activity_idle: 'Away from the keyboard', activity_online: 'Online', activity_dnd: 'Do not disturb', activity_offline: 'Offline',
@@ -19,6 +22,9 @@ export const interfaceCopy = {
   recovery_title: 'Something went wrong', recovery_desc: 'Please reload this page, or contact me directly.', reload: 'Reload page',
  },
  id: {
+  professional_identity: 'Software Engineer yang berfokus pada pengembangan Android dan web.',
+  professional_summary: 'Saya membangun dengan Kotlin dan React, berpengalaman dengan Firebase, REST API, dan integrasi machine learning.',
+  project_period: 'Periode', architecture: 'Cara kerjanya', decision_summary: 'Keputusan utama', decision_details: 'Telusuri pertimbangannya', project_results: 'Hasil & bukti', screenshot_caption: '{{title}} — tampilan aplikasi {{number}}',
   project_note_title: 'Catatan Rafie', project_note_lesson: 'Yang saya pelajari dari proyek ini',
   developer_id_play: 'Mainkan kartu', developer_id_done: 'Selesai', developer_id_scroll: 'Geser untuk scroll. Aktifkan kartu untuk menariknya.', developer_id_touch_active: 'Tarik ke segala arah. Ketuk Selesai untuk scroll kembali.',
   related_work: 'Lihat proyek dengan {{technology}}', personal_more: 'Musik dan keseharian di luar coding', personal_expand: 'Lihat selengkapnya', personal_collapse: 'Ringkas kembali', activity_label: 'Aktivitas', activity_using: 'Menggunakan', activity_idle: 'Sedang tidak aktif', activity_online: 'Online', activity_dnd: 'Jangan ganggu', activity_offline: 'Offline',
