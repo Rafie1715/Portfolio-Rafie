@@ -1,4 +1,5 @@
 import { caseStudyDetails } from './caseStudyDetails.js';
+import { galleryCaptions } from './galleryCaptions.js';
 export const projects = [
   {
     id: "OD60ttuTSwZW62TRJFm6",
@@ -7,6 +8,8 @@ export const projects = [
     evaluation: {
       source: "https://github.com/Rafie1715/Sleep-Quality-Monitoring-App-using-Random-Forest/blob/main/Machine_Learning_Code.ipynb",
       testSamples: 63,
+      datasetSamples: 315,
+      classCounts: { good: 61, fair: 156, poor: 98 },
       baselineAccuracy: 93.65, balancedAccuracy: 92.06,
       baselinePoorRecall: 0.83, balancedPoorRecall: 0.94,
     },
@@ -18,22 +21,23 @@ export const projects = [
     image: "/images/project-restup.jpg",
     featuredOrder: 1,
     year: "2026",
+    period: {"en":"October 2025 – June 2026","id":"Oktober 2025 – Juni 2026"},
     impact: {
-      en: "Thesis Researcher | Sleep quality prediction | 92.06% accuracy",
-      id: "Peneliti Skripsi | Prediksi kualitas tidur | Akurasi 92,06%"
+      en: "Android & ML Developer | Sleep quality prediction | 92.06% test-set accuracy · 63 samples",
+      id: "Android & ML Developer | Prediksi kualitas tidur | Akurasi data uji 92,06% · 63 sampel"
     },
     impactDetails: {
       role: {
-        en: "Thesis Researcher and ML Developer",
-        id: "Peneliti Skripsi dan ML Developer"
+        en: "Android & ML Developer — Undergraduate Thesis",
+        id: "Android & ML Developer — Skripsi S1"
       },
       team: {
         en: "Independent thesis project",
         id: "Proyek skripsi mandiri"
       },
       result: {
-        en: "92.06% Random Forest accuracy",
-        id: "Akurasi Random Forest 92,06%"
+        en: "92.06% test-set accuracy · 63 samples",
+        id: "Akurasi data uji 92,06% · 63 sampel"
       },
       scope: {
         en: "Sleep quality monitoring and prediction",
@@ -130,7 +134,7 @@ export const projects = [
         "id": "Project-Based Virtual Internship"
       },
       "result": {
-        "en": "Excellent predicate, 88.71/100",
+        "en": "Excellent rating, 88.71/100",
         "id": "Predikat Excellent, 88,71/100"
       },
       "scope": {
@@ -176,7 +180,7 @@ export const projects = [
         "id": "Arsitektur membutuhkan setup lebih banyak daripada pemanggilan jaringan langsung, tetapi menghasilkan pembagian tanggung jawab dan penanganan state yang lebih andal."
       },
       "evidence": {
-        "en": "All three screens and REST integrations were delivered, receiving an Excellent predicate with a score of 88.71/100.",
+        "en": "All three screens and REST integrations were delivered, receiving an Excellent rating with a score of 88.71/100.",
         "id": "Ketiga layar dan integrasi REST selesai dikembangkan serta memperoleh predikat Excellent dengan nilai 88,71/100."
       }
     },
@@ -352,7 +356,8 @@ export const projects = [
     "category": "mobile",
     "image": "/images/project-cinemazone.webp",
     "featuredOrder": 4,
-    "year": "2024",
+    year: "2025",
+    period: {"en":"May – June 2025","id":"Mei – Juni 2025"},
     "impactDetails": {
       "role": {
         "en": "Solo Android Developer",
@@ -380,7 +385,7 @@ export const projects = [
       "id": "Aplikasi Android dengan Firebase Auth, Cloud Firestore untuk wishlist, dan generator e-tiket QR Code."
     },
     "fullDesc": {
-      "en": "The CinemaZone project was developed to create a seamless and feature-rich movie ticket booking experience on an Android platform. The goal was to build an application that handles the entire user journey, from Browse movies and viewing details to selecting seats and generating a digital e-ticket.",
+      "en": "The CinemaZone project was developed to create a seamless and feature-rich movie ticket booking experience on an Android platform. The goal was to build an application that handles the entire user journey, from browsing movies and viewing details to selecting seats and generating a digital e-ticket.",
       "id": "Proyek CinemaZone dikembangkan untuk menciptakan pengalaman pemesanan tiket bioskop yang mulus dan kaya fitur di platform Android. Tujuannya adalah membangun aplikasi yang menangani seluruh perjalanan pengguna, mulai dari menelusuri film dan melihat detail hingga memilih kursi dan membuat e-tiket digital."
     },
     "challenges": {
@@ -438,7 +443,8 @@ export const projects = [
     "category": "web",
     "image": "/images/project-computercrafter.webp",
     "featuredOrder": 5,
-    "year": "2023",
+    year: "2024",
+    period: {"en":"May – June 2024","id":"Mei – Juni 2024"},
     "impactDetails": {
       "role": {
         "en": "Full-stack Developer",
@@ -1154,7 +1160,7 @@ export const projects = [
       { name: "Netlify", icon: "devicon-netlify-plain" },
       { name: "Three.js", icon: "devicon-threejs-original" }
     ],
-    github: "https://github.com/Rafie1715/Website-Portfolio-Rafie",
+    github: "https://github.com/Rafie1715/Portfolio-Rafie",
     live: "https://rafierb.me",
     gallery: []
   }
@@ -1210,5 +1216,6 @@ const evidenceById = {
 };
 for (const project of projects) {
   Object.assign(project, caseStudyDetails[project.id] || {});
+  if (galleryCaptions[project.id]) project.galleryCaptions = galleryCaptions[project.id];
   if (evidenceById[project.id]) project.evidence = evidenceById[project.id];
 }

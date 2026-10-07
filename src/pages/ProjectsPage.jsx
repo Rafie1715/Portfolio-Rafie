@@ -1,4 +1,4 @@
-import Icon from '../components/Icon';
+import ProjectBlueprint from '../components/ProjectBlueprint';
 import Projects from '../components/Projects';
 import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
@@ -20,10 +20,7 @@ const ProjectsPage = () => {
 
         <header className="relative z-10 border-b border-gray-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/30">
           <div className="container mx-auto max-w-6xl px-4 py-8 md:py-11 flex flex-col md:flex-row md:items-center gap-5 md:gap-7">
-            <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/40 text-primary flex-shrink-0">
-              <Icon className="fas fa-briefcase text-xl"></Icon>
-            </div>
-            <div>
+            <div className="min-w-0 flex-1">
               <h1 className="text-3xl md:text-4xl font-black text-dark dark:text-white mb-2">
                 {t('pages.projects.title_prefix')} <span className="text-primary">{t('pages.projects.title_highlight')}</span>
               </h1>
@@ -31,6 +28,7 @@ const ProjectsPage = () => {
                 {t('pages.projects.subtitle')}
               </p>
             </div>
+            <ProjectBlueprint />
           </div>
         </header>
 

@@ -161,16 +161,15 @@ const HomePage = () => {
           onChange={handleLensChange}
         />
 
-        <section id="selected-work" tabIndex={-1} className="scroll-mt-24 py-8 md:py-10 px-4 container mx-auto focus:outline-none" aria-live="polite">
+        <section id="selected-work" tabIndex={-1} className="scroll-mt-24 py-6 px-4 container mx-auto focus:outline-none" aria-live="polite">
           <motion.div
             variants={revealVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.35 }}
-            className="text-center mb-8"
+            className="text-center mb-6"
           >
-            <p className="text-xs font-semibold uppercase text-blue-600 dark:text-blue-400 mb-3">{t('home.highlights')}</p>
-            <h2 className="text-3xl font-bold text-dark dark:text-white mb-4">{t(`${lensKey}.work_title`)}</h2>
+            <h2 className="text-3xl font-bold text-dark dark:text-white mb-3">{t(`${lensKey}.work_title`)}</h2>
             <p className="text-gray-600 dark:text-gray-400">{t(`${lensKey}.work_summary`)}</p>
             {selectedTechnology && (
               <div className="mt-5 inline-flex max-w-full items-center gap-2 rounded-lg border border-primary/25 bg-primary/5 px-3 py-2 text-sm font-semibold text-primary">

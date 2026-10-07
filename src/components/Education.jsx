@@ -1,15 +1,17 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import JourneyMilestone from './JourneyMilestone';
 import { Award, CalendarDays, GraduationCap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Education = () => {
   const { t } = useTranslation();
+  const reducedMotion = useReducedMotion();
 
   return (
     <section className="py-16 md:py-20 bg-white dark:bg-dark">
       <div className="container mx-auto max-w-6xl px-4">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.4 }}
@@ -25,9 +27,9 @@ const Education = () => {
           </div>
 
           <div className="grid gap-6 border-y border-slate-200 dark:border-slate-700 py-7 md:grid-cols-[88px_1fr_auto] md:items-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white p-3 dark:bg-slate-800">
+            <JourneyMilestone className="h-20 w-20 p-3">
               <img src="/images/upnvj_logo.webp" alt="UPN Veteran Jakarta" className="h-full w-full object-contain" loading="lazy" />
-            </div>
+            </JourneyMilestone>
             <div>
               <h3 className="text-xl font-bold text-dark dark:text-white">{t('about.uni_name')}</h3>
               <p className="mt-1 font-semibold text-primary">{t('about.education.degree')}</p>

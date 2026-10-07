@@ -30,7 +30,9 @@ const listProjects = () => projects
         .join("; ")
       : "No verified impact metrics are recorded.";
     const stack = project.techStack?.map((technology) => technology.name).join(", ") || "Not specified";
-    return `- ${inEnglish(project.title)}${project.year ? ` (${project.year})` : ""}: ${inEnglish(project.shortDesc)} Impact: ${impact}. Stack: ${stack}. Detail route: ${projectPath(project)}`;
+    const period = inEnglish(project.period) || project.year;
+    const dataset = project.evaluation?.datasetSamples ? ` Final dataset: ${project.evaluation.datasetSamples} student survey responses across Indonesian universities; class counts Good ${project.evaluation.classCounts.good}, Fair ${project.evaluation.classCounts.fair}, Poor ${project.evaluation.classCounts.poor}; ${project.evaluation.testSamples} test samples.` : '';
+    return `- ${inEnglish(project.title)}${period ? ` (${period})` : ""}: ${inEnglish(project.shortDesc)} Impact: ${impact}. Stack: ${stack}.${dataset} Detail route: ${projectPath(project)}`;
   })
   .join("\n");
 

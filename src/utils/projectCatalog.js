@@ -1,6 +1,6 @@
 import { safeUrl } from './safeUrl.js';
 const titleKey = (project) => String(project.title?.en || project.title?.id || project.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-const publicFields = ['id', 'slug', 'aliases', 'galleryCaptions', 'architecture', 'title', 'category', 'image', 'imageFit', 'featuredOrder', 'year', 'impact', 'impactDetails', 'shortDesc', 'fullDesc', 'challenges', 'solution', 'lessonLearned', 'decisionReplay', 'features', 'techStack', 'github', 'live', 'figma', 'prototype', 'gallery', 'conceptualCover', 'evidence', 'evaluation', 'createdAt', 'updatedAt'];
+const publicFields = ['id', 'slug', 'aliases', 'galleryCaptions', 'architecture', 'title', 'category', 'image', 'imageFit', 'featuredOrder', 'year', 'period', 'impact', 'impactDetails', 'shortDesc', 'fullDesc', 'challenges', 'solution', 'lessonLearned', 'decisionReplay', 'features', 'techStack', 'github', 'live', 'figma', 'prototype', 'gallery', 'conceptualCover', 'evidence', 'evaluation', 'createdAt', 'updatedAt'];
 
 // Only explicit CMS publication decisions override reviewed repository content.
 // Legacy records without a flag must neither hide local projects nor expose CMS data.

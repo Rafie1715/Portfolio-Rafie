@@ -46,7 +46,7 @@ export default function ProjectDetail() {
   const facts = [
     [t('projectDetail.impact.role'), text(impact.role)],
     [t('projectDetail.impact.team'), text(impact.team)],
-    [t('common.project_period'), project.year],
+    [t(project.period ? 'common.project_period' : 'common.project_completed'), text(project.period) || project.year],
   ].filter(([, value]) => value);
   const links = [
     [project.github, t('projects.source_code'), Github],

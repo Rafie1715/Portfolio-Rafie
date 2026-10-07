@@ -25,13 +25,18 @@ const Skills = () => {
       key: "mobile",
       Icon: Smartphone,
       color: "text-blue-600 bg-blue-50 dark:bg-blue-950/40",
-      skills: ["Kotlin", "Jetpack Compose", "Android Studio", "Retrofit", "MVVM", "Coroutines", "Paging 3", "Material Design"],
+      skills: ["Kotlin", "XML layouts", "Jetpack Compose", "Android Studio", "Retrofit", "MVVM", "Coroutines", "Paging 3", "Material Design"],
+      evidence: [
+        { label: 'XML layouts · Mandiri News', href: 'https://github.com/Rafie1715/MandiriNewsApp/tree/main/app/src/main/res/layout' },
+        { label: 'Jetpack Compose · RupiahVision', href: 'https://github.com/Rafie1715/RupiahVision/blob/main/app/src/main/java/com/dicoding/myapplication/MainActivity.kt' },
+      ],
     },
     {
       key: "frontend",
       Icon: MonitorSmartphone,
       color: "text-cyan-700 bg-cyan-50 dark:bg-cyan-950/40",
-      skills: ["React.js", "Next.js", "JavaScript", "Tailwind CSS", "Bootstrap"],
+      skills: ["React.js", "JavaScript", "Tailwind CSS", "Bootstrap"],
+      learning: ['Next.js'],
     },
     {
       key: "ai",
@@ -103,6 +108,8 @@ const Skills = () => {
                   );
                 })}
               </div>
+              {category.evidence && <div className="mt-4 border-t border-slate-200 pt-4 dark:border-slate-700"><p className="mb-2 text-xs font-semibold text-slate-500 dark:text-slate-400">{t('common.skill_evidence')}</p>{category.evidence.map(item => <a key={item.href} href={item.href} target="_blank" rel="noreferrer" className="flex min-h-11 items-center py-2 text-sm font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300">{item.label} ↗</a>)}</div>}
+              {category.learning && <p className="mt-4 border-t border-slate-200 pt-4 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-400">{t('common.learning')}: <span className="font-medium">{category.learning.join(', ')}</span></p>}
             </motion.article>
           ))}
         </div>

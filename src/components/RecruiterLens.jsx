@@ -63,7 +63,7 @@ const RecruiterLens = ({ value, onChange }) => {
   };
 
   return (
-    <section className="border-y border-slate-200 bg-slate-50/80 py-4 dark:border-slate-800 dark:bg-slate-900/45">
+    <section className="border-y border-slate-200 bg-slate-50/80 py-3 dark:border-slate-800 dark:bg-slate-900/45">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:justify-between">
           <p className="text-sm font-bold text-slate-700 dark:text-slate-200">{t('common.lens_label')}</p>

@@ -15,7 +15,8 @@ const postRequest = (body) => new Request("http://localhost/api/chat", {
 test("portfolio context is generated from current project and experience data", () => {
   const context = buildPortfolioSystemInstruction("id");
 
-  assert.match(context, /92\.06% Random Forest accuracy/);
+  assert.match(context, /92\.06% test-set accuracy.*63 samples/);
+  assert.match(context, /Final dataset: 315 student survey responses/);
   assert.match(context, /26 students/);
   assert.match(context, /Google AI Professional Certificate/);
   assert.doesNotMatch(context, /3\+ years hands-on development experience/);

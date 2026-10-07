@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import {
   AlertCircle,
   Check,
-  CheckCircle2,
   Clock3,
   Copy,
   Download,
@@ -18,6 +17,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { trackFormSubmission, trackExternalLink, trackEvent } from '../utils/analytics';
+import MessageSentMotion from './MessageSentMotion';
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xanjlvvr';
 const CONTACT_EMAIL = 'rojagatrafie@gmail.com';
@@ -346,7 +346,7 @@ const Contact = () => {
                   }`}
                 >
                   {submission.status === 'success'
-                    ? <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />
+                    ? <MessageSentMotion />
                     : <AlertCircle className="mt-0.5 h-5 w-5 flex-none" aria-hidden="true" />}
                   <span>{submission.message}</span>
                 </motion.div>

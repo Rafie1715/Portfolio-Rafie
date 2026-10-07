@@ -1,4 +1,5 @@
 export const skillsData = [
+  { name: "XML layouts", icon: "fas fa-code text-blue-600" },
   { name: "Kotlin", icon: "devicon-kotlin-plain colored" },
   { name: "Jetpack Compose", icon: "devicon-jetpackcompose-plain colored" },
   { name: "Android Studio", icon: "devicon-androidstudio-plain colored" },

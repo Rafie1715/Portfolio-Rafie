@@ -11,7 +11,7 @@ export const experiences = [
       en: [
         "Engineered the Mandiri News Android app with three main screens powered by three REST API endpoints.",
         "Implemented MVVM, Retrofit, Kotlin Coroutines, and Paging 3 to support maintainable data flows and endless scrolling.",
-        "Earned an Excellent predicate with an average score of 88.71/100.",
+        "Earned an Excellent rating with an average score of 88.71/100.",
       ],
       id: [
         "Mengembangkan aplikasi Android Mandiri News dengan tiga layar utama yang terhubung ke tiga endpoint REST API.",

@@ -14,7 +14,9 @@ const copy = {
     tradeoff: 'Pada hasil tersimpan, bobot kelas seimbang menaikkan recall kelas Buruk dari 83% menjadi 94%, sementara akurasi total turun dari 93,65% menjadi 92,06%. Ini menunjukkan pertukaran antara kedua metrik, bukan peningkatan di semua aspek.',
     limits: 'Batas evaluasi',
     limitsBody: 'Hasil ini berasal dari satu pembagian data; kode yang ditinjau belum menunjukkan cross-validation atau validasi eksternal. Label berasal dari kuesioner, sehingga hasil tidak membuktikan ketepatan diagnosis klinis maupun perubahan kualitas tidur pengguna.',
-    snapshot: 'Catatan reproduksi: spreadsheet yang ditinjau berisi 317 respons, sedangkan keluaran notebook mencatat 63 sampel uji. Tabel ini merujuk keluaran tersimpan; snapshot data perlu disamakan sebelum hasil dapat direproduksi persis.',
+    dataset: 'Dataset final: {{count}} respons survei mahasiswa dari berbagai universitas di Indonesia.',
+    classes: 'Distribusi kelas', good: 'Baik', fair: 'Cukup', poor: 'Buruk',
+    snapshot: 'Dataset final dikonfirmasi berisi 315 respons. Spreadsheet yang ditinjau sebelumnya berisi 317 respons; untuk reproduksi, gunakan snapshot final yang sama dengan notebook. Metrik di atas merujuk keluaran notebook tersimpan.',
     source: 'Lihat metode dan hasil di GitHub',
   },
   en: {
@@ -29,7 +31,9 @@ const copy = {
     tradeoff: 'In the saved results, balanced class weights raise Poor-class recall from 83% to 94%, while overall accuracy falls from 93.65% to 92.06%. This is a tradeoff between metrics, rather than an improvement in every measure.',
     limits: 'Evaluation limits',
     limitsBody: 'These results use a single data split; the reviewed code does not show cross-validation or external validation. Questionnaire labels do not establish clinical diagnostic accuracy or an improvement in users’ sleep.',
-    snapshot: 'Reproduction note: the reviewed spreadsheet contains 317 responses, while the saved notebook reports 63 test samples. This table describes saved outputs; matching the dataset snapshot is necessary for exact reproduction.',
+    dataset: 'Final dataset: {{count}} survey responses from students at universities across Indonesia.',
+    classes: 'Class distribution', good: 'Good', fair: 'Fair', poor: 'Poor',
+    snapshot: 'The final dataset is confirmed as 315 responses. The previously reviewed spreadsheet contained 317 responses; exact reproduction requires the final snapshot used by the notebook. The metrics above refer to saved notebook outputs.',
     source: 'View methods and results on GitHub',
   },
 };
@@ -46,7 +50,13 @@ export default function ModelEvaluation({ evaluation }) {
       <p className="mt-3 text-slate-600 dark:text-slate-300">{c.intro}</p>
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
         {[['data', 'dataBody'], ['method', 'methodBody']].map(([title, body]) => (
-          <div key={title}><h3 className="font-semibold">{c[title]}</h3><p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{c[body]}</p></div>
+          <div key={title}><h3 className="font-semibold">{c[title]}</h3>
+            {title === 'data' && evaluation.datasetSamples && <>
+              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{c.dataset.replace('{{count}}', format(evaluation.datasetSamples))}</p>
+              <dl aria-label={c.classes} className="mt-3 flex flex-wrap gap-3 text-sm">{Object.entries(evaluation.classCounts || {}).map(([key, count]) => <div key={key} className="rounded-lg bg-slate-100 px-3 py-2 dark:bg-slate-800"><dt>{c[key]}</dt><dd className="font-bold">{format(count)}</dd></div>)}</dl>
+            </>}
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{c[body]}</p>
+          </div>
         ))}
       </div>
       <div className="mt-6 overflow-x-auto">

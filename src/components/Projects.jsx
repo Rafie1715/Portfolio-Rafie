@@ -1,4 +1,5 @@
 import { projectPath } from '../utils/projectRoutes';
+import { repositoryDetails } from '../data/repositoryHighlights';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -27,16 +28,16 @@ const ARCHIVE_PREVIEW_COUNT = 6;
 
 const RESTUP_IMPACT = {
   role: {
-    en: 'Thesis Researcher and ML Developer',
-    id: 'Peneliti Skripsi dan ML Developer',
+    en: 'Android & ML Developer — Undergraduate Thesis',
+    id: 'Android & ML Developer — Skripsi S1',
   },
   team: {
     en: 'Independent thesis project',
     id: 'Proyek skripsi mandiri',
   },
   result: {
-    en: '92.06% Random Forest accuracy',
-    id: 'Akurasi Random Forest 92,06%',
+    en: '92.06% test-set accuracy · 63 samples',
+    id: 'Akurasi data uji 92,06% · 63 sampel',
   },
   scope: {
     en: 'Sleep quality monitoring and prediction',
@@ -74,8 +75,8 @@ const enhanceProject = (project) => {
     year: project.year || '2026',
     impactDetails: project.impactDetails || RESTUP_IMPACT,
     impact: project.impact || {
-      en: 'Thesis Researcher | Sleep quality prediction | 92.06% accuracy',
-      id: 'Peneliti Skripsi | Prediksi kualitas tidur | Akurasi 92,06%',
+      en: 'Android & ML Developer | Sleep quality prediction | 92.06% test-set accuracy · 63 samples',
+      id: 'Android & ML Developer | Prediksi kualitas tidur | Akurasi data uji 92,06% · 63 sampel',
     },
   };
 };
@@ -218,7 +219,7 @@ const ProjectCard = ({
           </span>
           {project.year && (
             <span className="rounded-md bg-slate-900/85 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur">
-              {project.year}
+              {t('common.project_completed')} {project.year}
             </span>
           )}
         </div>
@@ -414,6 +415,8 @@ const Projects = () => {
     default: 'bg-gray-400',
   };
 
+  const visibleRepos = repos.map(repo => ({ ...repo, context: repositoryDetails(repo, allProjects, currentLang) })).filter(repo => repo.context.description);
+
   return (
     <section id="projects" className="bg-gray-50 py-10 transition-colors duration-300 dark:bg-dark md:py-14">
       <div className="container mx-auto max-w-6xl px-4">
@@ -600,9 +603,9 @@ const Projects = () => {
             </div>
           )}
 
-          {githubState === 'success' && repos.length > 0 && (
+          {githubState === 'success' && visibleRepos.length > 0 && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {repos.map((repo) => (
+              {visibleRepos.map((repo) => (
                 <article key={repo.id} className="flex min-h-48 flex-col rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
                   <div className="mb-4 flex items-start justify-between gap-3">
                     <FolderGit2 className="text-primary" size={25} aria-hidden="true" />
@@ -619,25 +622,24 @@ const Projects = () => {
                     </a>
                   </div>
                   <h3 className="mb-2 text-lg font-bold capitalize text-dark dark:text-white">{repo.name.replace(/-/g, ' ')}</h3>
-                  {(repo.description || allProjects.some(project => project.github?.toLowerCase() === repo.html_url?.toLowerCase())) && <p className="mb-5 line-clamp-3 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {repo.description || getLocalized(allProjects.find(project => project.github?.toLowerCase() === repo.html_url?.toLowerCase())?.shortDesc, currentLang)}
-                  </p>}
+                  <p className="mb-3 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{repo.context.description}</p>
+                  <p className="mb-4 text-xs font-semibold text-blue-700 dark:text-blue-300">{repo.context.status}</p>
                   <div className="flex items-center justify-between border-t border-gray-100 pt-4 text-xs text-gray-500 dark:border-slate-700">
                     <span className="flex items-center gap-2">
                       <span className={`size-2.5 rounded-full ${languageColors[repo.language] || languageColors.default}`} aria-hidden="true" />
                       {repo.language || 'Code'}
                     </span>
-                    <span className="flex items-center gap-1">
+                    {repo.stargazers_count > 0 && <span className="flex items-center gap-1">
                       <Star size={14} className="text-amber-500" aria-hidden="true" />
                       {repo.stargazers_count ?? 0}
-                    </span>
+                    </span>}
                   </div>
                 </article>
               ))}
             </div>
           )}
 
-          {(githubState === 'error' || (githubState === 'success' && repos.length === 0)) && (
+          {(githubState === 'error' || (githubState === 'success' && visibleRepos.length === 0)) && (
             <div className="flex flex-col items-start gap-3 border-y border-gray-200 py-8 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-gray-600 dark:text-gray-300">
                 {githubState === 'error' ? t('projects.github_error') : t('projects.github_empty')}

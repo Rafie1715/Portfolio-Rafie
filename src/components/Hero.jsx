@@ -3,63 +3,12 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { MapPin, BriefcaseBusiness, Layers, Code2, Download, Send } from 'lucide-react';
+import { MapPin, BriefcaseBusiness, Download, Send } from 'lucide-react';
 import { trackCTAClick, trackExternalLink } from '../utils/analytics';
 
 import HeroLightBackground from './HeroLightBackground';
 import PersonalMark from './PersonalMark';
-
-const TypewriterLine = ({ phrases, prefix, accessibleText, reduceMotion, active }) => {
-  const safePhrases = Array.isArray(phrases) && phrases.length > 0 ? phrases : [''];
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [characterCount, setCharacterCount] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const currentPhrase = safePhrases[phraseIndex % safePhrases.length];
-
-  useEffect(() => {
-    if (reduceMotion || !active || !currentPhrase) return undefined;
-
-    const reachedEnd = !isDeleting && characterCount === currentPhrase.length;
-    const reachedStart = isDeleting && characterCount === 0;
-    const delay = reachedEnd ? 1500 : reachedStart ? 220 : isDeleting ? 24 : 42;
-
-    const timeout = window.setTimeout(() => {
-      if (reachedEnd) {
-        setIsDeleting(true);
-        return;
-      }
-
-      if (reachedStart) {
-        setIsDeleting(false);
-        setPhraseIndex((index) => (index + 1) % safePhrases.length);
-        return;
-      }
-
-      setCharacterCount((count) => count + (isDeleting ? -1 : 1));
-    }, delay);
-
-    return () => window.clearTimeout(timeout);
-  }, [active, characterCount, currentPhrase, isDeleting, reduceMotion, safePhrases.length]);
-
-  const visiblePhrase = reduceMotion
-    ? currentPhrase
-    : currentPhrase.slice(0, characterCount);
-
-  return (
-    <span>
-      <span className="sr-only">{accessibleText}</span>
-      <span aria-hidden="true">
-        {prefix}{' '}
-        <span className="font-semibold text-blue-600 dark:text-blue-400">
-          {visiblePhrase}
-        </span>
-        {!reduceMotion && (
-          <span className="ml-0.5 inline-block h-[1.1em] w-0.5 translate-y-[0.12em] bg-blue-500 animate-pulse" />
-        )}
-      </span>
-    </span>
-  );
-};
+import TypewriterLine from './TypewriterLine';
 
 const Hero = ({ recruiterLens = 'overview' }) => {
   const { t, i18n } = useTranslation();
@@ -69,7 +18,6 @@ const Hero = ({ recruiterLens = 'overview' }) => {
   const [isDocumentVisible, setIsDocumentVisible] = useState(
     () => typeof document === 'undefined' || document.visibilityState === 'visible',
   );
-  const lensKey = "home.recruiter_lens.modes." + recruiterLens;
 
   useEffect(() => {
     const element = heroRef.current;
@@ -94,11 +42,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
   const quickFacts = [
     { icon: MapPin, text: t('hero.quick_facts.location') },
     { icon: BriefcaseBusiness, text: t('hero.quick_facts.availability') },
-    { icon: Layers, text: t(`${lensKey}.focus`) },
-    { icon: Code2, text: t(`${lensKey}.stack`) },
   ];
-  const rolePhrases = t(`${lensKey}.hero_phrases`, { returnObjects: true });
-  const accessibleTagline = t(`${lensKey}.tagline`);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -143,7 +87,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
     <section
       ref={heroRef}
       id="home"
-      className="relative flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-24 pb-6 sm:pb-8 overflow-hidden transition-colors duration-300"
+      className="relative flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-24 pb-4 overflow-hidden transition-colors duration-300"
     >
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -161,21 +105,19 @@ const Hero = ({ recruiterLens = 'overview' }) => {
         initial="hidden"
         animate="visible"
       >
-        <motion.figure variants={itemVariants} className="relative mb-3 sm:mb-5 rounded-full bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 p-1 shadow-lg shadow-blue-500/15">
+        <motion.figure variants={itemVariants} className="relative mb-3 rounded-full bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 p-1 shadow-lg shadow-blue-500/15">
           <img
             src="/images/profile.webp"
             alt={t('home.about_snapshot.photo_alt')}
             width="144" height="144" fetchPriority="high" decoding="async"
-            className="size-20 rounded-full border-4 border-white object-cover object-[center_25%] dark:border-slate-900 sm:size-24"
+            className="size-20 rounded-full border-4 border-white object-cover object-[center_25%] dark:border-slate-900 sm:size-20"
           />
           <span className="absolute -bottom-1 -right-3 rounded-md border border-blue-200 bg-white px-1.5 py-0.5 text-blue-600 shadow-sm dark:border-slate-600 dark:bg-slate-900 dark:text-blue-400" aria-hidden="true">
             <PersonalMark className="h-5 w-10" />
           </span>
         </motion.figure>
 
-        <motion.p variants={itemVariants} className="text-lg sm:text-xl font-medium text-gray-500 dark:text-gray-400 mb-2 md:mb-3 px-2">
-          {t('hero.greeting')}
-        </motion.p>
+
 
         <div className="overflow-hidden mb-3 md:mb-2 px-2 pb-2">
           <motion.h1 variants={nameVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight break-words">
@@ -187,18 +129,14 @@ const Hero = ({ recruiterLens = 'overview' }) => {
 
         <p className="max-w-3xl px-2 text-base font-semibold leading-relaxed text-slate-700 dark:text-slate-200 sm:text-lg">{t('common.professional_identity')}</p>
         <p className="mt-1 max-w-2xl px-2 text-sm leading-6 text-slate-600 dark:text-slate-400">{t('common.professional_summary')}</p>
-        <motion.p variants={itemVariants} className="text-sm text-gray-500 dark:text-gray-400 mb-3 mt-2 font-normal max-w-3xl mx-auto leading-relaxed px-4 min-h-12 sm:min-h-6">
-          <TypewriterLine
-            key={`${i18n.resolvedLanguage}-${recruiterLens}`}
-            phrases={rolePhrases}
-            prefix={t('hero.typewriter_prefix')}
-            accessibleText={accessibleTagline}
-            reduceMotion={shouldReduceMotion}
-            active={isHeroVisible && isDocumentVisible}
-          />
-        </motion.p>
+        <TypewriterLine
+          key={`${i18n.resolvedLanguage}-${recruiterLens}`}
+          prefix={t('hero.typewriter_prefix')}
+          phrases={t(`home.recruiter_lens.modes.${recruiterLens}.hero_phrases`, { returnObjects: true })}
+          active={isHeroVisible && isDocumentVisible}
+        />
 
-        <motion.div variants={groupVariants} className="mb-4 w-full max-w-3xl px-4 sm:px-0">
+        <motion.div variants={groupVariants} className="mb-4 mt-1 w-full max-w-3xl px-4 sm:px-0">
           <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:flex sm:flex-wrap sm:justify-center">
             {quickFacts.map((fact) => (
               <motion.div
@@ -250,7 +188,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
 
 
 
-        <motion.div variants={itemVariants} className="mt-3 flex gap-4 text-xl text-gray-400">
+        <motion.div variants={itemVariants} className="mt-1 flex gap-4 text-xl text-gray-400">
           <a href="https://github.com/Rafie1715" target="_blank" rel="noreferrer" className="p-2 hover:text-dark dark:hover:text-white hover:-translate-y-1 transition-all rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/50" aria-label="GitHub" onClick={event => trackExternalLink('github', event.currentTarget.href)}>
             <FaGithub />
           </a>

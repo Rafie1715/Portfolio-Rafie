@@ -19,9 +19,9 @@ export const blogs = [
     featured: true,
     projectId: 'OD60ttuTSwZW62TRJFm6',
     impact: {
-      role: { en: 'Thesis Researcher and ML Developer', id: 'Peneliti Skripsi dan ML Developer' },
+      role: { en: 'Android & ML Developer — Undergraduate Thesis', id: 'Android & ML Developer — Skripsi S1' },
       team: { en: 'Independent thesis project', id: 'Proyek skripsi mandiri' },
-      result: { en: '92.06% Random Forest accuracy', id: 'Akurasi Random Forest 92,06%' },
+      result: { en: '92.06% test-set accuracy · 63 samples', id: 'Akurasi data uji 92,06% · 63 sampel' },
       scope: { en: 'Sleep monitoring and prediction', id: 'Pemantauan dan prediksi tidur' },
     },
     sections: {
@@ -108,7 +108,7 @@ export const blogs = [
     impact: {
       role: { en: 'Mobile Apps Developer', id: 'Mobile Apps Developer' },
       team: { en: 'Project-Based Virtual Internship', id: 'Project-Based Virtual Internship' },
-      result: { en: 'Excellent predicate, 88.71/100', id: 'Predikat Excellent, 88,71/100' },
+      result: { en: 'Excellent rating, 88.71/100', id: 'Predikat Excellent, 88,71/100' },
       scope: { en: '3 screens and 3 REST endpoints', id: '3 layar dan 3 REST endpoint' },
     },
     sections: {
@@ -136,7 +136,7 @@ export const blogs = [
         },
         {
           heading: 'Result and lesson',
-          paragraphs: ['The project received an Excellent predicate with a score of 88.71/100. It strengthened my understanding of production-oriented Android architecture, API state handling, and the details that make a paginated experience feel reliable.'],
+          paragraphs: ['The project received an Excellent rating with a score of 88.71/100. It strengthened my understanding of production-oriented Android architecture, API state handling, and the details that make a paginated experience feel reliable.'],
         },
       ],
       id: [

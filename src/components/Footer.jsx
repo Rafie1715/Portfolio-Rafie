@@ -99,7 +99,7 @@ const Footer = () => {
             
             <motion.div variants={itemVariants} className="flex flex-col items-center md:items-start space-y-4">
                 <Link to="/" className="text-2xl font-bold text-dark dark:text-white tracking-tighter hover:text-primary transition-colors">
-                    rafie<span className="text-primary">.dev</span>
+                    Rafie<span className="text-primary">.</span>
                 </Link>
                 <p className="text-gray-500 dark:text-gray-400 text-sm text-center md:text-left leading-relaxed max-w-xs">
                     {t('footer.description')}
