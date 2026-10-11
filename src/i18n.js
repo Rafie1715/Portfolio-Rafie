@@ -15,6 +15,12 @@ const resources = {
                 afk: "AFK",
                 contact: "Contact"
             },
+            recruiter_pitch: {
+                trigger_button: "1-Page Summary",
+                trigger_button_short: "1-Page",
+                trigger_title: "Open 1-Page Recruiter Pitch Mode (Executive Summary)",
+                command_label: "Open 1-Page Summary (Recruiter Pitch Mode)",
+            },
             home: {
                 highlights: "Portfolio Highlights",
                 featured_work: "Selected Work",
@@ -61,6 +67,12 @@ const resources = {
                         { value: "900+", label: "Bangkit learning hours" },
                         { value: "88.71 / 100", label: "Mandiri project score" }
                     ]
+                },
+                recruiter_pitch: {
+                    trigger_button: "1-Page Summary",
+                    trigger_button_short: "1-Page",
+                    trigger_title: "Open 1-Page Recruiter Pitch Mode (Executive Summary)",
+                    command_label: "Open 1-Page Summary (Recruiter Pitch Mode)",
                 },
                 recruiter_lens: {
                     eyebrow: "Recruiter Lens",
@@ -764,6 +776,12 @@ const resources = {
                 afk: "AFK",
                 contact: "Kontak"
             },
+            recruiter_pitch: {
+                trigger_button: "Ringkasan 1-Halaman",
+                trigger_button_short: "1-Halaman",
+                trigger_title: "Buka Mode Ringkasan 1-Halaman untuk Recruiter (Executive Summary)",
+                command_label: "Buka Ringkasan 1-Halaman (Mode Recruiter Pitch)",
+            },
             home: {
                 highlights: "Sorotan Portofolio",
                 featured_work: "Karya Pilihan",
@@ -810,6 +828,12 @@ const resources = {
                         { value: "900+", label: "Jam belajar Bangkit" },
                         { value: "88,71 / 100", label: "Nilai proyek Mandiri" }
                     ]
+                },
+                recruiter_pitch: {
+                    trigger_button: "Ringkasan 1-Halaman",
+                    trigger_button_short: "1-Halaman",
+                    trigger_title: "Buka Mode Ringkasan 1-Halaman untuk Recruiter (Executive Summary)",
+                    command_label: "Buka Ringkasan 1-Halaman (Mode Recruiter Pitch)",
                 },
                 recruiter_lens: {
                     eyebrow: "Sudut Pandang Rekruter",

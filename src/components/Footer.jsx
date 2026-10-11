@@ -56,6 +56,7 @@ const Footer = () => {
     { name: t('navbar.home'), path: "/" },
     { name: t('navbar.about'), path: "/about" },
     { name: t('navbar.projects'), path: "/projects" },
+    { name: t('navbar.blog'), path: "/blog" },
     { name: t('navbar.workspace'), path: "/workspace" },
     { name: t('navbar.afk'), path: "/afk" },
     { name: t('navbar.contact'), path: "/contact" },

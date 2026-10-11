@@ -10,6 +10,7 @@ import ProjectEvidence from '../components/ProjectEvidence';
 import ProjectArchitecture from '../components/ProjectArchitecture';
 import ModelEvaluation from '../components/ModelEvaluation';
 import DecisionReplay from '../components/DecisionReplay';
+import DeviceMockupPreview from '../components/DeviceMockupPreview';
 import ImageDialog from '../components/ImageDialog';
 import PageTransition from '../components/PageTransition';
 import Loading from '../components/Loading';
@@ -78,12 +79,11 @@ export default function ProjectDetail() {
           <dl className="grid gap-5 sm:grid-cols-3">{facts.map(([label, value]) => <div key={label}><dt className="text-sm text-slate-500 dark:text-slate-400">{label}</dt><dd className="mt-1 font-semibold">{value}</dd></div>)}</dl>
         </section>}
         <ProjectEvidence project={project} showResults={false} />
-        <figure className="mb-10 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
-          <button type="button" aria-label={`${t('common.preview')}: ${title}`} onClick={() => setSelectedImage({ src: project.image, alt: title })} className="block w-full cursor-zoom-in">
-            <img src={project.image} alt={title} decoding="async" fetchPriority="high" className="mx-auto max-h-[28rem] w-full object-contain" />
-          </button>
-          {project.conceptualCover && <figcaption className="border-t border-slate-200 p-4 text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">{t('projectDetail.conceptual_cover')}</figcaption>}
-        </figure>
+        <DeviceMockupPreview
+          project={project}
+          title={title}
+          onSelectImage={setSelectedImage}
+        />
         <section className="mb-8">
           <h2 className={sectionTitle}>{t('projectDetail.overview')}</h2>
           <p className={bodyText}>{text(project.fullDesc)}</p>

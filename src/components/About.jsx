@@ -10,6 +10,7 @@ import {
   MapPin,
   Send,
 } from 'lucide-react';
+import DeveloperIDPreview from './DeveloperIDPreview';
 import cvFile from '/assets/CV Rafie Rojagat Bachri.pdf';
 
 const MetricValue = ({ target, decimals = 0, suffix = '', isStatic = false, reduceMotion }) => {
@@ -70,16 +71,9 @@ const About = () => {
             initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: 'easeOut' }}
-            className="mx-auto w-full max-w-sm"
+            className="mx-auto w-full max-w-md flex justify-center"
           >
-            <div className="aspect-[4/5] overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-              <img
-                src="/images/profile.webp"
-                alt="Rafie Rojagat Bachri"
-                className="h-full w-full object-cover"
-                decoding="async"
-              />
-            </div>
+            <DeveloperIDPreview />
           </motion.div>
 
           <motion.div

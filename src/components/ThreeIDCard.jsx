@@ -2,10 +2,10 @@ import * as THREE from 'three';
 import { RotateCcw } from 'lucide-react';
 import { createLanyard, stepLanyard, limitLanyardTarget, LANYARD_ANCHOR, LANYARD_LENGTH } from '../utils/lanyardPhysics';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 
-const FRAME_INTERVAL = 1000 / 30;
+const FRAME_INTERVAL = 1000 / 60;
 const TEXTURE_WIDTH = 900;
 const TEXTURE_HEIGHT = 1320;
 
@@ -243,57 +243,104 @@ const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange, touchInt
     gl.domElement.style.setProperty('touch-action', touchInteraction ? 'none' : 'pan-y');
   }, [gl, touchInteraction]);
 
+
+  const finishDrag = useCallback((event) => {
+    const canvas = gl.domElement;
+    if (!drag.current) return;
+    const pId = event?.pointerId ?? event?.nativeEvent?.pointerId;
+    if (pId != null && drag.current.pointerId != null && pId !== drag.current.pointerId) return;
+    const { pointerId, velocity, lastTime } = drag.current;
+    drag.current = null;
+    try {
+      if (pointerId != null && canvas.hasPointerCapture && canvas.hasPointerCapture(pointerId)) {
+        canvas.releasePointerCapture(pointerId);
+      }
+    } catch {
+      // safe fallback
+    }
+
+    // Impart release fling momentum
+    if (event?.type === 'pointerup' && velocity && !reducedMotion && performance.now() - lastTime < 120) {
+      const end = points.current.at(-1);
+      const impulseX = THREE.MathUtils.clamp(velocity.x * 0.015, -0.4, 0.4);
+      const impulseY = THREE.MathUtils.clamp(velocity.y * 0.015, -0.4, 0.4);
+      end.previousX = end.x - impulseX;
+      end.previousY = end.y - impulseY;
+    }
+
+    setDragging(false);
+    setHovered(false);
+    onDragChange(false);
+    invalidate();
+  }, [gl, invalidate, onDragChange, reducedMotion]);
+
   useEffect(() => {
     const canvas = gl.domElement;
-    const finish = event => {
-      if (!drag.current || (event?.pointerId != null && event.pointerId !== drag.current.pointerId)) return;
-      const { pointerId } = drag.current;
-      drag.current = null;
-      if (canvas.hasPointerCapture(pointerId)) canvas.releasePointerCapture(pointerId);
-      setDragging(false); setHovered(false); onDragChange(false); invalidate();
-    };
-    const move = event => {
-      if (!drag.current || event.pointerId !== drag.current.pointerId) return;
+    const move = (event) => {
+      if (!drag.current) return;
+      const pId = event.pointerId ?? event.nativeEvent?.pointerId;
+      if (pId != null && drag.current.pointerId != null && pId !== drag.current.pointerId) return;
       event.preventDefault();
       const rect = canvas.getBoundingClientRect();
-      scratch.pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
+      const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      scratch.pointer.set(x, y);
       scratch.raycaster.setFromCamera(scratch.pointer, camera);
       if (scratch.raycaster.ray.intersectPlane(scratch.plane, scratch.hit)) {
-        const { offset } = drag.current;
-        drag.current.target = limitLanyardTarget({ x: scratch.hit.x - offset.x, y: scratch.hit.y - offset.y }, Math.max(0.35, viewport.width / 2 - 1.45));
+        const { offset, lastPointer, lastTime } = drag.current;
+        const now = performance.now();
+        const dt = Math.max((now - (lastTime || now)) / 1000, 0.001);
+
+        if (lastPointer) {
+          drag.current.velocity = {
+            x: (scratch.hit.x - lastPointer.x) / dt,
+            y: (scratch.hit.y - lastPointer.y) / dt,
+          };
+        }
+        drag.current.lastPointer = { x: scratch.hit.x, y: scratch.hit.y };
+        drag.current.lastTime = now;
+
+        const maxH = Math.max(1.85, viewport.width / 2 - 0.4);
+        drag.current.target = limitLanyardTarget(
+          { x: scratch.hit.x - offset.x, y: scratch.hit.y - offset.y },
+          maxH,
+        );
         invalidate();
       }
     };
-    canvas.addEventListener('pointermove', move, { passive: false });
-    canvas.addEventListener('pointerup', finish);
-    canvas.addEventListener('pointercancel', finish);
-    canvas.addEventListener('lostpointercapture', finish);
-    window.addEventListener('blur', finish);
+
+    window.addEventListener('pointermove', move, { passive: false });
+    window.addEventListener('pointerup', finishDrag);
+    window.addEventListener('pointercancel', finishDrag);
+    canvas.addEventListener('lostpointercapture', finishDrag);
+    window.addEventListener('blur', finishDrag);
     return () => {
-      finish();
-      canvas.removeEventListener('pointermove', move);
-      canvas.removeEventListener('pointerup', finish);
-      canvas.removeEventListener('pointercancel', finish);
-      canvas.removeEventListener('lostpointercapture', finish);
-      window.removeEventListener('blur', finish);
+      finishDrag();
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', finishDrag);
+      window.removeEventListener('pointercancel', finishDrag);
+      canvas.removeEventListener('lostpointercapture', finishDrag);
+      window.removeEventListener('blur', finishDrag);
     };
-  }, [camera, gl, invalidate, onDragChange, scratch, viewport.width]);
+  }, [camera, gl, invalidate, finishDrag, scratch, viewport.width]);
 
   useEffect(() => {
-    if (!active && drag.current) {
-      const { pointerId } = drag.current;
-      if (gl.domElement.hasPointerCapture(pointerId)) gl.domElement.releasePointerCapture(pointerId);
-    }
-  }, [active, gl]);
+    if (active && (touchInteraction || drag.current?.pointerType !== 'touch')) return undefined;
+    const frame = window.requestAnimationFrame(() => finishDrag());
+    return () => window.cancelAnimationFrame(frame);
+  }, [active, touchInteraction, finishDrag]);
 
   useEffect(() => {
-    if (drag.current && gl.domElement.hasPointerCapture(drag.current.pointerId)) gl.domElement.releasePointerCapture(drag.current.pointerId);
-    points.current = createLanyard();
-    angularVelocity.current.set(0, 0, 0);
-    previousEndpoint.current.set(0, LANYARD_ANCHOR.y - LANYARD_LENGTH);
-    if (pivot.current) pivot.current.rotation.set(0, 0, 0);
-    invalidate();
-  }, [resetSignal, gl, invalidate]);
+    const frame = window.requestAnimationFrame(() => {
+      finishDrag();
+      points.current = createLanyard();
+      angularVelocity.current.set(0, 0, 0);
+      previousEndpoint.current.set(0, LANYARD_ANCHOR.y - LANYARD_LENGTH);
+      if (pivot.current) pivot.current.rotation.set(0, 0, 0);
+      invalidate();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [resetSignal, finishDrag, invalidate]);
 
   useEffect(() => {
     if (reducedMotion && !dragging) {
@@ -314,20 +361,22 @@ const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange, touchInt
       const vx = (end.x - previousEndpoint.current.x) / Math.max(dt, 1 / 120);
       const vy = (end.y - previousEndpoint.current.y) / Math.max(dt, 1 / 120);
       const lean = Math.atan2(end.x - before.x, before.y - end.y);
-      stepRotationSpring(pivot.current.rotation, angularVelocity.current, 'z', THREE.MathUtils.clamp(lean * 0.32 - vx * 0.035, -0.42, 0.42), 24, 5.8, dt, 0.5);
-      stepRotationSpring(pivot.current.rotation, angularVelocity.current, 'y', THREE.MathUtils.clamp(vx * 0.06 + end.x * 0.08, -0.3, 0.3), 20, 5.5, dt, 0.38);
-      stepRotationSpring(pivot.current.rotation, angularVelocity.current, 'x', THREE.MathUtils.clamp(vy * -0.035, -0.2, 0.2), 22, 6, dt, 0.25);
+      // Fluid pendulum sway: natural lean with lanyard, organic twist & tilt
+      stepRotationSpring(pivot.current.rotation, angularVelocity.current, 'z', THREE.MathUtils.clamp(lean * 0.78 - vx * 0.03, -0.75, 0.75), 18, 3.8, dt, 0.8);
+      stepRotationSpring(pivot.current.rotation, angularVelocity.current, 'y', THREE.MathUtils.clamp(vx * 0.12 + end.x * 0.14, -0.45, 0.45), 16, 3.6, dt, 0.55);
+      stepRotationSpring(pivot.current.rotation, angularVelocity.current, 'x', THREE.MathUtils.clamp(vy * -0.045, -0.3, 0.3), 18, 4.0, dt, 0.35);
     }
-    // Reserve room for the entire tilted badge, including its lower corners.
-    const tilt = pivot.current.rotation.z;
-    const halfWidth = viewport.width / 2 - 0.18;
-    const cardHalfWidth = 1.3 * Math.cos(tilt);
-    const bottomOffset = 3.75 * Math.sin(tilt);
-    const boundedX = THREE.MathUtils.clamp(end.x,
-      -halfWidth + cardHalfWidth - Math.min(0, bottomOffset),
-      halfWidth - cardHalfWidth - Math.max(0, bottomOffset));
-    end.previousX += boundedX - end.x;
-    end.x = boundedX;
+
+    // Soft elastic bounce boundary instead of rigid halt
+    const maxSwingX = Math.max(1.85, viewport.width / 2 - 0.4);
+    if (end.x > maxSwingX) {
+      end.x = maxSwingX;
+      end.previousX = end.x + (end.x - end.previousX) * 0.35;
+    } else if (end.x < -maxSwingX) {
+      end.x = -maxSwingX;
+      end.previousX = end.x + (end.x - end.previousX) * 0.35;
+    }
+
     pivot.current.position.set(end.x, end.y, 0);
     previousEndpoint.current.set(end.x, end.y);
 
@@ -344,28 +393,54 @@ const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange, touchInt
         attribute.setXYZ(i * 2 + 1, scratch.point.x + nx * (offset + halfWidth), scratch.point.y + ny * (offset + halfWidth), stripe ? 0.009 : 0);
       }
       attribute.needsUpdate = true;
+      // Raycasting must use the strap's current shape after a drag.
+      strap.computeBoundingSphere();
     });
   });
 
   const startDrag = event => {
-    if (!active || drag.current || event.button !== 0 || event.nativeEvent?.isPrimary === false) return;
+    if (!active || drag.current) return;
+    if (event.nativeEvent && event.nativeEvent.button !== undefined && event.nativeEvent.button !== 0) return;
     if (event.pointerType === 'touch' && !touchInteraction) return;
     event.stopPropagation();
-    if (!event.ray.intersectPlane(scratch.plane, scratch.hit)) return;
+
+    // R3F puts pointerId on event.nativeEvent
+    const pointerId = event.nativeEvent?.pointerId ?? event.pointerId ?? 1;
+
+    // Raycast hit on z=0 plane
+    const rayHit = (event.ray && event.ray.intersectPlane(scratch.plane, scratch.hit)) ||
+      (scratch.raycaster.ray && scratch.raycaster.ray.intersectPlane(scratch.plane, scratch.hit));
     const end = points.current.at(-1);
+    const hitPoint = rayHit ? scratch.hit : new THREE.Vector3(end.x, end.y - 1.94, 0);
+
     drag.current = {
-      pointerId: event.pointerId,
-      offset: { x: scratch.hit.x - end.x, y: scratch.hit.y - end.y },
+      pointerId,
+      pointerType: event.pointerType,
+      offset: { x: hitPoint.x - end.x, y: hitPoint.y - end.y },
       target: { x: end.x, y: end.y },
+      lastPointer: { x: hitPoint.x, y: hitPoint.y },
+      velocity: { x: 0, y: 0 },
+      lastTime: performance.now(),
     };
-    gl.domElement.setPointerCapture(event.pointerId);
-    setDragging(true); setHovered(true); onDragChange(true); invalidate();
+
+    try {
+      if (gl.domElement.setPointerCapture) {
+        gl.domElement.setPointerCapture(pointerId);
+      }
+    } catch {
+      // safe fallback
+    }
+
+    setDragging(true);
+    setHovered(true);
+    onDragChange(true);
+    invalidate();
   };
 
   return (
     <group>
       {straps.map((strap, index) => (
-        <mesh key={index} geometry={strap} frustumCulled={false}>
+        <mesh key={index} geometry={strap} frustumCulled={false} onPointerDown={startDrag}>
           <meshBasicMaterial color={index ? '#facc15' : '#047857'} side={THREE.DoubleSide} />
         </mesh>
       ))}
@@ -373,7 +448,11 @@ const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange, touchInt
         <sphereGeometry args={[0.1, 16, 16]} />
         <meshStandardMaterial color="#94a3b8" metalness={0.75} roughness={0.25} />
       </mesh>
-      <group ref={pivot} position={[0, LANYARD_ANCHOR.y - LANYARD_LENGTH, 0]}>
+      <group
+        ref={pivot}
+        position={[0, LANYARD_ANCHOR.y - LANYARD_LENGTH, 0]}
+        onPointerDown={startDrag}
+      >
         <mesh position={[0, -0.04, 0]}>
           <boxGeometry args={[0.46, 0.28, 0.16]} />
           <meshStandardMaterial color="#64748b" metalness={0.72} roughness={0.28} />
@@ -382,8 +461,16 @@ const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange, touchInt
           <torusGeometry args={[0.17, 0.045, 12, 28]} />
           <meshStandardMaterial color="#475569" metalness={0.78} roughness={0.25} />
         </mesh>
-        <group position={[0, -1.94, 0]} onPointerDown={startDrag}
-          onPointerOver={() => setHovered(true)} onPointerOut={() => { if (!drag.current) setHovered(false); }}>
+        <group
+          position={[0, -1.94, 0]}
+          onPointerDown={startDrag}
+          onPointerOver={() => setHovered(true)}
+          onPointerOut={() => { if (!drag.current) setHovered(false); }}
+        >
+          {/* Expanded invisible hitbox so clicking anywhere on or near the card starts drag */}
+          <mesh position={[0, 0, 0]} visible={false}>
+            <boxGeometry args={[3.2, 4.4, 0.8]} />
+          </mesh>
           <mesh geometry={geometry}>
             <meshPhysicalMaterial color="#f8fafc" clearcoat={0.7} clearcoatRoughness={0.22} metalness={0.08} roughness={0.48} />
           </mesh>
@@ -415,6 +502,7 @@ const useReducedMotion = () => {
 export default function ThreeIDCard() {
   const { t } = useTranslation();
   const [dragging, setDragging] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const [touchInteraction, setTouchInteraction] = useState(false);
   const [resetSignal, setResetSignal] = useState(0);
   const [documentVisible, setDocumentVisible] = useState(() => !document.hidden);
@@ -429,6 +517,12 @@ export default function ThreeIDCard() {
   const containerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(true);
   const reducedMotion = useReducedMotion();
+
+  // Keep the native pointer listeners alive when drag state re-renders this parent.
+  const handleDragChange = useCallback((isDragging) => {
+    setDragging(isDragging);
+    if (isDragging) setHasInteracted(true);
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return undefined;
@@ -449,8 +543,16 @@ export default function ThreeIDCard() {
     <div
       ref={containerRef}
       data-card-dragging={dragging}
-      className="w-full max-w-[520px] overflow-hidden rounded-lg border border-slate-200 bg-slate-100 shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-900"
+      className={`relative w-full max-w-[520px] select-none overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-xl shadow-slate-900/10 transition-shadow duration-300 dark:border-slate-700 dark:bg-slate-900 ${
+        dragging ? 'ring-2 ring-primary/40 shadow-2xl' : ''
+      }`}
     >
+      {!hasInteracted && !reducedMotion && (
+        <div className="pointer-events-none absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-primary/30 bg-white/95 px-3 py-1 text-[11px] font-semibold text-primary shadow-sm backdrop-blur dark:bg-slate-800/95 animate-pulse">
+          <span className="size-2 rounded-full bg-emerald-500 animate-ping" />
+          <span>3D Physics • Click & Drag to Swing</span>
+        </div>
+      )}
       <div className="h-[440px] w-full md:h-[500px]" role="img" aria-label={t('common.developer_id_preview')}>
         <Canvas
           frameloop="demand"
@@ -462,7 +564,7 @@ export default function ThreeIDCard() {
           <ambientLight intensity={1.9} />
           <directionalLight position={[4, 6, 8]} intensity={2.4} color="#ffffff" />
           <directionalLight position={[-4, 1, 5]} intensity={1.1} color="#a7f3d0" />
-          <BadgeModel active={active} reducedMotion={reducedMotion} resetSignal={resetSignal} onDragChange={setDragging} touchInteraction={touchInteraction} />
+          <BadgeModel active={active} reducedMotion={reducedMotion} resetSignal={resetSignal} onDragChange={handleDragChange} touchInteraction={touchInteraction} />
           <AnimationDriver active={active && (!reducedMotion || dragging)} />
         </Canvas>
       </div>

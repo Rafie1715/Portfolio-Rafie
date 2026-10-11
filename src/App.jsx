@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import Loading from './components/Loading';
 import ScrollProgress from './components/ScrollProgress';
 import Spotlight from './components/Spotlight';
+import CommandPalette from './components/CommandPalette';
 import { HelmetProvider } from 'react-helmet-async';
 import Footer from './components/Footer';
 import { ToastProvider } from './components/ToastProvider';
@@ -96,6 +97,7 @@ function App() {
         <ScrollProgress />
         <div className="bg-noise"></div>
         <Spotlight />
+        <CommandPalette />
 
         {!isAdminRoute && <Navbar />}
 

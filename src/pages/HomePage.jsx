@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import Hero from '../components/Hero';
 import HomeAboutSnapshot from '../components/HomeAboutSnapshot';
 import RecruiterLens from '../components/RecruiterLens';
+import RecruiterPitchModal from '../components/RecruiterPitchModal';
 import { useProjects } from '../hooks/useProjects';
 import ProjectCatalogStatus from '../components/ProjectCatalogStatus';
 import LivingTechStack from '../components/LivingTechStack';
@@ -92,6 +93,16 @@ const HomePage = () => {
   const currentLang = i18n.language || 'en';
   const shouldReduceMotion = useReducedMotion();
   const [selectedTechnology, setSelectedTechnology] = useState(null);
+  const [showPitchModal, setShowPitchModal] = useState(() => {
+    return searchParams.get('pitch') === 'true' || searchParams.get('mode') === 'pitch';
+  });
+
+  useEffect(() => {
+    const handleOpenPitch = () => setShowPitchModal(true);
+    window.addEventListener('open-recruiter-pitch', handleOpenPitch);
+    return () => window.removeEventListener('open-recruiter-pitch', handleOpenPitch);
+  }, []);
+
   const requestedLens = searchParams.get('focus');
   const recruiterLens = VALID_LENSES.has(requestedLens) ? requestedLens : 'overview';
   const lensKey = `home.recruiter_lens.modes.${recruiterLens}`;
@@ -159,6 +170,12 @@ const HomePage = () => {
         <RecruiterLens
           value={recruiterLens}
           onChange={handleLensChange}
+          onOpenPitch={() => setShowPitchModal(true)}
+        />
+        <RecruiterPitchModal
+          isOpen={showPitchModal}
+          onClose={() => setShowPitchModal(false)}
+          initialLens={recruiterLens}
         />
 
         <section id="selected-work" tabIndex={-1} className="scroll-mt-24 py-6 px-4 container mx-auto focus:outline-none" aria-live="polite">

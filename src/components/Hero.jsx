@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { MapPin, BriefcaseBusiness, Download, Send } from 'lucide-react';
+import { BriefcaseBusiness, Download, Send } from 'lucide-react';
 import { trackCTAClick, trackExternalLink } from '../utils/analytics';
 
 import HeroLightBackground from './HeroLightBackground';
@@ -39,10 +39,7 @@ const Hero = ({ recruiterLens = 'overview' }) => {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
-  const quickFacts = [
-    { icon: MapPin, text: t('hero.quick_facts.location') },
-    { icon: BriefcaseBusiness, text: t('hero.quick_facts.availability') },
-  ];
+
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -119,6 +116,19 @@ const Hero = ({ recruiterLens = 'overview' }) => {
 
 
 
+        <motion.div
+          variants={itemVariants}
+          className="mb-2 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-50/80 px-3.5 py-1 text-xs font-semibold text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950/40 dark:text-emerald-300 shadow-sm backdrop-blur"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span>{t('hero.quick_facts.availability')}</span>
+          <span className="text-emerald-400 dark:text-emerald-700">·</span>
+          <span>{t('hero.quick_facts.location')}</span>
+        </motion.div>
+
         <div className="overflow-hidden mb-3 md:mb-2 px-2 pb-2">
           <motion.h1 variants={nameVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight break-words">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-500 drop-shadow-sm">
@@ -136,26 +146,9 @@ const Hero = ({ recruiterLens = 'overview' }) => {
           active={isHeroVisible && isDocumentVisible}
         />
 
-        <motion.div variants={groupVariants} className="mb-4 mt-1 w-full max-w-3xl px-4 sm:px-0">
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:flex sm:flex-wrap sm:justify-center">
-            {quickFacts.map((fact) => (
-              <motion.div
-                key={fact.text}
-                variants={itemVariants}
-                whileHover={shouldReduceMotion ? undefined : { y: -3, scale: 1.015 }}
-                transition={{ duration: 0.2 }}
-                className="group flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2 bg-white/80 dark:bg-slate-800/80 text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-medium shadow-sm hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-md transition-[border-color,box-shadow]"
-              >
-                <fact.icon size={16} aria-hidden="true" className="shrink-0 text-primary transition-transform duration-200 group-hover:-translate-y-0.5" />
-                <span>{fact.text}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div variants={groupVariants} className="grid grid-cols-2 sm:flex sm:flex-row justify-center gap-3 sm:gap-5 md:gap-6 w-full px-4 sm:px-0">
-          <motion.div variants={itemVariants} className="col-span-2 w-full sm:w-auto">
-            <Link to={recruiterLens === 'overview' ? '/projects' : `/projects?focus=${recruiterLens}`} onClick={() => trackCTAClick('view_projects')} className="group relative w-full px-7 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-[1.03] hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center gap-2">
+        <motion.div variants={groupVariants} className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full px-4 sm:px-0">
+          <motion.div variants={itemVariants} className="w-full sm:w-auto">
+            <Link to={recruiterLens === 'overview' ? '/projects' : `/projects?focus=${recruiterLens}`} onClick={() => trackCTAClick('view_projects')} className="group relative w-full sm:w-auto px-7 py-3 sm:px-8 sm:py-3.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full font-bold text-sm sm:text-base shadow-lg shadow-blue-500/30 overflow-hidden transition-all active:scale-95 hover:scale-[1.03] hover:shadow-blue-500/50 text-center min-h-[44px] flex items-center justify-center gap-2">
               <BriefcaseBusiness size={18} aria-hidden="true" className="relative z-10" />
               <span className="relative z-10">{t('hero.view_projects')}</span>
               {!shouldReduceMotion && (
@@ -172,16 +165,17 @@ const Hero = ({ recruiterLens = 'overview' }) => {
           </motion.div>
 
           <motion.div variants={itemVariants} className="w-full sm:w-auto">
-            <a href="/assets/CV Rafie Rojagat Bachri.pdf" download="CV_Rafie_Rojagat_Bachri.pdf" className="w-full px-2 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-300 rounded-full font-bold text-sm sm:text-base hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-all duration-300 backdrop-blur-sm bg-white/70 dark:bg-slate-900/40 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5">
+            <a href="/assets/CV Rafie Rojagat Bachri.pdf" download="CV_Rafie_Rojagat_Bachri.pdf" className="w-full sm:w-auto px-7 py-3 sm:px-8 sm:py-3.5 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-300 rounded-full font-bold text-sm sm:text-base hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-all duration-300 backdrop-blur-sm bg-white/70 dark:bg-slate-900/40 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5 shadow-sm">
               <Download size={18} aria-hidden="true" />
               {t('hero.download_cv')}
             </a>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="w-full sm:w-auto">
-            <Link to="/contact" onClick={() => trackCTAClick('contact')} className="w-full px-2 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full font-bold text-sm sm:text-base hover:border-blue-500 hover:text-blue-500 dark:hover:text-blue-400 dark:hover:border-blue-400 transition-all duration-300 backdrop-blur-sm bg-white/50 dark:bg-black/20 text-center min-h-[44px] flex items-center justify-center gap-2 hover:-translate-y-0.5">
-              <Send size={18} aria-hidden="true" />
-              <span className="sm:hidden">{t('navbar.contact')}</span><span className="hidden sm:inline">{t('hero.contact_me')}</span>
+          <motion.div variants={itemVariants} className="w-full sm:w-auto flex justify-center">
+            <Link to="/contact" onClick={() => trackCTAClick('contact')} className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors py-2 px-3.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800/80">
+              <Send size={14} aria-hidden="true" />
+              <span>{t('hero.contact_me')}</span>
+              <span aria-hidden="true">→</span>
             </Link>
           </motion.div>
         </motion.div>

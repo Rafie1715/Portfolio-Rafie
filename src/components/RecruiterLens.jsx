@@ -4,6 +4,7 @@ import {
   BriefcaseBusiness,
   Check,
   Code2,
+  FileText,
   Link2,
   Smartphone,
 } from 'lucide-react';
@@ -33,8 +34,9 @@ const copyCurrentUrl = async () => {
   input.remove();
 };
 
-const RecruiterLens = ({ value, onChange }) => {
-  const { t } = useTranslation();
+const RecruiterLens = ({ value, onChange, onOpenPitch }) => {
+  const { t, i18n } = useTranslation();
+  const isIndonesian = (i18n.resolvedLanguage || i18n.language)?.startsWith('id');
   const [copyState, setCopyState] = useState('idle');
   const resetTimer = useRef(null);
   const controlsRef = useRef(null);
@@ -104,6 +106,24 @@ const RecruiterLens = ({ value, onChange }) => {
             >
               {copyState === 'copied' ? <Check size={18} aria-hidden="true" /> : <Link2 size={18} aria-hidden="true" />}
             </button>
+
+            {onOpenPitch && (
+              <button
+                type="button"
+                onClick={onOpenPitch}
+                title={t('recruiter_pitch.trigger_title', t('home.recruiter_pitch.trigger_title', isIndonesian ? 'Buka Ringkasan 1-Halaman (Executive Summary)' : 'Open 1-Page Summary (Executive Summary)'))}
+                aria-label={t('recruiter_pitch.trigger_title', t('home.recruiter_pitch.trigger_title', isIndonesian ? 'Buka Ringkasan 1-Halaman (Executive Summary)' : 'Open 1-Page Summary (Executive Summary)'))}
+                className="inline-flex min-h-11 flex-none items-center gap-1.5 rounded-lg border border-blue-500/30 bg-gradient-to-r from-blue-600 to-indigo-600 px-3.5 text-xs sm:text-sm font-bold text-white shadow-sm shadow-blue-500/20 transition-all hover:from-blue-700 hover:to-indigo-700 hover:shadow-md active:scale-95"
+              >
+                <FileText size={16} aria-hidden="true" />
+                <span className="hidden sm:inline">
+                  {t('recruiter_pitch.trigger_button', t('home.recruiter_pitch.trigger_button', isIndonesian ? 'Ringkasan 1-Halaman' : '1-Page Summary'))}
+                </span>
+                <span className="sm:hidden">
+                  {t('recruiter_pitch.trigger_button_short', t('home.recruiter_pitch.trigger_button_short', isIndonesian ? '1-Halaman' : '1-Page'))}
+                </span>
+              </button>
+            )}
           </div>
         </div>
 

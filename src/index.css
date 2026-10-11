@@ -365,3 +365,33 @@ html { scroll-padding-top: 6rem; }
   .hero-light-ribbon, .hero-light-trail { animation: none; }
   .hero-light-parallax { transform: none; transition: none; }
 }
+
+/* Print optimization for 1-Page Recruiter Pitch Mode */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+  body > * {
+    visibility: hidden;
+  }
+  .recruiter-pitch-sheet, .recruiter-pitch-sheet * {
+    visibility: visible;
+  }
+  .recruiter-pitch-sheet {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
