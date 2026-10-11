@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useFirebaseInit } from "../hooks/useFirebaseInit";
 import { onAuthStateChanged, reload, signOut } from "firebase/auth";
-import { getAdminEmails, isAdminUser } from "../utils/adminAccess";
+import { isAdminUser } from "../utils/adminAccess";
 
 const RequireAuth = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -11,7 +11,7 @@ const RequireAuth = ({ children }) => {
   const [checking, setChecking] = useState(false);
   const [accessError, setAccessError] = useState('');
   const { auth, loading: initializing } = useFirebaseInit('auth');
-  const adminEmails = getAdminEmails();
+
 
   useEffect(() => {
     if (!auth) return; // Wait for Firebase to load
@@ -79,9 +79,7 @@ const RequireAuth = ({ children }) => {
           <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
             {!currentUser.emailVerified
               ? 'Email-based admin access requires a verified email address. If this is a login-only address, the Firebase project owner can assign the admin role to this account instead.'
-              : adminEmails.includes(currentUser.email?.trim().toLowerCase())
-                ? 'This email is listed, but access could not be confirmed. Refresh access or ask the Firebase project owner to check the account role.'
-                : 'This account needs the Firebase admin role, or its verified email must be added to the admin allowlist.'}
+              : 'This account needs the Firebase admin role assigned by the project owner.'}
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">After the account role or email verification is updated, refresh access below.</p>
           {accessError && <p role="alert" className="mt-4 text-sm text-red-600 dark:text-red-400">{accessError}</p>}

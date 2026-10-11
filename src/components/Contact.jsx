@@ -223,7 +223,7 @@ const Contact = () => {
 
             <div className="absolute left-[-5000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
               <label htmlFor="company-website">Company website</label>
-              <input id="company-website" type="text" name="_gotcha" tabIndex="-1" autoComplete="off" />
+              <input id="company-website" type="text" name="_gotcha" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
             </div>
             <input type="hidden" name="_subject" value="New portfolio contact" />
 
