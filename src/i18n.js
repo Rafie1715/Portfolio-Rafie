@@ -254,6 +254,12 @@ const resources = {
                 availability: "Open to internships and entry-level roles",
                 view_projects: "View Projects",
                 contact: "Contact Me",
+                setup_banner: {
+                    eyebrow: "Behind the Code",
+                    title: "Curious about my workflow & testing devices?",
+                    desc: "Explore the physical testing hardware, software stack, and daily development setup I use to build products.",
+                    cta_workspace: "Explore Workspace & Gear →"
+                },
                 snapshot: {
                     graduate: "Informatics graduate",
                     gpa: "GPA / 4.00",
@@ -1015,6 +1021,12 @@ const resources = {
                 availability: "Terbuka untuk magang dan posisi entry-level",
                 view_projects: "Lihat Proyek",
                 contact: "Hubungi Saya",
+                setup_banner: {
+                    eyebrow: "Di Balik Layar",
+                    title: "Ingin tahu alur kerja & perangkat pengujian saya?",
+                    desc: "Jelajahi perangkat keras pengujian, software stack, dan setup harian yang saya gunakan untuk membangun produk.",
+                    cta_workspace: "Lihat Workspace & Setup →"
+                },
                 snapshot: {
                     graduate: "Lulusan Informatika",
                     gpa: "IPK / 4,00",

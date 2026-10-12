@@ -23,6 +23,7 @@ import { useProjects } from '../hooks/useProjects';
 import ProjectCatalogStatus from './ProjectCatalogStatus';
 import { trackExternalLink, trackProjectView } from '../utils/analytics';
 import LazyImage from './LazyImage';
+import TechnologyLabel from './TechnologyLabel';
 
 const ARCHIVE_PREVIEW_COUNT = 6;
 
@@ -276,9 +277,9 @@ const ProjectCard = ({
             {techStack.map((tech) => (
               <li
                 key={tech?.name || String(tech)}
-                className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600 dark:bg-slate-800 dark:text-gray-300"
+                className="flex max-w-full items-center rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600 dark:bg-slate-800 dark:text-gray-300"
               >
-                {tech?.name || String(tech)}
+                <TechnologyLabel technology={tech} />
               </li>
             ))}
           </ul>

@@ -1,3 +1,5 @@
+import TechnologyLabel from '../../components/TechnologyLabel';
+import { toTechnologyEntry } from '../../utils/technologies';
 import { uploadImage } from '../../utils/uploadImage';
 import Icon from '../../components/Icon';
 import { useState, useEffect, useRef } from "react";
@@ -284,10 +286,7 @@ const EditProject = () => {
     try {
       const imageUrl = await uploadImageIfNeeded();
 
-      const techArray = techItems.map((name) => ({
-        name: name.trim(),
-        icon: "fas fa-code",
-      }));
+      const techArray = techItems.map(toTechnologyEntry);
 
       const featuresArray = formData.features
         .split("\n")
@@ -686,6 +685,7 @@ const EditProject = () => {
                 </button>
               </div>
 
+              <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">Logos appear automatically from technology names. Unrecognized names use a code icon; no logo upload is needed.</p>
               {techItems.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {techItems.map((tech, idx) => (
@@ -693,7 +693,7 @@ const EditProject = () => {
                       key={idx}
                       className="flex max-w-full items-center gap-2 break-words px-3 py-1.5 bg-primary/10 border border-primary/30 text-primary rounded-lg text-sm"
                     >
-                      <span className="min-w-0 [overflow-wrap:anywhere]">{tech}</span>
+                      <TechnologyLabel technology={tech} />
                       <button
                         type="button"
                         onClick={() => removeTechItem(idx)}

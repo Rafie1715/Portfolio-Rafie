@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { BriefcaseBusiness, UserRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import About from "../components/About";
@@ -106,6 +107,30 @@ const AboutPage = () => {
             <Certifications />
           </Suspense>
         </DeferredSection>
+
+        <section className="border-t border-gray-200 bg-gray-50/70 py-12 dark:border-slate-800 dark:bg-slate-900/30">
+          <div className="container mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 px-4 text-center sm:px-6 md:flex-row md:text-left">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-primary">
+                {t('about.setup_banner.eyebrow', 'Behind the Code')}
+              </p>
+              <h2 className="mt-1 text-xl font-bold text-dark dark:text-white sm:text-2xl">
+                {t('about.setup_banner.title', 'Curious about my workflow & testing devices?')}
+              </h2>
+              <p className="mt-1 max-w-xl text-sm text-gray-600 dark:text-gray-400">
+                {t('about.setup_banner.desc', 'Explore the physical testing hardware, software stack, and daily development setup I use to build products.')}
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <Link
+                to="/workspace"
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-primary/30 bg-white px-5 py-2.5 text-sm font-bold text-primary shadow-sm hover:bg-primary/5 dark:bg-slate-800 dark:text-blue-300 transition"
+              >
+                <span>{t('about.setup_banner.cta_workspace', 'Explore Workspace & Gear →')}</span>
+              </Link>
+            </div>
+          </div>
+        </section>
 
       </main>
     </PageTransition>

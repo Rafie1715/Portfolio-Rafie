@@ -42,7 +42,7 @@ export default function Navbar() {
     window.dispatchEvent(new CustomEvent('open-command-palette'));
   };
 
-  const links = ['home', 'about', 'projects', 'blog', 'workspace', 'afk', 'contact'];
+  const links = ['home', 'about', 'projects', 'blog', 'contact'];
   const to = key => key === 'home' ? '/' : '/' + key;
   return <nav ref={nav} aria-label={t('common.nav')} className={'fixed inset-x-0 top-0 z-50 border-b transition-colors ' + (scrolled || open ? 'border-slate-200 bg-white/95 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-dark/95' : 'border-transparent bg-white/90 dark:bg-dark/90')}>
     <div className="container mx-auto flex min-h-20 items-center justify-between gap-3 px-4 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">

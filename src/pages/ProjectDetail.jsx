@@ -8,6 +8,7 @@ import { findProjectByRoute, projectPath, projectSlug } from '../utils/projectRo
 import ProjectCatalogStatus from '../components/ProjectCatalogStatus';
 import ProjectEvidence from '../components/ProjectEvidence';
 import ProjectArchitecture from '../components/ProjectArchitecture';
+import TechnologyLabel from '../components/TechnologyLabel';
 import ModelEvaluation from '../components/ModelEvaluation';
 import DecisionReplay from '../components/DecisionReplay';
 import DeviceMockupPreview from '../components/DeviceMockupPreview';
@@ -91,7 +92,7 @@ export default function ProjectDetail() {
         <ProjectArchitecture flows={project.architecture} />
         <section className="mb-10">
           <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">{t('projectDetail.tech_used')}</h2>
-          <ul className="flex flex-wrap gap-2">{(project.techStack || []).map(tech => <li key={tech.name} className="rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700">{tech.name}</li>)}</ul>
+          <ul className="flex flex-wrap gap-2">{(project.techStack || []).map((tech, index) => <li key={`${tech?.name || tech}-${index}`} className="flex max-w-full items-center rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-slate-700"><TechnologyLabel technology={tech} /></li>)}</ul>
         </section>
         {Array.isArray(features) && features.length > 0 && <section className="mb-10">
           <h2 className={sectionTitle}>{t('projectDetail.features')}</h2>
