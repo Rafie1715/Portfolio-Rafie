@@ -5,6 +5,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { useFirebaseInit } from "../../hooks/useFirebaseInit";
 import { useToast } from "../../hooks/useToast";
 import { certifications as localCertifications } from "../../data/certifications";
+import { mergeCertificationRecords } from "../../utils/certificationCatalog";
 import {
   bulkUpdateCertifications,
   deleteCertification,
@@ -87,15 +88,8 @@ const ManageCertifications = () => {
   }, [certifications]);
 
   const allCertifications = useMemo(() => {
-    const normalizedLocal = localCertifications.filter(local => !certifications.some(cert => String(cert.localId) === String(local.id) || getText(cert.title).trim().toLowerCase() === getText(local.title).trim().toLowerCase())).map((cert, index) => ({
-      ...cert,
-      id: `local-${cert.id || index + 1}`,
-      source: "local",
-      isPublished: true,
-    }));
-
-    const normalizedCms = certifications.map((cert) => ({ ...cert, source: "cms" }));
-    return [...normalizedCms, ...normalizedLocal];
+    const merged = mergeCertificationRecords(localCertifications, certifications);
+    return [...merged.filter(cert => cert.source === "cms"), ...merged.filter(cert => cert.source === "local")];
   }, [certifications]);
 
   const filteredCertifications = useMemo(() => {

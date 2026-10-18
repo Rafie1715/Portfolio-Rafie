@@ -42,7 +42,7 @@ const Education = () => {
               </p>
               <p className="flex items-center gap-2 md:justify-end">
                 <Award size={17} className="text-primary" aria-hidden="true" />
-                GPA 3.89 / 4.00
+                {t('about.education.gpa')}
               </p>
             </div>
           </div>

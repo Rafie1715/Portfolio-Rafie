@@ -1,20 +1,12 @@
-import { BadgeCheck, BookOpenCheck, GraduationCap, ArrowUpRight } from 'lucide-react';
+import { GraduationCap, ArrowUpRight, MapPin, FileText } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import DeveloperIDPreview from './DeveloperIDPreview';
 
-const metricIcons = [GraduationCap, BookOpenCheck, BadgeCheck];
-const metricColors = [
-  'text-blue-600 dark:text-blue-400',
-  'text-emerald-600 dark:text-emerald-400',
-  'text-amber-600 dark:text-amber-400',
-];
-
-const HomeAboutSnapshot = () => {
+const HomeAboutSnapshot = ({ onOpenPitch }) => {
   const { t } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
-  const metrics = t('home.about_snapshot.metrics', { returnObjects: true });
   const revealFromRight = shouldReduceMotion ? undefined : { opacity: 0, y: 16 };
 
   return (
@@ -44,27 +36,15 @@ const HomeAboutSnapshot = () => {
             {t('home.about_snapshot.summary')}
           </p>
 
-          <div className="mt-8 grid grid-cols-1 gap-y-4 sm:grid-cols-3 sm:divide-x divide-slate-200 border-y border-slate-200 py-5 dark:divide-slate-700 dark:border-slate-700">
-            {Array.isArray(metrics) && metrics.map((metric, index) => {
-              const Icon = metricIcons[index] || BadgeCheck;
-              return (
-                <dl key={metric.label} className="min-w-0 px-3 first:pl-0 last:pr-0 sm:px-4">
-                  <dt className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-                    <Icon
-                      className={`h-4 w-4 flex-none ${metricColors[index] || metricColors[0]}`}
-                      aria-hidden="true"
-                    />
-                    <span className="text-lg font-black leading-tight text-slate-950 dark:text-white sm:text-2xl">
-                      {metric.value}
-                    </span>
-                  </dt>
-                  <dd className="mt-2 text-[11px] leading-4 text-slate-500 dark:text-slate-400 sm:text-xs sm:leading-5">
-                    {metric.label}
-                  </dd>
-                </dl>
-              );
-            })}
-          </div>
+          <p className="mt-3 flex items-center justify-center gap-2 text-sm text-slate-500 dark:text-slate-400 lg:justify-start">
+            <MapPin className="h-4 w-4 flex-none text-primary" aria-hidden="true" />
+            {t('about.location')}
+          </p>
+
+          <p className="mt-5 flex items-start justify-center gap-2 text-sm leading-6 text-slate-500 dark:text-slate-400 lg:justify-start">
+            <GraduationCap className="mt-1 h-4 w-4 flex-none text-primary" aria-hidden="true" />
+            <span>{t('home.about_snapshot.education')}</span>
+          </p>
 
           <Link
             to="/about"
@@ -73,6 +53,12 @@ const HomeAboutSnapshot = () => {
             {t('home.about_snapshot.cta')}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </Link>
+          {onOpenPitch && <button type="button" onClick={onOpenPitch}
+            className="mx-auto mt-3 flex min-h-11 items-center gap-2 rounded-md text-sm font-medium text-slate-600 underline-offset-4 hover:text-primary hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary dark:text-slate-300 lg:mx-0"
+            aria-haspopup="dialog">
+            <FileText className="size-4" aria-hidden="true" />
+            {t('home.recruiter_pitch.trigger_button')}
+          </button>}
         </motion.div>
       </div>
     </section>

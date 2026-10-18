@@ -130,18 +130,6 @@ export const certifications = [
   },
   { 
     id: 11, 
-    img: "/images/cert-toefl.webp", 
-    alt: "TOEFL Certificate",
-    title: "TOEFL ITP Prediction Test",
-    issuer: "Language Center",
-    date: "2024",
-    link: "",
-    category: "Language",
-    badge: "📝",
-    color: "from-pink-500 to-pink-600"
-  },
-  { 
-    id: 12, 
     img: "/images/cert-dicoding-react-beginner.webp", 
     alt: "Dicoding React Beginner",
     title: "Belajar Membuat Aplikasi Web dengan React",
@@ -153,7 +141,7 @@ export const certifications = [
     color: "from-cyan-500 to-cyan-600"
   },
   { 
-    id: 13, 
+    id: 12, 
     img: "/images/cert-dicoding-react-fundamental.webp", 
     alt: "Dicoding React Fundamental",
     title: "Belajar Fundamental Aplikasi Web dengan React",
@@ -166,7 +154,7 @@ export const certifications = [
     featured: true
   },
   { 
-    id: 14, 
+    id: 13, 
     img: "/images/cert-dicoding-flutter-beginner.webp", 
     alt: "Dicoding Flutter Beginner",
     title: "Belajar Membuat Aplikasi Flutter untuk Pemula",
@@ -178,7 +166,7 @@ export const certifications = [
     color: "from-blue-500 to-blue-600"
   },
   { 
-    id: 15, 
+    id: 14, 
     img: "/images/cert-ibm-code.webp", 
     alt: "IBM Code Certificate",
     title: "Code Generation and Optimization using IBM Granite",
@@ -195,7 +183,7 @@ export const certifications = [
     }
   },
   { 
-    id: 16, 
+    id: 15, 
     img: "/images/cert-dicoding-frontend-fundamental.webp", 
     alt: "Frontend Fundamental Certificate",
     title: "Belajar Fundamental Front-End Web Development",
@@ -208,7 +196,7 @@ export const certifications = [
     featured: true
   },
   { 
-    id: 17, 
+    id: 16, 
     img: "/images/cert-dicoding-kotlin.webp", 
     alt: "Kotlin Beginner Certificate",
     title: "Memulai Pemrograman dengan Kotlin",
@@ -220,7 +208,7 @@ export const certifications = [
     color: "from-pink-500 to-pink-600"
   },
   { 
-    id: 18, 
+    id: 17, 
     img: "/images/cert-dicoding-github.webp", 
     alt: "GitHub Beginner Certificate",
     title: "Belajar Dasar Git dengan GitHub",
@@ -232,7 +220,7 @@ export const certifications = [
     color: "from-slate-500 to-slate-600"
   },
   { 
-    id: 19, 
+    id: 18, 
     img: "/images/cert-dicoding-dart.webp", 
     alt: "Dart Beginner Certificate",
     title: "Memulai Pemrograman dengan Dart",
@@ -244,7 +232,7 @@ export const certifications = [
     color: "from-pink-500 to-pink-600"
   },
   { 
-    id: 20, 
+    id: 19, 
     img: "/images/cert-dicoding-javascript.webp", 
     alt: "Dicoding JavaScript Beginner",
     title: "Belajar Dasar Pemrograman JavaScript",
@@ -256,9 +244,11 @@ export const certifications = [
     color: "from-yellow-500 to-yellow-600"
   },
   {
-    id: 21,
+    id: 20,
     alt: "BNSP Programming Assistant competency certificate",
     title: "Programming Assistant Competency",
+    titleAliases: ["Programming Assistant", "Asisten Pemrograman"],
+    issuerAliases: ["Badan Nasional Sertifikasi Profesi"],
     issuer: "BNSP",
     date: "February 2026",
     link: "",
@@ -270,7 +260,7 @@ export const certifications = [
     }
   },
   {
-    id: 22,
+    id: 21,
     alt: "AWS re Start cloud training",
     title: "AWS re/Start",
     issuer: "Amazon Web Services",
@@ -284,7 +274,7 @@ export const certifications = [
     }
   },
   {
-    id: 23,
+    id: 22,
     img: "/images/cert-coursera-AI-Professional.webp",
     alt: "Google AI Professional Certificate",
     title: "Google AI Professional Certificate",

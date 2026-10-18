@@ -62,11 +62,7 @@ const resources = {
                     summary: "I am a recent Informatics graduate from UPN Veteran Jakarta who enjoys turning ambiguous ideas into practical Android, web, and AI-integrated products. I care about clear architecture, useful interfaces, and decisions grounded in real user needs.",
                     photo_alt: "Portrait of Rafie Rojagat Bachri",
                     cta: "View Full Experience",
-                    metrics: [
-                        { value: "3.89 / 4.00", label: "Informatics GPA" },
-                        { value: "900+", label: "Bangkit learning hours" },
-                        { value: "88.71 / 100", label: "Mandiri project score" }
-                    ]
+                    education: "Bachelor of Informatics · UPN Veteran Jakarta · Class of 2026 · GPA 3.89/4.00"
                 },
                 recruiter_pitch: {
                     trigger_button: "1-Page Summary",
@@ -87,7 +83,7 @@ const resources = {
                     living_stack: {
                         eyebrow: "Living Tech Stack",
                         title: "Tools connected to shipped work",
-                        summary: "Choose a technology to see its role and highlight the projects where I applied it.",
+                        summary: "Choose a technology to see its role, then explore related projects in the full catalog.",
                         control_label: "Choose a technology to explore",
                         active_label: "Selected technology",
                         used_in: "Used in"
@@ -260,19 +256,13 @@ const resources = {
                     desc: "Explore the physical testing hardware, software stack, and daily development setup I use to build products.",
                     cta_workspace: "Explore Workspace & Gear →"
                 },
-                snapshot: {
-                    graduate: "Informatics graduate",
-                    gpa: "GPA / 4.00",
-                    mandiri: "Mandiri project score",
-                    ml_accuracy: "Thesis model accuracy",
-                    bangkit_hours: "Bangkit learning hours"
-                },
                 education: {
                     title: "Education",
                     subtitle: "Academic foundation behind my engineering work.",
                     degree: "Bachelor of Informatics",
                     note: "Focused on software engineering, Android development, web products, and applied machine learning.",
-                    period: "Aug 2022 - Jul 2026"
+                    period: "Aug 2022 - Jul 2026",
+                    gpa: "GPA 3.89 / 4.00"
                 },
                 profile_lab: {
                     title: "Developer ID",
@@ -299,7 +289,8 @@ const resources = {
                 hs_major: "Science (2019 - 2022)"
             },
             hero: {
-                greeting: "Hi there, I'm",
+                greeting: "Hi, I'm",
+                role: "Android & Web Developer",
                 tagline: "Recent Informatics graduate building practical mobile and web products with React and Kotlin.",
                 typewriter_prefix: "I build",
                 role_phrases: [
@@ -349,7 +340,19 @@ const resources = {
             skills: {
                 eyebrow: "Core Capabilities",
                 title: "Technical Skills",
-                description: "A recruiter-friendly view of the technologies I use across Android, web, AI, backend, and delivery workflows.",
+                description: "Android is my main focus, supported by web development and applied AI. Select a technology to explore the work behind it.",
+                primary_focus: "Primary focus",
+                evidence_for: "{{technology}} in practice",
+                loading: "Loading project evidence…",
+                retry: "Projects unavailable. Try again",
+                no_evidence: "A project example has not been linked for this technology yet.",
+                usage: {
+                    git: "I use Git for version control across all my projects. Selected examples are linked below.",
+                    github: "I use GitHub to host and manage repositories across all my projects. Selected examples are linked below.",
+                    vscode: "I use VS Code when developing websites, including this portfolio.",
+                    prompt: "I use prompt engineering during the development of this portfolio to guide AI assistance. My learning is also supported by the Google AI Professional Certificate.",
+                    generative_ai: "I use generative AI to support the development of this portfolio. I also completed the Google AI Professional Certificate.",
+                },
                 categories: {
                     frontend: {
                         title: "Frontend Engineering",
@@ -829,11 +832,7 @@ const resources = {
                     summary: "Saya adalah lulusan baru Informatika UPN Veteran Jakarta yang senang mengubah ide yang masih abstrak menjadi produk Android, web, dan terintegrasi AI yang praktis. Saya mengutamakan arsitektur yang jelas, antarmuka yang berguna, serta keputusan yang berangkat dari kebutuhan pengguna.",
                     photo_alt: "Potret Rafie Rojagat Bachri",
                     cta: "Lihat Pengalaman Lengkap",
-                    metrics: [
-                        { value: "3,89 / 4,00", label: "IPK Informatika" },
-                        { value: "900+", label: "Jam belajar Bangkit" },
-                        { value: "88,71 / 100", label: "Nilai proyek Mandiri" }
-                    ]
+                    education: "S1 Informatika · UPN Veteran Jakarta · Lulus 2026 · IPK 3,89/4,00"
                 },
                 recruiter_pitch: {
                     trigger_button: "Ringkasan 1-Halaman",
@@ -854,7 +853,7 @@ const resources = {
                     living_stack: {
                         eyebrow: "Tech Stack Interaktif",
                         title: "Teknologi yang terhubung dengan karya nyata",
-                        summary: "Pilih teknologi untuk melihat perannya dan menyorot proyek tempat saya menerapkannya.",
+                        summary: "Pilih teknologi untuk melihat perannya, lalu jelajahi proyek terkait di katalog lengkap.",
                         control_label: "Pilih teknologi untuk dijelajahi",
                         active_label: "Teknologi terpilih",
                         used_in: "Digunakan pada"
@@ -1027,19 +1026,13 @@ const resources = {
                     desc: "Jelajahi perangkat keras pengujian, software stack, dan setup harian yang saya gunakan untuk membangun produk.",
                     cta_workspace: "Lihat Workspace & Setup →"
                 },
-                snapshot: {
-                    graduate: "Lulusan Informatika",
-                    gpa: "IPK / 4,00",
-                    mandiri: "Nilai proyek Mandiri",
-                    ml_accuracy: "Akurasi model skripsi",
-                    bangkit_hours: "Jam belajar Bangkit"
-                },
                 education: {
                     title: "Pendidikan",
                     subtitle: "Fondasi akademik di balik karya engineering saya.",
                     degree: "Sarjana Informatika",
                     note: "Berfokus pada software engineering, pengembangan Android, produk web, dan machine learning terapan.",
-                    period: "Agu 2022 - Jul 2026"
+                    period: "Agu 2022 - Jul 2026",
+                    gpa: "IPK 3,89 / 4,00"
                 },
                 profile_lab: {
                     title: "ID Developer",
@@ -1067,6 +1060,7 @@ const resources = {
             },
             hero: {
                 greeting: "Halo, saya",
+                role: "Developer Android & Web",
                 tagline: "Lulusan baru Informatika yang membangun produk mobile dan web praktis dengan React dan Kotlin.",
                 typewriter_prefix: "Saya membangun",
                 role_phrases: [
@@ -1116,7 +1110,19 @@ const resources = {
             skills: {
                 eyebrow: "Kompetensi Utama",
                 title: "Keahlian Teknis",
-                description: "Ringkasan teknologi yang mudah dipindai rekruter, mencakup Android, web, AI, backend, dan workflow pengembangan.",
+                description: "Android menjadi fokus utama saya, didukung pengembangan web dan AI terapan. Pilih teknologi untuk melihat penerapannya dalam proyek.",
+                primary_focus: "Fokus utama",
+                evidence_for: "Penerapan {{technology}}",
+                loading: "Memuat bukti proyek…",
+                retry: "Proyek belum dapat dimuat. Coba lagi",
+                no_evidence: "Contoh proyek untuk teknologi ini belum ditautkan.",
+                usage: {
+                    git: "Saya menggunakan Git untuk version control di seluruh proyek. Beberapa contohnya ditautkan di bawah ini.",
+                    github: "Saya menggunakan GitHub untuk menyimpan dan mengelola repository di seluruh proyek. Beberapa contohnya ditautkan di bawah ini.",
+                    vscode: "Saya menggunakan VS Code saat mengembangkan website, termasuk portfolio ini.",
+                    prompt: "Saya menggunakan prompt engineering selama pengembangan portfolio ini untuk mengarahkan bantuan AI. Pembelajaran saya juga didukung Google AI Professional Certificate.",
+                    generative_ai: "Saya menggunakan generative AI untuk membantu pengembangan portfolio ini. Saya juga telah menyelesaikan Google AI Professional Certificate.",
+                },
                 categories: {
                     frontend: {
                         title: "Frontend Engineering",

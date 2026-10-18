@@ -20,6 +20,7 @@ const entries = [
   ['Vite', 'vitejs', purple, ['Vite.js']],
   ['Bootstrap', 'bootstrap', purple, []],
   ['Kotlin', 'kotlin', purple, []],
+  ['Jetpack Compose', 'jetpackcompose', blue, []],
   ['Android', 'android', green, []],
   ['Android Studio', 'androidstudio', green, []],
   ['Java', 'java', orange, []],
@@ -40,6 +41,8 @@ const entries = [
   ['C#', 'csharp', purple, ['C Sharp']],
   ['Three.js', 'threejs', neutral, ['ThreeJS']],
   ['Figma', 'figma', purple, []],
+  ['Postman', 'postman', orange, []],
+  ['VS Code', 'vscode', blue, ['Visual Studio Code']],
   ['Git', 'git', orange, []],
   ['GitHub', 'github', neutral, []],
   ['Docker', 'docker', blue, []],
@@ -54,6 +57,14 @@ for (const [name, key, color, aliases] of entries) {
 for (const [name, icon] of [['Machine Learning', 'fas fa-brain'], ['Retrofit', 'fas fa-plug'], ['Coroutines', 'fas fa-bolt'], ['Paging 3', 'fas fa-layer-group'], ['ProBuilder', 'fas fa-cubes']]) {
   registry.set(normalize(name), { icon, color: blue });
 }
+for (const [name, icon, color] of [
+  ['XML layouts', 'fas fa-code', blue],
+  ['MVVM', 'fas fa-layer-group', blue],
+  ['Material Design', 'fas fa-shapes', purple],
+  ['REST API', 'fas fa-plug', blue],
+  ['Prompt Engineering', 'fas fa-message', cyan],
+  ['Generative AI', 'fas fa-wand-magic-sparkles', purple],
+]) registry.set(normalize(name), { icon, color });
 
 export function technologyDetails(technology) {
   const raw = typeof technology === 'string' ? technology : technology?.name;

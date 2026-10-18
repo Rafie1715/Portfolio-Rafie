@@ -97,7 +97,7 @@ const technologiesByLens = {
   ai: ['python', 'tensorflow', 'scikit_learn', 'pandas', 'kotlin', 'firebase'],
 };
 
-const LivingTechStack = ({ mode, onTechnologySelect }) => {
+const LivingTechStack = ({ mode }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const sectionRef = useRef(null);
@@ -109,6 +109,9 @@ const LivingTechStack = ({ mode, onTechnologySelect }) => {
   const activeTechnology = selection?.mode === mode
     ? technologies.find((technology) => technology.id === selection.id) || technologies[0]
     : technologies[0];
+  const projectSearch = new URLSearchParams({ q: activeTechnology.name });
+  const language = new URLSearchParams(location.search).get('lang');
+  if (language) projectSearch.set('lang', language);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -125,11 +128,6 @@ const LivingTechStack = ({ mode, onTechnologySelect }) => {
 
   const handleTechnologySelect = (technology) => {
     setSelection({ mode, id: technology.id });
-    onTechnologySelect?.({
-      id: technology.id,
-      name: technology.name,
-      projectIds: technology.projectIds,
-    });
   };
 
   return (
@@ -237,12 +235,7 @@ const LivingTechStack = ({ mode, onTechnologySelect }) => {
             </span>
             {t(`home.recruiter_lens.technologies.${activeTechnology.id}.usage`)}
           </p>
-          <Link to={{ pathname: '/', search: location.search, hash: '#selected-work' }} onClick={() => {
-            handleTechnologySelect(activeTechnology);
-            const work = document.getElementById('selected-work');
-            work?.focus({ preventScroll: true });
-            work?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-          }} className="mt-4 inline-flex min-h-11 items-center rounded-lg font-semibold text-primary underline decoration-primary/40 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">{t('common.related_work', { technology: activeTechnology.name })}</Link>
+          <Link to={{ pathname: '/projects', search: '?' + projectSearch.toString() }} className="mt-4 inline-flex min-h-11 items-center rounded-lg font-semibold text-primary underline decoration-primary/40 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">{t('common.related_work', { technology: activeTechnology.name })}</Link>
         </div>
       </div>
     </div>

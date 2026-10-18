@@ -300,7 +300,12 @@ const Projects = () => {
     if (value === 'all') next.delete('focus'); else next.set('focus', value === 'web' ? 'frontend' : value === 'mobile' ? 'android' : value);
     setParams(next, { replace: true });
   };
-  const [searchTerm, setSearchTerm] = useState('');
+  const searchTerm = params.get('q') || '';
+  const setSearchTerm = value => {
+    const next = new URLSearchParams(params);
+    if (value) next.set('q', value); else next.delete('q');
+    setParams(next, { replace: true });
+  };
   const { projects: catalog, loading, error, retry } = useProjects();
   const [showAllArchive, setShowAllArchive] = useState(false);
   const [repos, setRepos] = useState([]);

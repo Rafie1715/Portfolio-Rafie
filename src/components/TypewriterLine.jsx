@@ -7,7 +7,7 @@ export default function TypewriterLine({ phrases, prefix, active = true }) {
   const { t } = useTranslation();
   const reducedMotion = useReducedMotion();
   const [paused, setPaused] = useState(false);
-  const [frame, setFrame] = useState({ index: 0, length: 0, deleting: false });
+  const [frame, setFrame] = useState({ index: 0, length: phrases[0]?.length || 0, deleting: false });
   const phrase = phrases[frame.index] || '';
   const running = active && !paused && !reducedMotion;
 
@@ -28,15 +28,15 @@ export default function TypewriterLine({ phrases, prefix, active = true }) {
   }, [frame, phrase, phrases.length, running]);
 
   return (
-    <div className="hero-typewriter mt-1 flex w-full max-w-xl items-center justify-center gap-1 text-xs sm:text-sm">
+    <div className="hero-typewriter mt-3 flex w-full max-w-2xl items-center justify-center gap-1 text-sm sm:text-base">
       {/* A stable text alternative prevents character-by-character announcements. */}
       <span className="sr-only">{prefix} {phrases[0]}</span>
-      <span aria-hidden="true" className="grid min-w-0 text-center font-mono leading-5">
+      <span aria-hidden="true" className="grid min-w-0 text-center leading-6">
         {phrases.map(text => (
           <span key={text} className="invisible col-start-1 row-start-1">{prefix} {text}<span className="inline-block w-2" /></span>
         ))}
         <span className="col-start-1 row-start-1 text-slate-500 dark:text-slate-400">
-          {prefix}{' '}<span className="text-blue-600 dark:text-blue-300">{reducedMotion ? phrases[0] : phrase.slice(0, frame.length)}</span>
+          {prefix}{' '}<span className="text-blue-600 dark:text-blue-300">{reducedMotion ? phrases[0] : paused ? phrase : phrase.slice(0, frame.length)}</span>
           <span className="typing-caret ml-0.5 inline-block h-3.5 w-px translate-y-0.5 bg-blue-500" data-running={running} />
         </span>
       </span>

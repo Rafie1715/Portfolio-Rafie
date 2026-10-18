@@ -1,121 +1,108 @@
-import Icon from './Icon';
-import { motion, useReducedMotion } from "framer-motion";
-import {
-  BrainCircuit,
-  Database,
-  MonitorSmartphone,
-  Smartphone,
-  Wrench,
-} from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { skillsData } from "../data/skills";
+import { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowRight, ArrowUpRight, BrainCircuit, Database, MonitorSmartphone, Smartphone, Wrench } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import TechnologyLabel from './TechnologyLabel';
+import { useProjects } from '../hooks/useProjects';
+import { projectPath } from '../utils/projectRoutes';
+import { projectsForSkill, skillSources, skillUsage } from '../utils/skillEvidence';
 
-const findSkill = (name) => (
-  skillsData.find((skill) => skill.name.toLowerCase() === name.toLowerCase()) || {
-    name,
-    icon: "fas fa-code text-gray-500",
-  }
-);
+const categories = [
+  { key: 'mobile', Icon: Smartphone, accent: '#3b82f6', columns: 'md:col-span-6 lg:col-span-7',
+    skills: ['Kotlin', 'XML layouts', 'Jetpack Compose', 'Android Studio', 'Retrofit', 'MVVM', 'Coroutines', 'Paging 3', 'Material Design'] },
+  { key: 'frontend', Icon: MonitorSmartphone, accent: '#06b6d4', columns: 'md:col-span-6 lg:col-span-5',
+    skills: ['React.js', 'JavaScript', 'Tailwind CSS', 'Bootstrap'], learning: 'Next.js' },
+  { key: 'ai', Icon: BrainCircuit, accent: '#10b981', columns: 'md:col-span-6 lg:col-span-4',
+    skills: ['Python', 'Machine Learning', 'Scikit-Learn', 'Prompt Engineering', 'Generative AI'] },
+  { key: 'backend', Icon: Database, accent: '#f59e0b', columns: 'md:col-span-6 lg:col-span-4', initial: 'Firebase',
+    skills: ['Node.js', 'Express.js', 'REST API', 'MySQL', 'Firebase'] },
+  { key: 'tools', Icon: Wrench, accent: '#a78bfa', columns: 'md:col-span-12 lg:col-span-4', initial: 'Figma',
+    skills: ['Git', 'GitHub', 'Postman', 'VS Code', 'Figma'] },
+];
 
-const Skills = () => {
-  const { t } = useTranslation();
-  const reduceMotion = useReducedMotion();
-  const categories = [
-    {
-      key: "mobile",
-      Icon: Smartphone,
-      color: "text-blue-600 bg-blue-50 dark:bg-blue-950/40",
-      skills: ["Kotlin", "XML layouts", "Jetpack Compose", "Android Studio", "Retrofit", "MVVM", "Coroutines", "Paging 3", "Material Design"],
-      evidence: [
-        { label: 'XML layouts · Mandiri News', href: 'https://github.com/Rafie1715/MandiriNewsApp/tree/main/app/src/main/res/layout' },
-        { label: 'Jetpack Compose · RupiahVision', href: 'https://github.com/Rafie1715/RupiahVision/blob/main/app/src/main/java/com/dicoding/myapplication/MainActivity.kt' },
-      ],
-    },
-    {
-      key: "frontend",
-      Icon: MonitorSmartphone,
-      color: "text-cyan-700 bg-cyan-50 dark:bg-cyan-950/40",
-      skills: ["React.js", "JavaScript", "Tailwind CSS", "Bootstrap"],
-      learning: ['Next.js'],
-    },
-    {
-      key: "ai",
-      Icon: BrainCircuit,
-      color: "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40",
-      skills: ["Python", "Machine Learning", "Scikit-Learn", "Prompt Engineering", "Generative AI"],
-    },
-    {
-      key: "backend",
-      Icon: Database,
-      color: "text-amber-700 bg-amber-50 dark:bg-amber-950/40",
-      skills: ["Node.js", "Express.js", "REST API", "MySQL", "Firebase"],
-    },
-    {
-      key: "tools",
-      Icon: Wrench,
-      color: "text-rose-700 bg-rose-50 dark:bg-rose-950/40",
-      skills: ["Git", "GitHub", "Postman", "VS Code", "Figma"],
-    },
-  ];
+function SkillCard({ category, index, catalog, reduceMotion }) {
+  const { t, i18n } = useTranslation();
+  const [selected, setSelected] = useState(category.initial || category.skills[0]);
+  const language = i18n.resolvedLanguage?.startsWith('id') ? 'id' : 'en';
+  const related = projectsForSkill(catalog.projects, selected);
+  const sources = skillSources[selected] || [];
+  const usage = skillUsage[selected];
+  const primary = category.key === 'mobile';
+  const panelId = `skill-evidence-${category.key}`;
 
   return (
-    <section id="skills" className="scroll-mt-24 bg-gray-50 py-16 dark:bg-slate-950 sm:py-20">
-      <div className="container mx-auto px-4 sm:px-6">
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-10 max-w-2xl"
-        >
-          <p className="mb-3 text-sm font-bold uppercase text-primary">{t("skills.eyebrow")}</p>
-          <h2 className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">{t("skills.title")}</h2>
-          <p className="mt-4 text-base leading-7 text-gray-600 dark:text-gray-400">
-            {t("skills.description")}
-          </p>
-        </motion.div>
+    <motion.div
+      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
+      className={`min-w-0 ${category.columns}`}
+    >
+      <article data-skill-category={category.key} style={{ '--skill-accent': category.accent }}
+        className={`skill-category flex min-w-0 flex-col rounded-2xl border bg-white p-5 dark:bg-slate-900/70 sm:p-6 ${primary ? 'border-blue-300 dark:border-blue-500/50' : 'border-slate-200 dark:border-slate-700'}`}>
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <span className="skill-category-icon flex size-11 items-center justify-center rounded-xl">
+            <category.Icon className="size-5" aria-hidden="true" />
+          </span>
+          {primary && <span className="text-xs font-bold uppercase tracking-wide text-blue-700 dark:text-blue-300">{t('skills.primary_focus')}</span>}
+        </div>
+        <h3 className={`${primary ? 'text-2xl sm:text-3xl' : 'text-xl'} font-bold text-slate-950 dark:text-white`}>
+          {t(`skills.categories.${category.key}.title`)}
+        </h3>
+        <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600 dark:text-slate-400">{t(`skills.categories.${category.key}.desc`)}</p>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {categories.map((category, index) => (
-            <motion.article
-              key={category.key}
-              initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.35, delay: index * 0.04 }}
-              className="rounded-lg border border-gray-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900 sm:p-6"
-            >
-              <div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-lg ${category.color}`}>
-                <category.Icon className="h-5 w-5" aria-hidden="true" />
-              </div>
-              <h3 className="text-lg font-bold text-dark dark:text-white">
-                {t(`skills.categories.${category.key}.title`)}
-              </h3>
-              <p className="mt-2 min-h-[44px] text-sm leading-6 text-gray-600 dark:text-gray-400">
-                {t(`skills.categories.${category.key}.desc`)}
-              </p>
-
-              <div className="mt-5 border-t border-gray-100 pt-2 dark:border-slate-800">
-                {category.skills.map((skillName) => {
-                  const skill = findSkill(skillName);
-                  return (
-                    <div
-                      key={`${category.key}-${skill.name}`}
-                      className="flex min-h-10 items-center gap-3 border-b border-gray-100 py-2 last:border-0 dark:border-slate-800"
-                    >
-                      <Icon className={`${skill.icon} w-5 text-center text-lg`} aria-hidden="true" />
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{skill.name}</span>
-                    </div>
-                  );
-                })}
-              </div>
-              {category.evidence && <div className="mt-4 border-t border-slate-200 pt-4 dark:border-slate-700"><p className="mb-2 text-xs font-semibold text-slate-500 dark:text-slate-400">{t('common.skill_evidence')}</p>{category.evidence.map(item => <a key={item.href} href={item.href} target="_blank" rel="noreferrer" className="flex min-h-11 items-center py-2 text-sm font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300">{item.label} ↗</a>)}</div>}
-              {category.learning && <p className="mt-4 border-t border-slate-200 pt-4 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-400">{t('common.learning')}: <span className="font-medium">{category.learning.join(', ')}</span></p>}
-            </motion.article>
+        <div className="my-5 flex flex-wrap gap-2" role="group" aria-label={t(`skills.categories.${category.key}.title`)}>
+          {category.skills.map((name, skillIndex) => (
+            <button key={name} type="button" aria-pressed={selected === name} aria-controls={panelId}
+              onClick={() => setSelected(name)}
+              className={`skill-choice inline-flex min-h-11 max-w-full items-center rounded-lg border px-3 py-2 text-left text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${selected === name ? 'border-blue-400 bg-blue-50 font-semibold text-slate-950 dark:border-blue-400 dark:bg-blue-950/60 dark:text-white' : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:bg-slate-950/40 dark:text-slate-200 dark:hover:border-slate-500'} ${skillIndex === 0 ? 'font-semibold' : ''}`}>
+              <TechnologyLabel technology={name} />
+            </button>
           ))}
+        </div>
+
+        {category.learning && <p className="mb-5 text-xs leading-5 text-slate-500 dark:text-slate-400">{t('common.learning')}: <span className="font-semibold text-slate-700 dark:text-slate-300">{category.learning}</span></p>}
+
+        <div id={panelId} className="mt-auto border-t border-slate-200 pt-4 dark:border-slate-700" aria-live="polite" aria-atomic="true" aria-busy={catalog.loading}>
+          <motion.div key={selected} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>
+            <p className="mb-2 text-xs font-semibold text-slate-500 dark:text-slate-400">{t('skills.evidence_for', { technology: selected })}</p>
+            {usage && <p className="mb-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{t(`skills.usage.${usage}`)}</p>}
+            {related.slice(0, 3).map(project => (
+              <Link key={project.id} to={projectPath(project)} className="group flex min-h-11 items-center justify-between gap-3 rounded-md py-2 text-sm font-medium text-blue-700 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 dark:text-blue-300">
+                <span>{typeof project.title === 'string' ? project.title : project.title?.[language] || project.title?.en || project.title?.id}</span>
+                <ArrowRight className="size-4 shrink-0 motion-safe:transition-transform motion-safe:group-hover:translate-x-1" aria-hidden="true" />
+              </Link>
+            ))}
+            {sources.map(source => <a key={source.href} href={source.href} target="_blank" rel="noreferrer" className="flex min-h-11 items-center justify-between gap-3 rounded-md py-2 text-sm font-medium text-blue-700 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 dark:text-blue-300">
+              <span>{source.label}</span><ArrowUpRight className="size-4 shrink-0" aria-hidden="true" />
+            </a>)}
+            {catalog.loading && <p className="py-2 text-sm text-slate-500 dark:text-slate-400">{t('skills.loading')}</p>}
+            {catalog.error && <button type="button" onClick={catalog.retry} className="min-h-11 py-2 text-left text-sm font-medium text-blue-700 underline dark:text-blue-300">{t('skills.retry')}</button>}
+            {!catalog.loading && !catalog.error && !related.length && !sources.length && !usage && <p className="py-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{t('skills.no_evidence')}</p>}
+          </motion.div>
+        </div>
+      </article>
+    </motion.div>
+  );
+}
+
+export default function Skills() {
+  const { t } = useTranslation();
+  const reduceMotion = useReducedMotion();
+  const catalog = useProjects();
+  return (
+    <section id="skills" aria-labelledby="skills-title" className="scroll-mt-24 bg-gray-50 py-16 dark:bg-slate-950 sm:py-20">
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+        <motion.div initial={reduceMotion ? false : { opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8 max-w-2xl">
+          <p className="mb-3 text-sm font-bold uppercase text-primary">{t('skills.eyebrow')}</p>
+          <h2 id="skills-title" className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">{t('skills.title')}</h2>
+          <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-400">{t('skills.description')}</p>
+        </motion.div>
+        <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-12 sm:gap-5">
+          {categories.map((category, index) => <SkillCard key={category.key} category={category} index={index} catalog={catalog} reduceMotion={reduceMotion} />)}
         </div>
       </div>
     </section>
   );
-};
-
-export default Skills;
+}

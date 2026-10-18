@@ -9,6 +9,34 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Keep skill cards quiet at rest; interaction gives each category its accent. */
+.skill-category {
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+.skill-category-icon {
+  color: var(--skill-accent);
+  background: color-mix(in srgb, var(--skill-accent) 12%, transparent);
+}
+.skill-category:focus-within {
+  border-color: var(--skill-accent);
+  box-shadow: 0 5px 24px -16px var(--skill-accent);
+}
+@media (hover: hover) {
+  .skill-category:hover {
+    border-color: var(--skill-accent);
+    box-shadow: 0 5px 24px -16px var(--skill-accent);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skill-category:focus-within { transform: translateY(-3px); }
+  @media (hover: hover) {
+    .skill-category:hover { transform: translateY(-3px); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skill-category { transition: none; }
+}
+
 /* Project notes are revealed on demand, keeping the familiar card layout. */
 .project-build-note-paper {
   background-color: #f0f6ff;
@@ -309,7 +337,7 @@ html { scroll-padding-top: 6rem; }
   opacity: .6;
   mask-image: radial-gradient(ellipse 48% 64% at 50% 45%, #0000000d 15%, #00000026 48%, #000 100%);
 }
-.dark .hero-light-canvas { opacity: .85; }
+.dark .hero-light-canvas { opacity: .6; }
 .hero-light-ribbon {
   transform-origin: center;
   animation: hero-light-drift var(--ribbon-duration) ease-in-out var(--ribbon-delay) infinite;
@@ -359,7 +387,7 @@ html { scroll-padding-top: 6rem; }
     opacity: .5;
     mask-image: linear-gradient(to right, #000, #00000026 24%, #00000012 50%, #00000026 76%, #000);
   }
-  .dark .hero-light-canvas { opacity: .65; }
+  .dark .hero-light-canvas { opacity: .45; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-light-ribbon, .hero-light-trail { animation: none; }

@@ -1,11 +1,9 @@
 import { projectPath } from '../utils/projectRoutes';
 import Icon from '../components/Icon';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import Hero from '../components/Hero';
 import HomeAboutSnapshot from '../components/HomeAboutSnapshot';
-import RecruiterLens from '../components/RecruiterLens';
 import RecruiterPitchModal from '../components/RecruiterPitchModal';
 import { useProjects } from '../hooks/useProjects';
 import ProjectCatalogStatus from '../components/ProjectCatalogStatus';
@@ -18,7 +16,7 @@ import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { motion, useReducedMotion } from 'framer-motion';
-import { trackEvent, trackProjectView } from '../utils/analytics';
+import { trackProjectView } from '../utils/analytics';
 
 const HomePersonalPanel = lazy(() => import('../components/HomePersonalPanel'));
 
@@ -77,22 +75,15 @@ const DeferredPersonalPanel = () => {
   );
 };
 
-const FEATURED_PROJECTS_BY_LENS = {
-  overview: ['OD60ttuTSwZW62TRJFm6', 'mandiri-news', 'planetku'],
-  android: ['mandiri-news', 'planetku', 'OD60ttuTSwZW62TRJFm6'],
-  frontend: ['portfolio-website', 'personal-notes', 'computer-crafter'],
-  ai: ['OD60ttuTSwZW62TRJFm6', 'planetku', 'sentimen-deepseek'],
-};
-
-const VALID_LENSES = new Set(Object.keys(FEATURED_PROJECTS_BY_LENS));
+const FEATURED_PROJECT_IDS = ['OD60ttuTSwZW62TRJFm6', 'mandiri-news', 'planetku'];
+const VALID_LENSES = new Set(['android', 'frontend', 'ai']);
 
 const HomePage = () => {
   const { t, i18n } = useTranslation();
   const { projects, loading, error, retry } = useProjects();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const currentLang = i18n.language || 'en';
   const shouldReduceMotion = useReducedMotion();
-  const [selectedTechnology, setSelectedTechnology] = useState(null);
   const [showPitchModal, setShowPitchModal] = useState(() => {
     return searchParams.get('pitch') === 'true' || searchParams.get('mode') === 'pitch';
   });
@@ -105,26 +96,12 @@ const HomePage = () => {
 
   const requestedLens = searchParams.get('focus');
   const recruiterLens = VALID_LENSES.has(requestedLens) ? requestedLens : 'overview';
-  const lensKey = `home.recruiter_lens.modes.${recruiterLens}`;
+  const lensKey = 'home.recruiter_lens.modes.overview';
 
-  const featuredProjects = FEATURED_PROJECTS_BY_LENS[recruiterLens]
+  const featuredProjects = FEATURED_PROJECT_IDS
     .map((projectId) => projects.find((project) => project.id === projectId))
     .filter(Boolean);
   const featuredBlogs = blogs.slice(0, 2);
-
-  const handleLensChange = (nextLens) => {
-    const nextParams = new URLSearchParams(searchParams);
-    if (nextLens === 'overview') nextParams.delete('focus');
-    else nextParams.set('focus', nextLens);
-    setSearchParams(nextParams, { replace: true });
-    setSelectedTechnology(null);
-    trackEvent('Recruiter Lens', 'select', nextLens, 1);
-  };
-
-  const handleTechnologySelect = (technology) => {
-    setSelectedTechnology(technology);
-    trackEvent('Living Tech Stack', 'select', technology.id, 1);
-  };
 
   const getData = (data) => {
     if (!data) return "";
@@ -155,6 +132,11 @@ const HomePage = () => {
     },
   };
 
+  // Keep previously shared Home focus links useful after moving browsing to Projects.
+  if (VALID_LENSES.has(requestedLens) && !showPitchModal) {
+    return <Navigate to={'/projects?' + searchParams.toString()} replace />;
+  }
+
   return (
     <PageTransition>
       <main className="bg-white dark:bg-dark min-h-screen">
@@ -166,46 +148,23 @@ const HomePage = () => {
           type="website"
         />
 
-        <Hero recruiterLens={recruiterLens} onRecruiterLensChange={handleLensChange} />
-        <RecruiterLens
-          value={recruiterLens}
-          onChange={handleLensChange}
-          onOpenPitch={() => setShowPitchModal(true)}
-        />
+        <Hero />
         <RecruiterPitchModal
           isOpen={showPitchModal}
           onClose={() => setShowPitchModal(false)}
           initialLens={recruiterLens}
         />
 
-        <section id="selected-work" tabIndex={-1} className="scroll-mt-24 py-6 px-4 container mx-auto focus:outline-none" aria-live="polite">
+        <section id="selected-work" tabIndex={-1} className="scroll-mt-24 pt-12 pb-14 sm:pt-16 sm:pb-20 px-4 sm:px-6 container max-w-6xl mx-auto focus:outline-none" aria-live="polite">
           <motion.div
             variants={revealVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.35 }}
-            className="text-center mb-6"
+            className="max-w-2xl text-left mb-8"
           >
             <h2 className="text-3xl font-bold text-dark dark:text-white mb-3">{t(`${lensKey}.work_title`)}</h2>
             <p className="text-gray-600 dark:text-gray-400">{t(`${lensKey}.work_summary`)}</p>
-            {selectedTechnology && (
-              <div className="mt-5 inline-flex max-w-full items-center gap-2 rounded-lg border border-primary/25 bg-primary/5 px-3 py-2 text-sm font-semibold text-primary">
-                <span className="truncate">
-                  {t('home.recruiter_lens.highlighting_technology', {
-                    technology: selectedTechnology.name,
-                  })}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setSelectedTechnology(null)}
-                  title={t('home.recruiter_lens.clear_technology')}
-                  aria-label={t('home.recruiter_lens.clear_technology')}
-                  className="inline-flex size-7 flex-none items-center justify-center rounded-md text-primary transition-colors hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/30"
-                >
-                  <X size={15} aria-hidden="true" />
-                </button>
-              </div>
-            )}
           </motion.div>
 
           <ProjectCatalogStatus loading={loading} error={error} retry={retry} />
@@ -215,25 +174,18 @@ const HomePage = () => {
             animate="visible"
             viewport={{ once: true, amount: 0.15 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 mb-6 sm:mb-12"
-            key={recruiterLens}
           >
             {featuredProjects.map((project) => {
               const title = getData(project.title);
               const shortDesc = getData(project.shortDesc);
               const result = getData(project.impactDetails?.result);
-              const isRelatedTechnology = selectedTechnology?.projectIds.includes(project.id);
-              const isDimmed = selectedTechnology && !isRelatedTechnology;
 
               return (
                 <motion.div
                   key={project.id}
                   initial={false}
-                  animate={{ opacity: isDimmed ? 0.45 : 1, y: 0 }}
-                  className={`h-full rounded-lg transition-[opacity,filter,box-shadow] duration-300 ${
-                    isRelatedTechnology
-                      ? 'ring-2 ring-primary ring-offset-4 ring-offset-white dark:ring-offset-dark'
-                      : ''
-                  } ${isDimmed ? 'opacity-45 grayscale-[0.35]' : 'opacity-100'}`}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="h-full rounded-lg"
                 >
                   <SpotlightCard className="group p-0 overflow-hidden h-full flex flex-col">
                     <div className="h-48 overflow-hidden relative">
@@ -245,13 +197,6 @@ const HomePage = () => {
                         decoding="async"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      {isRelatedTechnology && (
-                        <span className="absolute left-3 top-3 rounded-md bg-primary px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
-                          {t('home.recruiter_lens.related_project', {
-                            technology: selectedTechnology.name,
-                          })}
-                        </span>
-                      )}
                       {project.conceptualCover && (
                         <span className="absolute bottom-3 right-3 rounded-md bg-slate-900/85 px-2.5 py-1 text-xs font-medium text-white backdrop-blur">
                           {t('projects.conceptual_cover')}
@@ -295,14 +240,14 @@ const HomePage = () => {
           </motion.div>
 
           <div className="text-center">
-            <Link to={recruiterLens === 'overview' ? '/projects' : `/projects?focus=${recruiterLens}`} className="inline-block px-8 py-3 rounded-full border border-gray-300 dark:border-slate-700 text-dark dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+            <Link to="/projects" className="inline-block px-8 py-3 rounded-full border border-gray-300 dark:border-slate-700 text-dark dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
               {t('home.view_all')}
             </Link>
           </div>
         </section>
 
-        <HomeAboutSnapshot />
-        <section className="container mx-auto max-w-6xl px-4 py-12 sm:px-6"><LivingTechStack key={recruiterLens} mode={recruiterLens} onTechnologySelect={handleTechnologySelect} /></section>
+        <HomeAboutSnapshot onOpenPitch={() => setShowPitchModal(true)} />
+        <section className="container mx-auto max-w-6xl px-4 py-12 sm:px-6"><LivingTechStack mode="overview" /></section>
 
         <section className="mx-auto max-w-3xl px-5 py-10 sm:py-16 text-center"><h2 className="text-3xl font-bold">{t('common.connect')}</h2><p className="mt-4 text-slate-600 dark:text-slate-400">{t('common.connect_desc')}</p><Link to="/contact" className="mt-6 inline-flex min-h-12 items-center rounded-lg bg-primary px-6 py-3 font-bold text-white">{t('hero.contact_me')}</Link></section>
 

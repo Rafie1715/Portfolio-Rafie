@@ -1,93 +1,63 @@
-import { createElement, useEffect, useRef, useState } from 'react';
-import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   BriefcaseBusiness,
   Download,
   FolderKanban,
-  GraduationCap,
   MapPin,
   Send,
 } from 'lucide-react';
-import DeveloperIDPreview from './DeveloperIDPreview';
 import cvFile from '/assets/CV Rafie Rojagat Bachri.pdf';
-
-const MetricValue = ({ target, decimals = 0, suffix = '', isStatic = false, reduceMotion }) => {
-  const valueRef = useRef(null);
-  const isInView = useInView(valueRef, { once: true, margin: '-40px' });
-  const [displayValue, setDisplayValue] = useState(isStatic || reduceMotion ? target : 0);
-
-  useEffect(() => {
-    if (isStatic || reduceMotion || !isInView) return undefined;
-
-    const duration = 900;
-    const startedAt = performance.now();
-    let animationFrame;
-
-    const updateValue = (timestamp) => {
-      const progress = Math.min((timestamp - startedAt) / duration, 1);
-      const easedProgress = 1 - ((1 - progress) ** 3);
-      setDisplayValue(target * easedProgress);
-
-      if (progress < 1) {
-        animationFrame = window.requestAnimationFrame(updateValue);
-      }
-    };
-
-    animationFrame = window.requestAnimationFrame(updateValue);
-    return () => window.cancelAnimationFrame(animationFrame);
-  }, [decimals, isInView, isStatic, reduceMotion, target]);
-
-  const currentValue = isStatic || reduceMotion ? target : displayValue;
-  const formattedValue = isStatic
-    ? String(target)
-    : Number(currentValue).toFixed(decimals);
-
-  return (
-    <span ref={valueRef} data-metric-value className="tabular-nums">
-      {formattedValue}{suffix}
-    </span>
-  );
-};
 
 const About = () => {
   const { t } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
 
-  const proofPoints = [
-    { target: 2026, isStatic: true, label: t('about.snapshot.graduate'), icon: GraduationCap },
-    { target: 3.89, decimals: 2, label: t('about.snapshot.gpa'), icon: GraduationCap },
-    { target: 88.71, decimals: 2, suffix: '/100', label: t('about.snapshot.mandiri'), icon: BriefcaseBusiness },
-    { target: 92.06, decimals: 2, suffix: '%', label: t('about.snapshot.ml_accuracy'), icon: FolderKanban },
-    { target: 900, suffix: '+', label: t('about.snapshot.bangkit_hours'), icon: BriefcaseBusiness },
-  ];
-
   return (
-    <section id="about" className="py-14 md:py-16 bg-white dark:bg-dark relative overflow-hidden">
+    <section id="about" aria-labelledby="about-intro-title" className="py-10 md:py-14 bg-white dark:bg-dark relative overflow-hidden">
       <div className="container mx-auto max-w-6xl px-4">
-        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
+        <div className="grid gap-y-6 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:grid-rows-[auto_auto] lg:gap-x-12 lg:gap-y-5">
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="min-w-0 lg:col-start-2 lg:row-start-1 lg:self-end"
+          >
+            <p className="text-xs font-bold uppercase text-primary mb-3">
+              {t('about.eyebrow')}
+            </p>
+            <h2 id="about-intro-title" className="text-3xl md:text-4xl font-black text-dark dark:text-white max-w-3xl leading-tight">
+              {t('about.headline')}
+            </h2>
+          </motion.div>
+
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: 'easeOut' }}
-            className="mx-auto w-full max-w-md flex justify-center"
+            className="relative mx-auto w-full max-w-[240px] sm:max-w-[280px] lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:max-w-[360px] lg:self-center"
           >
-            <DeveloperIDPreview />
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-100 p-1.5 dark:border-slate-700 dark:bg-slate-900">
+              <img
+                src="/images/profile.webp"
+                alt="Rafie Rojagat Bachri"
+                width="3015"
+                height="3864"
+                decoding="async"
+                className="aspect-[4/5] w-full rounded-lg object-cover object-center"
+              />
+            </div>
+            <span aria-hidden="true" className="absolute -bottom-0.5 left-6 h-1 w-14 rounded-full bg-primary" />
           </motion.div>
 
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.08, ease: 'easeOut' }}
+            className="min-w-0 lg:col-start-2 lg:row-start-2 lg:self-start"
           >
-            <p className="text-xs font-bold uppercase text-primary mb-3">
-              {t('about.eyebrow')}
-            </p>
-            <h2 className="text-3xl md:text-4xl font-black text-dark dark:text-white max-w-3xl leading-tight">
-              {t('about.headline')}
-            </h2>
-            <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-300 max-w-3xl">
+            <p className="text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-300 max-w-3xl">
               {t('about.summary')}
             </p>
             <p className="mt-3 text-sm md:text-base leading-relaxed text-gray-500 dark:text-gray-400 max-w-3xl">
@@ -132,27 +102,6 @@ const About = () => {
           </motion.div>
         </div>
 
-        <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.4 }}
-          className="mt-12 border-y border-slate-200 dark:border-slate-700 py-5"
-        >
-          <div className="grid grid-cols-2 gap-y-5 sm:grid-cols-3 lg:grid-cols-5 lg:divide-x divide-slate-200 dark:divide-slate-700">
-            {proofPoints.map((proofPoint) => (
-              <div key={proofPoint.label} className="px-3 lg:px-5 first:lg:pl-0 last:lg:pr-0">
-                <div className="flex items-center gap-2 text-primary mb-1">
-                  {createElement(proofPoint.icon, { size: 15, 'aria-hidden': true })}
-                  <span className="text-xl font-black text-dark dark:text-white">
-                    <MetricValue {...proofPoint} reduceMotion={shouldReduceMotion} />
-                  </span>
-                </div>
-                <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">{proofPoint.label}</p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );
