@@ -6,9 +6,6 @@ import {
   Check,
   Clock3,
   Copy,
-  Download,
-  Github,
-  Instagram,
   Linkedin,
   LoaderCircle,
   Mail,
@@ -23,24 +20,6 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xanjlvvr';
 const CONTACT_EMAIL = 'rojagatrafie@gmail.com';
 const MESSAGE_MAX_LENGTH = 2000;
 const KNOWN_FIELDS = new Set(['name', 'email', 'topic', 'message']);
-
-const socialLinks = [
-  {
-    label: 'LinkedIn',
-    url: 'https://linkedin.com/in/rafie-rojagat',
-    icon: <Linkedin className="h-5 w-5" aria-hidden="true" />,
-  },
-  {
-    label: 'GitHub',
-    url: 'https://github.com/Rafie1715',
-    icon: <Github className="h-5 w-5" aria-hidden="true" />,
-  },
-  {
-    label: 'Instagram',
-    url: 'https://instagram.com/rafie_rb',
-    icon: <Instagram className="h-5 w-5" aria-hidden="true" />,
-  },
-];
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -201,11 +180,70 @@ const Contact = () => {
   return (
     <section id="contact" className="relative z-10 pb-16 md:pb-20">
       <div className="mx-auto grid max-w-6xl items-start gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(19rem,0.75fr)] lg:gap-14 lg:px-8">
-        <motion.div {...revealProps}>
-          <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50/60 p-4 dark:border-blue-900 dark:bg-blue-950/30">
-            <p className="text-sm font-semibold">{t('common.contact_direct')}</p>
-            <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2"><a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex min-h-11 items-center gap-2 break-all font-semibold text-primary"><Mail size={17} aria-hidden="true" />{CONTACT_EMAIL}</a><a href="https://linkedin.com/in/rafie-rojagat" target="_blank" rel="noreferrer" onClick={() => trackExternalLink('linkedin', 'https://linkedin.com/in/rafie-rojagat')} className="inline-flex min-h-11 items-center gap-2 font-semibold text-primary"><Linkedin size={17} aria-hidden="true" />LinkedIn</a></div>
+        <motion.aside
+          {...revealProps}
+          aria-labelledby="contact-details-title"
+          className="min-w-0 border-b border-gray-200 pb-8 dark:border-slate-700 lg:col-start-2 lg:row-start-1 lg:border-b-0 lg:border-l lg:pl-8 lg:pt-2"
+        >
+          <h2 id="contact-details-title" className="text-xl font-bold text-dark dark:text-white">
+            {t('contact.info_title')}
+          </h2>
+          <div className="mt-5 flex min-w-0 items-center gap-1">
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="inline-flex min-h-11 min-w-0 items-center gap-2 rounded text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+            >
+              <Mail className="h-4 w-4 flex-none" aria-hidden="true" />
+              <span className="[overflow-wrap:anywhere]">{CONTACT_EMAIL}</span>
+            </a>
+            <button
+              type="button"
+              onClick={handleCopyEmail}
+              className="flex h-11 w-11 flex-none items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:text-gray-400 dark:hover:bg-slate-800"
+              aria-label={copied ? t('contact.email_copied') : t('contact.copy_email')}
+              title={copied ? t('contact.email_copied') : t('contact.copy_email')}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={copied ? 'copied' : 'copy'}
+                  initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.75 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.75 }}
+                  transition={{ duration: 0.16 }}
+                >
+                  {copied
+                    ? <Check className="h-4 w-4" aria-hidden="true" />
+                    : <Copy className="h-4 w-4" aria-hidden="true" />}
+                </motion.span>
+              </AnimatePresence>
+            </button>
+            <span className="sr-only" role="status" aria-live="polite">
+              {copied ? t('contact.email_copied') : ''}
+            </span>
           </div>
+          <a
+            href="https://linkedin.com/in/rafie-rojagat"
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackExternalLink('linkedin', 'https://linkedin.com/in/rafie-rojagat')}
+            className="inline-flex min-h-11 items-center gap-2 rounded text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+          >
+            <Linkedin className="h-4 w-4" aria-hidden="true" />
+            LinkedIn
+          </a>
+          <div className="mt-5 space-y-3 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+            <p className="flex items-start gap-2">
+              <MapPin className="mt-0.5 h-4 w-4 flex-none" aria-hidden="true" />
+              <span><span className="sr-only">{t('contact.location')}: </span>Jakarta, Indonesia</span>
+            </p>
+            <p className="flex items-start gap-2">
+              <Clock3 className="mt-0.5 h-4 w-4 flex-none" aria-hidden="true" />
+              <span><span className="sr-only">{t('contact.response_time_label')}: </span>{t('contact.response_time')}</span>
+            </p>
+          </div>
+        </motion.aside>
+
+        <motion.div {...revealProps} className="min-w-0 lg:col-start-1 lg:row-start-1">
           <form
             onSubmit={handleSubmit}
             aria-busy={isSubmitting}
@@ -400,128 +438,6 @@ const Contact = () => {
             </div>
           </form>
         </motion.div>
-
-        <motion.aside
-          {...revealProps}
-          transition={shouldReduceMotion ? undefined : { duration: 0.4, delay: 0.08, ease: 'easeOut' }}
-          aria-labelledby="contact-details-title"
-          className="border-t border-gray-200 pt-8 dark:border-slate-700 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-1"
-        >
-          <div className="border-l-2 border-emerald-500 pl-4">
-            <p className="text-xs font-bold uppercase text-emerald-700 dark:text-emerald-400">
-              {t('contact.availability_label')}
-            </p>
-            <p className="mt-1 font-bold text-dark dark:text-white">{t('contact.availability')}</p>
-          </div>
-
-          <h2 id="contact-details-title" className="mt-8 text-xl font-black text-dark dark:text-white">
-            {t('contact.info_title')}
-          </h2>
-
-          <dl className="mt-5 divide-y divide-gray-200 border-y border-gray-200 dark:divide-slate-700 dark:border-slate-700">
-            <div className="flex gap-3 py-4">
-              <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-blue-50 text-primary dark:bg-blue-950/50">
-                <Mail className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <dt className="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Email</dt>
-                <dd className="mt-1 flex min-w-0 items-center gap-2">
-                  <a
-                    href={`mailto:${CONTACT_EMAIL}`}
-                    className="min-w-0 break-words text-sm font-semibold text-dark hover:text-primary dark:text-gray-200 [overflow-wrap:anywhere]"
-                  >
-                    {CONTACT_EMAIL}
-                  </a>
-                  <button
-                    type="button"
-                    onClick={handleCopyEmail}
-                    className="flex h-9 w-9 flex-none items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:text-gray-400 dark:hover:bg-slate-800"
-                    aria-label={copied ? t('contact.email_copied') : t('contact.copy_email')}
-                    title={copied ? t('contact.email_copied') : t('contact.copy_email')}
-                  >
-                    <AnimatePresence mode="wait" initial={false}>
-                      <motion.span
-                        key={copied ? 'copied' : 'copy'}
-                        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.75 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.75 }}
-                        transition={{ duration: 0.16 }}
-                      >
-                        {copied
-                          ? <Check className="h-4 w-4" aria-hidden="true" />
-                          : <Copy className="h-4 w-4" aria-hidden="true" />}
-                      </motion.span>
-                    </AnimatePresence>
-                  </button>
-                  <span className="sr-only" role="status" aria-live="polite">
-                    {copied ? t('contact.email_copied') : ''}
-                  </span>
-                </dd>
-              </div>
-            </div>
-
-            <div className="flex gap-3 py-4">
-              <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-cyan-50 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-300">
-                <MapPin className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <div>
-                <dt className="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">{t('contact.location')}</dt>
-                <dd className="mt-1 text-sm font-semibold text-dark dark:text-gray-200">Jakarta, Indonesia</dd>
-              </div>
-            </div>
-
-            <div className="flex gap-3 py-4">
-              <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
-                <Clock3 className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <div>
-                <dt className="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">{t('contact.response_time_label')}</dt>
-                <dd className="mt-1 text-sm font-semibold text-dark dark:text-gray-200">{t('contact.response_time')}</dd>
-              </div>
-            </div>
-          </dl>
-
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            <a
-              href="/assets/CV Rafie Rojagat Bachri.pdf"
-              download="CV_Rafie_Rojagat_Bachri.pdf"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-primary/40 px-4 py-2.5 text-sm font-bold text-primary transition-colors hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary/30"
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              {t('contact.download_cv')}
-            </a>
-            <a
-              href="https://linkedin.com/in/rafie-rojagat"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => trackExternalLink('linkedin', 'https://linkedin.com/in/rafie-rojagat')}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500/40 dark:bg-white dark:text-slate-900 dark:hover:bg-gray-200"
-            >
-              <Linkedin className="h-4 w-4" aria-hidden="true" />
-              LinkedIn
-            </a>
-          </div>
-
-          <div className="mt-7">
-            <p className="text-sm font-semibold text-gray-600 dark:text-gray-300">{t('contact.profiles')}</p>
-            <div className="mt-3 flex gap-2">
-              {socialLinks.map(({ label, url, icon }) => (
-                <a
-                  key={label}
-                  href={url}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={() => trackExternalLink(label.toLowerCase(), url)}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition-colors hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:text-gray-300"
-                  aria-label={`${t('contact.open_profile')} ${label}`}
-                  title={label}
-                >
-                  {icon}
-                </a>
-              ))}
-            </div>
-          </div>
-        </motion.aside>
       </div>
     </section>
   );

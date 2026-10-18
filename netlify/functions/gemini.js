@@ -116,7 +116,7 @@ export default async (request) => {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const chat = ai.chats.create({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       history,
       config: {
         systemInstruction: buildPortfolioSystemInstruction(locale),
