@@ -37,6 +37,10 @@ test("context distinguishes verified skill usage from learning and course creden
   assert.match(skills, /Prompt Engineering, Generative AI/);
   assert.match(skills, /Git, GitHub, VS Code, Postman/);
   assert.doesNotMatch(skills, /Next\.js/);
+  assert.doesNotMatch(skills, /MongoDB|PostgreSQL/);
+  assert.match(context, /CURRENTLY LEARNING \(NOT PROJECT EXPERIENCE\):\nNext\.js, MongoDB, PostgreSQL/);
+  assert.match(skills, /dataAnalytics: Pandas, NumPy, Matplotlib, Data Cleaning, Exploratory Data Analysis \(EDA\), Data Visualization/);
+  assert.match(context, /Google Colab is used to develop AI models/);
   assert.match(context, /Next\.js is currently being learned and has not been used in a project/);
   assert.match(context, /Git and GitHub are used across Rafie's projects/);
   assert.match(context, /VS Code is used for website development/);
@@ -63,7 +67,7 @@ test("context preserves corrected periods, individual contributions and evaluati
 });
 
 test("skill navigation points to About while equipment navigation points to Workspace", () => {
-  for (const message of ["What skills does Rafie use?", "Apa kemampuan teknologinya?", "Next.js", "GitHub", "Prompt engineering"]) {
+  for (const message of ["What skills does Rafie use?", "Apa kemampuan teknologinya?", "Next.js", "GitHub", "Prompt engineering", "MongoDB", "PostgreSQL", "Google Colab", "Data Analytics", "EDA"]) {
     assert.deepEqual(getSuggestedActionIds(message), ["about"]);
   }
   assert.deepEqual(getSuggestedActionIds("What laptop is in his workspace setup?"), ["workspace"]);

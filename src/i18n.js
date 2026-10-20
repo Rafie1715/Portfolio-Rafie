@@ -290,7 +290,9 @@ const resources = {
             },
             hero: {
                 greeting: "Hi, I'm",
-                role: "Android & Web Developer",
+                greetings: ["Hi, I'm", "Halo, saya"],
+                role: "Android, Web & AI Developer",
+                build_summary: "Building practical apps with Kotlin, React, and machine learning.",
                 tagline: "Recent Informatics graduate building practical mobile and web products with React and Kotlin.",
                 typewriter_prefix: "I build",
                 role_phrases: [
@@ -340,7 +342,7 @@ const resources = {
             skills: {
                 eyebrow: "Core Capabilities",
                 title: "Technical Skills",
-                description: "Android is my main focus, supported by web development and applied AI. Select a technology to explore the work behind it.",
+                description: "Android is my main focus, supported by web development, applied AI, and data analytics. Select a technology to explore the work behind it.",
                 primary_focus: "Primary focus",
                 evidence_for: "{{technology}} in practice",
                 loading: "Loading project evidence…",
@@ -350,6 +352,7 @@ const resources = {
                     git: "I use Git for version control across all my projects. Selected examples are linked below.",
                     github: "I use GitHub to host and manage repositories across all my projects. Selected examples are linked below.",
                     vscode: "I use VS Code when developing websites, including this portfolio.",
+                    colab: "I use Google Colab notebooks to develop AI models.",
                     prompt: "I use prompt engineering during the development of this portfolio to guide AI assistance. My learning is also supported by the Google AI Professional Certificate.",
                     generative_ai: "I use generative AI to support the development of this portfolio. I also completed the Google AI Professional Certificate.",
                 },
@@ -369,6 +372,10 @@ const resources = {
                     backend: {
                         title: "Backend & Data",
                         desc: "Working with APIs, databases, authentication, and cloud-backed app workflows."
+                    },
+                    analytics: {
+                        title: "Data Analytics",
+                        desc: "Cleaning and exploring data, working with numerical arrays, and creating visualizations with Pandas, NumPy, and Matplotlib."
                     },
                     tools: {
                         title: "Tools & Workflow",
@@ -1060,7 +1067,9 @@ const resources = {
             },
             hero: {
                 greeting: "Halo, saya",
-                role: "Developer Android & Web",
+                greetings: ["Halo, saya", "Hi, I'm"],
+                role: "Developer Android, Web & AI",
+                build_summary: "Membangun aplikasi praktis dengan Kotlin, React, dan machine learning.",
                 tagline: "Lulusan baru Informatika yang membangun produk mobile dan web praktis dengan React dan Kotlin.",
                 typewriter_prefix: "Saya membangun",
                 role_phrases: [
@@ -1110,7 +1119,7 @@ const resources = {
             skills: {
                 eyebrow: "Kompetensi Utama",
                 title: "Keahlian Teknis",
-                description: "Android menjadi fokus utama saya, didukung pengembangan web dan AI terapan. Pilih teknologi untuk melihat penerapannya dalam proyek.",
+                description: "Android menjadi fokus utama saya, didukung pengembangan web, AI terapan, dan analisis data. Pilih teknologi untuk melihat penerapannya dalam proyek.",
                 primary_focus: "Fokus utama",
                 evidence_for: "Penerapan {{technology}}",
                 loading: "Memuat bukti proyek…",
@@ -1120,6 +1129,7 @@ const resources = {
                     git: "Saya menggunakan Git untuk version control di seluruh proyek. Beberapa contohnya ditautkan di bawah ini.",
                     github: "Saya menggunakan GitHub untuk menyimpan dan mengelola repository di seluruh proyek. Beberapa contohnya ditautkan di bawah ini.",
                     vscode: "Saya menggunakan VS Code saat mengembangkan website, termasuk portfolio ini.",
+                    colab: "Saya menggunakan notebook Google Colab untuk mengembangkan model AI.",
                     prompt: "Saya menggunakan prompt engineering selama pengembangan portfolio ini untuk mengarahkan bantuan AI. Pembelajaran saya juga didukung Google AI Professional Certificate.",
                     generative_ai: "Saya menggunakan generative AI untuk membantu pengembangan portfolio ini. Saya juga telah menyelesaikan Google AI Professional Certificate.",
                 },
@@ -1139,6 +1149,10 @@ const resources = {
                     backend: {
                         title: "Backend & Data",
                         desc: "Mengelola API, database, autentikasi, dan workflow aplikasi berbasis cloud."
+                    },
+                    analytics: {
+                        title: "Data Analytics",
+                        desc: "Membersihkan dan mengeksplorasi data, mengolah array numerik, serta membuat visualisasi dengan Pandas, NumPy, dan Matplotlib."
                     },
                     tools: {
                         title: "Tools & Workflow",

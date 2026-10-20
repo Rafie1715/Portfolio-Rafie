@@ -20,8 +20,8 @@ export default function ImageDialog({ image, onClose }) {
     <dialog ref={ref} aria-label={image.alt} onCancel={event => { event.preventDefault(); onClose(); }}
       onClick={event => { if (event.target === event.currentTarget) onClose(); }}
       onKeyDown={event => { if (event.key === 'Tab') { event.preventDefault(); ref.current?.querySelector('button')?.focus(); } }}
-      className="fixed inset-0 m-auto max-h-[100dvh] w-full max-w-none bg-transparent p-4 text-white backdrop:bg-black/90 sm:p-8">
-      <div className="relative mx-auto flex max-w-6xl flex-col items-center rounded-lg bg-slate-950 p-3 pt-16">
+      className="image-dialog fixed inset-0 m-auto max-h-[100dvh] w-full max-w-none bg-transparent p-4 text-white backdrop:bg-black/90 sm:p-8">
+      <div className="image-dialog-content relative mx-auto flex max-w-6xl flex-col items-center rounded-lg bg-slate-950 p-3 pt-16">
         <button autoFocus type="button" onClick={onClose} aria-label={t('common.close')} className="absolute right-3 top-3 flex size-11 items-center justify-center rounded-lg bg-white/10 focus-visible:ring-2 focus-visible:ring-white"><X aria-hidden="true" /></button>
         <img src={image.src} alt={image.alt} className="max-h-[75dvh] max-w-full object-contain" />
         <p className="p-3 text-center text-sm text-slate-300">{image.alt}</p>

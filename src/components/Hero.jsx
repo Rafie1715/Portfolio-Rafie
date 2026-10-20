@@ -64,11 +64,12 @@ const Hero = () => {
     hidden: { opacity: 1 },
     visible: { opacity: 1 },
   } : {
-    hidden: { opacity: 0.35, y: '105%' },
+    hidden: { opacity: 0, y: 24, filter: 'blur(6px)' },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+      filter: 'blur(0px)',
+      transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
     },
   };
 
@@ -83,7 +84,8 @@ const Hero = () => {
     <section
       ref={heroRef}
       id="home"
-      className="relative flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-28 pb-6 sm:pt-32 sm:pb-8 overflow-hidden transition-colors duration-300"
+      data-motion-active={isHeroVisible && isDocumentVisible && !shouldReduceMotion}
+      className="relative flex flex-col items-center justify-center bg-white dark:bg-dark text-dark dark:text-white px-4 sm:px-6 lg:px-8 pt-32 pb-8 sm:pt-40 sm:pb-10 overflow-hidden transition-colors duration-300"
     >
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -96,43 +98,37 @@ const Hero = () => {
       <HeroLightBackground active={isHeroVisible && isDocumentVisible} />
 
       <motion.div
-        className="z-20 text-center max-w-5xl mx-auto flex flex-col items-center justify-center h-full w-full"
+        className="z-20 text-center max-w-6xl mx-auto flex flex-col items-center justify-center h-full w-full"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <motion.div variants={itemVariants} className="mb-4 flex items-center justify-center">
-          <img
-            src="/images/profile.webp"
-            alt={t('home.about_snapshot.photo_alt')}
-            width="72" height="72" fetchPriority="high" decoding="async"
-            className="size-16 rounded-full border-2 border-blue-400 object-cover object-[center_25%] sm:size-[72px]"
+        <motion.div variants={itemVariants} className="mb-3 flex w-full justify-center">
+          <TypewriterLine
+            key={i18n.resolvedLanguage}
+            phrases={t('hero.greetings', { returnObjects: true })}
+            active={isHeroVisible && isDocumentVisible}
           />
         </motion.div>
 
-        <motion.p variants={itemVariants} className="mb-1 text-sm font-medium text-slate-500 dark:text-slate-400 sm:text-base">
-          {t('hero.greeting')}
-        </motion.p>
-        <div className="overflow-hidden mb-3 md:mb-2 px-2 pb-2">
-          <motion.h1 variants={nameVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight break-words">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-500 drop-shadow-sm">
-              Rafie Rojagat Bachri
-            </span>
-          </motion.h1>
-        </div>
+        <motion.h1 variants={groupVariants} aria-label="Rafie Rojagat Bachri"
+          className="hero-name mb-3 px-2 text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] font-black tracking-tight">
+          <span aria-hidden="true" className="block sm:inline">
+            <motion.span variants={nameVariants} className="hero-name-word">Rafie</motion.span>
+          </span>{' '}
+          <span aria-hidden="true" className="block whitespace-nowrap sm:inline">
+            <motion.span variants={nameVariants} className="hero-name-word">Rojagat</motion.span>{' '}
+            <motion.span variants={nameVariants} className="hero-name-word">Bachri</motion.span>
+          </span>
+        </motion.h1>
 
-        <p className="max-w-3xl px-2 text-base font-semibold leading-relaxed text-slate-700 dark:text-slate-200 sm:text-lg">{t('hero.role')}</p>
-        <TypewriterLine
-          key={i18n.resolvedLanguage}
-          prefix={t('hero.typewriter_prefix')}
-          phrases={t('home.recruiter_lens.modes.overview.hero_phrases', { returnObjects: true })}
-          active={isHeroVisible && isDocumentVisible}
-        />
+        <motion.p variants={itemVariants} className="max-w-3xl px-2 text-base font-semibold leading-relaxed text-slate-700 dark:text-slate-200 sm:text-xl">{t('hero.role')}</motion.p>
+        <motion.p variants={itemVariants} className="mt-3 max-w-xl px-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400 sm:text-base">{t('hero.build_summary')}</motion.p>
 
-        <p className="mt-3 inline-flex items-center justify-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300 sm:text-sm">
+        <motion.p variants={itemVariants} className="mt-5 inline-flex items-center justify-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300 sm:text-sm">
           <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-emerald-500" />
           {t('hero.quick_facts.availability')}
-        </p>
+        </motion.p>
 
         <motion.div variants={groupVariants} className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full px-4 sm:px-0">
           <motion.div variants={itemVariants} className="w-full sm:w-auto">

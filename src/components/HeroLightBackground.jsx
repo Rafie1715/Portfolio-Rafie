@@ -36,14 +36,18 @@ export default function HeroLightBackground({ active = true }) {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
         const bounds = hero.getBoundingClientRect();
-        root.style.setProperty('--light-x', `${((event.clientX - bounds.left) / bounds.width - 0.5) * 20}px`);
-        root.style.setProperty('--light-y', `${((event.clientY - bounds.top) / bounds.height - 0.5) * 12}px`);
+        root.style.setProperty('--light-x', `${((event.clientX - bounds.left) / bounds.width - 0.5) * 32}px`);
+        root.style.setProperty('--light-y', `${((event.clientY - bounds.top) / bounds.height - 0.5) * 18}px`);
+        root.style.setProperty('--spotlight-x', `${event.clientX - bounds.left}px`);
+        root.style.setProperty('--spotlight-y', `${event.clientY - bounds.top}px`);
+        root.dataset.pointerActive = 'true';
       });
     };
     const reset = () => {
       cancelAnimationFrame(frame);
       root.style.setProperty('--light-x', '0px');
       root.style.setProperty('--light-y', '0px');
+      root.dataset.pointerActive = 'false';
     };
     hero.addEventListener('pointermove', move, { passive: true });
     hero.addEventListener('pointerleave', reset);
@@ -57,6 +61,9 @@ export default function HeroLightBackground({ active = true }) {
   return (
     <div ref={rootRef} data-hero-lights data-running={running} aria-hidden="true" className="hero-lights pointer-events-none absolute inset-0 overflow-hidden">
       <div className="hero-light-haze absolute inset-0" />
+      <div className="hero-ambient hero-ambient-blue" />
+      <div className="hero-ambient hero-ambient-cyan" />
+      <div className="hero-light-spotlight absolute inset-0" />
       <div className="hero-light-parallax absolute -inset-6">
         <svg ref={svgRef} viewBox="0 0 1440 900" preserveAspectRatio="none" focusable="false" className="hero-light-canvas h-full w-full">
           <defs>

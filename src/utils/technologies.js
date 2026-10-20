@@ -32,10 +32,13 @@ const entries = [
   ['PHP', 'php', purple, []],
   ['MySQL', 'mysql', blue, []],
   ['PostgreSQL', 'postgresql', blue, ['Postgres']],
+  ['MongoDB', 'mongodb', green, ['Mongo']],
   ['Supabase', 'supabase', green, []],
   ['TensorFlow', 'tensorflow', orange, ['TensorFlow Lite', 'TFLite']],
   ['Scikit-Learn', 'scikitlearn', orange, ['sklearn']],
   ['Pandas', 'pandas', purple, []],
+  ['NumPy', 'numpy', blue, []],
+  ['Google Colab', 'googlecolab', orange, ['Colab', 'Google Colaboratory']],
   ['OpenCV', 'opencv', green, []],
   ['Unity', 'unity', neutral, []],
   ['C#', 'csharp', purple, ['C Sharp']],
@@ -64,6 +67,11 @@ for (const [name, icon, color] of [
   ['REST API', 'fas fa-plug', blue],
   ['Prompt Engineering', 'fas fa-message', cyan],
   ['Generative AI', 'fas fa-wand-magic-sparkles', purple],
+  ['Matplotlib', 'fas fa-chart-line', blue],
+  ['Data Cleaning', 'fas fa-eraser', green],
+  ['Exploratory Data Analysis (EDA)', 'fas fa-search', cyan],
+  ['EDA', 'fas fa-search', cyan],
+  ['Data Visualization', 'fas fa-chart-line', purple],
 ]) registry.set(normalize(name), { icon, color });
 
 export function technologyDetails(technology) {

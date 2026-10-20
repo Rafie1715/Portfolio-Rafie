@@ -167,8 +167,6 @@ const ProjectCard = ({
   t,
   featured = false,
   lead = false,
-  animateLayout = false,
-  reduceMotion = false,
 }) => {
   const title = getLocalized(project.title, language);
   const shortDesc = getLocalized(project.shortDesc, language);
@@ -179,24 +177,10 @@ const ProjectCard = ({
   const impactFallback = getLocalized(project.impact, language);
   const techStack = Array.isArray(project.techStack) ? project.techStack.slice(0, featured ? 5 : 3) : [];
   const domain = getProjectDomain(project);
-  const animationProps = animateLayout && !reduceMotion
-    ? {
-        layout: true,
-        initial: { opacity: 0, y: 12 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -8 },
-        transition: {
-          duration: 0.24,
-          ease: 'easeOut',
-          layout: { duration: 0.28, ease: 'easeOut' },
-        },
-      }
-    : {};
 
   return (
-    <motion.article
-      {...animationProps}
-      className={`group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg dark:border-slate-700 dark:bg-darkLight ${lead ? 'lg:col-span-2 lg:grid lg:h-[32rem] lg:grid-cols-[1.25fr_1fr]' : 'flex h-full flex-col'}`}
+    <article
+      className={`project-card group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-slate-700 dark:bg-darkLight ${lead ? 'lg:col-span-2 lg:grid lg:h-[32rem] lg:grid-cols-[1.25fr_1fr]' : 'flex h-full flex-col'}`}
     >
       <Link
         to={projectPath(project)}
@@ -208,7 +192,7 @@ const ProjectCard = ({
           src={project.image}
           style={{ objectFit: project.imageFit || 'cover' }}
           alt={title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+          className="project-card-image h-full w-full object-cover"
           wrapperClassName="absolute inset-0 h-full w-full"
           placeholderClassName="rounded-none"
           loading="lazy"
@@ -287,7 +271,7 @@ const ProjectCard = ({
 
         <ProjectActions project={project} title={title} compact={!featured} t={t} />
       </div>
-    </motion.article>
+    </article>
   );
 };
 
@@ -533,22 +517,21 @@ const Projects = () => {
           <AnimatePresence mode="wait" initial={false}>
             {displayedProjects.length > 0 ? (
               <motion.div
-                key="project-grid"
-                layout={!shouldReduceMotion}
+                key={`project-grid-${filter}-${searchTerm}-${showAllArchive}`}
+                data-project-results
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.2, ease: 'easeOut' }}
                 className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
               >
-                <AnimatePresence mode="popLayout" initial={false}>
-                  {displayedProjects.map((project) => (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                      language={currentLang}
-                      t={t}
-                      animateLayout
-                      reduceMotion={shouldReduceMotion}
-                    />
-                  ))}
-                </AnimatePresence>
+                {displayedProjects.map((project) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    language={currentLang}
+                    t={t}
+                  />
+                ))}
               </motion.div>
             ) : (
               <motion.div

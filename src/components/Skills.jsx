@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, BrainCircuit, Database, MonitorSmartphone, Smartphone, Wrench } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, BrainCircuit, ChartLine, Database, MonitorSmartphone, Smartphone, Wrench } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import TechnologyLabel from './TechnologyLabel';
@@ -12,13 +12,15 @@ const categories = [
   { key: 'mobile', Icon: Smartphone, accent: '#3b82f6', columns: 'md:col-span-6 lg:col-span-7',
     skills: ['Kotlin', 'XML layouts', 'Jetpack Compose', 'Android Studio', 'Retrofit', 'MVVM', 'Coroutines', 'Paging 3', 'Material Design'] },
   { key: 'frontend', Icon: MonitorSmartphone, accent: '#06b6d4', columns: 'md:col-span-6 lg:col-span-5',
-    skills: ['React.js', 'JavaScript', 'Tailwind CSS', 'Bootstrap'], learning: 'Next.js' },
-  { key: 'ai', Icon: BrainCircuit, accent: '#10b981', columns: 'md:col-span-6 lg:col-span-4',
+    skills: ['React.js', 'JavaScript', 'Tailwind CSS', 'Bootstrap'], learning: ['Next.js'] },
+  { key: 'ai', Icon: BrainCircuit, accent: '#10b981', columns: 'md:col-span-6',
     skills: ['Python', 'Machine Learning', 'Scikit-Learn', 'Prompt Engineering', 'Generative AI'] },
-  { key: 'backend', Icon: Database, accent: '#f59e0b', columns: 'md:col-span-6 lg:col-span-4', initial: 'Firebase',
-    skills: ['Node.js', 'Express.js', 'REST API', 'MySQL', 'Firebase'] },
-  { key: 'tools', Icon: Wrench, accent: '#a78bfa', columns: 'md:col-span-12 lg:col-span-4', initial: 'Figma',
-    skills: ['Git', 'GitHub', 'Postman', 'VS Code', 'Figma'] },
+  { key: 'analytics', Icon: ChartLine, accent: '#0891b2', columns: 'md:col-span-6',
+    skills: ['Pandas', 'NumPy', 'Matplotlib', 'Data Cleaning', 'Exploratory Data Analysis (EDA)', 'Data Visualization'] },
+  { key: 'backend', Icon: Database, accent: '#f59e0b', columns: 'md:col-span-6', initial: 'Firebase',
+    skills: ['Node.js', 'Express.js', 'REST API', 'MySQL', 'Firebase'], learning: ['MongoDB', 'PostgreSQL'] },
+  { key: 'tools', Icon: Wrench, accent: '#a78bfa', columns: 'md:col-span-6', initial: 'Figma',
+    skills: ['Git', 'GitHub', 'Postman', 'VS Code', 'Google Colab', 'Figma'] },
 ];
 
 function SkillCard({ category, index, catalog, reduceMotion }) {
@@ -62,7 +64,14 @@ function SkillCard({ category, index, catalog, reduceMotion }) {
           ))}
         </div>
 
-        {category.learning && <p className="mb-5 text-xs leading-5 text-slate-500 dark:text-slate-400">{t('common.learning')}: <span className="font-semibold text-slate-700 dark:text-slate-300">{category.learning}</span></p>}
+        {category.learning && (
+          <div className="mb-5 text-xs leading-5 text-slate-500 dark:text-slate-400">
+            <p className="mb-2">{t('common.learning')}</p>
+            <ul className="flex flex-wrap gap-x-4 gap-y-2 text-slate-700 dark:text-slate-300">
+              {category.learning.map(name => <li key={name}><TechnologyLabel technology={name} /></li>)}
+            </ul>
+          </div>
+        )}
 
         <div id={panelId} className="mt-auto border-t border-slate-200 pt-4 dark:border-slate-700" aria-live="polite" aria-atomic="true" aria-busy={catalog.loading}>
           <motion.div key={selected} initial={reduceMotion ? false : { opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }}>

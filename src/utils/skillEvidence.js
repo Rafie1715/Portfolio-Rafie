@@ -7,6 +7,7 @@ export const skillUsage = {
   Git: 'git',
   GitHub: 'github',
   'VS Code': 'vscode',
+  'Google Colab': 'colab',
   'Prompt Engineering': 'prompt',
   'Generative AI': 'generative_ai',
 };

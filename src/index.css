@@ -38,6 +38,39 @@
 }
 
 /* Project notes are revealed on demand, keeping the familiar card layout. */
+.project-card, .certificate-card { transition: border-color 180ms ease; }
+.project-card:focus-within, .certificate-card:focus-within { border-color: #60a5fa; }
+.contact-field:focus-within > label,
+.contact-field:focus-within > div > label { color: #2563eb; }
+.dark .contact-field:focus-within > label,
+.dark .contact-field:focus-within > div > label { color: #93c5fd; }
+.contact-field label { transition: color 180ms ease; }
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover, .certificate-card:hover { border-color: #60a5fa; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .project-card { transition: transform 200ms ease, border-color 180ms ease; }
+  .project-card-image, .certificate-image, .timeline-document-image { transition: transform 220ms ease; }
+  .project-card:has(:focus-visible) { transform: translateY(-4px); }
+  .project-card:has(:focus-visible) .project-card-image { transform: scale(1.025); }
+  .certificate-card:has(:focus-visible) .certificate-image,
+  .timeline-document:focus-visible .timeline-document-image { transform: scale(1.015); }
+  .image-dialog[open] .image-dialog-content { animation: image-dialog-enter 200ms ease-out; }
+  .image-dialog[open]::backdrop { animation: image-dialog-backdrop 180ms ease-out; }
+  @media (hover: hover) and (pointer: fine) {
+    .project-card:hover { transform: translateY(-4px); }
+    .project-card:hover .project-card-image { transform: scale(1.025); }
+    .certificate-card:hover .certificate-image,
+    .timeline-document:hover .timeline-document-image { transform: scale(1.015); }
+    .contact-field { transition: transform 180ms ease; }
+    .contact-field:focus-within { transform: translateY(-2px); }
+    .contact-submit { transition: transform 180ms ease, background-color 180ms ease; }
+    .contact-submit:hover:not(:disabled) { transform: translateY(-2px); }
+  }
+}
+@keyframes image-dialog-enter { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes image-dialog-backdrop { from { opacity: 0; } to { opacity: 1; } }
+
 .project-build-note-paper {
   background-color: #f0f6ff;
   background-image: repeating-linear-gradient(transparent, transparent 23px, #2563eb0a 23px, #2563eb0a 24px);
@@ -320,7 +353,53 @@ html { scroll-padding-top: 6rem; }
 }
 
 /* Hero light ribbons: strong at the edges, quiet underneath the content. */
+.hero-name { line-height: 1.35; overflow: visible; }
+.hero-name-word {
+  display: inline-block;
+  /* Paint the gradient below the baseline too: Outfit's j/g extend past it. */
+  padding: .04em .025em .18em;
+  margin: -.04em -.025em -.18em;
+  color: transparent;
+  background-image: linear-gradient(110deg, #3b82f6 5%, #2563eb 35%, #0891b2 65%, #3b82f6 95%);
+  background-size: 220% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: hero-name-color 12s ease-in-out infinite alternate;
+}
+@keyframes hero-name-color { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+#home[data-motion-active="false"] .hero-name-word { animation-play-state: paused; }
 .hero-lights { contain: paint; }
+.hero-ambient {
+  position: absolute;
+  width: min(55vw, 700px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: .65;
+  animation: hero-ambient-drift 18s ease-in-out infinite alternate;
+}
+.hero-ambient-blue {
+  left: -15%;
+  top: 5%;
+  background: radial-gradient(circle, #3b82f626, transparent 68%);
+}
+.hero-ambient-cyan {
+  right: -12%;
+  bottom: -30%;
+  background: radial-gradient(circle, #06b6d426, transparent 68%);
+  animation-delay: -9s;
+}
+.dark .hero-ambient { opacity: .4; }
+@keyframes hero-ambient-drift {
+  from { transform: translate3d(-3%, -4%, 0) scale(.95); }
+  to { transform: translate3d(12%, 10%, 0) scale(1.1); }
+}
+.hero-light-spotlight {
+  opacity: 0;
+  background: radial-gradient(260px circle at var(--spotlight-x, 50%) var(--spotlight-y, 40%), #38bdf81a, transparent 75%);
+  transition: opacity 500ms ease;
+}
+.hero-lights[data-pointer-active="true"] .hero-light-spotlight { opacity: 1; }
+.hero-lights[data-running="false"] .hero-ambient { animation-play-state: paused; }
 .hero-light-haze {
   background: radial-gradient(ellipse at 4% 65%, #3b82f619, transparent 35%),
     radial-gradient(ellipse at 98% 28%, #06b6d419, transparent 37%);
@@ -378,6 +457,8 @@ html { scroll-padding-top: 6rem; }
 @keyframes record-turn { to { transform: rotate(360deg); } }
 @keyframes record-beat { from { transform: scaleY(.2); } to { transform: scaleY(var(--level)); } }
 @media (prefers-reduced-motion: reduce) {
+  .hero-name-word, .hero-ambient { animation: none; }
+  .hero-light-spotlight { display: none; }
   .typing-caret { animation: none; }
   .record-disc, .record-level { animation: none; }
 }

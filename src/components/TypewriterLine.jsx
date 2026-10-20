@@ -3,7 +3,7 @@ import { useReducedMotion } from 'framer-motion';
 import { Pause, Play } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function TypewriterLine({ phrases, prefix, active = true }) {
+export default function TypewriterLine({ phrases, prefix = '', active = true }) {
   const { t } = useTranslation();
   const reducedMotion = useReducedMotion();
   const [paused, setPaused] = useState(false);
@@ -14,7 +14,7 @@ export default function TypewriterLine({ phrases, prefix, active = true }) {
   useEffect(() => {
     if (!running || !phrase) return undefined;
     const complete = frame.length === phrase.length;
-    const delay = frame.deleting ? 30 : complete ? 2200 : 65;
+    const delay = frame.deleting ? 45 : complete ? 3500 : 95;
     const timer = window.setTimeout(() => {
       setFrame(current => {
         if (current.deleting && current.length === 0) {
@@ -28,7 +28,7 @@ export default function TypewriterLine({ phrases, prefix, active = true }) {
   }, [frame, phrase, phrases.length, running]);
 
   return (
-    <div className="hero-typewriter mt-3 flex w-full max-w-2xl items-center justify-center gap-1 text-sm sm:text-base">
+    <div className="hero-typewriter relative flex min-h-11 w-max max-w-full items-center justify-center text-lg font-medium sm:text-xl">
       {/* A stable text alternative prevents character-by-character announcements. */}
       <span className="sr-only">{prefix} {phrases[0]}</span>
       <span aria-hidden="true" className="grid min-w-0 text-center leading-6">
@@ -36,13 +36,13 @@ export default function TypewriterLine({ phrases, prefix, active = true }) {
           <span key={text} className="invisible col-start-1 row-start-1">{prefix} {text}<span className="inline-block w-2" /></span>
         ))}
         <span className="col-start-1 row-start-1 text-slate-500 dark:text-slate-400">
-          {prefix}{' '}<span className="text-blue-600 dark:text-blue-300">{reducedMotion ? phrases[0] : paused ? phrase : phrase.slice(0, frame.length)}</span>
+          {prefix}{prefix && ' '}<span>{reducedMotion ? phrases[0] : paused ? phrase : phrase.slice(0, frame.length)}</span>
           <span className="typing-caret ml-0.5 inline-block h-3.5 w-px translate-y-0.5 bg-blue-500" data-running={running} />
         </span>
       </span>
       {!reducedMotion && (
         <button type="button" onClick={() => setPaused(value => !value)}
-          className="flex size-11 shrink-0 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 dark:text-slate-400 dark:hover:bg-slate-800"
+          className="absolute left-full ml-2 flex size-11 shrink-0 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 dark:text-slate-400 dark:hover:bg-slate-800"
           aria-label={t(paused ? 'common.motion_resume' : 'common.motion_pause')}>
           {paused ? <Play size={13} aria-hidden="true" /> : <Pause size={13} aria-hidden="true" />}
         </button>

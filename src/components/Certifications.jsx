@@ -91,8 +91,8 @@ const Certifications = () => {
                 initial={reduceMotion ? false : { opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.3, delay: Math.min(index * 0.03, 0.18) }}
-                className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900 sm:min-h-[260px]"
+                transition={{ duration: reduceMotion ? 0 : 0.25, delay: reduceMotion ? 0 : Math.min(index * 0.03, 0.12) }}
+                className="certificate-card flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-900 sm:min-h-[260px]"
               >
                 {certification.img ? (
                   <button
@@ -106,7 +106,7 @@ const Certifications = () => {
                       alt=""
                       loading="lazy"
                       decoding="async"
-                      className="h-full w-full object-contain p-3 transition duration-300 group-hover:scale-[1.015] sm:p-4"
+                      className="certificate-image h-full w-full object-contain p-3 sm:p-4"
                     />
                   </button>
                 ) : (

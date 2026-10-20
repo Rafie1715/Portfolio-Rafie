@@ -209,7 +209,7 @@ const Contact = () => {
                   initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.75 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.75 }}
-                  transition={{ duration: 0.16 }}
+                  transition={{ duration: shouldReduceMotion ? 0 : 0.16 }}
                 >
                   {copied
                     ? <Check className="h-4 w-4" aria-hidden="true" />
@@ -266,7 +266,7 @@ const Contact = () => {
             <input type="hidden" name="_subject" value="New portfolio contact" />
 
             <div className="grid gap-5 sm:grid-cols-2">
-              <div className="transition-transform duration-200 focus-within:-translate-y-0.5 motion-reduce:transform-none">
+              <div className="contact-field">
                 <label htmlFor="name" className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200">
                   {t('contact.form.name_label')} <span className="text-red-600" aria-hidden="true">*</span>
                 </label>
@@ -287,7 +287,7 @@ const Contact = () => {
                 {fieldError('name')}
               </div>
 
-              <div className="transition-transform duration-200 focus-within:-translate-y-0.5 motion-reduce:transform-none">
+              <div className="contact-field">
                 <label htmlFor="email" className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200">
                   {t('contact.form.email_label')} <span className="text-red-600" aria-hidden="true">*</span>
                 </label>
@@ -308,7 +308,7 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="mt-5 transition-transform duration-200 focus-within:-translate-y-0.5 motion-reduce:transform-none">
+            <div className="mt-5 contact-field">
               <label htmlFor="topic" className="mb-2 block text-sm font-bold text-gray-700 dark:text-gray-200">
                 {t('contact.form.topic_label')} <span className="text-red-600" aria-hidden="true">*</span>
               </label>
@@ -332,7 +332,7 @@ const Contact = () => {
               {fieldError('topic')}
             </div>
 
-            <div className="mt-5 transition-transform duration-200 focus-within:-translate-y-0.5 motion-reduce:transform-none">
+            <div className="mt-5 contact-field">
               <div className="mb-2 flex items-end justify-between gap-4">
                 <label htmlFor="message" className="block text-sm font-bold text-gray-700 dark:text-gray-200">
                   {t('contact.form.message_label')} <span className="text-red-600" aria-hidden="true">*</span>
@@ -376,7 +376,7 @@ const Contact = () => {
                   initial={shouldReduceMotion ? false : { opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={shouldReduceMotion ? undefined : { opacity: 0, y: -6 }}
-                  transition={{ duration: 0.22, ease: 'easeOut' }}
+                  transition={{ duration: shouldReduceMotion ? 0 : 0.2, ease: 'easeOut' }}
                   className={`mt-6 flex items-start gap-3 rounded-lg border px-4 py-3 text-sm font-semibold outline-none focus:ring-2 ${
                     submission.status === 'success'
                       ? 'border-emerald-200 bg-emerald-50 text-emerald-800 focus:ring-emerald-300 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
@@ -396,7 +396,7 @@ const Contact = () => {
                 type="submit"
                 disabled={isSubmitting}
                 whileTap={shouldReduceMotion || isSubmitting ? undefined : { scale: 0.98 }}
-                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-65 dark:focus:ring-offset-slate-900 sm:w-auto"
+                className="contact-submit inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-65 dark:focus:ring-offset-slate-900 sm:w-auto"
               >
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span
