@@ -86,7 +86,14 @@ const resources = {
                         summary: "Choose a technology to see its role, then explore related projects in the full catalog.",
                         control_label: "Choose a technology to explore",
                         active_label: "Selected technology",
-                        used_in: "Used in"
+                        used_in: "Used in",
+                        orbit_view: "3D Orbit",
+                        grid_view: "Grid",
+                        orbit_hint: "Drag to rotate orbit • Hover node to inspect",
+                        orbit_touch_hint: "Tap node to inspect • Drag to rotate",
+                        orbit_reset: "Reset 3D view",
+                        orbit_pause: "Pause rotation",
+                        orbit_play: "Resume rotation"
                     },
                     technologies: {
                         kotlin: {
@@ -144,6 +151,10 @@ const resources = {
                         pandas: {
                             role: "Dataset preparation and analytical workflows",
                             usage: "Deepseek Sentiment Analysis"
+                        },
+                        threejs: {
+                            role: "3D graphics, interactive WebGL, and physics simulation",
+                            usage: "Personal Portfolio (3D ID Pass & Tech Orbit)"
                         }
                     },
                     options: {
@@ -309,6 +320,8 @@ const resources = {
                 view_projects: "View Projects",
                 download_cv: "Download CV",
                 contact_me: "Let's Connect",
+                bg_wave: "3D Wave Mesh",
+                bg_contour: "Contour Lines",
                 afk_cta: {
                     prefix: "Want a quick look outside my coding life?",
                     link: "Visit /afk"
@@ -494,6 +507,20 @@ const resources = {
                 title_highlight: "the work.",
                 subtitle: "A practical look at the hardware and software I use to move from an idea to a tested Android or web product.",
                 updated: "Last updated: August 2026",
+                desk_3d: {
+                    eyebrow: "Interactive 3D Setup",
+                    title: "Virtual Workstation Diorama",
+                    hint: "Drag to rotate diorama • Click lamp or screens to interact",
+                    touch_hint: "Swipe to rotate • Tap lamp or screens to interact",
+                    toggle_lamp: "Desk Lamp",
+                    lamp_on: "Lamp: On",
+                    lamp_off: "Lamp: Off",
+                    view_overview: "Overview",
+                    view_laptop: "Laptop",
+                    view_monitor: "Monitor",
+                    view_phone: "Phone",
+                    reset_view: "Reset Camera"
+                },
                 workflow: {
                     eyebrow: "Working Method",
                     title: "A simple loop from idea to delivery",
@@ -868,7 +895,14 @@ const resources = {
                         summary: "Pilih teknologi untuk melihat perannya, lalu jelajahi proyek terkait di katalog lengkap.",
                         control_label: "Pilih teknologi untuk dijelajahi",
                         active_label: "Teknologi terpilih",
-                        used_in: "Digunakan pada"
+                        used_in: "Digunakan pada",
+                        orbit_view: "Orbit 3D",
+                        grid_view: "Grid",
+                        orbit_hint: "Drag untuk memutar orbit • Arahkan kursor untuk melihat detail",
+                        orbit_touch_hint: "Ketuk node untuk melihat detail • Geser untuk memutar",
+                        orbit_reset: "Reset tampilan 3D",
+                        orbit_pause: "Jeda putaran orbit",
+                        orbit_play: "Lanjutkan putaran orbit"
                     },
                     technologies: {
                         kotlin: {
@@ -926,6 +960,10 @@ const resources = {
                         pandas: {
                             role: "Persiapan dataset dan alur analitik",
                             usage: "Analisis Sentimen Deepseek"
+                        },
+                        threejs: {
+                            role: "Grafik 3D, WebGL interaktif, dan simulasi fisika",
+                            usage: "Portfolio Pribadi (3D ID Pass & Orbit Teknologi)"
                         }
                     },
                     options: {
@@ -1091,6 +1129,8 @@ const resources = {
                 view_projects: "Lihat Proyek",
                 download_cv: "Unduh CV",
                 contact_me: "Mari Terhubung",
+                bg_wave: "Gelombang 3D",
+                bg_contour: "Garis Kontur",
                 afk_cta: {
                     prefix: "Ingin lihat sisi saya di luar coding?",
                     link: "Kunjungi /afk"
@@ -1276,6 +1316,20 @@ const resources = {
                 title_highlight: "setiap karya.",
                 subtitle: "Gambaran praktis tentang perangkat dan software yang saya gunakan untuk mengubah ide menjadi produk Android atau web yang telah diuji.",
                 updated: "Terakhir diperbarui: Agustus 2026",
+                desk_3d: {
+                    eyebrow: "Setup 3D Interaktif",
+                    title: "Diorama Workstation Virtual",
+                    hint: "Drag untuk memutar diorama • Klik lampu atau layar untuk interaksi",
+                    touch_hint: "Geser untuk memutar • Ketuk lampu atau layar untuk interaksi",
+                    toggle_lamp: "Lampu Meja",
+                    lamp_on: "Lampu: Nyala",
+                    lamp_off: "Lampu: Mati",
+                    view_overview: "Overview",
+                    view_laptop: "Laptop",
+                    view_monitor: "Monitor",
+                    view_phone: "Ponsel",
+                    reset_view: "Reset Kamera"
+                },
                 workflow: {
                     eyebrow: "Cara Kerja",
                     title: "Alur sederhana dari ide hingga rilis",

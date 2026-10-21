@@ -1,4 +1,16 @@
-import { useEffect, useId, useRef, useSyncExternalStore } from 'react';
+import { lazy, Suspense, useEffect, useId, useRef, useState, useSyncExternalStore } from 'react';
+
+const HeroWaveMesh3D = lazy(() => import('./HeroWaveMesh3D'));
+
+const supportsWebGL = () => {
+  try {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    if (!context) return false;
+    context.getExtension('WEBGL_lose_context')?.loseContext();
+    return true;
+  } catch { return false; }
+};
 
 const motionQuery = '(prefers-reduced-motion: reduce)';
 const subscribeMotionPreference = (onChange) => {
@@ -8,24 +20,24 @@ const subscribeMotionPreference = (onChange) => {
 };
 const getMotionPreference = () => window.matchMedia(motionQuery).matches;
 
-// Continuous curves frame the hero; the center mask keeps the copy quiet.
-const ribbons = [
-  { path: 'M-160 650 C80 880 390 690 270 440 S310 110 620 240 S1150 470 1550 70', duration: 32 },
-  { path: 'M-140 790 C170 900 430 620 305 415 S405 145 705 280 S1230 360 1560 150', duration: 38 },
-  { path: 'M-120 540 C100 360 200 830 560 670 S1040 40 1530 225', duration: 44 },
+// Fixed geometry: animate two groups, not dozens of individual path shapes.
+const contours = [
+  Array.from({ length: 12 }, (_, i) => `M -120 ${360 + i * 18} C 70 ${260 + i * 17} ${510 + i * 6} ${360 + i * 15} ${355 + i * 4} ${605 + i * 12} S 20 ${800 + i * 15} -130 ${725 + i * 18}`),
+  Array.from({ length: 12 }, (_, i) => `M ${860 + i * 17} -100 C ${760 + i * 16} 100 ${970 + i * 18} ${315 + i * 6} ${1280 + i * 10} ${190 + i * 14} S 1640 ${230 + i * 18} 1550 ${510 + i * 16}`),
 ];
 
-export default function HeroLightBackground({ active = true }) {
+export default function HeroLightBackground({ active = true, mode = 'wave' }) {
   const reduceMotion = useSyncExternalStore(subscribeMotionPreference, getMotionPreference, () => true);
   const rootRef = useRef(null);
-  const svgRef = useRef(null);
   const id = useId().replace(/:/g, '');
   const running = active && !reduceMotion;
+  const [canRender3D, setCanRender3D] = useState(false);
 
   useEffect(() => {
-    if (running) svgRef.current?.unpauseAnimations?.();
-    else svgRef.current?.pauseAnimations?.();
-  }, [running]);
+    if (typeof window !== 'undefined' && supportsWebGL()) {
+      setCanRender3D(true);
+    }
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -38,16 +50,12 @@ export default function HeroLightBackground({ active = true }) {
         const bounds = hero.getBoundingClientRect();
         root.style.setProperty('--light-x', `${((event.clientX - bounds.left) / bounds.width - 0.5) * 32}px`);
         root.style.setProperty('--light-y', `${((event.clientY - bounds.top) / bounds.height - 0.5) * 18}px`);
-        root.style.setProperty('--spotlight-x', `${event.clientX - bounds.left}px`);
-        root.style.setProperty('--spotlight-y', `${event.clientY - bounds.top}px`);
-        root.dataset.pointerActive = 'true';
       });
     };
     const reset = () => {
       cancelAnimationFrame(frame);
       root.style.setProperty('--light-x', '0px');
       root.style.setProperty('--light-y', '0px');
-      root.dataset.pointerActive = 'false';
     };
     hero.addEventListener('pointermove', move, { passive: true });
     hero.addEventListener('pointerleave', reset);
@@ -58,46 +66,47 @@ export default function HeroLightBackground({ active = true }) {
     };
   }, [running]);
 
+  const show3DWave = mode === 'wave' && canRender3D;
+
   return (
     <div ref={rootRef} data-hero-lights data-running={running} aria-hidden="true" className="hero-lights pointer-events-none absolute inset-0 overflow-hidden">
       <div className="hero-light-haze absolute inset-0" />
-      <div className="hero-ambient hero-ambient-blue" />
-      <div className="hero-ambient hero-ambient-cyan" />
-      <div className="hero-light-spotlight absolute inset-0" />
-      <div className="hero-light-parallax absolute -inset-6">
-        <svg ref={svgRef} viewBox="0 0 1440 900" preserveAspectRatio="none" focusable="false" className="hero-light-canvas h-full w-full">
-          <defs>
-            <linearGradient id={`${id}-ribbon`} x1="0" y1="780" x2="1440" y2="100" gradientUnits="userSpaceOnUse">
-              <stop stopColor="#2563eb" />
-              <stop offset=".28" stopColor="#38bdf8" />
-              <stop offset=".55" stopColor="#3b82f6" />
-              <stop offset=".85" stopColor="#22d3ee" />
-              <stop offset="1" stopColor="#0ea5e9" />
-            </linearGradient>
-            <filter id={`${id}-glow`} x="-30%" y="-50%" width="160%" height="200%">
-              <feGaussianBlur stdDeviation="6" />
-            </filter>
-          </defs>
-          {ribbons.map(({ path, duration }, index) => (
-            <g key={path} className={`hero-light-ribbon hero-light-ribbon-${index}`} style={{ '--ribbon-duration': `${duration}s`, '--ribbon-delay': `${-index * 9 - 5}s` }}>
-              <g fill="none" stroke={`url(#${id}-ribbon)`} strokeLinecap="round">
-                <path d={path} strokeWidth="18" opacity=".22" filter={`url(#${id}-glow)`} />
-                <path d={path} strokeWidth="7" opacity=".1" />
-                <path d={path} strokeWidth="1.2" opacity=".65" vectorEffect="non-scaling-stroke" />
-                <path className="hero-light-trail" d={path} pathLength="1000" strokeWidth="2" strokeDasharray="65 935" opacity=".9" vectorEffect="non-scaling-stroke" />
+
+      {/* 3D Ambient Geometric Wave Mesh */}
+      {show3DWave ? (
+        <Suspense fallback={null}>
+          <HeroWaveMesh3D active={running} />
+        </Suspense>
+      ) : (
+        /* Fallback / Classic SVG Contours */
+        <div className="hero-light-parallax absolute -inset-6">
+          <svg viewBox="0 0 1440 900" preserveAspectRatio="none" focusable="false" className="hero-contour-canvas h-full w-full">
+            <defs>
+              <linearGradient id={`${id}-left`} x1="-100" y1="700" x2="470" y2="360" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#244bff" />
+                <stop offset=".55" stopColor="#2563eb" />
+                <stop offset="1" stopColor="#06b6d4" />
+              </linearGradient>
+              <linearGradient id={`${id}-right`} x1="880" y1="0" x2="1450" y2="460" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#2563eb" />
+                <stop offset=".55" stopColor="#0891b2" />
+                <stop offset="1" stopColor="#22d3ee" />
+              </linearGradient>
+            </defs>
+            {contours.map((paths, side) => (
+              <g key={side} className={`hero-contour-group hero-contour-${side ? 'right' : 'left'}`} fill="none" stroke={`url(#${id}-${side ? 'right' : 'left'})`} strokeLinecap="round">
+                {paths.map((path, index) => (
+                  <path key={path} d={path} className={`hero-contour-line ${index % 2 ? 'hero-contour-detail' : ''}`}
+                    strokeWidth={index === 4 || index === 8 ? 2.2 : 1.1}
+                    opacity={index === 4 || index === 8 ? 0.95 : 0.5}
+                    vectorEffect="non-scaling-stroke" />
+                ))}
+                {!reduceMotion && <path className="hero-contour-signal" d={paths[4]} pathLength="1000" strokeWidth="3" strokeDasharray="75 925" vectorEffect="non-scaling-stroke" />}
               </g>
-              {!reduceMotion && [0, 1].map(particle => (
-                <g key={particle} className={particle ? 'hero-light-particle-secondary' : undefined}>
-                  <circle r="11" fill="#38bdf8" opacity=".09" />
-                  <circle r="5" fill="#38bdf8" opacity=".25" />
-                  <circle r="1.8" className="hero-light-spark" />
-                  <animateMotion path={path} dur={`${duration}s`} begin={`${-duration * (particle ? 0.72 : 0.24) - index * 4}s`} repeatCount="indefinite" />
-                </g>
-              ))}
-            </g>
-          ))}
-        </svg>
-      </div>
+            ))}
+          </svg>
+        </div>
+      )}
     </div>
   );
 }

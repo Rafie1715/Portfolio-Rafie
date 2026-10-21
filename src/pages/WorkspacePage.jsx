@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next';
 import { setupItems } from '../data/setup';
 import SEO from '../components/SEO';
 import PageTransition from '../components/PageTransition';
+import WorkspaceDeskPreview from '../components/WorkspaceDeskPreview';
 
 const itemIconRenderers = {
   laptop: (props) => <Laptop {...props} />,
@@ -223,6 +224,11 @@ const WorkspacePage = () => {
             </p>
           </motion.div>
         </header>
+
+        {/* 3D Isometric Miniatur Desk Showcase */}
+        <section className="relative z-10 mx-auto max-w-6xl px-4 pb-12 sm:px-6 lg:px-8" aria-label={t('workspace.desk_3d.title')}>
+          <WorkspaceDeskPreview />
+        </section>
 
         <section className="relative z-10 border-y border-gray-200 bg-gray-50/80 py-12 dark:border-slate-700 dark:bg-slate-900/40 md:py-16" aria-labelledby="workspace-workflow-title">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

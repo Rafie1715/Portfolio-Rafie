@@ -3,11 +3,21 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { BriefcaseBusiness, Download } from 'lucide-react';
+import { BriefcaseBusiness, Download, Sparkles } from 'lucide-react';
 import { trackCTAClick, trackExternalLink } from '../utils/analytics';
 
 import HeroLightBackground from './HeroLightBackground';
 import TypewriterLine from './TypewriterLine';
+
+const supportsWebGL = () => {
+  try {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    if (!context) return false;
+    context.getExtension('WEBGL_lose_context')?.loseContext();
+    return true;
+  } catch { return false; }
+};
 
 const Hero = () => {
   const { t, i18n } = useTranslation();
@@ -20,6 +30,17 @@ const Hero = () => {
   const [isDocumentVisible, setIsDocumentVisible] = useState(
     () => typeof document === 'undefined' || document.visibilityState === 'visible',
   );
+  const [canUse3D, setCanUse3D] = useState(false);
+  const [bgMode, setBgMode] = useState('wave');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && supportsWebGL()) {
+      setCanUse3D(true);
+      setBgMode('wave');
+    } else {
+      setBgMode('contour');
+    }
+  }, []);
 
   useEffect(() => {
     const element = heroRef.current;
@@ -98,7 +119,7 @@ const Hero = () => {
         <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-950/20"></div>
       </div>
 
-      <HeroLightBackground active={isHeroVisible && isDocumentVisible} />
+      <HeroLightBackground active={isHeroVisible && isDocumentVisible} mode={bgMode} />
 
       <motion.div
         className="z-20 text-center max-w-6xl mx-auto flex flex-col items-center justify-center h-full w-full"
@@ -186,6 +207,21 @@ const Hero = () => {
         </motion.div>
 
       </motion.div>
+
+      {canUse3D && (
+        <div className="absolute bottom-2 right-3 z-30 hidden sm:flex items-center">
+          <button
+            type="button"
+            onClick={() => setBgMode((prev) => (prev === 'wave' ? 'contour' : 'wave'))}
+            aria-label={t(bgMode === 'wave' ? 'hero.bg_wave' : 'hero.bg_contour')}
+            title={t(bgMode === 'wave' ? 'hero.bg_wave' : 'hero.bg_contour')}
+            className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white/75 px-2.5 py-1 text-[11px] font-semibold text-slate-600 shadow-sm backdrop-blur-md transition-all hover:bg-white hover:text-primary dark:border-slate-800/80 dark:bg-slate-900/75 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-primary"
+          >
+            <Sparkles size={11} className="text-amber-500" aria-hidden="true" />
+            <span>{t(bgMode === 'wave' ? 'hero.bg_wave' : 'hero.bg_contour')}</span>
+          </button>
+        </div>
+      )}
     </section>
   );
 };

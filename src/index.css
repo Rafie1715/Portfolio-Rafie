@@ -352,7 +352,7 @@ html { scroll-padding-top: 6rem; }
   .dark .text-primary { @apply text-blue-400; }
 }
 
-/* Hero light ribbons: strong at the edges, quiet underneath the content. */
+/* Hero typography and contour waves: crisp edges, quiet behind the copy. */
 .hero-name { line-height: 1.35; overflow: visible; }
 .hero-name-word {
   display: inline-block;
@@ -368,70 +368,55 @@ html { scroll-padding-top: 6rem; }
 }
 @keyframes hero-name-color { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
 #home[data-motion-active="false"] .hero-name-word { animation-play-state: paused; }
-.hero-lights { contain: paint; }
-.hero-ambient {
-  position: absolute;
-  width: min(55vw, 700px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  opacity: .65;
-  animation: hero-ambient-drift 18s ease-in-out infinite alternate;
+.hero-lights {
+  contain: paint;
+  mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
 }
-.hero-ambient-blue {
-  left: -15%;
-  top: 5%;
-  background: radial-gradient(circle, #3b82f626, transparent 68%);
-}
-.hero-ambient-cyan {
-  right: -12%;
-  bottom: -30%;
-  background: radial-gradient(circle, #06b6d426, transparent 68%);
-  animation-delay: -9s;
-}
-.dark .hero-ambient { opacity: .4; }
-@keyframes hero-ambient-drift {
-  from { transform: translate3d(-3%, -4%, 0) scale(.95); }
-  to { transform: translate3d(12%, 10%, 0) scale(1.1); }
-}
-.hero-light-spotlight {
-  opacity: 0;
-  background: radial-gradient(260px circle at var(--spotlight-x, 50%) var(--spotlight-y, 40%), #38bdf81a, transparent 75%);
-  transition: opacity 500ms ease;
-}
-.hero-lights[data-pointer-active="true"] .hero-light-spotlight { opacity: 1; }
-.hero-lights[data-running="false"] .hero-ambient { animation-play-state: paused; }
 .hero-light-haze {
-  background: radial-gradient(ellipse at 4% 65%, #3b82f619, transparent 35%),
-    radial-gradient(ellipse at 98% 28%, #06b6d419, transparent 37%);
+  background: radial-gradient(ellipse at 0% 80%, #3b82f61c, transparent 42%),
+    radial-gradient(ellipse at 100% 12%, #06b6d41c, transparent 40%);
 }
 .dark .hero-light-haze {
-  background: radial-gradient(ellipse at 4% 65%, #2563eb24, transparent 35%),
-    radial-gradient(ellipse at 98% 28%, #06b6d41c, transparent 37%);
+  background: radial-gradient(ellipse at 0% 80%, #2563eb30, transparent 42%),
+    radial-gradient(ellipse at 100% 12%, #06b6d426, transparent 40%);
 }
 .hero-light-parallax {
   transform: translate(var(--light-x, 0px), var(--light-y, 0px));
   transition: transform 800ms ease-out;
 }
-.hero-light-canvas {
-  opacity: .6;
-  mask-image: radial-gradient(ellipse 48% 64% at 50% 45%, #0000000d 15%, #00000026 48%, #000 100%);
+.hero-contour-canvas {
+  opacity: .85;
+  mask-image: radial-gradient(ellipse 44% 60% at 50% 46%, #00000008 24%, #00000033 57%, #000 100%);
 }
-.dark .hero-light-canvas { opacity: .6; }
-.hero-light-ribbon {
-  transform-origin: center;
-  animation: hero-light-drift var(--ribbon-duration) ease-in-out var(--ribbon-delay) infinite;
+.dark .hero-contour-canvas { opacity: .95; }
+.hero-contour-group { transform-box: view-box; }
+.hero-contour-left {
+  transform-origin: 12% 80%;
+  animation: hero-contour-swell 14s ease-in-out -4s infinite alternate;
 }
-.hero-light-ribbon-2 { opacity: .45; }
-.hero-light-trail { animation: hero-light-flow var(--ribbon-duration) linear var(--ribbon-delay) infinite; }
-.hero-light-spark { fill: #0284c7; }
-.dark .hero-light-spark { fill: #cffafe; }
-.hero-lights[data-running="false"] .hero-light-ribbon,
-.hero-lights[data-running="false"] .hero-light-trail { animation-play-state: paused; }
-@keyframes hero-light-drift {
-  0%, 100% { transform: translateY(-7px) rotate(-.5deg); }
-  50% { transform: translateY(7px) rotate(.5deg); }
+.hero-contour-right {
+  transform-origin: 90% 15%;
+  animation: hero-contour-swell 18s ease-in-out -11s infinite alternate-reverse;
 }
-@keyframes hero-light-flow { to { stroke-dashoffset: -1000; } }
+.hero-contour-signal {
+  stroke: #2563eb;
+  animation: hero-contour-signal 12s linear -2s infinite;
+}
+.hero-contour-right .hero-contour-signal { stroke: #0891b2; animation-delay: -8s; }
+.dark .hero-contour-signal { stroke: #93c5fd; }
+.dark .hero-contour-right .hero-contour-signal { stroke: #67e8f9; }
+.hero-lights[data-running="false"] .hero-contour-group,
+.hero-lights[data-running="false"] .hero-contour-signal { animation-play-state: paused; }
+@keyframes hero-contour-swell {
+  from { transform: translate3d(-12px, 14px, 0) rotate(-1deg) scale(.96); }
+  to { transform: translate3d(12px, -16px, 0) rotate(1deg) scale(1.04); }
+}
+@keyframes hero-contour-signal {
+  0% { stroke-dashoffset: 100; opacity: 0; }
+  12% { opacity: 1; }
+  60% { opacity: 1; }
+  75%, 100% { stroke-dashoffset: -1000; opacity: 0; }
+}
 .typing-caret { animation: typing-caret-blink 1s step-end infinite; }
 .typing-caret[data-running="false"] { animation: none; }
 @keyframes typing-caret-blink { 50% { opacity: 0; } }
@@ -457,21 +442,20 @@ html { scroll-padding-top: 6rem; }
 @keyframes record-turn { to { transform: rotate(360deg); } }
 @keyframes record-beat { from { transform: scaleY(.2); } to { transform: scaleY(var(--level)); } }
 @media (prefers-reduced-motion: reduce) {
-  .hero-name-word, .hero-ambient { animation: none; }
-  .hero-light-spotlight { display: none; }
+  .hero-name-word { animation: none; }
   .typing-caret { animation: none; }
   .record-disc, .record-level { animation: none; }
 }
 @media (max-width: 639px) {
-  .hero-light-ribbon-2, .hero-light-particle-secondary { display: none; }
-  .hero-light-canvas {
-    opacity: .5;
-    mask-image: linear-gradient(to right, #000, #00000026 24%, #00000012 50%, #00000026 76%, #000);
+  .hero-contour-detail { display: none; }
+  .hero-contour-canvas {
+    opacity: .65;
+    mask-image: linear-gradient(to right, #000, #00000026 28%, #0000000d 50%, #00000026 72%, #000);
   }
-  .dark .hero-light-canvas { opacity: .45; }
+  .dark .hero-contour-canvas { opacity: .75; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-light-ribbon, .hero-light-trail { animation: none; }
+  .hero-contour-group, .hero-contour-signal { animation: none; }
   .hero-light-parallax { transform: none; transition: none; }
 }
 

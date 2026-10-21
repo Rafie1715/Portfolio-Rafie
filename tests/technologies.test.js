@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { technologyDetails, toTechnologyEntry } from '../src/utils/technologies.js';
 import { mergeProjectCatalog } from '../src/utils/projectCatalog.js';
 import { projects } from '../src/data/projects.js';
+import { technologyIcons } from '../src/utils/orbitIcons.js';
 
 test('technology aliases ignore case, whitespace and punctuation', () => {
   for (const [input, canonical] of [[' react.js ', 'React'], ['NODE JS', 'Node.js'], ['tailwind', 'Tailwind CSS'], ['html', 'HTML5'], ['css', 'CSS3'], ['sklearn', 'Scikit-Learn'], ['C Sharp', 'C#']]) {
@@ -37,3 +38,12 @@ test('every existing portfolio technology has a registered logo or semantic icon
     }
   }
 });
+
+test('every 3D tech orbit technology has a registered SVG path', () => {
+  const expectedKeys = ['kotlin', 'react', 'python', 'threejs', 'tailwind', 'firebase'];
+  for (const key of expectedKeys) {
+    assert.equal(typeof technologyIcons[key], 'string', `Missing SVG path for ${key}`);
+    assert.ok(technologyIcons[key].length > 10, `SVG path for ${key} is too short`);
+  }
+});
+
