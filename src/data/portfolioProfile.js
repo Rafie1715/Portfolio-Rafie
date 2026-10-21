@@ -9,6 +9,7 @@ export const portfolioProfile = {
     institution: 'Universitas Pembangunan Nasional "Veteran" Jakarta',
     degree: "Bachelor of Informatics",
     period: "August 2022 - July 2026",
+    graduationYear: 2026,
     gpa: "3.89/4.00",
   },
   availability: {

@@ -293,6 +293,11 @@ const resources = {
                 greetings: ["Hi, I'm", "Halo, saya"],
                 role: "Android, Web & AI Developer",
                 build_summary: "Building practical apps with Kotlin, React, and machine learning.",
+                build_phrases: [
+                    "Building practical Android apps with Kotlin.",
+                    "Creating responsive web experiences with React.",
+                    "Turning data into useful machine learning models.",
+                ],
                 tagline: "Recent Informatics graduate building practical mobile and web products with React and Kotlin.",
                 typewriter_prefix: "I build",
                 role_phrases: [
@@ -1070,6 +1075,11 @@ const resources = {
                 greetings: ["Halo, saya", "Hi, I'm"],
                 role: "Developer Android, Web & AI",
                 build_summary: "Membangun aplikasi praktis dengan Kotlin, React, dan machine learning.",
+                build_phrases: [
+                    "Membangun aplikasi Android yang praktis dengan Kotlin.",
+                    "Menciptakan pengalaman web responsif dengan React.",
+                    "Mengolah data menjadi model machine learning yang bermanfaat.",
+                ],
                 tagline: "Lulusan baru Informatika yang membangun produk mobile dan web praktis dengan React dan Kotlin.",
                 typewriter_prefix: "Saya membangun",
                 role_phrases: [

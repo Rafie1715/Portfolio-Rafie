@@ -9,20 +9,6 @@ const FRAME_INTERVAL = 1000 / 60;
 const TEXTURE_WIDTH = 900;
 const TEXTURE_HEIGHT = 1320;
 
-const drawRoundedRect = (context, x, y, width, height, radius) => {
-  context.beginPath();
-  context.moveTo(x + radius, y);
-  context.lineTo(x + width - radius, y);
-  context.quadraticCurveTo(x + width, y, x + width, y + radius);
-  context.lineTo(x + width, y + height - radius);
-  context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-  context.lineTo(x + radius, y + height);
-  context.quadraticCurveTo(x, y + height, x, y + height - radius);
-  context.lineTo(x, y + radius);
-  context.quadraticCurveTo(x, y, x + radius, y);
-  context.closePath();
-};
-
 const drawImageCover = (context, image, x, y, width, height) => {
   const scale = Math.max(width / image.width, height / image.height);
   const sourceWidth = width / scale;
@@ -53,69 +39,104 @@ const createBadgeTexture = (profileImage) => {
 
   context.imageSmoothingEnabled = true;
   context.imageSmoothingQuality = 'high';
-  context.fillStyle = '#f8fafc';
+  // A printed personal pass: cobalt ink, warm paper, and two bold spot colors.
+  // This artwork is rasterized only when the portrait loads, never per frame.
+  const ink = '#18233c';
+  const paper = '#fff8eb';
+  const cobalt = '#294bff';
+  const lime = '#d9f568';
+  context.fillStyle = paper;
   context.fillRect(0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
-  context.fillStyle = '#047857';
-  context.fillRect(0, 0, TEXTURE_WIDTH, 180);
-
-  context.fillStyle = '#ffffff';
-  context.beginPath();
-  context.arc(95, 92, 52, 0, Math.PI * 2);
-  context.fill();
-  context.fillStyle = '#facc15';
-  context.beginPath();
-  context.arc(95, 92, 29, 0, Math.PI * 2);
-  context.fill();
-  context.fillStyle = '#166534';
-  context.beginPath();
-  context.arc(95, 92, 16, 0, Math.PI * 2);
-  context.fill();
-
+  context.fillStyle = cobalt;
+  context.fillRect(0, 0, TEXTURE_WIDTH, 170);
   context.textAlign = 'left';
-  context.fillStyle = '#ffffff';
-  context.font = '700 48px Arial';
-  context.fillText('UPN VETERAN', 175, 80);
-  context.fillText('JAKARTA', 175, 140);
+  context.fillStyle = paper;
+  context.font = '900 94px Arial';
+  context.fillText('r.', 52, 119);
+  context.font = '700 38px monospace';
+  context.fillText('DEVELOPER', 190, 82);
+  context.fillText('PERSONAL PASS', 190, 128);
+  context.fillStyle = lime;
+  context.fillRect(773, 49, 64, 72);
+  context.fillStyle = ink;
+  context.font = '700 40px monospace';
+  context.fillText('01', 780, 100);
 
-  const photoX = 140;
-  const photoY = 235;
-  const photoWidth = 620;
-  const photoHeight = 510;
-  drawRoundedRect(context, photoX, photoY, photoWidth, photoHeight, 24);
+  const photoX = 52;
+  const photoY = 218;
+  const photoWidth = 575;
+  const photoHeight = 590;
+  // Offset ink edge gives the photo the feel of a printed insert.
+  context.fillStyle = ink;
+  context.fillRect(photoX + 12, photoY + 12, photoWidth, photoHeight);
   context.save();
+  context.beginPath();
+  context.rect(photoX, photoY, photoWidth, photoHeight);
   context.clip();
   if (profileImage) {
     drawImageCover(context, profileImage, photoX, photoY, photoWidth, photoHeight);
   } else {
-    context.fillStyle = '#e2e8f0';
+    context.fillStyle = '#d8d3c9';
     context.fillRect(photoX, photoY, photoWidth, photoHeight);
   }
   context.restore();
-  context.strokeStyle = '#cbd5e1';
-  context.lineWidth = 5;
-  drawRoundedRect(context, photoX, photoY, photoWidth, photoHeight, 24);
-  context.stroke();
 
+  context.fillStyle = lime;
+  context.fillRect(675, 218, 173, 602);
+  // A small custom asterisk, drawn as geometry rather than an icon/font asset.
+  context.save();
+  context.translate(761, 310);
+  context.strokeStyle = ink;
+  context.lineWidth = 16;
+  for (let spoke = 0; spoke < 6; spoke += 1) {
+    context.rotate(Math.PI / 3);
+    context.beginPath();
+    context.moveTo(0, 19);
+    context.lineTo(0, 55);
+    context.stroke();
+  }
+  context.restore();
+  context.save();
+  context.translate(747, 765);
+  context.rotate(-Math.PI / 2);
+  context.fillStyle = ink;
+  context.font = '700 40px monospace';
+  context.fillText('IDEAS INTO APPS', 0, 0);
+  context.restore();
+
+  // A coral sticker sits on the portrait edge, clear of the face and side label.
+  context.save();
+  context.translate(550, 735);
+  context.rotate(-0.12);
+  context.fillStyle = '#ff876b';
+  context.fillRect(-118, -65, 236, 130);
+  context.fillStyle = ink;
   context.textAlign = 'center';
-  context.fillStyle = '#0f172a';
-  context.font = '700 108px Arial';
-  context.fillText('Rafie', TEXTURE_WIDTH / 2, 885);
-  context.font = '700 90px Arial';
-  context.fillText('Rojagat Bachri', TEXTURE_WIDTH / 2, 990);
-  context.fillStyle = '#047857';
-  context.font = '700 54px Arial';
-  context.fillText('Android · Web · AI', TEXTURE_WIDTH / 2, 1090);
+  context.font = '900 44px Arial';
+  context.fillText("LET'S", 0, -5);
+  context.fillText('BUILD!', 0, 45);
+  context.restore();
 
-  context.fillStyle = '#dcfce7';
-  drawRoundedRect(context, 145, 1150, 610, 110, 30);
-  context.fill();
-  context.fillStyle = '#166534';
-  context.font = '700 58px Arial';
-  context.fillText('OPEN TO WORK', TEXTURE_WIDTH / 2, 1226);
+  context.textAlign = 'left';
+  context.fillStyle = cobalt;
+  context.font = '900 157px Arial';
+  context.fillText('RAFIE', 44, 1000);
+  context.fillStyle = ink;
+  context.font = '700 68px Arial';
+  context.fillText('Rojagat Bachri', 52, 1083);
+  context.font = '500 43px Arial';
+  context.fillText('Android / Web / AI', 55, 1160);
 
-  context.fillStyle = '#047857';
-  context.fillRect(0, 1300, TEXTURE_WIDTH, 20);
+  context.fillStyle = ink;
+  context.fillRect(0, 1210, TEXTURE_WIDTH, 110);
+  context.fillStyle = paper;
+  context.font = '700 42px monospace';
+  context.fillText('rafierb.me', 52, 1281);
+  [cobalt, lime, '#ff876b'].forEach((color, index) => {
+    context.fillStyle = color;
+    context.fillRect(683 + index * 55, 1247, 42, 38);
+  });
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -441,7 +462,7 @@ const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange, touchInt
     <group>
       {straps.map((strap, index) => (
         <mesh key={index} geometry={strap} frustumCulled={false} onPointerDown={startDrag}>
-          <meshBasicMaterial color={index ? '#facc15' : '#047857'} side={THREE.DoubleSide} />
+          <meshBasicMaterial color={index ? '#d9f568' : '#294bff'} side={THREE.DoubleSide} />
         </mesh>
       ))}
       <mesh position={[0, LANYARD_ANCHOR.y, 0]}>
@@ -472,7 +493,7 @@ const BadgeModel = ({ active, reducedMotion, resetSignal, onDragChange, touchInt
             <boxGeometry args={[3.2, 4.4, 0.8]} />
           </mesh>
           <mesh geometry={geometry}>
-            <meshPhysicalMaterial color="#f8fafc" clearcoat={0.7} clearcoatRoughness={0.22} metalness={0.08} roughness={0.48} />
+            <meshPhysicalMaterial color="#fff8eb" clearcoat={0.45} clearcoatRoughness={0.35} metalness={0.08} roughness={0.48} />
           </mesh>
           <mesh position={[0, 0, 0.091]}>
             <planeGeometry args={[2.25, 3.35]} />
@@ -502,7 +523,6 @@ const useReducedMotion = () => {
 export default function ThreeIDCard() {
   const { t } = useTranslation();
   const [dragging, setDragging] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
   const [touchInteraction, setTouchInteraction] = useState(false);
   const [resetSignal, setResetSignal] = useState(0);
   const [documentVisible, setDocumentVisible] = useState(() => !document.hidden);
@@ -521,7 +541,6 @@ export default function ThreeIDCard() {
   // Keep the native pointer listeners alive when drag state re-renders this parent.
   const handleDragChange = useCallback((isDragging) => {
     setDragging(isDragging);
-    if (isDragging) setHasInteracted(true);
   }, []);
 
   useEffect(() => {
@@ -547,12 +566,6 @@ export default function ThreeIDCard() {
         dragging ? 'ring-2 ring-primary/40 shadow-2xl' : ''
       }`}
     >
-      {!hasInteracted && !reducedMotion && (
-        <div className="pointer-events-none absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-primary/30 bg-white/95 px-3 py-1 text-[11px] font-semibold text-primary shadow-sm backdrop-blur dark:bg-slate-800/95 animate-pulse">
-          <span className="size-2 rounded-full bg-emerald-500 animate-ping" />
-          <span>3D Physics • Click & Drag to Swing</span>
-        </div>
-      )}
       <div className="h-[440px] w-full md:h-[500px]" role="img" aria-label={t('common.developer_id_preview')}>
         <Canvas
           frameloop="demand"
@@ -563,7 +576,7 @@ export default function ThreeIDCard() {
         >
           <ambientLight intensity={1.9} />
           <directionalLight position={[4, 6, 8]} intensity={2.4} color="#ffffff" />
-          <directionalLight position={[-4, 1, 5]} intensity={1.1} color="#a7f3d0" />
+          <directionalLight position={[-4, 1, 5]} intensity={1.1} color="#c7d2fe" />
           <BadgeModel active={active} reducedMotion={reducedMotion} resetSignal={resetSignal} onDragChange={handleDragChange} touchInteraction={touchInteraction} />
           <AnimationDriver active={active && (!reducedMotion || dragging)} />
         </Canvas>

@@ -475,30 +475,60 @@ html { scroll-padding-top: 6rem; }
   .hero-light-parallax { transform: none; transition: none; }
 }
 
-/* Print optimization for 1-Page Recruiter Pitch Mode */
+/* Print only the summary portal, without retaining the Home page's height. */
+@page recruiter-summary { size: A4; margin: 12mm; }
 @media print {
-  body {
+  body:has(.recruiter-pitch-dialog[open]) {
     background: #ffffff !important;
     color: #0f172a !important;
+    overflow: visible !important;
   }
-  body > * {
-    visibility: hidden;
+  body:has(.recruiter-pitch-dialog[open]) > :not(.recruiter-pitch-dialog) {
+    display: none !important;
   }
-  .recruiter-pitch-sheet, .recruiter-pitch-sheet * {
-    visibility: visible;
-  }
-  .recruiter-pitch-sheet {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+  .recruiter-pitch-dialog[open] {
+    page: recruiter-summary;
+    position: static !important;
+    display: block;
+    max-height: none !important;
+    max-width: none !important;
     width: 100% !important;
-    max-width: 100% !important;
+    overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
-    border: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
     box-shadow: none !important;
-    background: #ffffff !important;
+    background: white !important;
+  }
+  .recruiter-pitch-dialog::backdrop { display: none; }
+  .recruiter-pitch-sheet {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     color: #0f172a !important;
+    font-size: 10px;
+  }
+  .recruiter-pitch-sheet * {
+    color: inherit !important;
+    border-color: #cbd5e1 !important;
+    outline: none !important;
+  }
+  .recruiter-pitch-sheet p, .recruiter-pitch-sheet a,
+  .recruiter-pitch-sheet dt, .recruiter-pitch-sheet dd,
+  .recruiter-pitch-sheet li { font-size: 11px; line-height: 1.45; }
+  .recruiter-pitch-sheet h2 { font-size: 24px; }
+  .recruiter-pitch-sheet h3 { font-size: 12px; margin-bottom: 6px; }
+  .recruiter-pitch-sheet a { text-decoration: underline; text-underline-offset: 2px; }
+  .recruiter-pitch-sheet .summary-header { padding-bottom: 10px; }
+  .recruiter-pitch-sheet .summary-section { margin-top: 12px; margin-bottom: 12px; }
+  .recruiter-pitch-sheet .summary-projects { gap: 10px; }
+  .recruiter-pitch-sheet .summary-project { break-inside: avoid; }
+  .recruiter-pitch-sheet .summary-skills { grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+  .recruiter-pitch-sheet .summary-skills > div { break-inside: avoid; }
+  .recruiter-pitch-sheet .summary-contacts { gap: 4px 12px; }
+  .recruiter-pitch-sheet .summary-section:last-child {
+    break-inside: avoid;
   }
   .no-print {
     display: none !important;

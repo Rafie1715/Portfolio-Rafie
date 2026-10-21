@@ -9,6 +9,7 @@ import { useProjects } from '../hooks/useProjects';
 import ProjectCatalogStatus from '../components/ProjectCatalogStatus';
 import LivingTechStack from '../components/LivingTechStack';
 import { blogs } from '../data/blogs';
+import { FEATURED_PROJECT_IDS, projectHighlights } from '../data/projectHighlights';
 import BlogCard from '../components/BlogCard';
 import SpotlightCard from '../components/SpotlightCard';
 import ProjectBuildNote from '../components/ProjectBuildNote';
@@ -75,7 +76,6 @@ const DeferredPersonalPanel = () => {
   );
 };
 
-const FEATURED_PROJECT_IDS = ['OD60ttuTSwZW62TRJFm6', 'mandiri-news', 'planetku'];
 const VALID_LENSES = new Set(['android', 'frontend', 'ai']);
 
 const HomePage = () => {
@@ -153,6 +153,10 @@ const HomePage = () => {
           isOpen={showPitchModal}
           onClose={() => setShowPitchModal(false)}
           initialLens={recruiterLens}
+          projects={projects}
+          loading={loading}
+          error={error}
+          retry={retry}
         />
 
         <section id="selected-work" tabIndex={-1} className="scroll-mt-24 pt-12 pb-14 sm:pt-16 sm:pb-20 px-4 sm:px-6 container max-w-6xl mx-auto focus:outline-none" aria-live="polite">
@@ -178,7 +182,9 @@ const HomePage = () => {
             {featuredProjects.map((project) => {
               const title = getData(project.title);
               const shortDesc = getData(project.shortDesc);
-              const result = getData(project.impactDetails?.result);
+              const highlight = projectHighlights[project.id];
+              const result = getData(project.impactDetails?.result) || getData(highlight?.result);
+              const lessonLearned = getData(project.lessonLearned) || getData(highlight?.lessonLearned);
 
               return (
                 <motion.div
@@ -221,7 +227,7 @@ const HomePage = () => {
                         </div>
                       )}
 
-                      <ProjectBuildNote project={project} />
+                      <ProjectBuildNote project={{ ...project, lessonLearned }} />
 
                       <Link
                         to={projectPath(project)}
