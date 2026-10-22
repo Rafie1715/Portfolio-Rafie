@@ -320,8 +320,9 @@ const resources = {
                 view_projects: "View Projects",
                 download_cv: "Download CV",
                 contact_me: "Let's Connect",
-                bg_wave: "3D Wave Mesh",
-                bg_contour: "Contour Lines",
+                bg_wave: "3D Wave",
+                bg_contour: "Contours",
+                bg_toggle_label: "Hero background style",
                 afk_cta: {
                     prefix: "Want a quick look outside my coding life?",
                     link: "Visit /afk"
@@ -1131,6 +1132,7 @@ const resources = {
                 contact_me: "Mari Terhubung",
                 bg_wave: "Gelombang 3D",
                 bg_contour: "Garis Kontur",
+                bg_toggle_label: "Gaya latar belakang hero",
                 afk_cta: {
                     prefix: "Ingin lihat sisi saya di luar coding?",
                     link: "Kunjungi /afk"

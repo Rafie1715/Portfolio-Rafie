@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { BriefcaseBusiness, Download, Sparkles } from 'lucide-react';
+import { BriefcaseBusiness, Download } from 'lucide-react';
 import { trackCTAClick, trackExternalLink } from '../utils/analytics';
 
 import HeroLightBackground from './HeroLightBackground';
@@ -206,22 +206,42 @@ const Hero = () => {
           </a>
         </motion.div>
 
-      </motion.div>
+        {canUse3D && (
+          <motion.div variants={itemVariants} className="mt-6 flex flex-col items-center">
+            <div
+              role="group"
+              aria-label={t('hero.bg_toggle_label')}
+              className="inline-flex items-center rounded-full border border-slate-200/90 bg-slate-100/90 p-1 shadow-sm backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80"
+            >
+              <button
+                type="button"
+                onClick={() => setBgMode('wave')}
+                aria-pressed={bgMode === 'wave'}
+                className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                  bgMode === 'wave'
+                    ? 'bg-white text-primary shadow-sm dark:bg-slate-800 dark:text-white'
+                    : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                }`}
+              >
+                {t('hero.bg_wave')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setBgMode('contour')}
+                aria-pressed={bgMode === 'contour'}
+                className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                  bgMode === 'contour'
+                    ? 'bg-white text-primary shadow-sm dark:bg-slate-800 dark:text-white'
+                    : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                }`}
+              >
+                {t('hero.bg_contour')}
+              </button>
+            </div>
+          </motion.div>
+        )}
 
-      {canUse3D && (
-        <div className="absolute bottom-2 right-3 z-30 hidden sm:flex items-center">
-          <button
-            type="button"
-            onClick={() => setBgMode((prev) => (prev === 'wave' ? 'contour' : 'wave'))}
-            aria-label={t(bgMode === 'wave' ? 'hero.bg_wave' : 'hero.bg_contour')}
-            title={t(bgMode === 'wave' ? 'hero.bg_wave' : 'hero.bg_contour')}
-            className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white/75 px-2.5 py-1 text-[11px] font-semibold text-slate-600 shadow-sm backdrop-blur-md transition-all hover:bg-white hover:text-primary dark:border-slate-800/80 dark:bg-slate-900/75 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-primary"
-          >
-            <Sparkles size={11} className="text-amber-500" aria-hidden="true" />
-            <span>{t(bgMode === 'wave' ? 'hero.bg_wave' : 'hero.bg_contour')}</span>
-          </button>
-        </div>
-      )}
+      </motion.div>
     </section>
   );
 };
