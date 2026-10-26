@@ -1,28 +1,32 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import JourneyMilestone from './JourneyMilestone';
-import { Award, CalendarDays, GraduationCap } from 'lucide-react';
+import { Award, CalendarDays } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Education = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const reducedMotion = useReducedMotion();
+  const isId = i18n.resolvedLanguage?.startsWith('id');
 
   return (
     <section className="py-16 md:py-20 bg-white dark:bg-dark">
-      <div className="container mx-auto max-w-6xl px-4">
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6">
         <motion.div
           initial={reducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.4 }}
         >
-          <div className="flex items-start gap-4 mb-8">
-            <span className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/40 text-primary">
-              <GraduationCap size={21} aria-hidden="true" />
-            </span>
-            <div>
-              <h2 className="text-3xl font-bold text-dark dark:text-white">{t('about.education.title')}</h2>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('about.education.subtitle')}</p>
+          <div className="mb-8">
+            <div className="mb-3 flex items-center gap-3">
+              <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                {isId ? 'FONDASI AKADEMIK' : 'ACADEMIC FOUNDATION'}
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+              <h2 className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">{t('about.education.title')}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('about.education.subtitle')}</p>
             </div>
           </div>
 

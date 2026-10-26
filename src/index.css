@@ -38,18 +38,24 @@
 }
 
 /* Project notes are revealed on demand, keeping the familiar card layout. */
-.project-card, .certificate-card { transition: border-color 180ms ease; }
-.project-card:focus-within, .certificate-card:focus-within { border-color: #60a5fa; }
+.project-card, .certificate-card { transition: border-color 180ms ease, box-shadow 220ms ease; }
+.project-card:focus-within, .certificate-card:focus-within {
+  border-color: rgb(6 182 212 / 0.55);
+  box-shadow: 0 12px 30px -16px rgb(37 99 235 / 0.2), 0 4px 12px -6px rgb(6 182 212 / 0.14);
+}
 .contact-field:focus-within > label,
 .contact-field:focus-within > div > label { color: #2563eb; }
 .dark .contact-field:focus-within > label,
 .dark .contact-field:focus-within > div > label { color: #93c5fd; }
 .contact-field label { transition: color 180ms ease; }
 @media (hover: hover) and (pointer: fine) {
-  .project-card:hover, .certificate-card:hover { border-color: #60a5fa; }
+  .project-card:hover, .certificate-card:hover {
+    border-color: rgb(6 182 212 / 0.55);
+    box-shadow: 0 14px 32px -16px rgb(37 99 235 / 0.22), 0 4px 14px -6px rgb(6 182 212 / 0.15);
+  }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .project-card { transition: transform 200ms ease, border-color 180ms ease; }
+  .project-card { transition: transform 200ms ease, border-color 180ms ease, box-shadow 220ms ease; }
   .project-card-image, .certificate-image, .timeline-document-image { transition: transform 220ms ease; }
   .project-card:has(:focus-visible) { transform: translateY(-4px); }
   .project-card:has(:focus-visible) .project-card-image { transform: scale(1.025); }
@@ -72,11 +78,19 @@
 @keyframes image-dialog-backdrop { from { opacity: 0; } to { opacity: 1; } }
 
 .project-build-note-paper {
-  background-color: #f0f6ff;
-  background-image: repeating-linear-gradient(transparent, transparent 23px, #2563eb0a 23px, #2563eb0a 24px);
-  border-left: 2px solid #60a5fa;
+  background-color: #f4f8ff;
+  background-image:
+    repeating-linear-gradient(transparent, transparent 23px, #2563eb0a 23px, #2563eb0a 24px),
+    radial-gradient(circle at 100% 0%, rgb(6 182 212 / 0.08), transparent 55%);
+  border-left: 3px solid transparent;
+  border-image: linear-gradient(to bottom, #2563eb, #06b6d4, #10b981) 1;
 }
-.dark .project-build-note-paper { background-color: #17253b; }
+.dark .project-build-note-paper {
+  background-color: #131f33;
+  background-image:
+    repeating-linear-gradient(transparent, transparent 23px, #38bdf80d 23px, #38bdf80d 24px),
+    radial-gradient(circle at 100% 0%, rgb(6 182 212 / 0.12), transparent 55%);
+}
 
 /* Reduce Motion Support */
 @media (prefers-reduced-motion: reduce) {

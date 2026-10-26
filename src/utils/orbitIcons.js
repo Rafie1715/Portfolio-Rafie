@@ -14,12 +14,66 @@ import {
   SiMysql,
   SiScikitlearn,
   SiPandas,
+  SiJetpackcompose,
+  SiMaterialdesign,
+  SiAndroid,
+  SiBootstrap,
+  SiNextdotjs,
+  SiGooglegemini,
+  SiOpenai,
+  SiNumpy,
+  SiNodedotjs,
+  SiExpress,
+  SiMongodb,
+  SiPostgresql,
+  SiGit,
+  SiGithub,
+  SiPostman,
+  SiGooglecolab,
+  SiFigma,
 } from 'react-icons/si';
+
+import {
+  FaBolt,
+  FaPlug,
+  FaLayerGroup,
+  FaBrain,
+  FaChartLine,
+  FaFilter,
+  FaMagnifyingGlassChart,
+  FaChartColumn,
+  FaServer,
+  FaMobileScreen,
+  FaLaptopCode,
+  FaChartPie,
+  FaDatabase,
+  FaWrench,
+} from 'react-icons/fa6';
+
+import { VscVscode } from 'react-icons/vsc';
 
 const extractPath = (IconComponent) => {
   try {
     const el = IconComponent({});
     return el?.props?.children?.[0]?.props?.d || null;
+  } catch {
+    return null;
+  }
+};
+
+const extractIconInfo = (IconComponent) => {
+  try {
+    const el = IconComponent({});
+    const vb = el?.props?.attr?.viewBox || el?.props?.viewBox || '0 0 24 24';
+    const [minX, minY, w, h] = vb.split(' ').map(Number);
+    const ch = el?.props?.children;
+    let d = '';
+    if (Array.isArray(ch)) {
+      d = ch.map((c) => c?.props?.d).filter(Boolean).join(' ');
+    } else {
+      d = ch?.props?.d || '';
+    }
+    return d ? { d, minX: minX || 0, minY: minY || 0, w: w || 24, h: h || 24 } : null;
   } catch {
     return null;
   }
@@ -45,3 +99,69 @@ export const technologyIcons = {
 
 export const getTechnologyIconPath = (id) => technologyIcons[id] || null;
 
+// Comprehensive logo path & viewBox registry for all 38 portfolio skills
+export const skillIcons = {
+  // Mobile Android
+  'Kotlin': extractIconInfo(SiKotlin),
+  'Jetpack Compose': extractIconInfo(SiJetpackcompose),
+  'Android Studio': extractIconInfo(SiAndroidstudio),
+  'Material Design': extractIconInfo(SiMaterialdesign),
+  'XML layouts': extractIconInfo(SiAndroid),
+  'Coroutines': extractIconInfo(FaBolt),
+  'Retrofit': extractIconInfo(FaPlug),
+  'MVVM': extractIconInfo(FaLayerGroup),
+  'Paging 3': extractIconInfo(FaLayerGroup),
+
+  // Frontend Engineering
+  'React.js': extractIconInfo(SiReact),
+  'JavaScript': extractIconInfo(SiJavascript),
+  'Tailwind CSS': extractIconInfo(SiTailwindcss),
+  'Bootstrap': extractIconInfo(SiBootstrap),
+  'Next.js': extractIconInfo(SiNextdotjs),
+
+  // AI & Machine Learning
+  'Python': extractIconInfo(SiPython),
+  'Scikit-Learn': extractIconInfo(SiScikitlearn),
+  'Machine Learning': extractIconInfo(FaBrain),
+  'Prompt Engineering': extractIconInfo(SiGooglegemini),
+  'Generative AI': extractIconInfo(SiOpenai),
+
+  // Data Analytics
+  'Pandas': extractIconInfo(SiPandas),
+  'NumPy': extractIconInfo(SiNumpy),
+  'Matplotlib': extractIconInfo(FaChartLine),
+  'Data Cleaning': extractIconInfo(FaFilter),
+  'Exploratory Data Analysis (EDA)': extractIconInfo(FaMagnifyingGlassChart),
+  'Data Visualization': extractIconInfo(FaChartColumn),
+
+  // Backend & Data
+  'Node.js': extractIconInfo(SiNodedotjs),
+  'Express.js': extractIconInfo(SiExpress),
+  'REST API': extractIconInfo(FaServer),
+  'MySQL': extractIconInfo(SiMysql),
+  'Firebase': extractIconInfo(SiFirebase),
+  'MongoDB': extractIconInfo(SiMongodb),
+  'PostgreSQL': extractIconInfo(SiPostgresql),
+
+  // Tools & Workflow
+  'Git': extractIconInfo(SiGit),
+  'GitHub': extractIconInfo(SiGithub),
+  'Postman': extractIconInfo(SiPostman),
+  'VS Code': extractIconInfo(VscVscode),
+  'Google Colab': extractIconInfo(SiGooglecolab),
+  'Figma': extractIconInfo(SiFigma),
+};
+
+export const getSkillIconInfo = (name) => skillIcons[name] || null;
+
+// Category Core Icons
+export const categoryIcons = {
+  mobile: extractIconInfo(FaMobileScreen),
+  frontend: extractIconInfo(FaLaptopCode),
+  ai: extractIconInfo(FaBrain),
+  analytics: extractIconInfo(FaChartPie),
+  backend: extractIconInfo(FaDatabase),
+  tools: extractIconInfo(FaWrench),
+};
+
+export const getCategoryIconInfo = (key) => categoryIcons[key] || null;

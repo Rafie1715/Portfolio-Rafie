@@ -57,7 +57,10 @@ const Certifications = () => {
           className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
         >
           <div className="max-w-2xl">
-            <p className="mb-3 text-sm font-bold uppercase text-primary">{t("certifications.eyebrow")}</p>
+            <div className="mb-3 flex items-center gap-3">
+              <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">{t("certifications.eyebrow")}</p>
+            </div>
             <h2 className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">
               {t("certifications.title")}
             </h2>

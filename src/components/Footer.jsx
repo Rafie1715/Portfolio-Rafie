@@ -4,6 +4,7 @@ import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Coffee, Heart } from 'lucide-react';
 
 const VisitorCounter = lazy(() => import('./VisitorCounter'));
 
@@ -167,8 +168,12 @@ const Footer = () => {
             className="pt-8 border-t border-gray-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400"
         >
             <p>© {currentYear} Rafie Rojagat. {t('footer.rights')}</p>
-            <p className="flex items-center gap-1">
-                {t('footer.made_with')} <span className="text-red-500 animate-pulse">❤</span> {t('footer.and')} <span className="text-amber-600">☕</span> {t('footer.in')} Jakarta
+            <p className="flex items-center gap-1.5">
+                <span>{t('footer.made_with')}</span>
+                <Heart size={13} className="text-rose-500 fill-rose-500 animate-pulse" aria-hidden="true" />
+                <span>{t('footer.and')}</span>
+                <Coffee size={13} className="text-amber-600 dark:text-amber-400" aria-hidden="true" />
+                <span>{t('footer.in')} Jakarta</span>
             </p>
         </motion.div>
       </div>

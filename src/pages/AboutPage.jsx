@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { BriefcaseBusiness, UserRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import About from "../components/About";
 import Education from "../components/Education";
@@ -70,18 +69,19 @@ const AboutPage = () => {
         />
 
         <header className="border-b border-gray-200 bg-gray-50/80 dark:border-slate-800 dark:bg-slate-900/40">
-          <div className="container mx-auto flex max-w-6xl flex-col gap-5 px-4 py-8 sm:px-6 md:flex-row md:items-center md:gap-7 md:py-11">
-            <div className="flex h-12 w-12 flex-none items-center justify-center rounded-lg bg-blue-100 text-primary dark:bg-blue-900/40">
-              <UserRound className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-black text-dark dark:text-white md:text-4xl">
-                {t("pages.about.title_prefix")} <span className="text-primary">{t("pages.about.title_highlight")}</span>
-              </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600 dark:text-gray-300 md:text-base">
-                {t("pages.about.subtitle")}
+          <div className="container mx-auto max-w-6xl px-4 py-8 sm:px-6 md:py-11">
+            <div className="mb-3 flex items-center gap-3">
+              <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                {t("about.eyebrow")}
               </p>
             </div>
+            <h1 className="text-3xl font-black text-dark dark:text-white md:text-4xl">
+              {t("pages.about.title_prefix")} <span className="text-primary">{t("pages.about.title_highlight")}</span>
+            </h1>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600 dark:text-gray-300 md:text-base">
+              {t("pages.about.subtitle")}
+            </p>
           </div>
         </header>
 
@@ -89,13 +89,17 @@ const AboutPage = () => {
         <Skills />
 
         <section id="experience" className="scroll-mt-24 bg-white py-16 dark:bg-dark sm:py-20">
-          <div className="container mx-auto mb-10 max-w-5xl px-4 sm:px-6">
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
-              <BriefcaseBusiness className="h-5 w-5" aria-hidden="true" />
+          <div className="container mx-auto mb-10 max-w-6xl px-4 sm:px-6">
+            <div className="mb-3 flex items-center gap-3">
+              <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                {t("experience.eyebrow")}
+              </p>
             </div>
-            <p className="mb-3 text-sm font-bold uppercase text-primary">{t("experience.eyebrow")}</p>
-            <h2 className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">{t("experience.title")}</h2>
-            <p className="mt-4 max-w-2xl leading-7 text-gray-600 dark:text-gray-400">{t("experience.subtitle")}</p>
+            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <h2 className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">{t("experience.title")}</h2>
+              <p className="max-w-xl text-sm leading-6 text-gray-600 dark:text-gray-400 md:text-right">{t("experience.subtitle")}</p>
+            </div>
           </div>
           <Timeline />
         </section>

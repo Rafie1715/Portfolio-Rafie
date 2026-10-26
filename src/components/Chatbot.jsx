@@ -13,7 +13,6 @@ import {
   RotateCcw,
   Send,
   ShieldCheck,
-  Sparkles,
   Wrench,
   X,
 } from "lucide-react";
@@ -304,7 +303,7 @@ const Chatbot = () => {
                   {t("chatbot.title")}
                 </h2>
                 <p className="mt-0.5 flex items-center gap-1.5 text-xs text-slate-300">
-                  <Sparkles className="h-3.5 w-3.5 text-cyan-300" aria-hidden="true" />
+                  <span className="size-2 rounded-full bg-emerald-400 ring-2 ring-emerald-400/25" aria-hidden="true" />
                   {t("chatbot.status")}
                 </p>
               </div>

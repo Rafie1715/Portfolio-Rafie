@@ -1,5 +1,6 @@
 import { projectPath } from '../utils/projectRoutes';
 import { repositoryDetails } from '../data/repositoryHighlights';
+import { caseStudyDetails } from '../data/caseStudyDetails';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -8,6 +9,7 @@ import {
   BarChart3,
   ChevronDown,
   ChevronUp,
+  Cpu,
   ExternalLink,
   Figma,
   FolderGit2,
@@ -177,6 +179,10 @@ const ProjectCard = ({
   const impactFallback = getLocalized(project.impact, language);
   const techStack = Array.isArray(project.techStack) ? project.techStack.slice(0, featured ? 5 : 3) : [];
   const domain = getProjectDomain(project);
+  const archFlows = project.architecture?.length
+    ? project.architecture
+    : caseStudyDetails[project.id]?.architecture || [];
+  const primaryFlow = archFlows[0];
 
   return (
     <article
@@ -208,10 +214,13 @@ const ProjectCard = ({
             </span>
           )}
         </div>
-        {project.conceptualCover && (
-          <span className="absolute bottom-3 right-3 rounded-md bg-slate-900/85 px-2.5 py-1 text-xs font-medium text-white backdrop-blur">
-            {t('projects.conceptual_cover')}
-          </span>
+        {primaryFlow && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 via-slate-950/70 to-transparent px-3.5 pb-2.5 pt-7 text-white">
+            <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300">
+              <Cpu size={11} aria-hidden="true" className="shrink-0" />
+              <span className="truncate">{getLocalized(primaryFlow.title, language)}</span>
+            </div>
+          </div>
         )}
       </Link>
 
@@ -414,7 +423,10 @@ const Projects = () => {
         {!isBrowsing && (
           <section aria-labelledby="featured-projects-title" className="mb-16 md:mb-20">
             <div className="mb-7 max-w-2xl">
-              <p className="mb-2 text-xs font-bold uppercase text-primary">{t('projects.featured_eyebrow')}</p>
+              <div className="mb-2.5 flex items-center gap-3">
+                <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">{t('projects.featured_eyebrow')}</p>
+              </div>
               <h2 id="featured-projects-title" className="mb-3 text-2xl font-bold text-dark dark:text-white md:text-3xl">
                 {t('projects.featured_title')}
               </h2>
@@ -441,9 +453,12 @@ const Projects = () => {
         <section aria-labelledby="project-archive-title">
           <div className="mb-7 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-xl">
-              <p className="mb-2 text-xs font-bold uppercase text-primary">
-                {isBrowsing ? t('projects.search_results') : t('projects.archive_eyebrow')}
-              </p>
+              <div className="mb-2.5 flex items-center gap-3">
+                <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                  {isBrowsing ? t('projects.search_results') : t('projects.archive_eyebrow')}
+                </p>
+              </div>
               <h2 id="project-archive-title" className="mb-2 text-2xl font-bold text-dark dark:text-white md:text-3xl">
                 {isBrowsing ? t('projects.results_title') : t('projects.archive_title')}
               </h2>

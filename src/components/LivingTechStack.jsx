@@ -2,7 +2,6 @@ import Icon from './Icon';
 import { Link, useLocation } from 'react-router-dom';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, Sparkles } from 'lucide-react';
 
 const TechOrbit3D = lazy(() => import('./TechOrbit3D'));
 
@@ -138,8 +137,8 @@ const LivingTechStack = ({ mode = 'overview' }) => {
   const [isInView, setIsInView] = useState(
     () => typeof window !== 'undefined' && !('IntersectionObserver' in window),
   );
-  const [canUse3D, setCanUse3D] = useState(false);
-  const [viewMode, setViewMode] = useState('grid');
+  const [canUse3D] = useState(() => typeof window !== 'undefined' && supportsWebGL());
+  const [viewMode, setViewMode] = useState(() => (typeof window !== 'undefined' && supportsWebGL() ? '3d' : 'grid'));
   const [selection, setSelection] = useState(null);
 
   const selectedLensList = technologiesByLens[mode] || technologiesByLens.overview;
@@ -151,13 +150,6 @@ const LivingTechStack = ({ mode = 'overview' }) => {
   const projectSearch = new URLSearchParams({ q: activeTechnology.name });
   const language = new URLSearchParams(location.search).get('lang');
   if (language) projectSearch.set('lang', language);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && supportsWebGL()) {
-      setCanUse3D(true);
-      setViewMode('3d');
-    }
-  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -246,9 +238,12 @@ const LivingTechStack = ({ mode = 'overview' }) => {
     <div ref={sectionRef} className="mt-7 border-t border-slate-200 pt-6 dark:border-slate-700">
       <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-6">
         <div>
-          <p className="text-[11px] font-bold uppercase text-primary">
-            {t('home.recruiter_lens.living_stack.eyebrow')}
-          </p>
+          <div className="mb-2 flex items-center gap-2.5">
+            <span aria-hidden="true" className="h-0.5 w-7 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-primary">
+              {t('home.recruiter_lens.living_stack.eyebrow')}
+            </p>
+          </div>
           <h3 className="mt-1 text-lg font-bold text-slate-900 dark:text-white md:text-xl">
             {t('home.recruiter_lens.living_stack.title')}
           </h3>
@@ -257,34 +252,32 @@ const LivingTechStack = ({ mode = 'overview' }) => {
           </p>
         </div>
 
-        {/* View Mode Switcher: 3D Orbit vs Classic Grid */}
+        {/* View Mode Switcher: 3D Orbit vs Classic Grid (Clean Typography) */}
         {canUse3D && (
           <div className="flex flex-none items-center gap-1 self-start rounded-lg border border-slate-200 bg-slate-100 p-1 dark:border-slate-700/80 dark:bg-slate-900 md:self-auto">
             <button
               type="button"
               aria-pressed={viewMode === '3d'}
               onClick={() => setViewMode('3d')}
-              className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`rounded-md px-3.5 py-1.5 text-xs font-semibold transition-all ${
                 viewMode === '3d'
                   ? 'bg-white text-primary shadow-sm dark:bg-slate-800 dark:text-white'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
             >
-              <Sparkles size={13} className="text-amber-500" aria-hidden="true" />
-              <span>{t('home.recruiter_lens.living_stack.orbit_view')}</span>
+              {t('home.recruiter_lens.living_stack.orbit_view')}
             </button>
             <button
               type="button"
               aria-pressed={viewMode === 'grid'}
               onClick={() => setViewMode('grid')}
-              className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all ${
+              className={`rounded-md px-3.5 py-1.5 text-xs font-semibold transition-all ${
                 viewMode === 'grid'
                   ? 'bg-white text-primary shadow-sm dark:bg-slate-800 dark:text-white'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
             >
-              <LayoutGrid size={13} aria-hidden="true" />
-              <span>{t('home.recruiter_lens.living_stack.grid_view')}</span>
+              {t('home.recruiter_lens.living_stack.grid_view')}
             </button>
           </div>
         )}

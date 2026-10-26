@@ -10,6 +10,7 @@ import ProjectCatalogStatus from '../components/ProjectCatalogStatus';
 import LivingTechStack from '../components/LivingTechStack';
 import { blogs } from '../data/blogs';
 import { FEATURED_PROJECT_IDS, projectHighlights } from '../data/projectHighlights';
+import { caseStudyDetails } from '../data/caseStudyDetails';
 import BlogCard from '../components/BlogCard';
 import SpotlightCard from '../components/SpotlightCard';
 import ProjectBuildNote from '../components/ProjectBuildNote';
@@ -17,6 +18,7 @@ import SEO from '../components/SEO';
 import { useTranslation } from 'react-i18next';
 import PageTransition from '../components/PageTransition';
 import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowUpRight, Cpu, FileText } from 'lucide-react';
 import { trackProjectView } from '../utils/analytics';
 
 const HomePersonalPanel = lazy(() => import('../components/HomePersonalPanel'));
@@ -165,10 +167,25 @@ const HomePage = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.35 }}
-            className="max-w-2xl text-left mb-8"
+            className="mb-9 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
           >
-            <h2 className="text-3xl font-bold text-dark dark:text-white mb-3">{t(`${lensKey}.work_title`)}</h2>
-            <p className="text-gray-600 dark:text-gray-400">{t(`${lensKey}.work_summary`)}</p>
+            <div className="max-w-2xl text-left">
+              <div className="mb-3 flex items-center gap-3">
+                <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                  01 / {t('projects.featured_eyebrow')}
+                </p>
+              </div>
+              <h2 className="text-3xl font-bold text-dark dark:text-white mb-2.5 sm:text-4xl">{t(`${lensKey}.work_title`)}</h2>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{t(`${lensKey}.work_summary`)}</p>
+            </div>
+            <Link
+              to="/projects"
+              className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-blue-700 dark:hover:text-blue-300 transition-colors shrink-0"
+            >
+              <span>{t('home.view_all')}</span>
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
           </motion.div>
 
           <ProjectCatalogStatus loading={loading} error={error} retry={retry} />
@@ -177,7 +194,7 @@ const HomePage = () => {
             initial={false}
             animate="visible"
             viewport={{ once: true, amount: 0.15 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 mb-6 sm:mb-12"
+            className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 mb-6 sm:mb-10"
           >
             {featuredProjects.map((project) => {
               const title = getData(project.title);
@@ -185,6 +202,10 @@ const HomePage = () => {
               const highlight = projectHighlights[project.id];
               const result = getData(project.impactDetails?.result) || getData(highlight?.result);
               const lessonLearned = getData(project.lessonLearned) || getData(highlight?.lessonLearned);
+              const archFlows = project.architecture?.length
+                ? project.architecture
+                : caseStudyDetails[project.id]?.architecture || [];
+              const primaryFlow = archFlows[0];
 
               return (
                 <motion.div
@@ -194,7 +215,7 @@ const HomePage = () => {
                   className="h-full rounded-lg"
                 >
                   <SpotlightCard className="group p-0 overflow-hidden h-full flex flex-col">
-                    <div className="h-48 overflow-hidden relative">
+                    <div className="h-48 overflow-hidden relative bg-slate-900">
                       <img
                         src={project.image}
                         style={{ objectFit: project.imageFit || 'cover' }}
@@ -203,10 +224,13 @@ const HomePage = () => {
                         decoding="async"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      {project.conceptualCover && (
-                        <span className="absolute bottom-3 right-3 rounded-md bg-slate-900/85 px-2.5 py-1 text-xs font-medium text-white backdrop-blur">
-                          {t('projects.conceptual_cover')}
-                        </span>
+                      {primaryFlow && (
+                        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 via-slate-950/75 to-transparent px-3.5 pb-2.5 pt-7 text-white">
+                          <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300">
+                            <Cpu size={11} aria-hidden="true" className="shrink-0" />
+                            <span className="truncate">{getData(primaryFlow.title)}</span>
+                          </div>
+                        </div>
                       )}
                     </div>
                     <div className="p-6 flex flex-col flex-grow">
@@ -245,8 +269,8 @@ const HomePage = () => {
             })}
           </motion.div>
 
-          <div className="text-center">
-            <Link to="/projects" className="inline-block px-8 py-3 rounded-full border border-gray-300 dark:border-slate-700 text-dark dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+          <div className="text-center md:hidden">
+            <Link to="/projects" className="inline-block px-8 py-3 rounded-lg border border-gray-300 dark:border-slate-700 font-semibold text-dark dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
               {t('home.view_all')}
             </Link>
           </div>
@@ -255,28 +279,90 @@ const HomePage = () => {
         <HomeAboutSnapshot onOpenPitch={() => setShowPitchModal(true)} />
         <section className="container mx-auto max-w-6xl px-4 py-12 sm:px-6"><LivingTechStack mode="overview" /></section>
 
-        <section className="mx-auto max-w-3xl px-5 py-10 sm:py-16 text-center"><h2 className="text-3xl font-bold">{t('common.connect')}</h2><p className="mt-4 text-slate-600 dark:text-slate-400">{t('common.connect_desc')}</p><Link to="/contact" className="mt-6 inline-flex min-h-12 items-center rounded-lg bg-primary px-6 py-3 font-bold text-white">{t('hero.contact_me')}</Link></section>
+        <section className="border-y border-slate-200/80 bg-slate-50/70 py-14 dark:border-slate-800 dark:bg-slate-900/35 sm:py-20">
+          <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div className="max-w-2xl">
+                <div className="mb-3 flex items-center gap-3">
+                  <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                    02 / {t('navbar.blog')}
+                  </p>
+                </div>
+                <h2 className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">{t('home.latest_blog')}</h2>
+                <p className="mt-2.5 text-gray-600 dark:text-gray-400 leading-relaxed">{t('home.blog_glimpse')}</p>
+              </div>
+              <Link
+                to="/blog"
+                className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-primary hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+              >
+                <span>{t('home.view_all_blogs')}</span>
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
 
-        <section className="py-10 sm:py-20 px-4 container mx-auto bg-gray-50 dark:bg-darkLight my-6 sm:my-12 rounded-2xl">
-          <div className="text-center mb-6 sm:mb-12">
-            <h2 className="text-3xl font-bold text-dark dark:text-white mb-4">{t('home.latest_blog')}</h2>
-            <p className="text-gray-600 dark:text-gray-400">{t('home.blog_glimpse')}</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {featuredBlogs.map((blog) => (
-              <BlogCard key={blog.id} blog={blog} compact />
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link to="/blog" className="inline-block px-8 py-3 rounded-full border border-gray-300 dark:border-slate-700 text-dark dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
-              {t('home.view_all_blogs')}
-            </Link>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {featuredBlogs.map((blog) => (
+                <BlogCard key={blog.id} blog={blog} compact />
+              ))}
+            </div>
           </div>
         </section>
 
         <DeferredPersonalPanel />
+
+        {/* Closing Editorial CTA — placed at the very end of the narrative */}
+        <section className="container mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6 sm:pb-24">
+          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 px-6 py-10 text-white shadow-xl dark:border-slate-800 sm:px-10 sm:py-14">
+            <span
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-600 via-cyan-400 to-emerald-400"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-15"
+              style={{
+                backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(56 189 248 / 0.4) 1px, transparent 0)',
+                backgroundSize: '24px 24px',
+              }}
+            />
+            <div className="relative z-10 flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
+              <div className="max-w-2xl">
+                <div className="mb-3 flex items-center gap-3">
+                  <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-cyan-400 to-emerald-400" />
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
+                    {currentLang.startsWith('id') ? 'PENUTUP & KOLABORASI' : 'NEXT STEP & COLLABORATION'}
+                  </p>
+                </div>
+                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                  {t('common.connect')}
+                </h2>
+                <p className="mt-3 text-base leading-7 text-slate-300">
+                  {t('common.connect_desc')}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3.5 shrink-0">
+                <Link
+                  to="/contact"
+                  className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                >
+                  <span>{t('hero.contact_me')}</span>
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowPitchModal(true)}
+                  aria-haspopup="dialog"
+                  className="inline-flex min-h-12 items-center gap-2 rounded-lg border border-slate-700 bg-slate-900/90 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-400/50 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                >
+                  <FileText className="h-4 w-4 text-cyan-300" aria-hidden="true" />
+                  <span>{t('home.recruiter_pitch.trigger_button')}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
       </main>
     </PageTransition>
