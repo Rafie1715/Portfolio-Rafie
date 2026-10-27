@@ -389,14 +389,21 @@ const resources = {
                     git: "I use Git for version control across all my projects. Selected examples are linked below.",
                     github: "I use GitHub to host and manage repositories across all my projects. Selected examples are linked below.",
                     vscode: "I use VS Code when developing websites, including this portfolio.",
+                    intellij: "I used IntelliJ IDEA during university coursework to build and test Java Object-Oriented Programming (OOP) and desktop GUI projects.",
+                    linux: "Studied during university Operating Systems coursework and practiced in cloud/Linux environment labs (AWS re/Start).",
                     colab: "I use Google Colab notebooks to develop AI models.",
                     prompt: "I use prompt engineering during the development of this portfolio to guide AI assistance. My learning is also supported by the Google AI Professional Certificate.",
                     generative_ai: "I use generative AI to support the development of this portfolio. I also completed the Google AI Professional Certificate.",
+                    sql: "Studied in university database coursework and applied to relational schema design and query filtering.",
+                    java: "Studied in university Object-Oriented Programming (OOP) coursework and applied to build a Java Swing desktop lending system.",
+                    cpp: "Studied during university coursework for fundamental programming, algorithms, and data structures.",
+                    csharp: "Studied in university coursework and applied to script 3D physics and interactive sorting mechanics in Unity.",
+                    unity: "Used in university AR/VR and simulation coursework to build 3D environments with ProBuilder and C#.",
                 },
                 categories: {
                     frontend: {
                         title: "Frontend Engineering",
-                        desc: "Building responsive interfaces, polished interactions, and production-ready React pages."
+                        desc: "Building responsive interfaces, semantic web structure, polished interactions, and production-ready React pages."
                     },
                     mobile: {
                         title: "Mobile Android",
@@ -408,7 +415,7 @@ const resources = {
                     },
                     backend: {
                         title: "Backend & Data",
-                        desc: "Working with APIs, databases, authentication, and cloud-backed app workflows."
+                        desc: "Working with APIs, relational SQL databases, authentication, and cloud-backed app workflows."
                     },
                     analytics: {
                         title: "Data Analytics",
@@ -416,7 +423,11 @@ const resources = {
                     },
                     tools: {
                         title: "Tools & Workflow",
-                        desc: "Designing, versioning, debugging, and shipping projects with a reliable toolchain."
+                        desc: "Designing, versioning, debugging, and working across IDEs and Linux environments with a reliable toolchain."
+                    },
+                    software: {
+                        title: "Programming, OOP & Interactive Systems",
+                        desc: "Core programming languages, Object-Oriented Programming (OOP), and 3D simulation development learned and applied during Informatics coursework."
                     }
                 }
             },
@@ -1217,14 +1228,21 @@ const resources = {
                     git: "Saya menggunakan Git untuk version control di seluruh proyek. Beberapa contohnya ditautkan di bawah ini.",
                     github: "Saya menggunakan GitHub untuk menyimpan dan mengelola repository di seluruh proyek. Beberapa contohnya ditautkan di bawah ini.",
                     vscode: "Saya menggunakan VS Code saat mengembangkan website, termasuk portfolio ini.",
+                    intellij: "Saya menggunakan IntelliJ IDEA selama perkuliahan untuk membangun dan menguji proyek Pemrograman Berorientasi Objek (PBO) Java serta GUI desktop.",
+                    linux: "Dipelajari pada mata kuliah Sistem Operasi saat kuliah serta dipraktikkan dalam lab lingkungan cloud dan Linux (AWS re/Start).",
                     colab: "Saya menggunakan notebook Google Colab untuk mengembangkan model AI.",
                     prompt: "Saya menggunakan prompt engineering selama pengembangan portfolio ini untuk mengarahkan bantuan AI. Pembelajaran saya juga didukung Google AI Professional Certificate.",
                     generative_ai: "Saya menggunakan generative AI untuk membantu pengembangan portfolio ini. Saya juga telah menyelesaikan Google AI Professional Certificate.",
+                    sql: "Dipelajari pada mata kuliah Basis Data saat kuliah dan diterapkan untuk perancangan skema relasional serta query pemfilteran.",
+                    java: "Dipelajari pada mata kuliah Pemrograman Berorientasi Objek (PBO) saat kuliah dan diterapkan untuk membangun aplikasi desktop peminjaman buku berbasis Java Swing.",
+                    cpp: "Dipelajari selama perkuliahan Informatika untuk dasar pemrograman, algoritma, dan struktur data.",
+                    csharp: "Dipelajari saat perkuliahan dan diterapkan untuk memprogram fisika 3D serta mekanika pemilahan interaktif di Unity.",
+                    unity: "Digunakan pada mata kuliah AR/VR dan simulasi saat kuliah untuk membangun environment 3D dengan ProBuilder dan C#.",
                 },
                 categories: {
                     frontend: {
                         title: "Frontend Engineering",
-                        desc: "Membangun antarmuka responsif, interaksi rapi, dan halaman React yang siap produksi."
+                        desc: "Membangun antarmuka responsif, struktur web semantik, interaksi rapi, dan halaman React yang siap produksi."
                     },
                     mobile: {
                         title: "Mobile Android",
@@ -1236,7 +1254,7 @@ const resources = {
                     },
                     backend: {
                         title: "Backend & Data",
-                        desc: "Mengelola API, database, autentikasi, dan workflow aplikasi berbasis cloud."
+                        desc: "Mengelola API, basis data relasional SQL, autentikasi, dan workflow aplikasi berbasis cloud."
                     },
                     analytics: {
                         title: "Data Analytics",
@@ -1244,7 +1262,11 @@ const resources = {
                     },
                     tools: {
                         title: "Tools & Workflow",
-                        desc: "Mendesain, versioning, debugging, dan merilis proyek dengan toolchain yang stabil."
+                        desc: "Mendesain, versioning, debugging, dan bekerja di berbagai IDE serta lingkungan Linux dengan toolchain yang stabil."
+                    },
+                    software: {
+                        title: "Pemrograman, OOP & Sistem Interaktif",
+                        desc: "Bahasa pemrograman inti, Pemrograman Berorientasi Objek (PBO), serta pengembangan simulasi 3D yang dipelajari dan diterapkan selama kuliah Informatika."
                     }
                 }
             },

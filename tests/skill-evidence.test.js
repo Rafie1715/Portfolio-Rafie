@@ -19,6 +19,12 @@ test('featured skills lead to actual portfolio evidence without inventing Next.j
   assert.ok(projectsForSkill(projects, 'Kotlin').some(p => p.id === 'mandiri-news'));
   assert.deepEqual(projectsForSkill(projects, 'Next.js'), []);
   assert.deepEqual(projectsForSkill(projects, 'Java'), projects.filter(p => p.id === 'library-system'));
+  assert.deepEqual(projectsForSkill(projects, 'IntelliJ IDEA'), projects.filter(p => p.id === 'library-system'));
+  assert.deepEqual(projectsForSkill(projects, 'SQL'), projects.filter(p => p.id === 'computer-crafter'));
+  assert.deepEqual(projectsForSkill(projects, 'C#'), projects.filter(p => p.id === 'green-sort-unity'));
+  assert.deepEqual(projectsForSkill(projects, 'Unity'), projects.filter(p => p.id === 'green-sort-unity'));
+  assert.deepEqual(projectsForSkill(projects, 'C++'), []);
+  assert.deepEqual(projectsForSkill(projects, 'Linux'), []);
 });
 
 test('previously verified XML and Compose source evidence remains available', () => {

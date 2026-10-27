@@ -3,13 +3,17 @@ import assert from 'node:assert/strict';
 import { technologyDetails, toTechnologyEntry } from '../src/utils/technologies.js';
 import { mergeProjectCatalog } from '../src/utils/projectCatalog.js';
 import { projects } from '../src/data/projects.js';
-import { technologyIcons } from '../src/utils/orbitIcons.js';
+import { technologyIcons, skillIcons } from '../src/utils/orbitIcons.js';
 
 test('technology aliases ignore case, whitespace and punctuation', () => {
-  for (const [input, canonical] of [[' react.js ', 'React'], ['NODE JS', 'Node.js'], ['tailwind', 'Tailwind CSS'], ['html', 'HTML5'], ['css', 'CSS3'], ['sklearn', 'Scikit-Learn'], ['C Sharp', 'C#']]) {
+  for (const [input, canonical] of [[' react.js ', 'React'], ['NODE JS', 'Node.js'], ['tailwind', 'Tailwind CSS'], ['html', 'HTML5'], ['css', 'CSS3'], ['sklearn', 'Scikit-Learn'], ['C Sharp', 'C#'], ['IntellijIDEA', 'IntelliJ IDEA'], ['cpp', 'C++']]) {
     assert.equal(technologyDetails(input).icon, technologyDetails(canonical).icon);
   }
   assert.notEqual(technologyDetails('C++').icon, technologyDetails('C#').icon);
+  for (const skill of ['Linux', 'Java', 'SQL', 'IntelliJ IDEA', 'C++', 'C#', 'Unity', 'HTML5', 'CSS3']) {
+    assert.notEqual(technologyDetails(skill).icon, 'fas fa-code', `Missing 2D icon for ${skill}`);
+    assert.ok(skillIcons[skill]?.d?.length > 10, `Missing 3D orbit SVG path for ${skill}`);
+  }
 });
 
 test('legacy generic or incorrect CMS icons are resolved by technology name', () => {

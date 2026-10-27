@@ -19,10 +19,11 @@ export const portfolioProfile = {
   focus: ["Android development", "Front-end engineering", "AI-integrated products"],
   skills: {
     mobile: ["Kotlin", "XML layouts", "Jetpack Compose", "Android Studio", "MVVM", "Retrofit", "Coroutines", "Paging 3", "Material Design", "Flutter"],
-    web: ["React", "JavaScript", "Tailwind CSS", "Bootstrap", "Node.js", "Express.js", "REST API", "PHP", "MySQL"],
+    web: ["React", "JavaScript", "Tailwind CSS", "HTML5", "CSS3", "Bootstrap", "Node.js", "Express.js", "REST API", "PHP", "SQL", "MySQL"],
     aiAndData: ["Python", "Machine Learning", "Scikit-Learn", "TensorFlow Lite", "Random Forest", "Firebase", "Prompt Engineering", "Generative AI"],
     dataAnalytics: ["Pandas", "NumPy", "Matplotlib", "Data Cleaning", "Exploratory Data Analysis (EDA)", "Data Visualization"],
-    workflow: ["Git", "GitHub", "VS Code", "Postman", "Google Colab", "Figma", "Netlify", "AWS"],
+    softwareAndGame: ["Java", "C++", "C#", "Unity"],
+    workflow: ["Git", "GitHub", "VS Code", "Postman", "IntelliJ IDEA", "Google Colab", "Linux", "Figma", "Netlify", "AWS"],
   },
   learning: ["Next.js", "MongoDB", "PostgreSQL"],
   skillContext: [

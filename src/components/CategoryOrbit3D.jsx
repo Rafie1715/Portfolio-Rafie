@@ -81,8 +81,16 @@ function createBadgeTexture(tech, isDark) {
       ctx.translate(256, 182);
       ctx.scale(scale, scale);
       ctx.translate(-(iconInfo.minX + iconInfo.w / 2), -(iconInfo.minY + iconInfo.h / 2));
-      ctx.fillStyle = accent;
-      ctx.fill(new Path2D(iconInfo.d));
+      if (iconInfo.isStroke) {
+        ctx.strokeStyle = accent;
+        ctx.lineWidth = 2.2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke(new Path2D(iconInfo.d));
+      } else {
+        ctx.fillStyle = accent;
+        ctx.fill(new Path2D(iconInfo.d));
+      }
       ctx.restore();
     } catch {
       drawFallbackMonogram(ctx, tech.name, accent);

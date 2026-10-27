@@ -31,6 +31,12 @@ import {
   SiPostman,
   SiGooglecolab,
   SiFigma,
+  SiHtml5,
+  SiCss3,
+  SiLinux,
+  SiCplusplus,
+  SiUnity,
+  SiIntellijidea,
 } from 'react-icons/si';
 
 import {
@@ -48,8 +54,11 @@ import {
   FaChartPie,
   FaDatabase,
   FaWrench,
+  FaJava,
+  FaCode,
 } from 'react-icons/fa6';
 
+import { TbBrandCSharp } from 'react-icons/tb';
 import { VscVscode } from 'react-icons/vsc';
 
 const extractPath = (IconComponent) => {
@@ -65,6 +74,7 @@ const extractIconInfo = (IconComponent) => {
   try {
     const el = IconComponent({});
     const vb = el?.props?.attr?.viewBox || el?.props?.viewBox || '0 0 24 24';
+    const isStroke = el?.props?.attr?.fill === 'none';
     const [minX, minY, w, h] = vb.split(' ').map(Number);
     const ch = el?.props?.children;
     let d = '';
@@ -73,7 +83,7 @@ const extractIconInfo = (IconComponent) => {
     } else {
       d = ch?.props?.d || '';
     }
-    return d ? { d, minX: minX || 0, minY: minY || 0, w: w || 24, h: h || 24 } : null;
+    return d ? { d, minX: minX || 0, minY: minY || 0, w: w || 24, h: h || 24, isStroke } : null;
   } catch {
     return null;
   }
@@ -116,6 +126,8 @@ export const skillIcons = {
   'React.js': extractIconInfo(SiReact),
   'JavaScript': extractIconInfo(SiJavascript),
   'Tailwind CSS': extractIconInfo(SiTailwindcss),
+  'HTML5': extractIconInfo(SiHtml5),
+  'CSS3': extractIconInfo(SiCss3),
   'Bootstrap': extractIconInfo(SiBootstrap),
   'Next.js': extractIconInfo(SiNextdotjs),
 
@@ -138,6 +150,7 @@ export const skillIcons = {
   'Node.js': extractIconInfo(SiNodedotjs),
   'Express.js': extractIconInfo(SiExpress),
   'REST API': extractIconInfo(FaServer),
+  'SQL': extractIconInfo(FaDatabase),
   'MySQL': extractIconInfo(SiMysql),
   'Firebase': extractIconInfo(SiFirebase),
   'MongoDB': extractIconInfo(SiMongodb),
@@ -148,8 +161,16 @@ export const skillIcons = {
   'GitHub': extractIconInfo(SiGithub),
   'Postman': extractIconInfo(SiPostman),
   'VS Code': extractIconInfo(VscVscode),
+  'IntelliJ IDEA': extractIconInfo(SiIntellijidea),
   'Google Colab': extractIconInfo(SiGooglecolab),
+  'Linux': extractIconInfo(SiLinux),
   'Figma': extractIconInfo(SiFigma),
+
+  // Software, OOP & Interactive Systems
+  'Java': extractIconInfo(FaJava),
+  'C++': extractIconInfo(SiCplusplus),
+  'C#': extractIconInfo(TbBrandCSharp),
+  'Unity': extractIconInfo(SiUnity),
 };
 
 export const getSkillIconInfo = (name) => skillIcons[name] || null;
@@ -162,6 +183,7 @@ export const categoryIcons = {
   analytics: extractIconInfo(FaChartPie),
   backend: extractIconInfo(FaDatabase),
   tools: extractIconInfo(FaWrench),
+  software: extractIconInfo(FaCode),
 };
 
 export const getCategoryIconInfo = (key) => categoryIcons[key] || null;

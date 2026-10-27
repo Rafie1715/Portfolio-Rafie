@@ -5,6 +5,7 @@ import {
   ArrowUpRight,
   BrainCircuit,
   ChartLine,
+  Code2,
   Database,
   MonitorSmartphone,
   Smartphone,
@@ -35,15 +36,17 @@ const categories = [
   { key: 'mobile', Icon: Smartphone, accent: '#3b82f6', columns: 'md:col-span-6 lg:col-span-7',
     skills: ['Kotlin', 'XML layouts', 'Jetpack Compose', 'Android Studio', 'Retrofit', 'MVVM', 'Coroutines', 'Paging 3', 'Material Design'] },
   { key: 'frontend', Icon: MonitorSmartphone, accent: '#06b6d4', columns: 'md:col-span-6 lg:col-span-5',
-    skills: ['React.js', 'JavaScript', 'Tailwind CSS', 'Bootstrap'], learning: ['Next.js'] },
+    skills: ['React.js', 'JavaScript', 'Tailwind CSS', 'HTML5', 'CSS3', 'Bootstrap'], learning: ['Next.js'] },
   { key: 'ai', Icon: BrainCircuit, accent: '#10b981', columns: 'md:col-span-6',
     skills: ['Python', 'Machine Learning', 'Scikit-Learn', 'Prompt Engineering', 'Generative AI'] },
   { key: 'analytics', Icon: ChartLine, accent: '#0891b2', columns: 'md:col-span-6',
     skills: ['Pandas', 'NumPy', 'Matplotlib', 'Data Cleaning', 'Exploratory Data Analysis (EDA)', 'Data Visualization'] },
   { key: 'backend', Icon: Database, accent: '#f59e0b', columns: 'md:col-span-6', initial: 'Firebase',
-    skills: ['Node.js', 'Express.js', 'REST API', 'MySQL', 'Firebase'], learning: ['MongoDB', 'PostgreSQL'] },
+    skills: ['Node.js', 'Express.js', 'REST API', 'SQL', 'MySQL', 'Firebase'], learning: ['MongoDB', 'PostgreSQL'] },
   { key: 'tools', Icon: Wrench, accent: '#a78bfa', columns: 'md:col-span-6', initial: 'Figma',
-    skills: ['Git', 'GitHub', 'Postman', 'VS Code', 'Google Colab', 'Figma'] },
+    skills: ['Git', 'GitHub', 'Postman', 'VS Code', 'IntelliJ IDEA', 'Google Colab', 'Linux', 'Figma'] },
+  { key: 'software', Icon: Code2, accent: '#6366f1', columns: 'md:col-span-12', initial: 'Java',
+    skills: ['Java', 'C++', 'C#', 'Unity'] },
 ];
 
 function SkillCard({ category, index, catalog, reduceMotion }) {
@@ -431,7 +434,10 @@ export default function Skills() {
             viewport={{ once: true }}
             className="max-w-2xl"
           >
-            <p className="mb-3 text-sm font-bold uppercase text-primary">{t('skills.eyebrow')}</p>
+            <div className="mb-3 flex items-center gap-3">
+              <span aria-hidden="true" className="h-0.5 w-8 rounded-full bg-gradient-to-r from-primary via-cyan-500 to-emerald-400" />
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary">{t('skills.eyebrow')}</p>
+            </div>
             <h2 id="skills-title" className="text-3xl font-bold text-dark dark:text-white sm:text-4xl">
               {t('skills.title')}
             </h2>

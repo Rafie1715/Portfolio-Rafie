@@ -1,15 +1,22 @@
-const normalize = value => String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
-const aliases = { reactjs: 'react', expressjs: 'express', nodejs: 'node', sklearn: 'scikitlearn' };
+const normalize = value => String(value ?? '').toLowerCase().replace(/#/g, 'sharp').replace(/\+/g, 'plus').replace(/[^a-z0-9]/g, '');
+const aliases = { reactjs: 'react', expressjs: 'express', nodejs: 'node', sklearn: 'scikitlearn', html: 'html5', css: 'css3', intellij: 'intellijidea' };
 const key = value => aliases[normalize(value)] || normalize(value);
 
-// Workflow usage confirmed by the portfolio owner, separate from the product's tech stack.
+// Workflow & academic usage confirmed by the portfolio owner, separate from or complementing the product's tech stack.
 export const skillUsage = {
   Git: 'git',
   GitHub: 'github',
   'VS Code': 'vscode',
+  'IntelliJ IDEA': 'intellij',
+  Linux: 'linux',
   'Google Colab': 'colab',
   'Prompt Engineering': 'prompt',
   'Generative AI': 'generative_ai',
+  SQL: 'sql',
+  Java: 'java',
+  'C++': 'cpp',
+  'C#': 'csharp',
+  Unity: 'unity',
 };
 
 // Only return entries in the supplied public catalog, including for confirmed workflow usage.
@@ -20,8 +27,13 @@ export function projectsForSkill(projects, name) {
   if (skill === 'promptengineering' || skill === 'generativeai') return projects.filter(project => (
     project.id === 'portfolio-website' || project.localId === 'portfolio-website'
   ));
+  if (skill === 'sql') {
+    return projects.filter(project => Array.isArray(project.techStack) && project.techStack.some(technology => (
+      ['sql', 'mysql', 'postgresql'].includes(key(typeof technology === 'string' ? technology : technology?.name))
+    )));
+  }
   return projects.filter(project => Array.isArray(project.techStack) && project.techStack.some(technology => (
-    key(typeof technology === 'string' ? technology : technology?.name) === key(name)
+    key(typeof technology === 'string' ? technology : technology?.name) === skill
   )));
 }
 

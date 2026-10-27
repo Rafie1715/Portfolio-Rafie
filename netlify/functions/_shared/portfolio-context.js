@@ -130,7 +130,7 @@ const actionRules = [
   },
   {
     id: "about",
-    pattern: /experience|pengalaman|background|latar belakang|education|pendidikan|certif|sertif|bangkit|rakamin|ksm|hmif|skill|keahlian|kemampuan|stack|technology|teknologi|kotlin|react|next\.?js|compose|xml|prompt|generative|generatif|\bgit(?:hub)?\b|vs\s?code|postman|mongodb|postgres(?:ql)?|colab|pandas|numpy|matplotlib|data analytics|analisis data|data cleaning|data visualization|\beda\b/i,
+    pattern: /experience|pengalaman|background|latar belakang|education|pendidikan|certif|sertif|bangkit|rakamin|ksm|hmif|skill|keahlian|kemampuan|stack|technology|teknologi|kotlin|react|next\.?js|compose|xml|prompt|generative|generatif|\bgit(?:hub)?\b|vs\s?code|postman|mongodb|postgres(?:ql)?|colab|pandas|numpy|matplotlib|data analytics|analisis data|data cleaning|data visualization|\beda\b|linux|java|intellij|c\+\+|c#|unity|\bsql\b|html5?|css3?/i,
   },
   {
     id: "workspace",
