@@ -374,7 +374,11 @@ const Projects = () => {
       getLocalized(project.shortDesc, currentLang),
       getLocalized(project.impact, currentLang),
       project.category,
-      ...(Array.isArray(project.techStack) ? project.techStack.map((tech) => tech?.name || tech) : []),
+      project.github ? 'github git' : '',
+      ...(Array.isArray(project.techStack) ? project.techStack.flatMap((tech) => {
+        const name = tech?.name || tech;
+        return String(name).toLowerCase() === 'react' ? [name, 'React.js'] : [name];
+      }) : []),
     ].map(normalizeText).join(' ');
 
     return searchableText.includes(normalizedSearch);

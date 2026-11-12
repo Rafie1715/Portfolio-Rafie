@@ -37,8 +37,9 @@ test("context distinguishes verified skill usage from learning and course creden
   assert.match(skills, /Prompt Engineering, Generative AI/);
   assert.match(skills, /Git, GitHub, VS Code, Postman/);
   assert.doesNotMatch(skills, /Next\.js/);
-  assert.doesNotMatch(skills, /MongoDB|PostgreSQL/);
-  assert.match(context, /CURRENTLY LEARNING \(NOT PROJECT EXPERIENCE\):\nNext\.js, MongoDB, PostgreSQL/);
+  assert.doesNotMatch(skills, /MongoDB|PostgreSQL|\.NET|Angular/);
+  assert.match(context, /CURRENTLY LEARNING \(NOT PROJECT EXPERIENCE\):\nNext\.js, MongoDB, PostgreSQL, \.NET, Angular/);
+  assert.match(context, /IT Trainee at AdIns \(PT Adicipta Inovasi Teknologi\)/);
   assert.match(skills, /dataAnalytics: Pandas, NumPy, Matplotlib, Data Cleaning, Exploratory Data Analysis \(EDA\), Data Visualization/);
   assert.match(context, /Google Colab is used to develop AI models/);
   assert.match(context, /Next\.js is currently being learned and has not been used in a project/);

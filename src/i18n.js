@@ -155,6 +155,10 @@ const resources = {
                         threejs: {
                             role: "3D graphics, interactive WebGL, and physics simulation",
                             usage: "Personal Portfolio (3D ID Pass & Tech Orbit)"
+                        },
+                        github: {
+                            role: "Version control, source code hosting, and engineering documentation",
+                            usage: "RestUP, Mandiri News, Planetku, and all public repositories"
                         }
                     },
                     options: {
@@ -397,8 +401,13 @@ const resources = {
                     sql: "Studied in university database coursework and applied to relational schema design and query filtering.",
                     java: "Studied in university Object-Oriented Programming (OOP) coursework and applied to build a Java Swing desktop lending system.",
                     cpp: "Studied during university coursework for fundamental programming, algorithms, and data structures.",
-                    csharp: "Studied in university coursework and applied to script 3D physics and interactive sorting mechanics in Unity.",
+                    csharp: "Studied in university coursework and applied to script 3D physics and interactive sorting mechanics in Unity, and currently deepened for enterprise backend development with .NET at AdIns.",
                     unity: "Used in university AR/VR and simulation coursework to build 3D environments with ProBuilder and C#.",
+                    dotnet: "Currently being learned and practiced for enterprise backend services and object-oriented application development during the IT Trainee program at AdIns (PT Adicipta Inovasi Teknologi).",
+                    angular: "Currently being learned and practiced for component-driven enterprise front-end development during the IT Trainee program at AdIns (PT Adicipta Inovasi Teknologi).",
+                    postgresql: "Currently being learned and practiced for relational database schema design, SQL queries, and data workflows during the IT Trainee program at AdIns (PT Adicipta Inovasi Teknologi).",
+                    nextjs: "Currently being learned independently to explore React server-rendering and full-stack web routing.",
+                    mongodb: "Currently being learned independently to explore document-based NoSQL data modeling.",
                 },
                 categories: {
                     frontend: {
@@ -994,6 +1003,10 @@ const resources = {
                         threejs: {
                             role: "Grafik 3D, WebGL interaktif, dan simulasi fisika",
                             usage: "Portfolio Pribadi (3D ID Pass & Orbit Teknologi)"
+                        },
+                        github: {
+                            role: "Version control, pengelolaan repositori kode, dan dokumentasi teknis",
+                            usage: "RestUP, Mandiri News, Planetku, serta seluruh repositori publik"
                         }
                     },
                     options: {
@@ -1236,8 +1249,13 @@ const resources = {
                     sql: "Dipelajari pada mata kuliah Basis Data saat kuliah dan diterapkan untuk perancangan skema relasional serta query pemfilteran.",
                     java: "Dipelajari pada mata kuliah Pemrograman Berorientasi Objek (PBO) saat kuliah dan diterapkan untuk membangun aplikasi desktop peminjaman buku berbasis Java Swing.",
                     cpp: "Dipelajari selama perkuliahan Informatika untuk dasar pemrograman, algoritma, dan struktur data.",
-                    csharp: "Dipelajari saat perkuliahan dan diterapkan untuk memprogram fisika 3D serta mekanika pemilahan interaktif di Unity.",
+                    csharp: "Dipelajari saat perkuliahan dan diterapkan untuk memprogram fisika 3D serta mekanika pemilahan interaktif di Unity, serta kini diperdalam untuk pengembangan backend enterprise dengan .NET di AdIns.",
                     unity: "Digunakan pada mata kuliah AR/VR dan simulasi saat kuliah untuk membangun environment 3D dengan ProBuilder dan C#.",
+                    dotnet: "Sedang dipelajari dan dipraktikkan secara intensif untuk pengembangan layanan backend enterprise berorientasi objek dalam program IT Trainee di AdIns (PT Adicipta Inovasi Teknologi).",
+                    angular: "Sedang dipelajari dan dipraktikkan secara intensif untuk pengembangan front-end web enterprise berbasis komponen dalam program IT Trainee di AdIns (PT Adicipta Inovasi Teknologi).",
+                    postgresql: "Sedang dipelajari dan dipraktikkan secara intensif untuk perancangan skema database relasional, query SQL, dan alur data dalam program IT Trainee di AdIns (PT Adicipta Inovasi Teknologi).",
+                    nextjs: "Sedang dipelajari secara mandiri untuk mendalami server-rendering React dan arsitektur web full-stack.",
+                    mongodb: "Sedang dipelajari secara mandiri untuk memahami pemodelan data NoSQL berbasis dokumen.",
                 },
                 categories: {
                     frontend: {

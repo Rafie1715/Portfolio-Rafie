@@ -8,6 +8,7 @@ import {
   BriefcaseBusiness,
   ChevronLeft,
   ChevronRight,
+  Code2,
   Image as ImageIcon,
   Maximize2,
   Pause,
@@ -19,11 +20,13 @@ import {
 import { useTranslation } from "react-i18next";
 import { experiences } from "../data/experience";
 import JourneyMilestone from "./JourneyMilestone";
+import TechnologyLabel from "./TechnologyLabel";
 
 const iconMap = {
   mobile: Smartphone,
   teaching: Presentation,
   organization: BriefcaseBusiness,
+  software: Code2,
 };
 
 const ExperienceDocShowcase = ({
@@ -443,7 +446,7 @@ const Timeline = () => {
                     alt={`${experience.org} logo`}
                     loading="lazy"
                     decoding="async"
-                    className="h-full w-full object-contain p-2"
+                    className="h-full w-full rounded-md object-contain p-1.5"
                   />
                 ) : (
                   <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
@@ -453,7 +456,13 @@ const Timeline = () => {
               <div className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800/90 sm:p-6 lg:p-7">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center lg:gap-8">
                   {/* Left Column: Experience Details & Bullet Points */}
-                  <div className="lg:col-span-6 xl:col-span-7">
+                  <div
+                    className={
+                      experience.docs?.length > 0
+                        ? "lg:col-span-6 xl:col-span-7"
+                        : "lg:col-span-12"
+                    }
+                  >
                     <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <h3 className="text-lg font-bold text-dark dark:text-white sm:text-xl">
@@ -484,6 +493,19 @@ const Timeline = () => {
                         </li>
                       ))}
                     </ul>
+
+                    {experience.techStack?.length > 0 && (
+                      <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-4 dark:border-slate-700/80">
+                        {experience.techStack.map((tech) => (
+                          <span
+                            key={tech}
+                            className="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-200"
+                          >
+                            <TechnologyLabel technology={tech} />
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Right Column: Large Auto-Playing Documentation Showcase */}

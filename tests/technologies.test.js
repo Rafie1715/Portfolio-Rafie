@@ -6,11 +6,11 @@ import { projects } from '../src/data/projects.js';
 import { technologyIcons, skillIcons } from '../src/utils/orbitIcons.js';
 
 test('technology aliases ignore case, whitespace and punctuation', () => {
-  for (const [input, canonical] of [[' react.js ', 'React'], ['NODE JS', 'Node.js'], ['tailwind', 'Tailwind CSS'], ['html', 'HTML5'], ['css', 'CSS3'], ['sklearn', 'Scikit-Learn'], ['C Sharp', 'C#'], ['IntellijIDEA', 'IntelliJ IDEA'], ['cpp', 'C++']]) {
+  for (const [input, canonical] of [[' react.js ', 'React'], ['NODE JS', 'Node.js'], ['tailwind', 'Tailwind CSS'], ['html', 'HTML5'], ['css', 'CSS3'], ['sklearn', 'Scikit-Learn'], ['C Sharp', 'C#'], ['IntellijIDEA', 'IntelliJ IDEA'], ['cpp', 'C++'], ['DotNet', '.NET'], ['ASP.NET Core', '.NET'], ['AngularJS', 'Angular']]) {
     assert.equal(technologyDetails(input).icon, technologyDetails(canonical).icon);
   }
   assert.notEqual(technologyDetails('C++').icon, technologyDetails('C#').icon);
-  for (const skill of ['Linux', 'Java', 'SQL', 'IntelliJ IDEA', 'C++', 'C#', 'Unity', 'HTML5', 'CSS3']) {
+  for (const skill of ['Linux', 'Java', 'SQL', 'IntelliJ IDEA', 'C++', 'C#', 'Unity', 'HTML5', 'CSS3', '.NET', 'Angular', 'PostgreSQL']) {
     assert.notEqual(technologyDetails(skill).icon, 'fas fa-code', `Missing 2D icon for ${skill}`);
     assert.ok(skillIcons[skill]?.d?.length > 10, `Missing 3D orbit SVG path for ${skill}`);
   }
@@ -44,7 +44,7 @@ test('every existing portfolio technology has a registered logo or semantic icon
 });
 
 test('every 3D tech orbit technology has a registered SVG path', () => {
-  const expectedKeys = ['kotlin', 'react', 'python', 'threejs', 'tailwind', 'firebase'];
+  const expectedKeys = ['kotlin', 'react', 'python', 'threejs', 'tailwind', 'firebase', 'github'];
   for (const key of expectedKeys) {
     assert.equal(typeof technologyIcons[key], 'string', `Missing SVG path for ${key}`);
     assert.ok(technologyIcons[key].length > 10, `SVG path for ${key} is too short`);

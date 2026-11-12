@@ -36,13 +36,13 @@ const categories = [
   { key: 'mobile', Icon: Smartphone, accent: '#3b82f6', columns: 'md:col-span-6 lg:col-span-7',
     skills: ['Kotlin', 'XML layouts', 'Jetpack Compose', 'Android Studio', 'Retrofit', 'MVVM', 'Coroutines', 'Paging 3', 'Material Design'] },
   { key: 'frontend', Icon: MonitorSmartphone, accent: '#06b6d4', columns: 'md:col-span-6 lg:col-span-5',
-    skills: ['React.js', 'JavaScript', 'Tailwind CSS', 'HTML5', 'CSS3', 'Bootstrap'], learning: ['Next.js'] },
+    skills: ['React.js', 'JavaScript', 'Tailwind CSS', 'HTML5', 'CSS3', 'Bootstrap'], learning: ['Angular', 'Next.js'] },
   { key: 'ai', Icon: BrainCircuit, accent: '#10b981', columns: 'md:col-span-6',
     skills: ['Python', 'Machine Learning', 'Scikit-Learn', 'Prompt Engineering', 'Generative AI'] },
   { key: 'analytics', Icon: ChartLine, accent: '#0891b2', columns: 'md:col-span-6',
     skills: ['Pandas', 'NumPy', 'Matplotlib', 'Data Cleaning', 'Exploratory Data Analysis (EDA)', 'Data Visualization'] },
   { key: 'backend', Icon: Database, accent: '#f59e0b', columns: 'md:col-span-6', initial: 'Firebase',
-    skills: ['Node.js', 'Express.js', 'REST API', 'SQL', 'MySQL', 'Firebase'], learning: ['MongoDB', 'PostgreSQL'] },
+    skills: ['Node.js', 'Express.js', 'REST API', 'SQL', 'MySQL', 'Firebase'], learning: ['.NET', 'PostgreSQL', 'MongoDB'] },
   { key: 'tools', Icon: Wrench, accent: '#a78bfa', columns: 'md:col-span-6', initial: 'Figma',
     skills: ['Git', 'GitHub', 'Postman', 'VS Code', 'IntelliJ IDEA', 'Google Colab', 'Linux', 'Figma'] },
   { key: 'software', Icon: Code2, accent: '#6366f1', columns: 'md:col-span-12', initial: 'Java',
@@ -116,14 +116,25 @@ function SkillCard({ category, index, catalog, reduceMotion }) {
 
         {category.learning && (
           <div className="mb-5 text-xs leading-5 text-slate-500 dark:text-slate-400">
-            <p className="mb-2">{t('common.learning')}</p>
-            <ul className="flex flex-wrap gap-x-4 gap-y-2 text-slate-700 dark:text-slate-300">
+            <p className="mb-2 font-semibold">{t('common.learning')}</p>
+            <div className="flex flex-wrap gap-2">
               {category.learning.map((name) => (
-                <li key={name}>
+                <button
+                  key={name}
+                  type="button"
+                  aria-pressed={selected === name}
+                  aria-controls={panelId}
+                  onClick={() => setSelected(name)}
+                  className={`skill-choice inline-flex min-h-10 max-w-full items-center rounded-lg border border-dashed px-3 py-1.5 text-left text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${
+                    selected === name
+                      ? 'border-blue-400 bg-blue-50 font-semibold text-slate-950 dark:border-blue-400 dark:bg-blue-950/60 dark:text-white'
+                      : 'border-slate-300 bg-slate-50/70 text-slate-700 hover:border-slate-400 dark:border-slate-700 dark:bg-slate-950/40 dark:text-slate-200 dark:hover:border-slate-500'
+                  }`}
+                >
                   <TechnologyLabel technology={name} />
-                </li>
+                </button>
               ))}
-            </ul>
+            </div>
           </div>
         )}
 
@@ -338,7 +349,7 @@ function SkillEvidenceInspector({
       {/* Sibling skills in this category */}
       <div className="mt-6 border-t border-slate-100 pt-4 dark:border-slate-800">
         <p className="mb-2.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
-          {t(`skills.categories.${category.key}.title`)} ({category.skills.length})
+          {t(`skills.categories.${category.key}.title`)} ({category.skills.length + (category.learning ? category.learning.length : 0)})
         </p>
         <div className="flex flex-wrap gap-1.5">
           {category.skills.map((name) => (
@@ -350,6 +361,20 @@ function SkillEvidenceInspector({
                 selectedSkill === name
                   ? 'bg-blue-600 font-bold text-white shadow-sm dark:bg-blue-500'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+              }`}
+            >
+              {name}
+            </button>
+          ))}
+          {(category.learning || []).map((name) => (
+            <button
+              key={name}
+              type="button"
+              onClick={() => onSelectSkill(name)}
+              className={`rounded-md border border-dashed px-2.5 py-1 text-xs transition-colors ${
+                selectedSkill === name
+                  ? 'border-blue-600 bg-blue-600 font-bold text-white shadow-sm dark:border-blue-500 dark:bg-blue-500'
+                  : 'border-slate-300 bg-slate-50 text-slate-600 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:bg-slate-700'
               }`}
             >
               {name}
@@ -407,7 +432,7 @@ export default function Skills() {
   const handleSelectCategory = (catKey) => {
     setActiveCategoryKey(catKey);
     const cat = categories.find((c) => c.key === catKey);
-    if (cat && !cat.skills.includes(selectedSkill)) {
+    if (cat && !cat.skills.includes(selectedSkill) && !(cat.learning && cat.learning.includes(selectedSkill))) {
       setSelectedSkill(cat.skills[0]);
     }
   };

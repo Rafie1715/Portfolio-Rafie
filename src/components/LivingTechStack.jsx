@@ -52,11 +52,19 @@ const technologyCatalog = {
     projectIds: ['planetku'],
   },
   react: {
-    name: 'React',
+    name: 'React.js',
+    query: 'React',
     icon: 'devicon-react-original',
     color: '#0891b2',
     category: 'Front-End',
     projectIds: ['portfolio-website', 'personal-notes'],
+  },
+  github: {
+    name: 'GitHub',
+    icon: 'devicon-github-original',
+    color: '#6366f1',
+    category: 'Version Control',
+    projectIds: ['OD60ttuTSwZW62TRJFm6', 'mandiri-news', 'planetku', 'portfolio-website'],
   },
   javascript: {
     name: 'JavaScript',
@@ -124,7 +132,7 @@ const technologyCatalog = {
 };
 
 const technologiesByLens = {
-  overview: ['kotlin', 'react', 'python', 'threejs', 'tailwind', 'firebase'],
+  overview: ['kotlin', 'python', 'react', 'firebase', 'github'],
   android: ['kotlin', 'android_studio', 'firebase', 'gradle', 'tensorflow', 'scikit_learn'],
   frontend: ['react', 'javascript', 'vite', 'tailwind', 'threejs', 'mysql'],
   ai: ['python', 'tensorflow', 'scikit_learn', 'pandas', 'kotlin', 'firebase'],
@@ -147,7 +155,7 @@ const LivingTechStack = ({ mode = 'overview' }) => {
     ? technologies.find((technology) => technology.id === selection.id) || technologies[0]
     : technologies[0];
 
-  const projectSearch = new URLSearchParams({ q: activeTechnology.name });
+  const projectSearch = new URLSearchParams({ q: activeTechnology.query || activeTechnology.name });
   const language = new URLSearchParams(location.search).get('lang');
   if (language) projectSearch.set('lang', language);
 

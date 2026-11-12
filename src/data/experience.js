@@ -1,5 +1,27 @@
 export const experiences = [
   {
+    id: 5,
+    logo: "/images/adins-logo.png",
+    icon: "software",
+    title: { en: "IT Trainee", id: "IT Trainee" },
+    org: "AdIns (PT Adicipta Inovasi Teknologi)",
+    type: { en: "IT Trainee Program", id: "Program IT Trainee" },
+    date: { en: "November 2026 - Present", id: "November 2026 - Sekarang" },
+    techStack: [".NET", "C#", "Angular", "PostgreSQL", "SQL"],
+    description: {
+      en: [
+        "Undergoing intensive enterprise software engineering training focused on full-stack development with .NET, Angular, and PostgreSQL.",
+        "Building and practicing object-oriented backend services with C# and .NET alongside component-driven front-end interfaces in Angular.",
+        "Designing relational database schemas, SQL queries, and data integration workflows using PostgreSQL.",
+      ],
+      id: [
+        "Menjalani pelatihan intensif software engineering enterprise yang berfokus pada pengembangan full-stack menggunakan .NET, Angular, dan PostgreSQL.",
+        "Mempelajari dan mempraktikkan pengembangan layanan backend berorientasi objek dengan C# dan .NET serta antarmuka front-end berbasis komponen dengan Angular.",
+        "Merancang skema database relasional, query SQL, serta alur integrasi data menggunakan PostgreSQL.",
+      ],
+    },
+  },
+  {
     id: 1,
     logo: "/images/mandiri-logo.webp",
     icon: "mobile",
@@ -7,6 +29,7 @@ export const experiences = [
     org: "Bank Mandiri x Rakamin Academy",
     type: { en: "Project-Based Virtual Internship", id: "Project-Based Virtual Internship" },
     date: { en: "March 2026", id: "Maret 2026" },
+    techStack: ["Kotlin", "Android Studio", "MVVM", "Retrofit", "Coroutines", "Paging 3", "XML layouts"],
     description: {
       en: [
         "Engineered the Mandiri News Android app with three main screens powered by three REST API endpoints.",
@@ -107,6 +130,7 @@ export const experiences = [
       en: "Sep 2024 - Jan 2025",
       id: "Sep 2024 - Jan 2025",
     },
+    techStack: ["Kotlin", "Android Studio", "Jetpack Compose", "Retrofit", "Firebase", "TensorFlow Lite"],
     description: {
       en: [
         "Completed more than 900 hours of intensive mobile development, technical, and career-readiness learning.",

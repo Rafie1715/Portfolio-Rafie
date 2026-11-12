@@ -17,6 +17,11 @@ export const skillUsage = {
   'C++': 'cpp',
   'C#': 'csharp',
   Unity: 'unity',
+  '.NET': 'dotnet',
+  Angular: 'angular',
+  PostgreSQL: 'postgresql',
+  'Next.js': 'nextjs',
+  MongoDB: 'mongodb',
 };
 
 // Only return entries in the supplied public catalog, including for confirmed workflow usage.

@@ -37,6 +37,8 @@ import {
   SiCplusplus,
   SiUnity,
   SiIntellijidea,
+  SiDotnet,
+  SiAngular,
 } from 'react-icons/si';
 
 import {
@@ -96,6 +98,7 @@ export const technologyIcons = {
   threejs: extractPath(SiThreedotjs),
   tailwind: extractPath(SiTailwindcss),
   firebase: extractPath(SiFirebase),
+  github: extractPath(SiGithub),
   android_studio: extractPath(SiAndroidstudio),
   gradle: extractPath(SiGradle),
   tensorflow: extractPath(SiTensorflow),
@@ -129,6 +132,7 @@ export const skillIcons = {
   'HTML5': extractIconInfo(SiHtml5),
   'CSS3': extractIconInfo(SiCss3),
   'Bootstrap': extractIconInfo(SiBootstrap),
+  'Angular': extractIconInfo(SiAngular),
   'Next.js': extractIconInfo(SiNextdotjs),
 
   // AI & Machine Learning
@@ -153,6 +157,7 @@ export const skillIcons = {
   'SQL': extractIconInfo(FaDatabase),
   'MySQL': extractIconInfo(SiMysql),
   'Firebase': extractIconInfo(SiFirebase),
+  '.NET': extractIconInfo(SiDotnet),
   'MongoDB': extractIconInfo(SiMongodb),
   'PostgreSQL': extractIconInfo(SiPostgresql),
 
